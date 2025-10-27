@@ -81,24 +81,24 @@
                                                     writeShellApplication
                                                         {
                                                             name = "setup" ;
-                                                            runtimeInputs = [ coreutils flock jq ps publish sequential yq-go ] ;
+                                                            runtimeInputs = [ coreutils flock jq ps publish sequential yq-go ( _failure.implementation "39b26fdc" ) ] ;
                                                             text =
                                                                 ''
                                                                     if [[ -t 0 ]]
                                                                     then
                                                                         HAS_STANDARD_INPUT=false
                                                                         STANDARD_INPUT=
-                                                                        STANDARD_INPUT_FILE="$( mktemp )" || ${ _failure.implementation "7f77cdad" }/bin/failure
+                                                                        STANDARD_INPUT_FILE="$( mktemp )" || failure
                                                                     else
                                                                         HAS_STANDARD_INPUT=true
                                                                         cat <&0 > "$STANDARD_INPUT_FILE"
-                                                                        STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || ${ _failure.implementation "fbb0e2f8" }/bin/failure
+                                                                        STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure
                                                                     fi
                                                                     TRANSIENT=${ transient_ }
-                                                                    ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" )" || ${ _failure.implementation "833fbd3f" }/bin/failure
+                                                                    ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" )" || failure
                                                                     HASH="$( echo "${ pre-hash } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || ${ _failure.implementation "bc3e1b88" }/bin/failure
                                                                     mkdir --parents "${ resources-directory }/locks"
-                                                                    ARGUMENTS_YAML="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . | yq -P )" || ${ _failure.implementation "fc776602" }/bin/failure
+                                                                    ARGUMENTS_YAML="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . | yq -P )" || failure
                                                                     export ARGUMENTS_YAML
                                                                     export HAS_STANDARD_INPUT
                                                                     export HASH
@@ -151,7 +151,7 @@
                                                     writeShellApplication
                                                         {
                                                             name = "setup" ;
-                                                            runtimeInputs = [ coreutils flock jq ps publish redis sequential yq-go ] ;
+                                                            runtimeInputs = [ coreutils flock jq ps publish redis sequential yq-go ( _failure.implementation "4606b7cc" ) ] ;
                                                             text =
                                                                 ''
                                                                     if [[ -t 0 ]]
@@ -159,17 +159,17 @@
                                                                         HAS_STANDARD_INPUT=false
                                                                         STANDARD_INPUT=
                                                                     else
-                                                                        STANDARD_INPUT_FILE="$( mktemp )" || ${ _failure.implementation "f66f966d" }/bin/failure
+                                                                        STANDARD_INPUT_FILE="$( mktemp )" || failure
                                                                         export STANDARD_INPUT_FILE
                                                                         HAS_STANDARD_INPUT=true
                                                                         cat <&0 > "$STANDARD_INPUT_FILE"
-                                                                        STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || ${ _failure.implementation "ffff1b30" }/bin/failure
+                                                                        STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure
                                                                     fi
                                                                     mkdir --parents ${ resources-directory }
                                                                     ARGUMENTS=( "$@" )
                                                                     ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                     TRANSIENT=${ transient_ }
-                                                                    ORIGINATOR_PID="$(ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || ${ _failure.implementation "833fbd3f" }/bin/failure
+                                                                    ORIGINATOR_PID="$(ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure
                                                                     export ORIGINATOR_PID
                                                                     HASH="$( echo "${ pre-hash } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || ${ _failure.implementation "7849a979" }/bin/failure
                                                                     export HASH
@@ -329,7 +329,7 @@
                                                                                     "targets" : $TARGETS ,
                                                                                     "transient" : $TRANSIENT
                                                                                 }' | publish
-                                                                            ${ _failure.implementation "bd13c123" }/bin/failure
+                                                                            failure "$STANDARD_ERROR_FILE"
                                                                         fi
                                                                     fi
                                                                 '' ;
