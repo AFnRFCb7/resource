@@ -436,7 +436,7 @@
                                                                                 sleep 0
                                                                             done
                                                                             subscribe &
-                                                                            if RESOURCE=${ resource } 2> /build/standard-error
+                                                                            if RESOURCE=${ implementation ( setup : ''${ setup } ${ if builtins.typeOf standard-input == "null" then "" else "${ builtins.toFile standard-input }'' ) } 2> /build/standard-error
                                                                             then
                                                                                 STATUS="$?"
                                                                             else
