@@ -407,6 +407,7 @@
                                                                         runtimeInputs =
                                                                             [
                                                                                 coreutils
+                                                                                jq
                                                                                 redis
                                                                                 (
                                                                                     writeShellApplication
