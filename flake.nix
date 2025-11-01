@@ -470,7 +470,7 @@
                                                                                         then
                                                                                             ${ _failure.implementation "12073df9" }/bin/failure "We expected the payload dependencies to be $EXPECTED_DEPENDENCIES but it was $OBSERVED_DEPENDENCIES"
                                                                                         fi
-                                                                                        EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON description }' | jq '.' )" || ${ _failure.implementation "f7b03966" }
+                                                                                        EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || ${ _failure.implementation "f7b03966" }
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || ${ _failure.implementation "4f4a2232" }
                                                                                         if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
                                                                                         then
