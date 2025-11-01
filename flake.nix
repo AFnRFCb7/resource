@@ -537,7 +537,7 @@
                                                                                         then
                                                                                             ${ _failure.implementation "e6815070" }/bin/failure "We expected the payload transient to be $EXPECTED_TRANSIENT but it was $OBSERVED_TRANSIENT"
                                                                                         fi
-                                                                                        PRE_HASH="${ pre-hash }"
+                                                                                        PRE_HASH="${ pre-hash { init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
                                                                                         FORMATTED_ARGUMENTS="${ builtins.concatStringsSep " " arguments }"
                                                                                         EXPECTED_HASH="$( echo "$PRE_HASH $EXPECTED_TRANSIENT$FORMATTED_ARGUMENTS $EXPECTED_STANDARD_INPUT $EXPECTED_HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || ${ _failure.implementation "e5f7b54d" }/bin/failure
                                                                                         OBSERVED_HASH="$( jq --raw-output ".hash" /build/payload )" || ${ _failure.implementation "a3fb933c" }/bin/failure
