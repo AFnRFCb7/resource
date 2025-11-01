@@ -97,7 +97,7 @@
                                                                     fi
                                                                     TRANSIENT=${ transient_ }
                                                                     ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" )" || failure
-                                                                    HASH="$( echo "${ pre-hash } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || ${ _failure.implementation "bc3e1b88" }/bin/failure
+                                                                    HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || ${ _failure.implementation "bc3e1b88" }/bin/failure
                                                                     mkdir --parents "${ resources-directory }/locks"
                                                                     ARGUMENTS_YAML="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . | yq -P )" || failure
                                                                     export ARGUMENTS_YAML
@@ -172,7 +172,7 @@
                                                                     TRANSIENT=${ transient_ }
                                                                     ORIGINATOR_PID="$(ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure
                                                                     export ORIGINATOR_PID
-                                                                    HASH="$( echo "${ pre-hash } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || ${ _failure.implementation "7849a979" }/bin/failure
+                                                                    HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || ${ _failure.implementation "7849a979" }/bin/failure
                                                                     export HASH
                                                                     mkdir --parents "${ resources-directory }/locks"
                                                                     export HAS_STANDARD_INPUT
@@ -363,7 +363,9 @@
                                                                 }
                                                                 transient ;
                                             in script : ''"$( ${ script "${ setup }/bin/setup" } )" || ${ _failure.implementation "5b05da86" }/bin/failure'' ;
-                            pre-hash = builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
+                            pre-hash =
+                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                    builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
                                     check =
