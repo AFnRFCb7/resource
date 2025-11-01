@@ -432,8 +432,8 @@
                                                                             resource =
                                                                                 _visitor.implementation
                                                                                     {
-                                                                                        null = path : value : implementation ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
-                                                                                        string = path : value : implementation ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" } 2> /build/standard-error" ) ;
+                                                                                        null = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
+                                                                                        string = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" } 2> /build/standard-error" ) ;
                                                                                     }
                                                                                     standard-input ;
                                                                             in
