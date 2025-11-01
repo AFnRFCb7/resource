@@ -603,7 +603,7 @@
                                                                                             cp /build/standard-error "$OUT/standard-error"
                                                                                             ${ _failure.implementation "a6d0f7ed" }/bin/failure "We expected the standard error file to be ${ builtins.toFile "standard-error" standard-error } but it was $OUT/standard-error"
                                                                                         fi
-                                                                                         566151e002afb9d76eb5e1bdf2cb6fe8004c3094acdf74a7d1e51f4f16e2d8fcf69399e045f7b16da4d7c9b908a56832e9f6d6bbf2447c59b16ad97e4499c537 >&2
+                                                                                        echo 566151e002afb9d76eb5e1bdf2cb6fe8004c3094acdf74a7d1e51f4f16e2d8fcf69399e045f7b16da4d7c9b908a56832e9f6d6bbf2447c59b16ad97e4499c537 >&2
                                                                                     '' ;
                                                                     }
                                                             )
