@@ -462,7 +462,9 @@
                                                                                         do
                                                                                             sleep 0
                                                                                         done
+                                                                                        echo b05a609e7e3d8c9674412ea01428dcd05923f4685f54ab4b8bc72698eeb39e13dbd0448605fa2df05f0cea571e74126bc6e15309f5943153ca83dce5afc2f4b7 "$0" >&2
                                                                                         fixture
+                                                                                        echo cd88cbba913f8cbd7c808bdb9fee733a302661a486c6ba3236071491878afad91c6504bcbfac09ce282797d3914dcf949f64950ca5aabbebfeb6651eb9355910 "$0" >&2
                                                                                         subscribe &
                                                                                         if RESOURCE=${ resource }
                                                                                         then
