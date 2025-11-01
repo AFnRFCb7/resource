@@ -66,7 +66,6 @@
                                                             name = "init-application" ;
                                                             runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
                                                         } ;
-                                            pre-hash = builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                                             publish =
                                                 writeShellApplication
                                                     {
@@ -364,6 +363,7 @@
                                                                 }
                                                                 transient ;
                                             in script : ''"$( ${ script "${ setup }/bin/setup" } )" || ${ _failure.implementation "5b05da86" }/bin/failure'' ;
+                            pre-hash = builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
                                     check =
