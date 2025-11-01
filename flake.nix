@@ -506,18 +506,21 @@
                                                                                         then
                                                                                             ${ _failure.implementation "7a3de836" }/bin/failure "We expected the payload index to be $EXPECTED_INDEX but it was $OBSERVED_INDEX"
                                                                                         fi
+                                                                                        echo 8203c90fd1bc42ecbeb27679d364c0102fad5d480ed9263ffe1844f08dc4ed273f314b83dc7c312b5bbfe3900d1e1e1ed38953b72c61f3fce80dce5b59ea5dfa >&2
                                                                                         EXPECTED_HAS_STANDARD_INPUT="${ if builtins.typeOf standard-input == "null" then "false" else "true" }"
                                                                                         OBSERVED_HAS_STANDARD_INPUT="$( jq --raw-output '."has-standard-input"' /build/payload )" || ${ _failure.implementation "1de78471" }
                                                                                         if [[ "$EXPECTED_HAS_STANDARD_INPUT" != "$OBSERVED_HAS_STANDARD_INPUT" ]]
                                                                                         then
                                                                                             ${ _failure.implementation "89b51e3a" }/bin/failure "We expected the payload has-standard-input to be $EXPECTED_STANDARD_INPUT but it was $OBSERVED_STANDARD_INPUT"
                                                                                         fi
+                                                                                        echo 1763f54ece3e60be327e7e32587b1aaf69128d636cdc118dbb7890d87511d547c22505e8a2531cac57aa23c3ac289bb8562d173e64c0dd3e5c0e0818dd77983c >&2
                                                                                         EXPECTED_ORIGINATOR_PID="${ builtins.toString expected-originator-pid }"
                                                                                         OBSERVED_ORIGINATOR_PID="$( jq --raw-output '."originator-pid"' /build/payload )" || ${ _failure.implementation "26e0cb2b" }/bin/failure
                                                                                         if [[ "$EXPECTED_ORIGINATOR_PID" != "$OBSERVED_ORIGINATOR_PID" ]]
                                                                                         then
                                                                                             ${ _failure.implementation "db64a1c9" } "We expected the payload originator-pid to be $EXPECTED_ORIGINATOR_PID but it was $OBSERVED_ORIGINATOR_PID"
                                                                                         fi
+                                                                                        echo 043542631b87c60c516dbca29e7cd7042005fdf43d32d8ec4b3810ab365c3674c9c33b597e12f7b463bf7c29d2092949c913fc85dd947b49e660284bba0aa7fc >&2
                                                                                         EXPECTED_PROVENANCE="${ expected-provenance }"
                                                                                         OBSERVED_PROVENANCE="$( jq --raw-output ".provenance" /build/payload )" || ${ _failure.implementation "26e0cb2b" }/bin/failure
                                                                                         if [[ "$EXPECTED_PROVENANCE" != "$OBSERVED_PROVENANCE" ]]
@@ -530,6 +533,7 @@
                                                                                         then
                                                                                             ${ _failure.implementation "85ad88e4" }/bin/failure "We expected the payload targets to be $EXPECTED_TARGETS but it was $OBSERVED_TARGETS"
                                                                                         fi
+                                                                                        echo b14d06629264984b8f276fff0c9b6112f64736ac00c04890b54ce584270bc1ce07ad83f1861bfe8cd5c236f8a5b05b802da4626c8b60c52da43a7d90098c22ac >&2
                                                                                         EXPECTED_STANDARD_ERROR="${ expected-standard-error }"
                                                                                         OBSERVED_STANDARD_ERROR="$( jq --raw-output '."standard-error"' /build/payload )" || ${ _failure.implementation "714592cd" }/bin/failure
                                                                                         if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
@@ -542,6 +546,7 @@
                                                                                         then
                                                                                             ${ _failure.implementation "11e3a4aa" }/bin/failure "We expected the payload standard-input to be $EXPECTED_STANDARD_INPUT but it was $OBSERVED_STANDARD_INPUT"
                                                                                         fi
+                                                                                        echo 457f5df94d4d034df1b81a84bcf79db1a68d1b074b4150e5892e75e07df7a99be15055ed35c67460a6ab85fa74929b4137031fca146ed4fc640f27fb1f4aa7e5 >&2
                                                                                         EXPECTED_STANDARD_OUTPUT="${ builtins.toFile "standard-output" expected-standard-output }"
                                                                                         mkdir --parents "$OUT/payload"
                                                                                         jq --raw-output '."standard-output"' /build/payload > "$OUT/payload/standard-output"
@@ -555,6 +560,7 @@
                                                                                         then
                                                                                             ${ _failure.implementation "d1054818" }/bin/failure "We expected the payload status to be $EXPECTED_STATUS but it was $OBSERVED_STATUS"
                                                                                         fi
+                                                                                        echo 7bb9c6f19f9e2cd621024703291f2aad6cb593fc8ba3710ebb3e7c8511f9291c9f60ac5af7178fd853f2754c0fa91770c7fdc98a5f75ae91953755f0147bc6d3 >&2
                                                                                         EXPECTED_TRANSIENT="${ builtins.toString expected-transient }"
                                                                                         OBSERVED_TRANSIENT="$( jq --raw-output ".transient" /build/payload )" || ${ _failure.implementation "85ad88e4" }/bin/failure
                                                                                         if [[ "$EXPECTED_TRANSIENT" != "$OBSERVED_TRANSIENT" ]]
