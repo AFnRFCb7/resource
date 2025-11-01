@@ -554,6 +554,7 @@
                                                                                         then
                                                                                             ${ _failure.implementation "d1054818" }/bin/failure "We expected the payload standard-output to be $EXPECTED_STANDARD_OUTPUT but it was $OUT/payload/standard-output"
                                                                                         fi
+                                                                                        echo 412334ef83627ae9156840c2b8f2e1874ee0a42ca6ad06776ba0b806b26ed312b658f8f9af9619c2fa61c1c026433db697a2a4dfd5a1082c2bf6fe4bddb7221a >&2
                                                                                         EXPECTED_STATUS="${ builtins.toString expected-status }"
                                                                                         OBSERVED_STATUS="$( jq --raw-output ".status" /build/payload )" || ${ _failure.implementation "714592cd" }/bin/failure
                                                                                         if [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
