@@ -561,7 +561,9 @@
                                                                                         then
                                                                                             ${ _failure.implementation "e6815070" }/bin/failure "We expected the payload transient to be $EXPECTED_TRANSIENT but it was $OBSERVED_TRANSIENT"
                                                                                         fi
+                                                                                        echo bd094b80d0c86c33b0915838ea6474176585685e3246de6338b69709dbf0554318fc7596edf98a1203c8aeb70c2792686540866f0e4a11763d590f5afad75bba >&2
                                                                                         PRE_HASH="${ pre-hash { init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
+                                                                                        echo 51ecd77c8f30740a52efc520a7efc5bff5ab90c5f76fbfbf9f8800d5c293db75ebc64c22670c3e29a997d71394c6ab2604293141f9c3a7ba07183fd075b07371 >&2
                                                                                         FORMATTED_ARGUMENTS="${ builtins.concatStringsSep " " arguments }"
                                                                                         EXPECTED_HASH="$( echo "$PRE_HASH $EXPECTED_TRANSIENT$FORMATTED_ARGUMENTS $EXPECTED_STANDARD_INPUT $EXPECTED_HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || ${ _failure.implementation "e5f7b54d" }/bin/failure
                                                                                         OBSERVED_HASH="$( jq --raw-output ".hash" /build/payload )" || ${ _failure.implementation "a3fb933c" }/bin/failure
