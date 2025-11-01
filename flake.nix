@@ -549,6 +549,7 @@
                                                                                         echo 457f5df94d4d034df1b81a84bcf79db1a68d1b074b4150e5892e75e07df7a99be15055ed35c67460a6ab85fa74929b4137031fca146ed4fc640f27fb1f4aa7e5 >&2
                                                                                         EXPECTED_STANDARD_OUTPUT="${ builtins.toFile "standard-output" expected-standard-output }"
                                                                                         echo e25353a73db53ec30cdd4ee7a59c6a51135c65867330fe6b419e6b36f8fb42bca619c0bc18a685709ecaaded651a824e201b0ce6b6a8658d8eac241edab1623b >&2
+                                                                                        echo "a848eba021e0006248fc6d98217a58c30dacba6cec4e23c29b5bed81991e60f514648588aeea34e6559a9c57f3e5fc948c577b6b35649504fbf64a2e13d3b31c $OUT/payload" >&2
                                                                                         mkdir --parents "$OUT/payload"
                                                                                         echo 831dc85c382d50c75d93e31082d489a8aa0024194321f80aad30c4bb02c8e925d10dc9a8d9aa21b444cf76de1b7703c06135ad4bffb7dcd07d5d560b85aee010 >&2
                                                                                         jq --raw-output '."standard-output"' /build/payload > "$OUT/payload/standard-output"
