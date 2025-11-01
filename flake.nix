@@ -596,7 +596,7 @@
                                                                                         then
                                                                                             ${ _failure.implementation "57cd83f9" }/bin/failure "We expected the status to be ${ builtins.toString status } but it was $STATUS"
                                                                                         fi
-                                                                                        echo 3d91c76e34e174908af328b36c07bf31e1ffd82f709a1bd4668f252a3882eb30c5e400cbfcbc8fef7ddbe24af5d9e337cd6f46edfee3bcb489f3700e9056d5fe >&2
+                                                                                        echo 3d91c76e34e174908af328b36c07bf31e1ffd82f709a1bd4668f252a3882eb30c5e400cbfcbc8fef7ddbe24af5d9e337cd6f46edfee3bcb489f3700e9056d5fe /build/standard-error "$OUT/standard-error" >&2
                                                                                         cp /build/standard-error "$OUT/standard-error"
                                                                                         echo 5070b76a530a48e5c61c41880674dc3a850e28e974a9a6adcf5021d6363e71a1b4a83538df4afb7588b5d94e9d80226446447d5226f1dac94a47231c9b2dbc23 >&2
                                                                                         if ! diff --unified ${ builtins.toFile "standard-error" standard-error } /build/standard-error
