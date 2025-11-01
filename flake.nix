@@ -478,12 +478,14 @@
                                                                                         do
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
                                                                                         done
+                                                                                        echo 6f9fe2879dff2ae71781351c64b5057da4350e0b403691653e78c6ad5c61c071210afa550e9f8c7f8a1035b548e97a0c2c1a176bc3a201262c112d24b10ab5bc >&2
                                                                                         EXPECTED_ARGUMENTS="$( jq --null-input '${ builtins.toJSON arguments }' )" || ${ _failure.implementation "c0a73187" }
                                                                                         OBSERVED_ARGUMENTS="$( jq ".arguments" /build/payload )" || ${ _failure.implementation "44440f2d" }
                                                                                         if [[ "$EXPECTED_ARGUMENTS" != "$OBSERVED_ARGUMENTS" ]]
                                                                                         then
                                                                                             ${ _failure.implementation "d3fb3e9b" }/bin/failure "We expected the payload arguments to be $EXPECTED_ARGUMENTS but it was $OBSERVED_ARGUMENTS"
                                                                                         fi
+                                                                                        echo 29d187dee3b012c489f8b8847915e28932b8022b9c6d2b5e7f1a083d71ba6838a38a577033d330acc32352493f3c6387006a0373cc389fa6dada9a4e48572dfe >&2
                                                                                         EXPECTED_DEPENDENCIES="$( jq --null-input '${ builtins.toJSON expected-dependencies }' )" || ${ _failure.implementation "2c5c7ae4" }
                                                                                         OBSERVED_DEPENDENCIES="$( jq ".dependencies" /build/payload )" || ${ _failure.implementation "8d52f2db" }
                                                                                         if [[ "$EXPECTED_DEPENDENCIES" != "$OBSERVED_DEPENDENCIES" ]]
@@ -585,6 +587,7 @@
                                                                                             cp /build/standard-error "$OUT/standard-error"
                                                                                             ${ _failure.implementation "a6d0f7ed" }/bin/failure "We expected the standard error file to be ${ builtins.toFile "standard-error" standard-error } but it was $OUT/standard-error"
                                                                                         fi
+                                                                                         566151e002afb9d76eb5e1bdf2cb6fe8004c3094acdf74a7d1e51f4f16e2d8fcf69399e045f7b16da4d7c9b908a56832e9f6d6bbf2447c59b16ad97e4499c537 >&2
                                                                                     '' ;
                                                                     }
                                                             )
