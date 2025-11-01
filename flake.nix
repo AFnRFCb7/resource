@@ -492,12 +492,14 @@
                                                                                         then
                                                                                             ${ _failure.implementation "12073df9" }/bin/failure "We expected the payload dependencies to be $EXPECTED_DEPENDENCIES but it was $OBSERVED_DEPENDENCIES"
                                                                                         fi
+                                                                                        echo 3352fc3e83a360ffcd717d31caa1b3f30f4beb598edb7aec9d5b6f9744823b121edd3d063f9b1eaa3c3c3f699aa629144cb1f0ddf3a0e453cb1f6d4ac4fdb95b >&2
                                                                                         EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || ${ _failure.implementation "f7b03966" }
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || ${ _failure.implementation "4f4a2232" }
                                                                                         if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
                                                                                         then
                                                                                             ${ _failure.implementation "4656e7d5" }/bin/failure "We expected the payload description to be $EXPECTED_DESCRIPTION but it was $OBSERVED_DESCRIPTION"
                                                                                         fi
+                                                                                        echo b942108ab1fc77f5708bbbb9817167ed4a9b615520d764443e690ac080170b9f0cd838967f0294658dcdaf66fd6e81bf14993a070c5c04015f9e0f6cf5296c21 >&2
                                                                                         EXPECTED_INDEX="${ expected-index }"
                                                                                         OBSERVED_INDEX="$( jq --raw-output ".index" /build/payload )" || ${ _failure.implementation "abdf3e25" }/bin/failure
                                                                                         if [[ "$EXPECTED_INDEX" != "$OBSERVED_INDEX" ]]
