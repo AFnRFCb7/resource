@@ -600,7 +600,7 @@
                                                                                         echo 5070b76a530a48e5c61c41880674dc3a850e28e974a9a6adcf5021d6363e71a1b4a83538df4afb7588b5d94e9d80226446447d5226f1dac94a47231c9b2dbc23 >&2
                                                                                         if ! diff --unified ${ builtins.toFile "standard-error" standard-error } /build/standard-error
                                                                                         then
-                                                                                            cp /build/standard-error "$OUT/standard-error"
+                                                                                            # cp /build/standard-error "$OUT/standard-error"
                                                                                             ${ _failure.implementation "a6d0f7ed" }/bin/failure "We expected the standard error file to be ${ builtins.toFile "standard-error" standard-error } but it was $OUT/standard-error"
                                                                                         fi
                                                                                         echo 566151e002afb9d76eb5e1bdf2cb6fe8004c3094acdf74a7d1e51f4f16e2d8fcf69399e045f7b16da4d7c9b908a56832e9f6d6bbf2447c59b16ad97e4499c537 >&2
