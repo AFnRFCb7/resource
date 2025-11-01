@@ -412,6 +412,20 @@
                                                                                 (
                                                                                     writeShellApplication
                                                                                         {
+                                                                                            name = "fixture" ;
+                                                                                            runtimeInputs = [ ] ;
+                                                                                            text =
+                                                                                                _visitor.implementation
+                                                                                                    {
+                                                                                                        lambda = path : value : value resources-directory ;
+                                                                                                        null = path : value : "" ;
+                                                                                                    }
+                                                                                                    resources-directory-fixture ;
+                                                                                        }
+                                                                                )
+                                                                                (
+                                                                                    writeShellApplication
+                                                                                        {
                                                                                              name = "subscribe" ;
                                                                                              runtimeInputs = [ coreutils redis ] ;
                                                                                              text =
@@ -448,6 +462,7 @@
                                                                                         do
                                                                                             sleep 0
                                                                                         done
+                                                                                        fixture
                                                                                         subscribe &
                                                                                         if RESOURCE=${ resource }
                                                                                         then
