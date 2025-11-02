@@ -24,13 +24,12 @@
                         yq-go
                     } @primary :
                         let
-                            _visitor = visitor.lib { } ;
                             description =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
                                         seed = path : value : [ { path = path ; type = builtins.typeOf value ; value = if builtins.typeOf value == "lambda" then null else value ; } ] ;
                                         in
-                                            _visitor.implementation
+                                            visitor
                                                 {
                                                     bool = seed ;
                                                     float = seed ;
@@ -356,7 +355,7 @@
                                                                     '' ;
                                                             } ;
                                                         transient_ =
-                                                            _visitor.implementation
+                                                            visitor
                                                                 {
                                                                     bool = path : value : if value then "$( sequential ) || failure" else "-1" ;
                                                                 }
@@ -415,7 +414,7 @@
                                                                                             name = "fixture" ;
                                                                                             runtimeInputs = [ ] ;
                                                                                             text =
-                                                                                                _visitor.implementation
+                                                                                                visitor
                                                                                                     {
                                                                                                         lambda = path : value : value resources-directory ;
                                                                                                         null = path : value : "" ;
@@ -446,7 +445,7 @@
                                                                         text =
                                                                             let
                                                                                 resource =
-                                                                                    _visitor.implementation
+                                                                                    visitor
                                                                                         {
                                                                                             null = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
                                                                                             string = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ) ;
