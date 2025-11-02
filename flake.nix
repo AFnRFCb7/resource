@@ -330,7 +330,7 @@
                                                                                     "targets" : $TARGETS ,
                                                                                     "transient" : $TRANSIENT
                                                                                 }' | publish
-                                                                            failure "$STANDARD_ERROR_FILE"
+                                                                            failure
                                                                         fi
                                                                     fi
                                                                 '' ;
