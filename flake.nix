@@ -406,6 +406,7 @@
                                                                         runtimeInputs =
                                                                             [
                                                                                 coreutils
+                                                                                failure
                                                                                 jq
                                                                                 redis
                                                                                 (
