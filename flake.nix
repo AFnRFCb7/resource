@@ -455,7 +455,7 @@
                                                                                 in
                                                                                     ''
                                                                                         OUT="$1"
-                                                                                        touch "$OUT"
+                                                                                        mkdir --parents "$OUT"
                                                                                         mkdir --parents /build/redis
                                                                                         redis-server --dir /build/redis --daemonize yes
                                                                                         while ! redis-cli ping
