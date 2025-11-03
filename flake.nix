@@ -576,6 +576,8 @@
                                                                                         OBSERVED_ARGUMENTS="$( jq ".arguments" /build/payload )" || failure
                                                                                         if [[ "$EXPECTED_ARGUMENTS" != "$OBSERVED_ARGUMENTS" ]]
                                                                                         then
+                                                                                            echo PAYLOAD >&2
+                                                                                            cat /build/payload >&2
                                                                                             failure "We expected the payload arguments to be $EXPECTED_ARGUMENTS but it was $OBSERVED_ARGUMENTS"
                                                                                         fi
                                                                                         echo 29d187dee3b012c489f8b8847915e28932b8022b9c6d2b5e7f1a083d71ba6838a38a577033d330acc32352493f3c6387006a0373cc389fa6dada9a4e48572dfe >&2
