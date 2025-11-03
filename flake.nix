@@ -15,6 +15,7 @@
                         makeBinPath ,
                         makeWrapper ,
                         mkDerivation ,
+                        nix ,
                         ps ,
                         redis ,
                         resources ? null ,
@@ -69,6 +70,7 @@
                                                             targetPkgs =
                                                                 pkgs :
                                                                     [
+                                                                        nix
                                                                         (
                                                                             writeShellApplication
                                                                                 {
