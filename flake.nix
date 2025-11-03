@@ -264,14 +264,17 @@
                                                                         INDEX="$( basename "$MOUNT" )" || failure
                                                                         export INDEX
                                                                         export PROVENANCE=cached
-                                                                        DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
+                                                                        RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
+                                                                        mkdir --parents "${ store-garbage-collection-root }/$INDEX"
+                                                                        STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
                                                                         TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
                                                                         mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                             # shellcheck disable=SC2016
                                                                             jq \
                                                                                 --null-input \
                                                                                 --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                --argjson DEPENDENCIES "$DEPENDENCIES" \
+                                                                                --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
+                                                                                --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                 --arg HASH "$HASH" \
                                                                                 --arg INDEX "$INDEX" \
                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -285,6 +288,7 @@
                                                                                     "dependencies" :
                                                                                       {
                                                                                         "resource" : $DEPENDENCIES ,
+                                                                                        "store" : "STORE_DEPENDENCIES"
                                                                                       } ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
@@ -335,7 +339,8 @@
                                                                         STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                         export STANDARD_OUTPUT
                                                                         mkdir --parents "${ resources-directory }/links/$INDEX"
-                                                                        DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
+                                                                        RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
+                                                                        STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
                                                                         TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure
                                                                         if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                         then
@@ -343,7 +348,8 @@
                                                                             jq \
                                                                                 --null-input \
                                                                                 --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                --argjson DEPENDENCIES "$DEPENDENCIES" \
+                                                                                --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
+                                                                                --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                 --arg HASH "$HASH" \
                                                                                 --arg INDEX "$INDEX" \
                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -360,7 +366,8 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
-                                                                                        "resource" : $DEPENDENCIES
+                                                                                        "resource" : $RESOURCE_DEPENDENCIES ,
+                                                                                        "store" : $STORE_DEPENDENCIES
                                                                                       } ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
@@ -382,7 +389,8 @@
                                                                             jq \
                                                                                 --null-input \
                                                                                 --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                --argjson DEPENDENCIES "$DEPENDENCIES" \
+                                                                                --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
+                                                                                --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                 --arg HASH "$HASH" \
                                                                                 --arg INDEX "$INDEX" \
                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -398,7 +406,8 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
-                                                                                        "resource" : $DEPENDENCIES
+                                                                                        "resource" : $RESOURCE_DEPENDENCIES ,
+                                                                                        "store" : $STORE_DEPENDENCIES
                                                                                       } ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
