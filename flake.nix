@@ -282,7 +282,10 @@
                                                                                 --arg TRANSIENT "$TRANSIENT" \
                                                                                 '{
                                                                                     "arguments" : $ARGUMENTS ,
-                                                                                    "dependencies" : $DEPENDENCIES ,
+                                                                                    "dependencies" :
+                                                                                      {
+                                                                                        resource : $DEPENDENCIES ,
+                                                                                      } ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
