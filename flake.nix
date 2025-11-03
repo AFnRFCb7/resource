@@ -118,8 +118,6 @@
                                                                                             else
                                                                                                 failure e99018b3 "$COMMAND" "$MAGIC"
                                                                                             fi
-                                                                                            mkdir --parents "${ store-garbage-collection-root }/$INDEX"
-                                                                                            if [[ -
                                                                                         '' ;
                                                                                 }
                                                                         )
