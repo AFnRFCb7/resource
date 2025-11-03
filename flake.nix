@@ -569,9 +569,9 @@
                                                                                         echo 29d187dee3b012c489f8b8847915e28932b8022b9c6d2b5e7f1a083d71ba6838a38a577033d330acc32352493f3c6387006a0373cc389fa6dada9a4e48572dfe >&2
                                                                                         EXPECTED_RESOURCE_DEPENDENCIES="$( jq --null-input '${ builtins.toJSON expected-resource-dependencies }' )" || failure
                                                                                         OBSERVED_RESOURCE_DEPENDENCIES="$( jq ".dependencies.resource" /build/payload )" || failure
-                                                                                        if [[ "$EXPECTED_DEPENDENCIES" != "$OBSERVED_DEPENDENCIES" ]]
+                                                                                        if [[ "$EXPECTED_RESOURCE_DEPENDENCIES" != "$OBSERVED_RESOURCE_DEPENDENCIES" ]]
                                                                                         then
-                                                                                            failure 93f8acb4 "We expected the payload resource dependencies to be $EXPECTED_DEPENDENCIES but it was $OBSERVED_DEPENDENCIES"
+                                                                                            failure 93f8acb4 "We expected the payload resource dependencies to be $EXPECTED_RESOURCE_DEPENDENCIES but it was $OBSERVED_RESOURCE_DEPENDENCIES"
                                                                                         fi
                                                                                         echo 3352fc3e83a360ffcd717d31caa1b3f30f4beb598edb7aec9d5b6f9744823b121edd3d063f9b1eaa3c3c3f699aa629144cb1f0ddf3a0e453cb1f6d4ac4fdb95b >&2
                                                                                         EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure
