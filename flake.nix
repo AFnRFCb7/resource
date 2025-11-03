@@ -65,12 +65,14 @@
                                                             name = "init-application" ;
                                                             runScript =
                                                                 ''
-                                                                    if [[ -t 0 ]]
-                                                                    then
-                                                                        cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }"
-                                                                    else
-                                                                        execute-init "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }"
-                                                                    fi
+                                                                    bash -c '
+                                                                        if [[ -t 0 ]]
+                                                                        then
+                                                                            cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                        else
+                                                                            execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                        fi
+                                                                    '
                                                                 '' ;
                                                             targetPkgs =
                                                                 pkgs :
@@ -103,6 +105,7 @@
                                                                                 } ;
                                                                         in
                                                                     [
+                                                                        pkgs.bash
                                                                         pkgs.coreutils
                                                                         (
                                                                             pkgs.writeShellApplication
