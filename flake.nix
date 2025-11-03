@@ -65,7 +65,7 @@
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
-                                                            runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; stores = builtins.mapAttrs ( name : value : import value ) stores ; } ;
+                                                            runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; stores = builtins.mapAttrs ( name : value : ''"$( nix eval ${ value } )" ) || failure 896b1f39'' stores ; } ;
                                                             targetPkgs =
                                                                 pkgs :
                                                                     [
