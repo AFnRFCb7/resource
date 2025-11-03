@@ -21,6 +21,7 @@
                         resources-directory ,
                         root-script-name ? "root" ,
                         store-garbage-collection-root ,
+                        stores ,
                         visitor ,
                         writeShellApplication ,
                         yq-go
