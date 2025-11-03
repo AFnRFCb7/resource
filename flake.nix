@@ -20,7 +20,6 @@
                         redis ,
                         resources ? null ,
                         resources-directory ,
-                        root-script-name ? "root" ,
                         store-garbage-collection-root ,
                         visitor ,
                         writeShellApplication ,
@@ -68,56 +67,56 @@
                                                             runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
                                                             targetPkgs =
                                                                 pkgs :
-                                                                    [
-                                                                        (
-                                                                            writeShellApplication
+                                                                    let
+                                                                        root =
+                                                                            pkgs.writeShellApplication
                                                                                 {
-                                                                                    name = root-script-name ;
-                                                                                    runtimeInputs =
-                                                                                        [
-                                                                                            coreutils
-                                                                                            failure
-                                                                                            (
-                                                                                                writeShellApplication
-                                                                                                    {
-                                                                                                        name = "magic" ;
-                                                                                                        runtimeInputs = [ coreutils failure ] ;
-                                                                                                        text =
-                                                                                                            ''
-                                                                                                                ROOT_DIRECTORY="$1"
-                                                                                                                MAGIC="$2"
-                                                                                                                HASH="$( basename "$MAGIC" )" || failure 388f974f
-                                                                                                                mkdir --parents "$ROOT_DIRECTORY/$INDEX"
-                                                                                                                if [[ -L "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
-                                                                                                                then
-                                                                                                                    CHECK="$( readlink "$ROOT_DIRECTORY/$INDEX/$HASH" )" || failure acce2ddb
-                                                                                                                    if [[ "$MAGIC" != "$CHECK" ]]
-                                                                                                                    then
-                                                                                                                        failure 4745d66a
-                                                                                                                    fi
-                                                                                                                elif [[ -e "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
-                                                                                                                then
-                                                                                                                    failure 6513a7a8
-                                                                                                                else
-                                                                                                                    ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX/$HASH"
-                                                                                                                fi
-                                                                                                            '' ;
-                                                                                                    }
-                                                                                            )
-                                                                                        ] ;
+                                                                                    name = "root" ;
+                                                                                    runtimeInputs = [ pkgs.coreutils failure ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            COMMAND="$1"
+                                                                                            ROOT_DIRECTORY="$1"
                                                                                             MAGIC="$2"
-                                                                                            if [[ "$COMMAND" == "resource" ]]
+                                                                                            HASH="$( basename "$MAGIC" )" || failure 388f974f
+                                                                                            mkdir --parents "$ROOT_DIRECTORY/$INDEX"
+                                                                                            if [[ -L "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
                                                                                             then
-                                                                                                magic ${ resources-directory } "$MAGIC"
-                                                                                            elif [[ "$COMMAND" == "store" ]]
+                                                                                                CHECK="$( readlink "$ROOT_DIRECTORY/$INDEX/$HASH" )" || failure acce2ddb
+                                                                                                if [[ "$MAGIC" != "$CHECK" ]]
+                                                                                                then
+                                                                                                    failure 4745d66a
+                                                                                                fi
+                                                                                            elif [[ -e "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
                                                                                             then
-                                                                                                magic ${ store-garbage-collection-root } "$MAGIC"
+                                                                                                failure 6513a7a8
                                                                                             else
-                                                                                                failure e99018b3 "$COMMAND" "$MAGIC"
+                                                                                                ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX/$HASH"
                                                                                             fi
+                                                                                        '' ;
+                                                                                } ;
+                                                                        in
+                                                                    [
+                                                                        (
+                                                                            pkgs.writeShellApplication
+                                                                                {
+                                                                                    name = "root-resource" ;
+                                                                                    runtimeInputs = [ root ] ;
+                                                                                    text =
+                                                                                        ''
+                                                                                            MAGIC="$1"
+                                                                                            root "${ resources-directory }/$INDEX" "$MAGIC"
+                                                                                        '' ;
+                                                                                }
+                                                                        )
+                                                                        (
+                                                                            pkgs.writeShellApplication
+                                                                                {
+                                                                                    name = "root-store" ;
+                                                                                    runtimeInputs = [ root ] ;
+                                                                                    text =
+                                                                                        ''
+                                                                                            MAGIC="$1"
+                                                                                            root "${ store-garbage-collection-root }/$INDEX" "$MAGIC"
                                                                                         '' ;
                                                                                 }
                                                                         )
