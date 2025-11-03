@@ -287,8 +287,8 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
-                                                                                        "resource" : $DEPENDENCIES ,
-                                                                                        "store" : "STORE_DEPENDENCIES"
+                                                                                        "resource" : $RESOURCE_DEPENDENCIES ,
+                                                                                        "store" : "$STORE_DEPENDENCIES"
                                                                                       } ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
@@ -407,6 +407,7 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
+                                                                                        "FIND_ME" : true ,
                                                                                         "resource" : $RESOURCE_DEPENDENCIES ,
                                                                                         "store" : $STORE_DEPENDENCIES
                                                                                       } ,
