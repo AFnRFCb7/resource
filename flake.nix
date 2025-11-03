@@ -265,10 +265,10 @@
                                                                         export INDEX
                                                                         export PROVENANCE=cached
                                                                         RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
-                                                                        EXPECTED_STORE_DEPENDENCIES "${ store-garbage-collection-root }/$INDEX"
+                                                                        mkdir --parents "${ store-garbage-collection-root }/$INDEX"
                                                                         STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
                                                                         TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
-                                                                        EXPECTED_STORE_DEPENDENCIES "${ resources-directory }/locks/$INDEX"
+                                                                        mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                             # shellcheck disable=SC2016
                                                                             jq \
                                                                                 --null-input \
@@ -304,13 +304,13 @@
                                                                         INDEX="$( sequential )" || failure
                                                                         export INDEX
                                                                         export PROVENANCE=new
-                                                                        EXPECTED_STORE_DEPENDENCIES= "${ resources-directory }/locks/$INDEX"
+                                                                        mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                         exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                         flock -s 211
                                                                         MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                        EXPECTED_STORE_DEPENDENCIES= "$MOUNT"
+                                                                        mkdir --parents "$MOUNT"
                                                                         export MOUNT
-                                                                        EXPECTED_STORE_DEPENDENCIES= "$MOUNT"
+                                                                        mkdir --parents "$MOUNT"
                                                                         STANDARD_ERROR_FILE="$( mktemp )" || failure
                                                                         export STANDARD_ERROR_FILE
                                                                         STANDARD_OUTPUT_FILE="$( mktemp )" || failure
@@ -338,9 +338,8 @@
                                                                         export STANDARD_ERROR
                                                                         STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                         export STANDARD_OUTPUT
-                                                                        EXPECTED_STORE_DEPENDENCIES= "${ resources-directory }/links/$INDEX"
+                                                                        mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                         RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
-                                                                        EXPECTED_STORE_DEPENDENCIES= "${ store-garbage-collection-root }/$INDEX"
                                                                         STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
                                                                         TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure
                                                                         if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
@@ -382,7 +381,7 @@
                                                                                     "targets" : $TARGETS ,
                                                                                     "transient" : $TRANSIENT
                                                                                 }' | publish > /dev/null 2>&1
-                                                                            EXPECTED_STORE_DEPENDENCIES= ${ resources-directory }/canonical
+                                                                            mkdir --parents ${ resources-directory }/canonical
                                                                             ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
                                                                             echo -n "$MOUNT"
                                                                         else
