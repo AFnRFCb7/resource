@@ -630,6 +630,7 @@
                                                                                         echo 8e85f21da99e7ecedb49022cce6a7dc8e9b1720a6d2e7489ab2478740fe87d9b0335eac575b7f21dea8da77de0da3645aea8a37231062ef33e54506e79c854bc >&2
                                                                                         if ! diff --unified "$EXPECTED_STANDARD_OUTPUT" "/build/observed/payload/standard-output"
                                                                                         then
+                                                                                            mkdir --parents "$OUT/payload"
                                                                                             cp /build/observed/payload/standard-output "$OUT/payload/standard-output"
                                                                                             failure 0d3810c3 "We expected the payload standard-output to be $EXPECTED_STANDARD_OUTPUT but it was $OUT/payload/standard-output"
                                                                                         fi
