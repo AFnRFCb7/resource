@@ -284,7 +284,7 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
-                                                                                        resource : $DEPENDENCIES ,
+                                                                                        "resource" : $DEPENDENCIES ,
                                                                                       } ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
@@ -360,7 +360,7 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
-                                                                                        resource : $DEPENDENCIES
+                                                                                        "resource" : $DEPENDENCIES
                                                                                       } ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
