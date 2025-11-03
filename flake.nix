@@ -68,9 +68,9 @@
                                                                     bash -c '
                                                                         if [[ -t 0 ]]
                                                                         then
-                                                                            cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                        else
                                                                             execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                        else
+                                                                            cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                         fi
                                                                     '
                                                                 '' ;
