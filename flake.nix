@@ -59,7 +59,6 @@
                                                         {
                                                             extraBwrapArgs =
                                                                 [
-                                                                    "--bind $LINK /links"
                                                                     "--bind $MOUNT /mount"
                                                                     "--tmpfs /scratch"
                                                                 ] ;
@@ -96,6 +95,14 @@
                                                                                 } ;
                                                                         in
                                                                     [
+                                                                        (
+                                                                            pkgs.writeShellApplication
+                                                                                {
+                                                                                    name = "execute-init" ;
+                                                                                    runtimeInputs = [ ] ;
+                                                                                    text = init { pkgs = pkgs ; resources = resources ; self = self ; } ;
+                                                                                }
+                                                                        )
                                                                         (
                                                                             pkgs.writeShellApplication
                                                                                 {
@@ -281,9 +288,6 @@
                                                                         mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                         exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                         flock -s 211
-                                                                        LINK="${ resources-directory }/links/$INDEX"
-                                                                        export LINK
-                                                                        mkdir --parents "$LINK"
                                                                         MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                         mkdir --parents "$MOUNT"
                                                                         export MOUNT
@@ -315,6 +319,7 @@
                                                                         export STANDARD_ERROR
                                                                         STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                         export STANDARD_OUTPUT
+                                                                        mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                         DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
                                                                         TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure
                                                                         if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
