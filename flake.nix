@@ -99,7 +99,7 @@
                                                                                             then
                                                                                                 failure 6513a7a8
                                                                                             else
-                                                                                                ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX/$HASH"
+                                                                                                ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX
                                                                                             fi
                                                                                         '' ;
                                                                                 } ;
