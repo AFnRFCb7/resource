@@ -90,12 +90,12 @@
                                                                                                                 mkdir --parents "$ROOT_DIRECTORY/$INDEX"
                                                                                                                 if [[ -L "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
                                                                                                                 then
-                                                                                                                    CHECK=$( readlink "$ROOT_DIRECTORY/$INDEX/$HASH" ) || failure acce2ddb
+                                                                                                                    CHECK="$( readlink "$ROOT_DIRECTORY/$INDEX/$HASH" )" || failure acce2ddb
                                                                                                                     if [[ "$MAGIC" != "$CHECK" ]]
                                                                                                                     then
                                                                                                                         failure 4745d66a
                                                                                                                     fi
-                                                                                                                elif [[ -e "$ROOT_DIRECTORY/$INDEX/$HASH ]]
+                                                                                                                elif [[ -e "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
                                                                                                                 then
                                                                                                                     failure 6513a7a8
                                                                                                                 else
