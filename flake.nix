@@ -124,7 +124,7 @@
                                                                                     text =
                                                                                         ''
                                                                                             MAGIC="$1"
-                                                                                            root "${ resources-directory }/links/$INDEX" "$MAGIC"
+                                                                                            root "${ resources-directory }/links" "$MAGIC"
                                                                                         '' ;
                                                                                 }
                                                                         )
@@ -136,7 +136,7 @@
                                                                                     text =
                                                                                         ''
                                                                                             MAGIC="$1"
-                                                                                            root "${ store-garbage-collection-root }/$INDEX" "$MAGIC"
+                                                                                            root "${ store-garbage-collection-root }" "$MAGIC"
                                                                                         '' ;
                                                                                 }
                                                                         )
