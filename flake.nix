@@ -579,7 +579,7 @@
                                                                                         fi
                                                                                         EXPECTED_STORE_DEPENDENCIES="$( jq --null-input '${ builtins.toJSON expected-store-dependencies }' )" || failure f364c24b
                                                                                         cat /build/payload >&2
-                                                                                        OBSERVED_RESOURCE_DEPENDENCIES="$( jq ".dependencies.store" /build/payload )" || failure ebf0993a
+                                                                                        OBSERVED_STORE_DEPENDENCIES="$( jq ".dependencies.store" /build/payload )" || failure ebf0993a
                                                                                         if [[ "$EXPECTED_STORE_DEPENDENCIES" != "$OBSERVED_STORE_DEPENDENCIES" ]]
                                                                                         then
                                                                                             failure 9597a6d7 "We expected the payload store dependencies to be $EXPECTED_STORE_DEPENDENCIES but it was $OBSERVED_STORE_DEPENDENCIES"
