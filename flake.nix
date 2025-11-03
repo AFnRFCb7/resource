@@ -287,6 +287,7 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
+                                                                                        "FIND_ME: "2" ,
                                                                                         "resource" : $RESOURCE_DEPENDENCIES ,
                                                                                         "store" : "$STORE_DEPENDENCIES"
                                                                                       } ,
@@ -367,6 +368,7 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
+                                                                                        "FIND_ME" : 3 ,
                                                                                         "resource" : $RESOURCE_DEPENDENCIES ,
                                                                                         "store" : $STORE_DEPENDENCIES
                                                                                       } ,
@@ -407,7 +409,7 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "dependencies" :
                                                                                       {
-                                                                                        "FIND_ME" : true ,
+                                                                                        "FIND_ME" : 2 ,
                                                                                         "resource" : $RESOURCE_DEPENDENCIES ,
                                                                                         "store" : $STORE_DEPENDENCIES
                                                                                       } ,
