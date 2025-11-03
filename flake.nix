@@ -100,7 +100,7 @@
                                                                                 {
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
-                                                                                    text = init { pkgs = pkgs ; resources = resources ; self = self ; } ;
+                                                                                    text = init { resources = resources ; self = self ; } ;
                                                                                 }
                                                                         )
                                                                         (
