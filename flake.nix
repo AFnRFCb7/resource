@@ -112,7 +112,7 @@
                                                                                 {
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
-                                                                                    text = init { resources = resources ; self = "self:" ; } ;
+                                                                                    text = init { resources = resources ; self = self_ ; } ;
                                                                                 }
                                                                         )
                                                                         (
@@ -439,6 +439,7 @@
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
+                            self_ = self ;
                             in
                                 {
                                     check =
