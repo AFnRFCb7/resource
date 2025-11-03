@@ -340,6 +340,7 @@
                                                                         export STANDARD_OUTPUT
                                                                         mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                         RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
+                                                                        mkdir --parents "${ store-garbage-collection-root }/$INDEX"
                                                                         STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure
                                                                         TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure
                                                                         if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
