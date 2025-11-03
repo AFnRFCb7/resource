@@ -101,6 +101,7 @@
                                                                                             else
                                                                                                 ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX"
                                                                                             fi
+                                                                                            echo "ROOT_DIRECTORY=$ROOT_DIRECTORY MAGIC=$MAGIC HASH=$HASH" >> "$ROOT_DIRECTORY/$INDEX/DEBUG"
                                                                                         '' ;
                                                                                 } ;
                                                                         in
