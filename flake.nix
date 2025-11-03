@@ -577,6 +577,13 @@
                                                                                         then
                                                                                             failure 93f8acb4 "We expected the payload resource dependencies to be $EXPECTED_RESOURCE_DEPENDENCIES but it was $OBSERVED_RESOURCE_DEPENDENCIES"
                                                                                         fi
+                                                                                        EXPECTED_STORE_DEPENDENCIES="$( jq --null-input '${ builtins.toJSON expected-store-dependencies }' )" || failure f364c24b
+                                                                                        cat /build/payload >&2
+                                                                                        OBSERVED_RESOURCE_DEPENDENCIES="$( jq ".dependencies.store" /build/payload )" || failure ebf0993a
+                                                                                        if [[ "$EXPECTED_STORE_DEPENDENCIES" != "$OBSERVED_STORE_DEPENDENCIES" ]]
+                                                                                        then
+                                                                                            failure 9597a6d7 "We expected the payload store dependencies to be $EXPECTED_STORE_DEPENDENCIES but it was $OBSERVED_STORE_DEPENDENCIES"
+                                                                                        fi
                                                                                         echo 3352fc3e83a360ffcd717d31caa1b3f30f4beb598edb7aec9d5b6f9744823b121edd3d063f9b1eaa3c3c3f699aa629144cb1f0ddf3a0e453cb1f6d4ac4fdb95b >&2
                                                                                         EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure
