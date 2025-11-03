@@ -104,7 +104,7 @@
                                                                                     text =
                                                                                         ''
                                                                                             MAGIC="$1"
-                                                                                            root "${ resources-directory }/$INDEX" "$MAGIC"
+                                                                                            root "${ resources-directory }/links/$INDEX" "$MAGIC"
                                                                                         '' ;
                                                                                 }
                                                                         )
