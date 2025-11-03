@@ -19,6 +19,8 @@
                         redis ,
                         resources ? null ,
                         resources-directory ,
+                        root-script-name ? "root" ,
+                        store-garbage-collection-root ,
                         visitor ,
                         writeShellApplication ,
                         yq-go
@@ -62,7 +64,65 @@
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
-                                                            runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
+                                                            runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; stores = builtins.mapAttrs ( name : value : import value ) stores ; } ;
+                                                            targetPkgs =
+                                                                pkgs :
+                                                                    [
+                                                                        (
+                                                                            writeShellApplication
+                                                                                {
+                                                                                    name = root-store-script-name ;
+                                                                                    runtimeInputs =
+                                                                                        [
+                                                                                            coreutils
+                                                                                            failure
+                                                                                            (
+                                                                                                writeShellApplication
+                                                                                                    {
+                                                                                                        name = "magic" ;
+                                                                                                        runtimeInputs = [ coreutils failure ] ;
+                                                                                                        text =
+                                                                                                            ''
+                                                                                                                ROOT_DIRECTORY="$1"
+                                                                                                                MAGIC="$2"
+                                                                                                                HASH="$( basename "$MAGIC" )" || failure 388f974f
+                                                                                                                mkdir --parents "$ROOT_DIRECTORY/$INDEX"
+                                                                                                                if [[ -L "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
+                                                                                                                then
+                                                                                                                    CHECK=$( readlink "$ROOT_DIRECTORY/$INDEX/$HASH" ) || failure acce2ddb
+                                                                                                                    if [[ "$MAGIC" != "$CHECK" ]]
+                                                                                                                    then
+                                                                                                                        failure 4745d66a
+                                                                                                                    fi
+                                                                                                                elif [[ -e "$ROOT_DIRECTORY/$INDEX/$HASH ]]
+                                                                                                                then
+                                                                                                                    failure 6513a7a8
+                                                                                                                else
+                                                                                                                    ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX/$HASH"
+                                                                                                                fi
+                                                                                                            '' ;
+                                                                                                    }
+                                                                                            )
+                                                                                        ] ;
+                                                                                    text =
+                                                                                        ''
+                                                                                            COMMAND="$1"
+                                                                                            MAGIC="$2"
+                                                                                            if [[ "$COMMAND" == "resource" ]]
+                                                                                            then
+                                                                                                magic ${ resources-directory } "$MAGIC"
+                                                                                            elif [[ "$COMMAND" == "store" ]]
+                                                                                            then
+                                                                                                magic ${ store-garbage-collection-root } "$MAGIC"
+                                                                                            else
+                                                                                                failure e99018b3 "$COMMAND" "$MAGIC"
+                                                                                            fi
+                                                                                            mkdir --parents "${ store-garbage-collection-root }/$INDEX"
+                                                                                            if [[ -
+                                                                                        '' ;
+                                                                                }
+                                                                        )
+                                                                    ] ;
                                                         } ;
                                             publish =
                                                 writeShellApplication
