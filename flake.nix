@@ -618,7 +618,7 @@
                                                                                         OBSERVED_STANDARD_INPUT="$( jq --raw-output '."standard-input"' /build/payload )" || failure
                                                                                         if [[ "$EXPECTED_STANDARD_INPUT" != "$OBSERVED_STANDARD_INPUT" ]]
                                                                                         then
-                                                                                            failure "We expected the payload standard-input to be $EXPECTED_STANDARD_INPUT but it was $OBSERVED_STANDARD_INPUT"
+                                                                                            failure 724dbca6 "We expected the payload standard-input to be $EXPECTED_STANDARD_INPUT but it was $OBSERVED_STANDARD_INPUT"
                                                                                         fi
                                                                                         echo 457f5df94d4d034df1b81a84bcf79db1a68d1b074b4150e5892e75e07df7a99be15055ed35c67460a6ab85fa74929b4137031fca146ed4fc640f27fb1f4aa7e5 >&2
                                                                                         EXPECTED_STANDARD_OUTPUT="${ builtins.toFile "standard-output" expected-standard-output }"
@@ -630,7 +630,7 @@
                                                                                         echo 8e85f21da99e7ecedb49022cce6a7dc8e9b1720a6d2e7489ab2478740fe87d9b0335eac575b7f21dea8da77de0da3645aea8a37231062ef33e54506e79c854bc >&2
                                                                                         if ! diff --unified "$EXPECTED_STANDARD_OUTPUT" "/build/observed/payload/standard-output"
                                                                                         then
-                                                                                            failure "We expected the payload standard-output to be $EXPECTED_STANDARD_OUTPUT but it was $OUT/payload/standard-output"
+                                                                                            failure 0d3810c3 "We expected the payload standard-output to be $EXPECTED_STANDARD_OUTPUT but it was $OUT/payload/standard-output"
                                                                                         fi
                                                                                         echo 412334ef83627ae9156840c2b8f2e1874ee0a42ca6ad06776ba0b806b26ed312b658f8f9af9619c2fa61c1c026433db697a2a4dfd5a1082c2bf6fe4bddb7221a >&2
                                                                                         EXPECTED_STATUS="${ builtins.toString expected-status }"
