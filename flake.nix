@@ -458,7 +458,7 @@
                                                                     bool = path : value : if value then "$( sequential ) || failure" else "-1" ;
                                                                 }
                                                                 transient ;
-                                            in script : ''"$( ${ script "${ setup }/bin/setup" } )" || failure'' ;
+                                            in script : ''"$( ${ script "${ setup }/bin/setup" } )" || ${ failure }/bin/failure'' ;
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
