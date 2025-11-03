@@ -112,7 +112,7 @@
                                                                                 {
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
-                                                                                    text = init { resources = resources ; self = self_ ; } ;
+                                                                                    text = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
                                                                                 }
                                                                         )
                                                                         (
