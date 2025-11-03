@@ -112,7 +112,7 @@
                                                                                 {
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
-                                                                                    text = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
+                                                                                    text = init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
                                                                                 }
                                                                         )
                                                                         (
@@ -439,7 +439,6 @@
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
-                            self_ = self ;
                             in
                                 {
                                     check =
