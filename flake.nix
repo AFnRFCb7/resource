@@ -63,7 +63,15 @@
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
-                                                            runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
+                                                            runScript =
+                                                                ''
+                                                                    if [[ -t 0 ]]
+                                                                    then
+                                                                        cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }"
+                                                                    else
+                                                                        execute-init "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }"
+                                                                    fi
+                                                                '' ;
                                                             targetPkgs =
                                                                 pkgs :
                                                                     let
@@ -95,6 +103,7 @@
                                                                                 } ;
                                                                         in
                                                                     [
+                                                                        pkgs.coreutils
                                                                         (
                                                                             pkgs.writeShellApplication
                                                                                 {
