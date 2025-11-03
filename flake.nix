@@ -22,7 +22,6 @@
                         resources-directory ,
                         root-script-name ? "root" ,
                         store-garbage-collection-root ,
-                        stores ,
                         visitor ,
                         writeShellApplication ,
                         yq-go
@@ -66,11 +65,10 @@
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
-                                                            runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; stores = builtins.mapAttrs ( name : value : ''"$( nix eval ${ value } )" || failure 896b1f39'' ) stores ; } ;
+                                                            runScript = init { resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
                                                             targetPkgs =
                                                                 pkgs :
                                                                     [
-                                                                        nix
                                                                         (
                                                                             writeShellApplication
                                                                                 {
