@@ -72,7 +72,7 @@
                                                                         (
                                                                             writeShellApplication
                                                                                 {
-                                                                                    name = root-store-script-name ;
+                                                                                    name = root-script-name ;
                                                                                     runtimeInputs =
                                                                                         [
                                                                                             coreutils
