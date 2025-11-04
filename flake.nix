@@ -113,7 +113,7 @@
                                                                                 {
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
-                                                                                    text = init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
+                                                                                    text = init { pkgs = { } ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
                                                                                 }
                                                                         )
                                                                         (
