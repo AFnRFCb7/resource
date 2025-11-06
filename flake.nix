@@ -455,7 +455,9 @@
                                                                     bool = path : value : if value then "$( sequential ) || failure 0da02db4" else "-1" ;
                                                                 }
                                                                 transient ;
-                                            in script : ''"$( ${ script "${ setup }/bin/setup" } )" || ${ failure }/bin/failure 0cab88eb'' ;
+                                            in script : ''
+                                                "$( ${ script "${ setup }/bin/setup" } )" ||
+                                                ${ failure }/bin/failure 0cab88eb'' ;
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
@@ -713,8 +715,6 @@
                                                                                             echo 7f5ebff2cac0591df963be03c307617684981c85bc9b7c3960a064c543951ec175fc9ee98e1e6592d0ad68fa18abbd146ad5e43c8ad3c5ce75449035f91376fa >&2
                                                                                             failure 19e7dbe8 "We expected the standard error file to be ${ builtins.toFile "standard-error" standard-error } but it was $OUT/standard-error"
                                                                                         fi
-                                                                                        echo 566151e002afb9d76eb5e1bdf2cb6fe8004c3094acdf74a7d1e51f4f16e2d8fcf69399e045f7b16da4d7c9b908a56832e9f6d6bbf2447c59b16ad97e4499c537 >&2
-                                                                                        ####
                                                                                     '' ;
                                                                     }
                                                             )
