@@ -456,7 +456,8 @@
                                                                     bool = path : value : if value then "$( sequential ) || failure 0da02db4" else "-1" ;
                                                                 }
                                                                 transient ;
-                                            in script : ''"$( ${ script "${ if builtins.typeOf setup == "set" then setup else "59b9dd59" }/bin/setup" } )" || ${ failure }/bin/failure 0cab88eb'' ;
+                                            in
+                                                assert builtins.typeOf setup == "string" ; script : ''"$( ${ script "${ if builtins.typeOf setup == "string" then setup else "59b9dd59" }/bin/setup" } )" || ${ failure }/bin/failure 0cab88eb'' ;
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
