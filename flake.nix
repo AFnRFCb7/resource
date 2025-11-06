@@ -101,7 +101,6 @@
                                                                                             else
                                                                                                 ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX"
                                                                                             fi
-                                                                                            # echo "ROOT_DIRECTORY=$ROOT_DIRECTORY MAGIC=$MAGIC HASH=$HASH" >> "$ROOT_DIRECTORY/$INDEX/DEBUG"
                                                                                         '' ;
                                                                                 } ;
                                                                         in
@@ -113,7 +112,9 @@
                                                                                 {
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
-                                                                                    text = init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ;
+                                                                                    text =
+                                                                                        if builtins.typeOf ( init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ) == "string" then init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; }
+                                                                                        else builtins.throw "WTF" ;
                                                                                 }
                                                                         )
                                                                         (
