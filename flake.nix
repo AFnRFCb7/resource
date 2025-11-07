@@ -27,6 +27,7 @@
                         yq-go
                     } @primary :
                         let
+                            _string = string ;
                             description =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
@@ -459,7 +460,7 @@
                                                                 transient ;
                                             in
                                                 script :
-                                                    string
+                                                    _string
                                                         {
                                                             template = { setup , failure } : ''"$( "${ setup }" || ${ failure }'' ;
                                                             values =
