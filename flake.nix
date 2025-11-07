@@ -458,7 +458,16 @@
                                                                 }
                                                                 transient ;
                                             in
-                                                assert builtins.typeOf setup == "set" ; script : ''"$( ${ script "${ if builtins.typeOf setup == "string" then setup else "59b9dd59" }/bin/setup" } )" || ${ failure }/bin/failure 0cab88eb'' ;
+                                                script :
+                                                    string
+                                                        {
+                                                            template = { setup , failure } : ''"$( "${ setup }" || ${ failure }'' ;
+                                                            values =
+                                                                {
+                                                                    setup = setup "${ script }/bin/setup" ;
+                                                                    failure = "${ failure }/bin/failure b06fc102" ;
+                                                                } ;
+                                                        } ;
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
