@@ -21,6 +21,7 @@
                         resources ? null ,
                         resources-directory ,
                         store-garbage-collection-root ,
+                        string ,
                         visitor ,
                         writeShellApplication ,
                         yq-go
