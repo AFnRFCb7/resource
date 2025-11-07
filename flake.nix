@@ -460,7 +460,7 @@
                                                                 transient ;
                                             in
                                                 script :
-                                                    _string
+                                                    string
                                                         {
                                                             template = { setup , failure } : ''"$( "${ setup }" ) || ${ failure }'' ;
                                                             values =
