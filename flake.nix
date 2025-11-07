@@ -462,7 +462,7 @@
                                                 script :
                                                     _string
                                                         {
-                                                            template = { setup , failure } : ''"$( "${ setup }" || ${ failure }'' ;
+                                                            template = { setup , failure } : ''"$( "${ setup }" ) || ${ failure }'' ;
                                                             values =
                                                                 {
                                                                     setup = setup "${ script }/bin/setup" ;
