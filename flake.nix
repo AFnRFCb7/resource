@@ -465,7 +465,7 @@
                                                             template = { setup , failure } : ''"$( "${ setup }" ) || ${ failure }'' ;
                                                             values =
                                                                 {
-                                                                    setup = setup "${ script }/bin/setup" ;
+                                                                    setup = script "${ setup }/bin/setup" ;
                                                                     failure = "${ failure }/bin/failure b06fc102" ;
                                                                 } ;
                                                         } ;
