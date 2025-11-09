@@ -237,6 +237,7 @@
                                                                     {
                                                                         template =
                                                                             {
+                                                                                arguments-nix ,
                                                                                 resources-directory
                                                                             } :
                                                                                 ''
@@ -253,7 +254,7 @@
                                                                                     fi
                                                                                     mkdir --parents ${ resources-directory }
                                                                                     ARGUMENTS=( "$@" )
-                                                                                    ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
+                                                                                    ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                     TRANSIENT=${ transient_ }
                                                                                     ORIGINATOR_PID="$(ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
                                                                                     export ORIGINATOR_PID
@@ -424,7 +425,7 @@
                                                                                                     "index" : $INDEX ,
                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                     "originator-pid" : $ORIGINATOR_PID ,
-                                                                                                    "provenance" : $PROVENANCE ,
+                                                                                                   ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } "provenance" : $PROVENANCE ,
                                                                                                     "standard-error" : $STANDARD_ERROR ,
                                                                                                     "standard-input" : $STANDARD_INPUT ,
                                                                                                     "standard-output" : $STANDARD_OUTPUT ,
@@ -438,6 +439,7 @@
                                                                                 '' ;
                                                                         values =
                                                                             {
+                                                                                arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                                 resources-directory = resources-directory ;
                                                                             } ;
                                                                     } ;
