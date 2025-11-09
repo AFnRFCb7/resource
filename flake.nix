@@ -241,6 +241,7 @@
                                                                                 hash ,
                                                                                 pre-hash ,
                                                                                 resources-directory ,
+                                                                                store-garbage-collection-root ,
                                                                                 transient
                                                                             } :
                                                                                 ''
@@ -446,6 +447,7 @@
                                                                                 hash = "${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] }" ;
                                                                                 pre-hash = pre-hash secondary ;
                                                                                 resources-directory = resources-directory ;
+                                                                                store-garbage-collection-root = store-garbage-collection-root ;
                                                                                 transient = transient_ ;
                                                                             } ;
                                                                     } ;
