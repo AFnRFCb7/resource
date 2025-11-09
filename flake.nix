@@ -236,7 +236,9 @@
                                                                 string
                                                                     {
                                                                         template =
-                                                                            { } :
+                                                                            {
+                                                                                resources-directory
+                                                                            } :
                                                                                 ''
                                                                                     if [[ -t 0 ]]
                                                                                     then
