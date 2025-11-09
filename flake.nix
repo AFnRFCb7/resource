@@ -434,7 +434,10 @@
                                                                                         fi
                                                                                     fi
                                                                                 '' ;
-                                                                        values = { } ;
+                                                                        values =
+                                                                            {
+                                                                                resources-directory = resources-directory ;
+                                                                            } ;
                                                                     } ;
                                                         } ;
                                                     sequential =
