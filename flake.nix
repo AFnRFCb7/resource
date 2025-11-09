@@ -243,6 +243,7 @@
                                                                                 pre-hash ,
                                                                                 resources-directory ,
                                                                                 store-garbage-collection-root ,
+                                                                                target-hash-expected ,
                                                                                 transient
                                                                             } :
                                                                                 ''
@@ -348,7 +349,7 @@
                                                                                             fi
                                                                                         fi
                                                                                         export STATUS
-                                                                                        TARGET_HASH_EXPECTED=${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }
+                                                                                        TARGET_HASH_EXPECTED=${ target-hash-expected }
                                                                                         TARGET_HASH_OBSERVED="$( find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" | sha512sum | cut --characters 1-128 )" || failure f6bff0bc
                                                                                         STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure
                                                                                         export STANDARD_ERROR
@@ -450,6 +451,7 @@
                                                                                 pre-hash = pre-hash secondary ;
                                                                                 resources-directory = resources-directory ;
                                                                                 store-garbage-collection-root = store-garbage-collection-root ;
+                                                                                target-hash-expected = "${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }" ;
                                                                                 transient = transient_ ;
                                                                             } ;
                                                                     } ;
