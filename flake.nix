@@ -239,6 +239,7 @@
                                                                             {
                                                                                 arguments-nix ,
                                                                                 hash ,
+                                                                                init-application ,
                                                                                 pre-hash ,
                                                                                 resources-directory ,
                                                                                 store-garbage-collection-root ,
@@ -284,36 +285,36 @@
                                                                                         STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 8a54bbd4
                                                                                         TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
                                                                                         mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                                            # shellcheck disable=SC2016
-                                                                                            jq \
-                                                                                                --null-input \
-                                                                                                --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                                --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                                --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
-                                                                                                --arg HASH "$HASH" \
-                                                                                                --arg INDEX "$INDEX" \
-                                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
-                                                                                                --arg PROVENANCE "$PROVENANCE" \
-                                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                                --argjson TARGETS "$TARGETS" \
-                                                                                                --arg TRANSIENT "$TRANSIENT" \
-                                                                                                '{
-                                                                                                    "arguments" : $ARGUMENTS ,
-                                                                                                    "dependencies" :
-                                                                                                      {
-                                                                                                        "resource" : $RESOURCE_DEPENDENCIES ,
-                                                                                                        "store" : "$STORE_DEPENDENCIES"
-                                                                                                      } ,
-                                                                                                    "hash" : $HASH ,
-                                                                                                    "index" : $INDEX ,
-                                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                    "originator-pid" : $ORIGINATOR_PID ,
-                                                                                                    "provenance" : $PROVENANCE ,
-                                                                                                    "standard-input" : $STANDARD_INPUT ,
-                                                                                                    "targets" : $TARGETS ,
-                                                                                                    "transient" : $TRANSIENT
-                                                                                                }' | publish > /dev/null 2>&1
+                                                                                        # shellcheck disable=SC2016
+                                                                                        jq \
+                                                                                            --null-input \
+                                                                                            --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                            --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
+                                                                                            --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
+                                                                                            --arg HASH "$HASH" \
+                                                                                            --arg INDEX "$INDEX" \
+                                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                            --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                            --arg PROVENANCE "$PROVENANCE" \
+                                                                                            --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                            --argjson TARGETS "$TARGETS" \
+                                                                                            --arg TRANSIENT "$TRANSIENT" \
+                                                                                            '{
+                                                                                                "arguments" : $ARGUMENTS ,
+                                                                                                "dependencies" :
+                                                                                                  {
+                                                                                                    "resource" : $RESOURCE_DEPENDENCIES ,
+                                                                                                    "store" : "$STORE_DEPENDENCIES"
+                                                                                                  } ,
+                                                                                                "hash" : $HASH ,
+                                                                                                "index" : $INDEX ,
+                                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                "originator-pid" : $ORIGINATOR_PID ,
+                                                                                                "provenance" : $PROVENANCE ,
+                                                                                                "standard-input" : $STANDARD_INPUT ,
+                                                                                                "targets" : $TARGETS ,
+                                                                                                "transient" : $TRANSIENT
+                                                                                            }' | publish > /dev/null 2>&1
                                                                                         echo -n "$MOUNT"
                                                                                     else
                                                                                         INDEX="$( sequential )" || failure 65a31c86
@@ -445,6 +446,7 @@
                                                                             {
                                                                                 arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                                 hash = "${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] }" ;
+                                                                                init-application = init-application ;
                                                                                 pre-hash = pre-hash secondary ;
                                                                                 resources-directory = resources-directory ;
                                                                                 store-garbage-collection-root = store-garbage-collection-root ;
