@@ -238,7 +238,8 @@
                                                                         template =
                                                                             {
                                                                                 arguments-nix ,
-                                                                                resources-directory
+                                                                                resources-directory ,
+                                                                                transient
                                                                             } :
                                                                                 ''
                                                                                     if [[ -t 0 ]]
@@ -255,7 +256,7 @@
                                                                                     mkdir --parents ${ resources-directory }
                                                                                     ARGUMENTS=( "$@" )
                                                                                     ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
-                                                                                    TRANSIENT=${ transient_ }
+                                                                                    TRANSIENT=${ transient }
                                                                                     ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
                                                                                     export ORIGINATOR_PID
                                                                                     HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
@@ -441,6 +442,7 @@
                                                                             {
                                                                                 arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                                 resources-directory = resources-directory ;
+                                                                                transient = transient_ ;
                                                                             } ;
                                                                     } ;
                                                         } ;
