@@ -434,7 +434,7 @@
                                                                                         fi
                                                                                     fi
                                                                                 '' ;
-                                                                        value = { } ;
+                                                                        values = { } ;
                                                                     } ;
                                                         } ;
                                                     sequential =
