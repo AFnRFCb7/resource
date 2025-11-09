@@ -238,6 +238,7 @@
                                                                         template =
                                                                             {
                                                                                 arguments-nix ,
+                                                                                pre-hash ,
                                                                                 resources-directory ,
                                                                                 transient
                                                                             } :
@@ -259,7 +260,7 @@
                                                                                     TRANSIENT=${ transient }
                                                                                     ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
                                                                                     export ORIGINATOR_PID
-                                                                                    HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                                    HASH="$( echo "${ pre-hash } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                     export HASH
                                                                                     mkdir --parents "${ resources-directory }/locks"
                                                                                     export HAS_STANDARD_INPUT
@@ -441,6 +442,7 @@
                                                                         values =
                                                                             {
                                                                                 arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
+                                                                                pre-hash = pre-hash secondary ;
                                                                                 resources-directory = resources-directory ;
                                                                                 transient = transient_ ;
                                                                             } ;
