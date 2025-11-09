@@ -256,7 +256,7 @@
                                                                                     ARGUMENTS=( "$@" )
                                                                                     ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                     TRANSIENT=${ transient_ }
-                                                                                    ORIGINATOR_PID="$(ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
+                                                                                    ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
                                                                                     export ORIGINATOR_PID
                                                                                     HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                     export HASH
@@ -328,14 +328,14 @@
                                                                                         export STANDARD_OUTPUT_FILE
                                                                                         if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                         then
-                                                                                            if ${ init-application }/bin/init-application "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                            if ${ init-application }/bin/init-application "${ arguments-nix }" < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                             then
                                                                                                 STATUS="$?"
                                                                                             else
                                                                                                 STATUS="$?"
                                                                                             fi
                                                                                         else
-                                                                                            if ${ init-application }/bin/init-application "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                            if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                             then
                                                                                                 STATUS="$?"
                                                                                             else
