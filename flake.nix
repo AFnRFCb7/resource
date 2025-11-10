@@ -343,7 +343,7 @@
                                                                                         else
                                                                                             cat >> /tmp/DEBUG <<EOF
                                                                                             if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                        EOF
+                                                                                    EOF
                                                                                             if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                             then
                                                                                                 STATUS="$?"
