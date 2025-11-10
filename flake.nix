@@ -431,7 +431,7 @@
                                                                                                     "index" : $INDEX ,
                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                     "originator-pid" : $ORIGINATOR_PID ,
-                                                                                                   ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } "provenance" : $PROVENANCE ,
+                                                                                                    "provenance" : $PROVENANCE ,
                                                                                                     "standard-error" : $STANDARD_ERROR ,
                                                                                                     "standard-input" : $STANDARD_INPUT ,
                                                                                                     "standard-output" : $STANDARD_OUTPUT ,
