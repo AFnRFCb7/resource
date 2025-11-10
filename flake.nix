@@ -115,7 +115,10 @@
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
                                                                                     text =
-                                                                                        if builtins.typeOf ( init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ) == "string" then init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; }
+                                                                                        if builtins.typeOf ( init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ) == "string" then
+                                                                                            ''
+                                                                                                ${ init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } } "$@"
+                                                                                            ''
                                                                                         else builtins.throw "WTF" ;
                                                                                 }
                                                                         )
