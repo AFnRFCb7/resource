@@ -341,7 +341,7 @@
                                                                                                 STATUS="$?"
                                                                                             fi
                                                                                         else
-                                                                                            cat >> /tmp/DEBUG
+                                                                                            cat >> /tmp/DEBUG <<EOF
                                                                                             if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                         EOF
                                                                                             if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
