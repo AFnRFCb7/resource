@@ -439,7 +439,7 @@
                                                                                                     "targets" : $TARGETS ,
                                                                                                     "transient" : $TRANSIENT
                                                                                                 }' | publish
-                                                                                            failure a05ad0c3
+                                                                                            failure a05ad0c3 "$STANDARD_ERROR" "$STATUS"
                                                                                         fi
                                                                                     fi
                                                                                 '' ;
