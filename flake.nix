@@ -61,14 +61,12 @@
                                                         {
                                                             extraBwrapArgs =
                                                                 [
-                                                                    "--bind /tmp/debug /debug"
                                                                     "--bind $MOUNT /mount"
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
                                                             runScript =
                                                                 ''
-                                                                    echo 1d3bd516 "$0 $#" >> /debug/DEBUG
                                                                     bash -c '
                                                                         if [[ -t 0 ]]
                                                                         then
