@@ -75,7 +75,7 @@
                                                                         else
                                                                             cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                         fi
-                                                                    ' "$0" "$@"
+                                                                    '
                                                                 '' ;
                                                             targetPkgs =
                                                                 pkgs :
