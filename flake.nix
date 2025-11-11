@@ -70,7 +70,6 @@
                                                                     bash -c '
                                                                         if [[ -t 0 ]]
                                                                         then
-                                                                            echo c85257a8 "$0 $#" >> /tmp/DEBUG
                                                                             execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                         else
                                                                             cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
