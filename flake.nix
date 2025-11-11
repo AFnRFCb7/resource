@@ -67,7 +67,6 @@
                                                             name = "init-application" ;
                                                             runScript =
                                                                 ''
-                                                                    echo 92629f1d "$0 $#" >> /tmp/DEBUG
                                                                     bash -c '
                                                                         if [[ -t 0 ]]
                                                                         then
