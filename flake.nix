@@ -117,6 +117,7 @@
                                                                                     text =
                                                                                         if builtins.typeOf ( init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ) == "string" then
                                                                                             ''
+                                                                                                echo "7743675e $0 $#" >> /tmp/DEBUG
                                                                                                 ${ init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } } "$@"
                                                                                             ''
                                                                                         else builtins.throw "WTF" ;
