@@ -445,7 +445,7 @@
                                                                                                     "targets" : $TARGETS ,
                                                                                                     "transient" : $TRANSIENT
                                                                                                 }' | publish
-                                                                                            failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON"
+                                                                                            failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                                         fi
                                                                                     fi
                                                                                 '' ;
