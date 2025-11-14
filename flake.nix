@@ -271,7 +271,7 @@
                                                                                     then
                                                                                         ${ has-standard-input-true }
                                                                                     else
-                                                                                        ${ has-standard-input false }
+                                                                                        ${ has-standard-input-false }
                                                                                     fi
                                                                                     export STATUS
                                                                                     TARGET_HASH_EXPECTED=${ target-hash-expected }
