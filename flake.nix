@@ -369,50 +369,53 @@
                                                                                 fi
                                                                             '' ;
                                                                     values =
-                                                                        {
+                                                                        let
                                                                             arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
-                                                                            hash = "${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] }" ;
-                                                                            has-standard-input-false =
-                                                                                if builtins.typeOf init == "null"
-                                                                                then
-                                                                                    ''
-                                                                                        touch "$STANDARD_OUTPUT_FILE"
-                                                                                        touch "$STANDARD_ERROR_FILE"
-                                                                                        STATUS=A
-                                                                                    ''
-                                                                                else
-                                                                                    ''
-                                                                                        if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                            in
+                                                                                {
+                                                                                    arguments-nix = arguments-nix ;
+                                                                                    hash = "${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] }" ;
+                                                                                    has-standard-input-false =
+                                                                                        if builtins.typeOf init == "null"
                                                                                         then
-                                                                                            STATUS="$?"
+                                                                                            ''
+                                                                                                touch "$STANDARD_OUTPUT_FILE"
+                                                                                                touch "$STANDARD_ERROR_FILE"
+                                                                                                STATUS=A
+                                                                                            ''
                                                                                         else
-                                                                                            STATUS="$?"
-                                                                                        fi
-                                                                                    '' ;
-                                                                            has-standard-input-true =
-                                                                                if builtins.typeOf init == "null"
-                                                                                then
-                                                                                    ''
-                                                                                        touch "$STANDARD_OUTPUT_FILE"
-                                                                                        touch "$STANDARD_ERROR_FILE"
-                                                                                        STATUS=B
-                                                                                    ''
-                                                                                else
-                                                                                    ''
-                                                                                        if ${ init-application }/bin/init-application "${ arguments-nix }" < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                            ''
+                                                                                                if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                then
+                                                                                                    STATUS="$?"
+                                                                                                else
+                                                                                                    STATUS="$?"
+                                                                                                fi
+                                                                                            '' ;
+                                                                                    has-standard-input-true =
+                                                                                        if builtins.typeOf init == "null"
                                                                                         then
-                                                                                            STATUS="$?"
+                                                                                            ''
+                                                                                                touch "$STANDARD_OUTPUT_FILE"
+                                                                                                touch "$STANDARD_ERROR_FILE"
+                                                                                                STATUS=B
+                                                                                            ''
                                                                                         else
-                                                                                            STATUS="$?"
-                                                                                        fi
-                                                                                    '' ;
-                                                                            init-application = init-application ;
-                                                                            pre-hash = pre-hash secondary ;
-                                                                            resources-directory = resources-directory ;
-                                                                            store-garbage-collection-root = store-garbage-collection-root ;
-                                                                            target-hash-expected = "${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }" ;
-                                                                            transient = transient_ ;
-                                                                        } ;
+                                                                                            ''
+                                                                                                if ${ init-application }/bin/init-application "${ arguments-nix }" < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                then
+                                                                                                    STATUS="$?"
+                                                                                                else
+                                                                                                    STATUS="$?"
+                                                                                                fi
+                                                                                            '' ;
+                                                                                    init-application = init-application ;
+                                                                                    pre-hash = pre-hash secondary ;
+                                                                                    resources-directory = resources-directory ;
+                                                                                    store-garbage-collection-root = store-garbage-collection-root ;
+                                                                                    target-hash-expected = "${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }" ;
+                                                                                    transient = transient_ ;
+                                                                                } ;
                                                                 } ;
                                                         } ;
                                                     sequential =
