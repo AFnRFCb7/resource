@@ -62,6 +62,7 @@
                                                             extraBwrapArgs =
                                                                 [
                                                                     "--bind $MOUNT /mount"
+                                                                    "--bind $STAGE /stage"
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
@@ -116,9 +117,9 @@
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
                                                                                     text =
-                                                                                        if builtins.typeOf ( init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } ) == "string" then
+                                                                                        if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } ) == "string" then
                                                                                             ''
-                                                                                                ${ init { pkgs = pkgs ; resources = resources ; self = "${ resources-directory }/mounts/$INDEX" ; } } "$@"
+                                                                                                ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } } "$@"
                                                                                             ''
                                                                                         else builtins.throw "WTF" ;
                                                                                 }
@@ -262,6 +263,9 @@
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     export MOUNT
+                                                                                    STAGE="${ resources-directory }/stages/$INDEX"
+                                                                                    mkdir --parents "$STAGE"
+                                                                                    export STAGE
                                                                                     mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                                     export STANDARD_ERROR_FILE
