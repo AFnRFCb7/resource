@@ -368,7 +368,7 @@
                                                                                                 "targets" : $TARGETS ,
                                                                                                 "transient" : $TRANSIENT
                                                                                             }' | publish
-                                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS" "${ pkgs.writeShellScriptBin "script" has-standard-input-false }"
+                                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS" ${ has-standard-input-false }
                                                                                     fi
                                                                                 fi
                                                                             '' ;
