@@ -368,7 +368,7 @@
                                                                                                 "targets" : $TARGETS ,
                                                                                                 "transient" : $TRANSIENT
                                                                                             }' | publish
-                                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS" "${ if builtins.typeOf init == "string" then init else "" }"
+                                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS" "${ if builtins.typeOf init == "string" then init else "78e1d0a6a93f8734aa6ef72825075ba7bf5c4e842f39676811acae0acb4c73b1c2649f438e054ba840ac495467b1b41edc61d847b222078c51c4b60bcf45ccfe ${ builtins.typeOf init }" }"
                                                                                     fi
                                                                                 fi
                                                                             '' ;
