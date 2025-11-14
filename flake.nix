@@ -368,7 +368,7 @@
                                                                                                 "targets" : $TARGETS ,
                                                                                                 "transient" : $TRANSIENT
                                                                                             }' | publish
-                                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
+                                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS" "${ if builtins.typeOf init == "string" then init else "" }"
                                                                                     fi
                                                                                 fi
                                                                             '' ;
