@@ -368,7 +368,7 @@
                                                                                                 "targets" : $TARGETS ,
                                                                                                 "transient" : $TRANSIENT
                                                                                             }' | publish
-                                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS" ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = null ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } }
+                                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS" ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = { } ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } }
                                                                                     fi
                                                                                 fi
                                                                             '' ;
