@@ -69,7 +69,6 @@
                                                             runScript =
                                                                 ''
                                                                     bash -c '
-                                                                        source ${ makeWrapper }/nix-support/setup-hook
                                                                         if [[ -t 0 ]]
                                                                         then
                                                                             execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
@@ -119,6 +118,7 @@
                                                                                     text =
                                                                                         if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } ) == "string" then
                                                                                             ''
+                                                                                                source ${ makeWrapper }/nix-support/setup-hook
                                                                                                 ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } } "$@"
                                                                                             ''
                                                                                         else builtins.throw "WTF" ;
