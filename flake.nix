@@ -69,9 +69,9 @@
                                                             runScript =
                                                                 ''
                                                                     bash -c '
+                                                                        source ${ makeWrapper }/nix-support/setup-hook
                                                                         if [[ -t 0 ]]
                                                                         then
-                                                                            echo 95e0e70f "$0" "$#" >> /tmp/DEBUG
                                                                             execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                         else
                                                                             cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
