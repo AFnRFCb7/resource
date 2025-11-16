@@ -128,6 +128,18 @@
                                                                         (
                                                                             pkgs.writeShellApplication
                                                                                 {
+                                                                                    name = "makeWrapper" ;
+                                                                                    runtimeInputs = [ pkgs.makeWrapper ] ;
+                                                                                    text =
+                                                                                        ''
+                                                                                            source ${ pkgs.makeWrapper }/nix-support/setup-hook
+                                                                                            makeWrapper "$@"
+                                                                                        '' ;
+                                                                                }
+                                                                        )
+                                                                        (
+                                                                            pkgs.writeShellApplication
+                                                                                {
                                                                                     name = "root-resource" ;
                                                                                     runtimeInputs = [ root ] ;
                                                                                     text =
