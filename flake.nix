@@ -118,8 +118,6 @@
                                                                                     text =
                                                                                         if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } ) == "string" then
                                                                                             ''
-                                                                                                # shellcheck source=/dev/null
-                                                                                                source ${ makeWrapper }/nix-support/setup-hook
                                                                                                 ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } } "$@"
                                                                                             ''
                                                                                         else builtins.throw "WTF" ;
@@ -129,9 +127,10 @@
                                                                             pkgs.writeShellApplication
                                                                                 {
                                                                                     name = "makeWrapper" ;
-                                                                                    runtimeInputs = [ pkgs.makeWrapper ] ;
+                                                                                    runtimeInputs = [ ] ;
                                                                                     text =
                                                                                         ''
+                                                                                            # shellcheck disable=SC2016
                                                                                             source ${ pkgs.makeWrapper }/nix-support/setup-hook
                                                                                             makeWrapper "$@"
                                                                                         '' ;
