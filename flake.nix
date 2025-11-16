@@ -238,6 +238,7 @@
                                                                                         --argjson TARGETS "$TARGETS" \
                                                                                         --arg TRANSIENT "$TRANSIENT" \
                                                                                         '{
+                                                                                            "FLAG" : 1 ,
                                                                                             "arguments" : $ARGUMENTS ,
                                                                                             "dependencies" :
                                                                                               {
@@ -311,6 +312,7 @@
                                                                                             --argjson TARGETS "$TARGETS" \
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             '{
+                                                                                                "FLAG" : 2 ,
                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                 "dependencies" :
                                                                                                   {
@@ -351,6 +353,7 @@
                                                                                             --argjson TARGETS "$TARGETS" \
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             '{
+                                                                                                "FLAG" : 3 ,
                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                 "dependencies" :
                                                                                                   {
