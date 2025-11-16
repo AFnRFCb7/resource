@@ -71,7 +71,6 @@
                                                                     bash -c '
                                                                         if [[ -t 0 ]]
                                                                         then
-                                                                            echo 95e0e70f "$0" "$#" >> /tmp/DEBUG
                                                                             execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                         else
                                                                             cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
@@ -119,6 +118,8 @@
                                                                                     text =
                                                                                         if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } ) == "string" then
                                                                                             ''
+                                                                                                # shellcheck source=/dev/null
+                                                                                                source ${ makeWrapper }/nix-support/setup-hook
                                                                                                 ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } } "$@"
                                                                                             ''
                                                                                         else builtins.throw "WTF" ;
