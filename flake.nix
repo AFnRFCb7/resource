@@ -127,7 +127,7 @@
                                                                             pkgs.writeShellApplication
                                                                                 {
                                                                                     name = "makeWrapper" ;
-                                                                                    runtimeInputs = [ pkgs.coreutils ( failure "8c4400a5" ) ] ;
+                                                                                    runtimeInputs = [ pkgs.coreutils failure ] ;
                                                                                     text =
                                                                                         ''
                                                                                             OUT="$1"
