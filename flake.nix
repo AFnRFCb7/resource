@@ -130,7 +130,6 @@
                                                                                     runtimeInputs = [ ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            # WTF
                                                                                             # shellcheck disable=SC1091
                                                                                             source ${ pkgs.makeWrapper }/nix-support/setup-hook
                                                                                             makeWrapper "$@"
