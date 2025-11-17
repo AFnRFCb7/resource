@@ -130,9 +130,13 @@
                                                                                     runtimeInputs = [ pkgs.coreutils failure ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            OUT="$1"
-                                                                                            shift
+                                                                                            if [[ "$#" -lt 2 ]]
+                                                                                            then
+                                                                                                failure 8dba0150
+                                                                                            fi
                                                                                             PROG="$1"
+                                                                                            shift
+                                                                                            OUT="$1"
                                                                                             shift
                                                                                             DIR="$( dirname "$OUT" )" || failure 289160af
                                                                                             mkdir --parents "$DIR"
