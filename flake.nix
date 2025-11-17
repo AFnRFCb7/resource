@@ -147,7 +147,7 @@
                                                                                                         fi
                                                                                                         VAR="$2"
                                                                                                         VALUE="$3"
-                                                                                                        env_exports+=( "export ${VAR}=\"${VALUE}\"" )
+                                                                                                        env_exports+=( "export ${ builtins.concatStringsSep "" [ "$" "{" "VAR" "}" ] }=\"${ builtins.concatStringsSep "" [ "$" "{" "VALUE" "}" ] }\"" )
                                                                                                         shift 3
                                                                                                         ;;
                                                                                                     *)
