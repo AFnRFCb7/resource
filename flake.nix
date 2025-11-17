@@ -127,12 +127,44 @@
                                                                             pkgs.writeShellApplication
                                                                                 {
                                                                                     name = "makeWrapper" ;
-                                                                                    runtimeInputs = [ ] ;
+                                                                                    runtimeInputs = [ pkgs.coreutis ( _failure.implementation "8c4400a5" ) ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            # shellcheck disable=SC1091
-                                                                                            source ${ pkgs.makeWrapper }/nix-support/setup-hook
-                                                                                            makeWrapper "$@"
+                                                                                            OUT="$1"
+                                                                                            shift
+                                                                                            PROG="$1"
+                                                                                            shift
+                                                                                            DIR="$( dirname "$OUT" )" || failure 289160af
+                                                                                            mkdir --parents "$DIR"
+                                                                                            env_exports=()
+                                                                                            while [[ "$#" -gt 0 ]]
+                                                                                            do
+                                                                                                case "$1" in
+                                                                                                    --set)
+                                                                                                        if [[ "$#" -lt 3 ]]
+                                                                                                        then
+                                                                                                            failure d62c907d
+                                                                                                        fi
+                                                                                                        VAR="$2"
+                                                                                                        VALUE="$3"
+                                                                                                        env_exports+=( "export ${VAR}=\"${VALUE}\"" )
+                                                                                                        shift 3
+                                                                                                        ;;
+                                                                                                    *)
+                                                                                                        failure 28b62917
+                                                                                                        ;;
+                                                                                                esac
+                                                                                            done
+                                                                                            {
+                                                                                                echo "#!/usr/bin/env bash"
+                                                                                                echo "set -euo pipefail"
+                                                                                                for line in "${ builtins.concatStringsSep "" [ "$" "{" "env_exports[@]" "}" ] }"
+                                                                                                do
+                                                                                                    echo "$line"
+                                                                                                done
+                                                                                                echo "exec \"$PROG\" \"\$@\""
+                                                                                            } > "$OUT"
+                                                                                            chmod +x "$OUT"
                                                                                         '' ;
                                                                                 }
                                                                         )
