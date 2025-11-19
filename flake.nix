@@ -137,7 +137,7 @@
 																cat ${ wrapper } > "$OUTPUT"
 																cat >> "$OUTPUT" <<EOF																
 																export MOUNT="$MOUNT"
-																exec "$INPUT" "@"
+																exec "$INPUT" "$@"
 																EOF
 																chmod 0500 "$OUTPUT"
 															'' ;
