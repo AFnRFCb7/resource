@@ -125,6 +125,7 @@
 																			name = "wrapper" ;
 																			text =
 																				''
+
 																				'' ;
 																		} ;
 																in "${ application }/bin/wrapper" ;
@@ -134,8 +135,7 @@
 																OUTPUT="$2"
 																MOUNT="$3"
 																cat ${ wrapper } > "$OUTPUT"
-																cat >> "$OUTPUT" <<EOF
-																
+																cat >> "$OUTPUT" <<EOF																
 																export MOUNT="$MOUNT"
 																exec "$INPUT" "@"
 																EOF
