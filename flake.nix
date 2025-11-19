@@ -125,8 +125,6 @@
 																			name = "wrapper" ;
 																			text =
 																				''
-																					export MOUNT="$MOUNT"
-																					exec "$INPUT" "$@"
 																				'' ;
 																		} ;
 																in "${ application }/bin/wrapper" ;
@@ -135,7 +133,12 @@
 																INPUT="$1"
 																OUTPUT="$2"
 																MOUNT="$3"
-																sed -e "s#\$INPUT#$INPUT#" -e "s#\$MOUNT#$MOUNT#" -e "w$OUTPUT" ${ wrapper }
+																cat ${ wrapper } > "$OUTPUT"
+																cat >> "$OUTPUT" <<EOF
+																
+																export MOUNT="$MOUNT"
+																exec "$INPUT" "@"
+																EOF
 																chmod 0500 "$OUTPUT"
 															'' ;
 											}
