@@ -212,7 +212,7 @@
                                             setup =
                                                 writeShellApplication
                                                     {
-                                                        name = "setup" ;
+                                                        giname = "setup" ;
                                                         runtimeInputs = [ coreutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             string
