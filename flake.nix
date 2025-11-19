@@ -110,6 +110,36 @@
                                                                     [
                                                                         pkgs.bash
                                                                         pkgs.coreutils
+									(
+										pkgs.writeShellApplication
+											{
+												name = "make-wrapper" ;
+												runtimeInputs = [ pkgs.coreutils ] ;
+												text =
+													let
+														wrapper =
+															let
+																application =
+																	pkgs.writeShellApplication
+																		{
+																			name = "wrapper" ;
+																			text =
+																				''
+																					export MOUNT="$MOUNT"
+																					exec "$INPUT" "$@"
+																				'' ;
+																		} ;
+																in "${ application }/bin/wrapper" ;
+														in
+															''
+																INPUT="$1"
+																OUTPUT="$2"
+																MOUNT="$3"
+																sed -e "s#\$INPUT#$INPUT# -e "s#\$MOUNT#$MOUNT#" -e w$OUTPUT ${ wrapper }
+																chmod 0500 $OUTPUT
+															'' ;
+											}
+									)
                                                                         (
                                                                             pkgs.writeShellApplication
                                                                                 {
