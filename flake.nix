@@ -135,8 +135,8 @@
 																INPUT="$1"
 																OUTPUT="$2"
 																MOUNT="$3"
-																sed -e "s#\$INPUT#$INPUT# -e "s#\$MOUNT#$MOUNT#" -e w$OUTPUT
-																chmod 0500 $OUTPUT
+																sed -e "s#\$INPUT#$INPUT#" -e "s#\$MOUNT#$MOUNT#" -e "w$OUTPUT"
+																chmod 0500 "$OUTPUT"
 															'' ;
 											}
 									)
