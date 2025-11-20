@@ -110,39 +110,38 @@
                                                                     [
                                                                         pkgs.bash
                                                                         pkgs.coreutils
-									(
-										pkgs.writeShellApplication
-											{
-												name = "make-wrapper" ;
-												runtimeInputs = [ pkgs.coreutils ] ;
-												text =
-													let
-														wrapper =
-															let
-																application =
-																	pkgs.writeShellApplication
-																		{
-																			name = "wrapper" ;
-																			text =
-																				''
-
-																				'' ;
-																		} ;
-																in "${ application }/bin/wrapper" ;
-														in
-															''
-																INPUT="$1"
-																OUTPUT="$2"
-																MOUNT="$3"
-																cat ${ wrapper } > "$OUTPUT"
-																cat >> "$OUTPUT" <<EOF																
-export MOUNT="$MOUNT"
-exec "$INPUT" "\$@"
-EOF
-																chmod 0500 "$OUTPUT"
-															'' ;
-											}
-									)
+					                                                	(
+										                                    pkgs.writeShellApplication
+											                                    {
+												                                    name = "make-wrapper" ;
+												                                    runtimeInputs = [ pkgs.coreutils ] ;
+												                                    text =
+                                                                                        let
+														                                    wrapper =
+															                                    let
+																                                    application =
+																	                                    pkgs.writeShellApplication
+																		                                    {
+																			                                    name = "wrapper" ;
+																			                                        text =
+																				                                        ''
+																				                                        '' ;
+																		                                    } ;
+																                                    in "${ application }/bin/wrapper" ;
+														                                    in
+															                                    ''
+																                                    INPUT="$1"
+                                                                                                    OUTPUT="$2"
+																                                    MOUNT="$3"
+																                                    cat ${ wrapper } > "$OUTPUT"
+																                                    cat >> "$OUTPUT" <<EOF
+                                                                                                    export MOUNT="$MOUNT"
+                                                                                                    exec "$INPUT" "\$@"
+                                                                                                    EOF
+																                                    chmod 0500 "$OUTPUT"
+															                                    '' ;
+                                                                                }
+									                                    )
                                                                         (
                                                                             pkgs.writeShellApplication
                                                                                 {
