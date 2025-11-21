@@ -61,8 +61,8 @@
                                                         {
                                                             extraBwrapArgs =
                                                                 [
+                                                                    "--bind $DEBUG /debug"
                                                                     "--bind $MOUNT /mount"
-                                                                    "--bind $STAGE /stage"
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
@@ -297,9 +297,9 @@
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     export MOUNT
-                                                                                    STAGE="${ resources-directory }/stages/$INDEX"
-                                                                                    mkdir --parents "$STAGE"
-                                                                                    export STAGE
+                                                                                    DEBUG="${ resources-directory }/debug/$INDEX"
+                                                                                    mkdir --parents "$DEBUG"
+                                                                                    export DEBUG
                                                                                     mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                                     export STANDARD_ERROR_FILE
