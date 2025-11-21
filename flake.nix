@@ -130,15 +130,15 @@
 																                                    in "${ application }/bin/wrapper" ;
 														                                    in
 															                                    ''
-																                                    INPUT="$1"
+                                                                                                    INPUT="$1"
                                                                                                     OUTPUT="$2"
-																                                    MOUNT="$3"
-																                                    cat ${ wrapper } > "$OUTPUT"
+                                                                                                    MOUNT="$3"
+                                                                                                    cat ${ wrapper } > "$OUTPUT"
                                                                                                     cat >> "$OUTPUT" <<EOF
                                                                                                     export MOUNT="$MOUNT"
                                                                                                     exec "$INPUT" "\$@"
                                                                                                     EOF
-																                                    chmod 0500 "$OUTPUT"
+                                                                                                    chmod 0500 "$OUTPUT"
 															                                    '' ;
                                                                                 }
 									                                    )
