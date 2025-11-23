@@ -61,8 +61,8 @@
                                                         {
                                                             extraBwrapArgs =
                                                                 [
+                                                                    "--bind $DEBUG /debug"
                                                                     "--bind $MOUNT /mount"
-                                                                    "--bind $STAGE /stage"
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
@@ -110,6 +110,38 @@
                                                                     [
                                                                         pkgs.bash
                                                                         pkgs.coreutils
+					                                                	(
+										                                    pkgs.writeShellApplication
+											                                    {
+												                                    name = "make-wrapper" ;
+												                                    runtimeInputs = [ pkgs.coreutils ] ;
+												                                    text =
+                                                                                        let
+														                                    wrapper =
+															                                    let
+																                                    application =
+																	                                    pkgs.writeShellApplication
+																		                                    {
+																			                                    name = "wrapper" ;
+																			                                        text =
+																				                                        ''
+																				                                        '' ;
+																		                                    } ;
+																                                    in "${ application }/bin/wrapper" ;
+														                                    in
+                                                                                                ''
+                                                                                                    INPUT="$1"
+                                                                                                    OUTPUT="$2"
+                                                                                                    MOUNT="$3"
+                                                                                                    cat ${ wrapper } > "$OUTPUT"
+                                                                                                    cat >> "$OUTPUT" <<EOF
+                                                                                                    export MOUNT="$MOUNT"
+                                                                                                    exec "$INPUT" "\$@"
+                                                                                                    EOF
+                                                                                                    chmod 0500 "$OUTPUT"
+                                                                                                '' ;
+                                                                                }
+									                                    )
                                                                         (
                                                                             pkgs.writeShellApplication
                                                                                 {
@@ -118,6 +150,7 @@
                                                                                     text =
                                                                                         if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } ) == "string" then
                                                                                             ''
+                                                                                                #
                                                                                                 # shellcheck source=/dev/null
                                                                                                 source ${ makeWrapper }/nix-support/setup-hook
                                                                                                 ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; stage = "${ resources-directory }/stages/$INDEX" ; } } "$@"
@@ -264,9 +297,9 @@
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     export MOUNT
-                                                                                    STAGE="${ resources-directory }/stages/$INDEX"
-                                                                                    mkdir --parents "$STAGE"
-                                                                                    export STAGE
+                                                                                    DEBUG="${ resources-directory }/debug/$INDEX"
+                                                                                    mkdir --parents "$DEBUG"
+                                                                                    export DEBUG
                                                                                     mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                                     export STANDARD_ERROR_FILE
