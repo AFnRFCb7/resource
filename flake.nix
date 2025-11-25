@@ -148,9 +148,8 @@
                                                                                     name = "execute-init" ;
                                                                                     runtimeInputs = [ ] ;
                                                                                     text =
-                                                                                        if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; ) == "string" then
+                                                                                        if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; } ) == "string" then
                                                                                             ''
-                                                                                                #
                                                                                                 # shellcheck source=/dev/null
                                                                                                 source ${ makeWrapper }/nix-support/setup-hook
                                                                                                 ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; } } "$@"
