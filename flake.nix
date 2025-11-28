@@ -61,7 +61,6 @@
                                                         {
                                                             extraBwrapArgs =
                                                                 [
-                                                                    "--bind $DEBUG /debug"
                                                                     "--bind $MOUNT /mount"
                                                                     "--tmpfs /scratch"
                                                                 ] ;
