@@ -11,7 +11,6 @@
                         failure ,
                         findutils ,
                         flock ,
-                        invalid-resource-channel ,
                         jq ,
                         makeBinPath ,
                         makeWrapper ,
@@ -23,7 +22,6 @@
                         resources-directory ,
                         store-garbage-collection-root ,
                         string ,
-                        valid-resource-channel ,
                         visitor ,
                         writeShellApplication ,
                         yq-go
