@@ -31,7 +31,7 @@
                             description =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
-                                        seed = path : value : [ { path = path ; type = builtins.typeOf value ; value = if builtins.typeOf value == "lambda" then null else value ; } ] ;
+                                        seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
                                             visitor
                                                 {
@@ -282,7 +282,8 @@
                                                                                             "provenance" : $PROVENANCE ,
                                                                                             "standard-input" : $STANDARD_INPUT ,
                                                                                             "targets" : $TARGETS ,
-                                                                                            "transient" : $TRANSIENT
+                                                                                            "transient" : $TRANSIENT ,
+                                                                                            "type" : "stale"
                                                                                         }' | publish > /dev/null 2>&1
                                                                                     echo -n "$MOUNT"
                                                                                 else
@@ -358,7 +359,8 @@
                                                                                                 "standard-output" : $STANDARD_OUTPUT ,
                                                                                                 "status" : $STATUS ,
                                                                                                 "targets" : $TARGETS ,
-                                                                                                "transient" : $TRANSIENT
+                                                                                                "transient" : $TRANSIENT ,
+                                                                                                "type" : "valid"
                                                                                             }' | publish > /dev/null 2>&1
                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
@@ -398,7 +400,8 @@
                                                                                                 "standard-output" : $STANDARD_OUTPUT ,
                                                                                                 "status" : $STATUS ,
                                                                                                 "targets" : $TARGETS ,
-                                                                                                "transient" : $TRANSIENT
+                                                                                                "transient" : $TRANSIENT ,
+                                                                                                "type" : "invalid"
                                                                                             }' | publish
                                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                                     fi
@@ -511,6 +514,7 @@
                                             expected-status ,
                                             expected-targets ,
                                             expected-transient ,
+                                            expected-type ,
                                             init ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
@@ -716,6 +720,12 @@
                                                                                         then
                                                                                             failure ba808c74 "We expected the payload transient to be $EXPECTED_TRANSIENT but it was $OBSERVED_TRANSIENT"
                                                                                         fi
+                                                                                        EXPECTED_TYPE="${ builtins.toString expected-type }"
+                                                                                        OBSERVED_TYPE="$( jq --raw-output ".type" /build/payload )" || failure f8b99a4d
+                                                                                        if [[ "$EXPECTED_TYPE" != "$OBSERVED_TYPE" ]]
+                                                                                        then
+                                                                                            failure b132ce9b "We expected the payload type to be $EXPECTED_TYPE but it was $OBSERVED_TYPE"
+                                                                                        fi
                                                                                         echo bd094b80d0c86c33b0915838ea6474176585685e3246de6338b69709dbf0554318fc7596edf98a1203c8aeb70c2792686540866f0e4a11763d590f5afad75bba >&2
                                                                                         PRE_HASH="${ pre-hash { init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
                                                                                         echo 51ecd77c8f30740a52efc520a7efc5bff5ab90c5f76fbfbf9f8800d5c293db75ebc64c22670c3e29a997d71394c6ab2604293141f9c3a7ba07183fd075b07371 >&2
@@ -726,7 +736,7 @@
                                                                                         then
                                                                                             failure f40a3551 "We expected the payload hash to be $EXPECTED_HASH but it was $OBSERVED_HASH"
                                                                                         fi
-                                                                                        EXPECTED_KEYS="$( echo '${ builtins.toJSON [ "arguments" "dependencies" "description" "has-standard-input" "hash" "index" "originator-pid" "provenance" "standard-error" "standard-input" "standard-output" "status" "targets" "transient" ] }' | jq --raw-output "." )" || failure a90aef96
+                                                                                        EXPECTED_KEYS="$( echo '${ builtins.toJSON [ "arguments" "dependencies" "description" "has-standard-input" "hash" "index" "originator-pid" "provenance" "standard-error" "standard-input" "standard-output" "status" "targets" "transient" "type" ] }' | jq --raw-output "." )" || failure a90aef96
                                                                                         OBSERVED_KEYS="$( jq --raw-output "[keys[]]" /build/payload )" || failure ed34aceb
                                                                                         if [[ "$EXPECTED_KEYS" != "$OBSERVED_KEYS" ]]
                                                                                         then
