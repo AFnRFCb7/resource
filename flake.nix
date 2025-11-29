@@ -20,6 +20,7 @@
                         redis ,
                         resources ? null ,
                         resources-directory ,
+                        seed ? null ,
                         store-garbage-collection-root ,
                         string ,
                         visitor ,
