@@ -514,6 +514,7 @@
                                             expected-status ,
                                             expected-targets ,
                                             expected-transient ,
+                                            expected-type ,
                                             init ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
@@ -525,8 +526,7 @@
                                             standard-output ? "" ,
                                             status ? 0 ,
                                             targets ,
-                                            transient ,
-                                            type
+                                            transient
                                         } :
                                             mkDerivation
                                                 {
