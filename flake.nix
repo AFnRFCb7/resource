@@ -525,7 +525,8 @@
                                             standard-output ? "" ,
                                             status ? 0 ,
                                             targets ,
-                                            transient
+                                            transient ,
+                                            type
                                         } :
                                             mkDerivation
                                                 {
@@ -718,6 +719,12 @@
                                                                                         if [[ "$EXPECTED_TRANSIENT" != "$OBSERVED_TRANSIENT" ]]
                                                                                         then
                                                                                             failure ba808c74 "We expected the payload transient to be $EXPECTED_TRANSIENT but it was $OBSERVED_TRANSIENT"
+                                                                                        fi
+                                                                                        EXPECTED_TYPE="${ builtins.toString expected-type }"
+                                                                                        OBSERVED_TYPE="$( jq --raw-output ".type" /build/payload )" || failure f8b99a4d
+                                                                                        if [[ "$EXPECTED_TYPE" != "$OBSERVED_TYPE" ]]
+                                                                                        then
+                                                                                            failure b132ce9b "We expected the payload type to be $EXPECTED_TYPE but it was $OBSERVED_TYPE"
                                                                                         fi
                                                                                         echo bd094b80d0c86c33b0915838ea6474176585685e3246de6338b69709dbf0554318fc7596edf98a1203c8aeb70c2792686540866f0e4a11763d590f5afad75bba >&2
                                                                                         PRE_HASH="${ pre-hash { init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
