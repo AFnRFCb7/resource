@@ -20,7 +20,6 @@
                         redis ,
                         resources ? null ,
                         resources-directory ,
-                        seed ? null ,
                         store-garbage-collection-root ,
                         string ,
                         visitor ,
@@ -32,7 +31,7 @@
                             description =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
-                                        seed = path : value : [ { path = path ; type = builtins.typeOf value ; value = if builtins.typeOf value == "lambda" then null else value ; } ] ;
+                                        seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
                                             visitor
                                                 {
