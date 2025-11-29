@@ -282,7 +282,8 @@
                                                                                             "provenance" : $PROVENANCE ,
                                                                                             "standard-input" : $STANDARD_INPUT ,
                                                                                             "targets" : $TARGETS ,
-                                                                                            "transient" : $TRANSIENT
+                                                                                            "transient" : $TRANSIENT ,
+                                                                                            "type" : "stale"
                                                                                         }' | publish > /dev/null 2>&1
                                                                                     echo -n "$MOUNT"
                                                                                 else
@@ -358,7 +359,8 @@
                                                                                                 "standard-output" : $STANDARD_OUTPUT ,
                                                                                                 "status" : $STATUS ,
                                                                                                 "targets" : $TARGETS ,
-                                                                                                "transient" : $TRANSIENT
+                                                                                                "transient" : $TRANSIENT ,
+                                                                                                "type" : "valid"
                                                                                             }' | publish > /dev/null 2>&1
                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
@@ -398,7 +400,8 @@
                                                                                                 "standard-output" : $STANDARD_OUTPUT ,
                                                                                                 "status" : $STATUS ,
                                                                                                 "targets" : $TARGETS ,
-                                                                                                "transient" : $TRANSIENT
+                                                                                                "transient" : $TRANSIENT ,
+                                                                                                "type" : $INVALID
                                                                                             }' | publish
                                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                                     fi
