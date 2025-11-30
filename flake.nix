@@ -296,9 +296,6 @@
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     export MOUNT
-                                                                                    DEBUG="${ resources-directory }/debug/$INDEX"
-                                                                                    mkdir --parents "$DEBUG"
-                                                                                    export DEBUG
                                                                                     mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                                     export STANDARD_ERROR_FILE
