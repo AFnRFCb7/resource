@@ -649,7 +649,7 @@
                                                                                         OBSERVED_FOLLOWS_PARENT="$( jq --raw-output ".follow-parent" /build/payload )" || failure 7c22681a
                                                                                         if [[ "$EXPECTED_FOLLOWS_PARENT" != "$OBSERVED_FOLLOWS_PARENT" ]]
                                                                                         then
-                                                                                            failure 4be71d2e "We expected the payload follows parent to be $EXPECTED_FOLLOWS_PARENT but it was $OBSERVED_FOLLOWS_PARENT
+                                                                                            failure 4be71d2e "We expected the payload follows parent to be $EXPECTED_FOLLOWS_PARENT but it was $OBSERVED_FOLLOWS_PARENT"
                                                                                         fi
                                                                                         EXPECTED_INDEX="${ expected-index }"
                                                                                         OBSERVED_INDEX="$( jq --raw-output ".index" /build/payload )" || failure 0f907573
