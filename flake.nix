@@ -232,7 +232,7 @@
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
                                                                                 PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
-                                                                                ORIGINATOR_PID=${ if follows-parent then ''"$PENULTIMATE_PID"'' else ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' }
+                                                                                ORIGINATOR_PID=${ if follow-parent then ''"$PENULTIMATE_PID"'' else ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' }
                                                                                 export ORIGINATOR_PID
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
@@ -645,8 +645,8 @@
                                                                                         then
                                                                                             failure 2057af05 "We expected the payload description to be $EXPECTED_DESCRIPTION but it was $OBSERVED_DESCRIPTION"
                                                                                         fi
-                                                                                        EXPECTED_FOLLOWS_PARENT="${ builtins.toJSON follows-parent }"
-                                                                                        OBSERVED_FOLLOWS_PARENT="$( jq --raw-output ".follows-parent" /build/payload )" || failure 7c22681a
+                                                                                        EXPECTED_FOLLOWS_PARENT="${ builtins.toJSON follow-parent }"
+                                                                                        OBSERVED_FOLLOWS_PARENT="$( jq --raw-output ".follow-parent" /build/payload )" || failure 7c22681a
                                                                                         if [[ "$EXPECTED_FOLLOWS_PARENT" != "$OBSERVED_FOLLOWS_PARENT" ]]
                                                                                         then
                                                                                             failure 4be71d2e "We expected the payload follows parent to be $EXPECTED_FOLLOWS_PARENT but it was $OBSERVED_FOLLOWS_PARENT
