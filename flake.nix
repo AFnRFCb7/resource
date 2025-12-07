@@ -645,6 +645,7 @@
                                                                                         then
                                                                                             failure 2057af05 "We expected the payload description to be $EXPECTED_DESCRIPTION but it was $OBSERVED_DESCRIPTION"
                                                                                         fi
+                                                                                        EXPECTED_INDEX="${ expected-index }"
                                                                                         OBSERVED_INDEX="$( jq --raw-output ".index" /build/payload )" || failure 0f907573
                                                                                         if [[ "$EXPECTED_INDEX" != "$OBSERVED_INDEX" ]]
                                                                                         then
