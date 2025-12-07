@@ -11,7 +11,6 @@
                         failure ,
                         findutils ,
                         flock ,
-                        follow-parent ? false ,
                         jq ,
                         makeBinPath ,
                         makeWrapper ,
@@ -49,6 +48,7 @@
                                                 { primary = primary ; secondary = secondary ; } ;
                                 implementation =
                                     {
+                                        follow-parent ? false ,
                                         init ? null ,
                                         seed ? null ,
                                         targets ? [ ] ,
