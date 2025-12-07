@@ -646,7 +646,7 @@
                                                                                             failure 2057af05 "We expected the payload description to be $EXPECTED_DESCRIPTION but it was $OBSERVED_DESCRIPTION"
                                                                                         fi
                                                                                         EXPECTED_FOLLOWS_PARENT="${ builtins.toJSON follow-parent }"
-                                                                                        OBSERVED_FOLLOWS_PARENT="$( jq --raw-output ".follow-parent" /build/payload )" || failure 7c22681a
+                                                                                        OBSERVED_FOLLOWS_PARENT="$( jq --raw-output '."follow-parent"' /build/payload )" || failure 7c22681a
                                                                                         if [[ "$EXPECTED_FOLLOWS_PARENT" != "$OBSERVED_FOLLOWS_PARENT" ]]
                                                                                         then
                                                                                             failure 4be71d2e "We expected the payload follows parent to be $EXPECTED_FOLLOWS_PARENT but it was $OBSERVED_FOLLOWS_PARENT"
