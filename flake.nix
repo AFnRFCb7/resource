@@ -514,7 +514,7 @@
                                             expected-targets ,
                                             expected-transient ,
                                             expected-type ,
-                                            follow-parent ,
+                                            follow-parent ? false ,
                                             init ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
