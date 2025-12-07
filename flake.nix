@@ -11,6 +11,7 @@
                         failure ,
                         findutils ,
                         flock ,
+                        follow-parent ? false ,
                         jq ,
                         makeBinPath ,
                         makeWrapper ,
@@ -230,7 +231,8 @@
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
-                                                                                ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
+                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
+                                                                                ORIGINATOR_PID=${ if follows-parent then ''"$PENULTIMATE_PID"'' else ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' }
                                                                                 export ORIGINATOR_PID
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
@@ -512,6 +514,7 @@
                                             expected-targets ,
                                             expected-transient ,
                                             expected-type ,
+                                            follow-parent ,
                                             init ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
@@ -580,8 +583,8 @@
                                                                                 resource =
                                                                                     visitor
                                                                                         {
-                                                                                            null = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
-                                                                                            string = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ) ;
+                                                                                            null = path : value : implementation { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
+                                                                                            string = path : value : implementation { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ) ;
                                                                                         }
                                                                                         standard-input ;
                                                                                 in
@@ -642,7 +645,12 @@
                                                                                         then
                                                                                             failure 2057af05 "We expected the payload description to be $EXPECTED_DESCRIPTION but it was $OBSERVED_DESCRIPTION"
                                                                                         fi
-                                                                                        echo b942108ab1fc77f5708bbbb9817167ed4a9b615520d764443e690ac080170b9f0cd838967f0294658dcdaf66fd6e81bf14993a070c5c04015f9e0f6cf5296c21 >&2
+                                                                                        EXPECTED_FOLLOWS_PARENT="${ builtins.toJSON follows-parent }"
+                                                                                        OBSERVED_FOLLOWS_PARENT="$( jq --raw-output ".follows-parent" /build/payload )" || failure 7c22681a
+                                                                                        if [[ "$EXPECTED_FOLLOWS_PARENT" != "$OBSERVED_FOLLOWS_PARENT" ]]
+                                                                                        then
+                                                                                            failure 4be71d2e "We expected the payload follows parent to be $EXPECTED_FOLLOWS_PARENT but it was $OBSERVED_FOLLOWS_PARENT
+                                                                                        fi
                                                                                         EXPECTED_INDEX="${ expected-index }"
                                                                                         OBSERVED_INDEX="$( jq --raw-output ".index" /build/payload )" || failure 0f907573
                                                                                         if [[ "$EXPECTED_INDEX" != "$OBSERVED_INDEX" ]]
