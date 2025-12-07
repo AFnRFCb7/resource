@@ -29,7 +29,7 @@
                         let
                             _string = string ;
                             description =
-                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
                                         seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
@@ -48,6 +48,7 @@
                                                 { primary = primary ; secondary = secondary ; } ;
                                 implementation =
                                     {
+                                        follow-parent ? false ,
                                         init ? null ,
                                         seed ? null ,
                                         targets ? [ ] ,
@@ -230,7 +231,8 @@
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
-                                                                                ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
+                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
+                                                                                ORIGINATOR_PID=${ if follow-parent then ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' else ''"$PENULTIMATE_PID"'' }
                                                                                 export ORIGINATOR_PID
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
@@ -493,7 +495,7 @@
                                                                 } ;
                                                         } ;
                             pre-hash =
-                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
@@ -512,6 +514,7 @@
                                             expected-targets ,
                                             expected-transient ,
                                             expected-type ,
+                                            follow-parent ? false ,
                                             init ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
@@ -580,8 +583,8 @@
                                                                                 resource =
                                                                                     visitor
                                                                                         {
-                                                                                            null = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
-                                                                                            string = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ) ;
+                                                                                            null = path : value : implementation { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
+                                                                                            string = path : value : implementation { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ) ;
                                                                                         }
                                                                                         standard-input ;
                                                                                 in
@@ -636,13 +639,12 @@
                                                                                             failure 9597a6d7 "We expected the payload store dependencies to be $EXPECTED_STORE_DEPENDENCIES but it was $OBSERVED_STORE_DEPENDENCIES"
                                                                                         fi
                                                                                         echo 3352fc3e83a360ffcd717d31caa1b3f30f4beb598edb7aec9d5b6f9744823b121edd3d063f9b1eaa3c3c3f699aa629144cb1f0ddf3a0e453cb1f6d4ac4fdb95b >&2
-                                                                                        EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
+                                                                                        EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure 338e000e
                                                                                         if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
                                                                                         then
                                                                                             failure 2057af05 "We expected the payload description to be $EXPECTED_DESCRIPTION but it was $OBSERVED_DESCRIPTION"
                                                                                         fi
-                                                                                        echo b942108ab1fc77f5708bbbb9817167ed4a9b615520d764443e690ac080170b9f0cd838967f0294658dcdaf66fd6e81bf14993a070c5c04015f9e0f6cf5296c21 >&2
                                                                                         EXPECTED_INDEX="${ expected-index }"
                                                                                         OBSERVED_INDEX="$( jq --raw-output ".index" /build/payload )" || failure 0f907573
                                                                                         if [[ "$EXPECTED_INDEX" != "$OBSERVED_INDEX" ]]
@@ -724,7 +726,7 @@
                                                                                             failure b132ce9b "We expected the payload type to be $EXPECTED_TYPE but it was $OBSERVED_TYPE"
                                                                                         fi
                                                                                         echo bd094b80d0c86c33b0915838ea6474176585685e3246de6338b69709dbf0554318fc7596edf98a1203c8aeb70c2792686540866f0e4a11763d590f5afad75bba >&2
-                                                                                        PRE_HASH="${ pre-hash { init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
+                                                                                        PRE_HASH="${ pre-hash { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
                                                                                         echo 51ecd77c8f30740a52efc520a7efc5bff5ab90c5f76fbfbf9f8800d5c293db75ebc64c22670c3e29a997d71394c6ab2604293141f9c3a7ba07183fd075b07371 >&2
                                                                                         FORMATTED_ARGUMENTS="${ builtins.concatStringsSep " " arguments }"
                                                                                         EXPECTED_HASH="$( echo "$PRE_HASH $EXPECTED_TRANSIENT$FORMATTED_ARGUMENTS $EXPECTED_STANDARD_INPUT $EXPECTED_HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 291ae43b
