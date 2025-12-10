@@ -150,70 +150,79 @@
                                                                                     text =
                                                                                         let
                                                                                             wrap =
-                                                                                                pkgs.writeShellApplication
+                                                                                                pkgs.buildFHSUserEnv
                                                                                                     {
+                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount" ]
                                                                                                         name = "wrap" ;
-                                                                                                        runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
-                                                                                                        text =
-                                                                                                            ''
-                                                                                                                if [[ 2 -lt "$#"]]
-                                                                                                                then
-                                                                                                                    failure 4b5fcf01 "We are expecting at least two arguments"
-                                                                                                                fi
-                                                                                                                INPUT="$1"
-                                                                                                                if [[ ! -x "$INPUT" ]]
-                                                                                                                then
-                                                                                                                    failure 2c068d47 "We are expecting the first argument $INPUT to be an executable"
-                                                                                                                fi
-                                                                                                                shift
-                                                                                                                OUTPUT="$1"
-                                                                                                                if [[ -e "$OUTPUT" ]]
-                                                                                                                then
-                                                                                                                    failure 9887df89 "We are expecting the second argument $OUTPUT to not (yet) exist"
-                                                                                                                fi
-                                                                                                                OUTPUT_DIRECTORY="( dirname "$OUTPUT" )" || failure a3308d94
-                                                                                                                mkdir --parents "$OUTPUT_DIRECTORY"
-                                                                                                                shift
-                                                                                                                EXPORT_LINES=()
-                                                                                                                while [[ "$#" -gt 0 ]]
-                                                                                                                do
-                                                                                                                    case "$1" in
-                                                                                                                        --inherit)
-                                                                                                                            if [[ "$#" -lt 2 ]]
-                                                                                                                            then
-                                                                                                                                failure 20b59d3f "We are expecting --inherit VARIABLE but we observed $*"
-                                                                                                                            fi
-                                                                                                                            VARIABLE="$2"
-                                                                                                                            if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
-                                                                                                                            then
-                                                                                                                                failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
-                                                                                                                            fi
-                                                                                                                            shift 2
-                                                                                                                        --literal)
-                                                                                                                            if [[ "$#" -lt 2 ]]
-                                                                                                                            then
-                                                                                                                                failure 55186955 "We are expecting --literal VARIABLE but we observed $*"
-                                                                                                                            fi
-                                                                                                                            VARIABLE="$2"
-                                                                                                                            EXPORT_LINES+=( "export $VARIABLE=\"\\\$$VARIABLE\"" )
-                                                                                                                            shift 2
-                                                                                                                        --set)
-                                                                                                                            if [[ "$#" -lt 3 ]]
-                                                                                                                            then
-                                                                                                                                failure ddcc84cc "We are expecting --set VARIABLE VALUE but we observed $*"
-                                                                                                                            fi
-                                                                                                                            VARIABLE="$2"
-                                                                                                                            VALUE="$3"
-                                                                                                                            EXPORT_LINES+=( "export $VARIABLE=\"$VALUE\"" )
-                                                                                                                            shift 3
-                                                                                                                        *)
-                                                                                                                            failure d40b5fe2 "We are expecting --inherit, --link, or --set but we observed $1"
-                                                                                                                    esac
-                                                                                                                done
-                                                                                                                envsubst < "$INPUT" > "$OUTPUT"
-                                                                                                                chmod 0500 "$OUTPUT"
-                                                                                                            '' ;
-                                                                                                    } ;
+                                                                                                        runScript =
+                                                                                                            let
+                                                                                                                application =
+                                                                                                                    pkgs.writeShellApplication
+                                                                                                                        {
+                                                                                                                            name = "runScript" ;
+                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
+                                                                                                                            text =
+                                                                                                                                ''
+                                                                                                                                    if [[ 2 -lt "$#"]]
+                                                                                                                                    then
+                                                                                                                                        failure 4b5fcf01 "We are expecting at least two arguments"
+                                                                                                                                    fi
+                                                                                                                                    INPUT="$1"
+                                                                                                                                    if [[ ! -x "$INPUT" ]]
+                                                                                                                                    then
+                                                                                                                                        failure 2c068d47 "We are expecting the first argument $INPUT to be an executable"
+                                                                                                                                    fi
+                                                                                                                                    shift
+                                                                                                                                    OUTPUT="$1"
+                                                                                                                                    if [[ -e "/mount/$OUTPUT" ]]
+                                                                                                                                    then
+                                                                                                                                        failure 9887df89 "We are expecting the second argument $OUTPUT to not (yet) exist"
+                                                                                                                                    fi
+                                                                                                                                    OUTPUT_DIRECTORY="( dirname "$OUTPUT" )" || failure a3308d94
+                                                                                                                                    mkdir --parents "$OUTPUT_DIRECTORY"
+                                                                                                                                    shift
+                                                                                                                                    EXPORT_LINES=()
+                                                                                                                                    while [[ "$#" -gt 0 ]]
+                                                                                                                                    do
+                                                                                                                                        case "$1" in
+                                                                                                                                            --inherit)
+                                                                                                                                                if [[ "$#" -lt 2 ]]
+                                                                                                                                                then
+                                                                                                                                                    failure 20b59d3f "We are expecting --inherit VARIABLE but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                VARIABLE="$2"
+                                                                                                                                                if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
+                                                                                                                                                then
+                                                                                                                                                    failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
+                                                                                                                                                fi
+                                                                                                                                                shift 2
+                                                                                                                                            --literal)
+                                                                                                                                                if [[ "$#" -lt 2 ]]
+                                                                                                                                                then
+                                                                                                                                                    failure 55186955 "We are expecting --literal VARIABLE but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                VARIABLE="$2"
+                                                                                                                                                EXPORT_LINES+=( "export $VARIABLE=\"\\\$$VARIABLE\"" )
+                                                                                                                                                shift 2
+                                                                                                                                            --set)
+                                                                                                                                                if [[ "$#" -lt 3 ]]
+                                                                                                                                                then
+                                                                                                                                                    failure ddcc84cc "We are expecting --set VARIABLE VALUE but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                VARIABLE="$2"
+                                                                                                                                                VALUE="$3"
+                                                                                                                                                EXPORT_LINES+=( "export $VARIABLE=\"$VALUE\"" )
+                                                                                                                                                shift 3
+                                                                                                                                            *)
+                                                                                                                                                failure d40b5fe2 "We are expecting --inherit, --link, or --set but we observed $1"
+                                                                                                                                        esac
+                                                                                                                                    done
+                                                                                                                                    envsubst < "$INPUT" > "/mount/$OUTPUT"
+                                                                                                                                    chmod 0500 "$OUTPUT"
+                                                                                                                                '' ;
+                                                                                                                        } ;
+                                                                                                                    in "${ application }/bin/runScript" ;
+                                                                                                        } ;
                                                                                             in
                                                                                                 if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
