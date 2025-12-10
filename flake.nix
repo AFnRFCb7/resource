@@ -219,6 +219,7 @@
                                                                                                                                                 VALUE="$3"
                                                                                                                                                 EXPORT_LINES+=( "export $VARIABLE=\"$VALUE\"" )
                                                                                                                                                 shift 3
+                                                                                                                                                ;;
                                                                                                                                             *)
                                                                                                                                                 failure d40b5fe2 "We are expecting --executable, --inherit, --link, or --set but we observed $1"
                                                                                                                                         esac
