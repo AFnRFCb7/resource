@@ -166,7 +166,7 @@
                                                                                                                                     EXECUTABLE=false
                                                                                                                                     if [[ 2 -lt "$#" ]]
                                                                                                                                     then
-                                                                                                                                        failure 4b5fcf01 "We are expecting at least two arguments"
+                                                                                                                                        failure 4b5fcf01 "We are expecting at least two arguments but we observed $*"
                                                                                                                                     fi
                                                                                                                                     INPUT="$1"
                                                                                                                                     if [[ ! -f "$INPUT" ]]
