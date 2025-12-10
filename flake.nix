@@ -224,7 +224,7 @@
                                                                                                                                                 failure d40b5fe2 "We are expecting --executable, --inherit, --link, or --set but we observed $1"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" }" ] }"
+                                                                                                                                    for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
                                                                                                                                     do
                                                                                                                                         eval "$EXPORT_LINE"
                                                                                                                                     done
