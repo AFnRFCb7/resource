@@ -164,7 +164,7 @@
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     EXECUTABLE=false
-                                                                                                                                    if [[ 2 -lt "$#"]]
+                                                                                                                                    if [[ 2 -lt "$#" ]]
                                                                                                                                     then
                                                                                                                                         failure 4b5fcf01 "We are expecting at least two arguments"
                                                                                                                                     fi
@@ -179,7 +179,7 @@
                                                                                                                                     then
                                                                                                                                         failure 9887df89 "We are expecting the second argument $OUTPUT to not (yet) exist"
                                                                                                                                     fi
-                                                                                                                                    OUTPUT_DIRECTORY="( dirname "$OUTPUT" )" || failure a3308d94
+                                                                                                                                    OUTPUT_DIRECTORY="$( dirname "$OUTPUT" )" || failure a3308d94
                                                                                                                                     mkdir --parents "$OUTPUT_DIRECTORY"
                                                                                                                                     shift
                                                                                                                                     EXPORT_LINES=()
@@ -201,6 +201,7 @@
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
                                                                                                                                                 shift 2
+                                                                                                                                                ;;
                                                                                                                                             --literal)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
