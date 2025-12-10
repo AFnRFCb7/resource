@@ -215,7 +215,7 @@
                                                                                                             '' ;
                                                                                                     } ;
                                                                                             in
-                                                                                                if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; wrap = wrap } ) == "string" then
+                                                                                                if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
                                                                                                         # shellcheck source=/dev/null
                                                                                                         source ${ makeWrapper }/nix-support/setup-hook
