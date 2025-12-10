@@ -168,7 +168,7 @@
                                                                                                                                         failure 4b5fcf01 "We are expecting at least two arguments"
                                                                                                                                     fi
                                                                                                                                     INPUT="$1"
-                                                                                                                                    if [[ ! -x "$INPUT" ]]
+                                                                                                                                    if [[ ! -f "$INPUT" ]]
                                                                                                                                     then
                                                                                                                                         failure 2c068d47 "We are expecting the first argument $INPUT to be an executable"
                                                                                                                                     fi
@@ -228,7 +228,7 @@
                                                                                                     ''
                                                                                                         # shellcheck source=/dev/null
                                                                                                         source ${ makeWrapper }/nix-support/setup-hook
-                                                                                                        ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; } } "$@"
+                                                                                                        ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
                                                                                 }
@@ -602,8 +602,7 @@
                                             standard-output ? "" ,
                                             status ? 0 ,
                                             targets ,
-                                            transient ,
-                                            wrap ? "2a559060"
+                                            transient
                                         } :
                                             mkDerivation
                                                 {
