@@ -152,7 +152,7 @@
                                                                                             wrap =
                                                                                                 pkgs.buildFHSUserEnv
                                                                                                     {
-                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount" ]
+                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount" ] ;
                                                                                                         name = "wrap" ;
                                                                                                         runScript =
                                                                                                             let
