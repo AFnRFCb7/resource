@@ -223,7 +223,12 @@
                                                                                                                                         esac
                                                                                                                                     done
                                                                                                                                     envsubst < "$INPUT" > "/mount/$OUTPUT"
-                                                                                                                                    chmod 0500 "$OUTPUT"
+                                                                                                                                    if "$EXECUTABLE"
+                                                                                                                                    then
+                                                                                                                                        chmod 0500 "$OUTPUT"
+                                                                                                                                    else
+                                                                                                                                        chmod 0400 "$OUTPUT"
+                                                                                                                                    fi
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                                     in "${ application }/bin/runScript" ;
