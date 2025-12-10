@@ -210,6 +210,7 @@
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 EXPORT_LINES+=( "export $VARIABLE=\"\\\$$VARIABLE\"" )
                                                                                                                                                 shift 2
+                                                                                                                                                ;;
                                                                                                                                             --set)
                                                                                                                                                 if [[ "$#" -lt 3 ]]
                                                                                                                                                 then
