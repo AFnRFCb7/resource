@@ -163,6 +163,7 @@
                                                                                                                             runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
+                                                                                                                                    EXECUTABLE=false
                                                                                                                                     if [[ 2 -lt "$#"]]
                                                                                                                                     then
                                                                                                                                         failure 4b5fcf01 "We are expecting at least two arguments"
@@ -185,6 +186,10 @@
                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                     do
                                                                                                                                         case "$1" in
+                                                                                                                                            --executable)
+                                                                                                                                                EXECUTABLE=true
+                                                                                                                                                shift
+                                                                                                                                                ;;
                                                                                                                                             --inherit)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
@@ -214,7 +219,7 @@
                                                                                                                                                 EXPORT_LINES+=( "export $VARIABLE=\"$VALUE\"" )
                                                                                                                                                 shift 3
                                                                                                                                             *)
-                                                                                                                                                failure d40b5fe2 "We are expecting --inherit, --link, or --set but we observed $1"
+                                                                                                                                                failure d40b5fe2 "We are expecting --executable, --inherit, --link, or --set but we observed $1"
                                                                                                                                         esac
                                                                                                                                     done
                                                                                                                                     envsubst < "$INPUT" > "/mount/$OUTPUT"
