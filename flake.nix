@@ -149,6 +149,11 @@
                                                                                     runtimeInputs = [ ] ;
                                                                                     text =
                                                                                         let
+                                                                                            root =
+                                                                                                pkgs.writeShellApplication
+                                                                                                                                                                                                    {
+
+                                                                                                    } ;
                                                                                             wrap =
                                                                                                 pkgs.buildFHSUserEnv
                                                                                                     {
