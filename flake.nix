@@ -164,7 +164,7 @@
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     EXECUTABLE=false
-                                                                                                                                    if [[ 2 -lt "$#" ]]
+                                                                                                                                    if [[ 2 -gt "$#" ]]
                                                                                                                                     then
                                                                                                                                         failure 4b5fcf01 "We are expecting at least two arguments but we observed $# arguments:  $*"
                                                                                                                                     fi
