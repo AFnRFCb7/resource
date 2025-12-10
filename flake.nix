@@ -602,7 +602,8 @@
                                             standard-output ? "" ,
                                             status ? 0 ,
                                             targets ,
-                                            transient
+                                            transient ,
+                                            wrap ? "2a559060"
                                         } :
                                             mkDerivation
                                                 {
