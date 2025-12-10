@@ -232,9 +232,9 @@
                                                                                                                                     envsubst < "$INPUT" > "/mount/$OUTPUT"
                                                                                                                                     if "$EXECUTABLE"
                                                                                                                                     then
-                                                                                                                                        chmod 0500 "$OUTPUT"
+                                                                                                                                        chmod 0500 "/mount/$OUTPUT"
                                                                                                                                     else
-                                                                                                                                        chmod 0400 "$OUTPUT"
+                                                                                                                                        chmod 0400 "/mount$OUTPUT"
                                                                                                                                     fi
                                                                                                                                 '' ;
                                                                                                                         } ;
