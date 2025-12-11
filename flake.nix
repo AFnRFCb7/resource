@@ -271,10 +271,17 @@
                                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                                     export INDEX
                                                                                     export PROVENANCE=cached
+                                                                                    RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure b39ed4ef
+                                                                                    mkdir --parents "${ store-garbage-collection-root }/$INDEX"
+                                                                                    STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 8a54bbd4
+                                                                                    TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
+                                                                                    mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                                     # shellcheck disable=SC2016
                                                                                     jq \
                                                                                         --null-input \
                                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                        --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
+                                                                                        --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -325,12 +332,18 @@
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                                     export STANDARD_OUTPUT
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
+                                                                                    RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 1e739712
+                                                                                    mkdir --parents "${ store-garbage-collection-root }/$INDEX"
+                                                                                    STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure c5553f2b
+                                                                                    TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                                     then
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                            --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
+                                                                                            --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
