@@ -275,8 +275,6 @@
                                                                                     jq \
                                                                                         --null-input \
                                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                        --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                        --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -333,8 +331,6 @@
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                            --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                            --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -370,8 +366,6 @@
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                            --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                            --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -385,11 +379,6 @@
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             '{
                                                                                                 "arguments" : $ARGUMENTS ,
-                                                                                                "dependencies" :
-                                                                                                  {
-                                                                                                    "resource" : $RESOURCE_DEPENDENCIES ,
-                                                                                                    "store" : $STORE_DEPENDENCIES
-                                                                                                  } ,
                                                                                                 "hash" : $HASH ,
                                                                                                 "index" : $INDEX ,
                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -717,7 +706,7 @@
                                                                                         then
                                                                                             failure f40a3551 "We expected the payload hash to be $EXPECTED_HASH but it was $OBSERVED_HASH"
                                                                                         fi
-                                                                                        EXPECTED_KEYS="$( echo '${ builtins.toJSON [ "arguments" "dependencies" "description" "has-standard-input" "hash" "index" "originator-pid" "provenance" "standard-error" "standard-input" "standard-output" "status" "targets" "transient" "type" ] }' | jq --raw-output "." )" || failure a90aef96
+                                                                                        EXPECTED_KEYS="$( echo '${ builtins.toJSON [ "arguments" "description" "has-standard-input" "hash" "index" "originator-pid" "provenance" "standard-error" "standard-input" "standard-output" "status" "targets" "transient" "type" ] }' | jq --raw-output "." )" || failure a90aef96
                                                                                         OBSERVED_KEYS="$( jq --raw-output "[keys[]]" /build/payload )" || failure ed34aceb
                                                                                         if [[ "$EXPECTED_KEYS" != "$OBSERVED_KEYS" ]]
                                                                                         then
