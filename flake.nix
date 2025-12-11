@@ -239,7 +239,7 @@
                                                                                                                                                 failure d40b5fe2 "We are expecting --inherit, --link, or --set but we observed $1"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    EXPORT_LINES+=( "envsubt < \"$INPUT\" > \"/mount/$OUTPUT\"" )
+                                                                                                                                    EXPORT_LINES+=( "envsubst < \"$INPUT\" > \"/mount/$OUTPUT\"" )
                                                                                                                                     EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
                                                                                                                                     for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
                                                                                                                                     do
