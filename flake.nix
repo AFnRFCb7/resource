@@ -271,11 +271,6 @@
                                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                                     export INDEX
                                                                                     export PROVENANCE=cached
-                                                                                    RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure b39ed4ef
-                                                                                    mkdir --parents "${ store-garbage-collection-root }/$INDEX"
-                                                                                    STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 8a54bbd4
-                                                                                    TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
-                                                                                    mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                                     # shellcheck disable=SC2016
                                                                                     jq \
                                                                                         --null-input \
@@ -292,11 +287,6 @@
                                                                                         --arg TRANSIENT "$TRANSIENT" \
                                                                                         '{
                                                                                             "arguments" : $ARGUMENTS ,
-                                                                                            "dependencies" :
-                                                                                              {
-                                                                                                "resource" : $RESOURCE_DEPENDENCIES ,
-                                                                                                "store" : "$STORE_DEPENDENCIES"
-                                                                                              } ,
                                                                                             "hash" : $HASH ,
                                                                                             "index" : $INDEX ,
                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -337,10 +327,6 @@
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                                     export STANDARD_OUTPUT
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
-                                                                                    RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 1e739712
-                                                                                    mkdir --parents "${ store-garbage-collection-root }/$INDEX"
-                                                                                    STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure c5553f2b
-                                                                                    TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                                     then
                                                                                         # shellcheck disable=SC2016
@@ -363,11 +349,6 @@
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             '{
                                                                                                 "arguments" : $ARGUMENTS ,
-                                                                                                "dependencies" :
-                                                                                                  {
-                                                                                                    "resource" : $RESOURCE_DEPENDENCIES ,
-                                                                                                    "store" : $STORE_DEPENDENCIES
-                                                                                                  } ,
                                                                                                 "hash" : $HASH ,
                                                                                                 "index" : $INDEX ,
                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -523,8 +504,6 @@
                                         {
                                             arguments ? [ ] ,
                                             diffutils ,
-                                            expected-resource-dependencies ? [ ] ,
-                                            expected-store-dependencies ? [ ] ,
                                             expected-index ? 0 ,
                                             expected-originator-pid ,
                                             expected-provenance ? "new" ,
@@ -642,23 +621,6 @@
                                                                                             cat /build/payload >&2
                                                                                             failure 75431637 "We expected the payload arguments to be $EXPECTED_ARGUMENTS but it was $OBSERVED_ARGUMENTS"
                                                                                         fi
-                                                                                        echo 29d187dee3b012c489f8b8847915e28932b8022b9c6d2b5e7f1a083d71ba6838a38a577033d330acc32352493f3c6387006a0373cc389fa6dada9a4e48572dfe >&2
-                                                                                        EXPECTED_RESOURCE_DEPENDENCIES="$( jq --null-input '${ builtins.toJSON expected-resource-dependencies }' )" || failure 9a30de23
-                                                                                        cat /build/payload >&2
-                                                                                        OBSERVED_RESOURCE_DEPENDENCIES="$( jq ".dependencies.resource" /build/payload )" || failure c2b2d099
-                                                                                        if [[ "$EXPECTED_RESOURCE_DEPENDENCIES" != "$OBSERVED_RESOURCE_DEPENDENCIES" ]]
-                                                                                        then
-                                                                                            failure 93f8acb4 "We expected the payload resource dependencies to be $EXPECTED_RESOURCE_DEPENDENCIES but it was $OBSERVED_RESOURCE_DEPENDENCIES"
-                                                                                        fi
-                                                                                        EXPECTED_STORE_DEPENDENCIES="$( jq --null-input '${ builtins.toJSON expected-store-dependencies }' )" || failure f364c24b
-                                                                                        cat /build/payload >&2
-                                                                                        OBSERVED_STORE_DEPENDENCIES="$( jq ".dependencies.store" /build/payload )" || failure ebf0993a
-                                                                                        if [[ "$EXPECTED_STORE_DEPENDENCIES" != "$OBSERVED_STORE_DEPENDENCIES" ]]
-                                                                                        then
-                                                                                            cat /build/payload >&2
-                                                                                            failure 9597a6d7 "We expected the payload store dependencies to be $EXPECTED_STORE_DEPENDENCIES but it was $OBSERVED_STORE_DEPENDENCIES"
-                                                                                        fi
-                                                                                        echo 3352fc3e83a360ffcd717d31caa1b3f30f4beb598edb7aec9d5b6f9744823b121edd3d063f9b1eaa3c3c3f699aa629144cb1f0ddf3a0e453cb1f6d4ac4fdb95b >&2
                                                                                         EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure 338e000e
                                                                                         if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
