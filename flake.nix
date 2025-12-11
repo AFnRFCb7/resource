@@ -236,7 +236,7 @@
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
-                                                                                                                                                failure d40b5fe2 "We are expecting --inherit, --link, or --set but we observed $1"
+                                                                                                                                                failure d40b5fe2 "We were expecting --inherit, --link, or --set but we observed $1"
                                                                                                                                         esac
                                                                                                                                     done
                                                                                                                                     EXPORT_LINES+=( "envsubst < \"$INPUT\" > \"/mount/$OUTPUT\"" )
