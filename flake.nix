@@ -1,4 +1,3 @@
-#WTF
 {
 	inputs = { } ;
 	outputs =
