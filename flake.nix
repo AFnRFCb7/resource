@@ -220,11 +220,11 @@
                                                                                                                     in "${ application }/bin/runScript" ;
                                                                                                         } ;
                                                                                             in
-                                                                                                if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; wrap = wrap ; } ) == "string" then
+                                                                                                if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
                                                                                                         # shellcheck source=/dev/null
                                                                                                         source ${ makeWrapper }/nix-support/setup-hook
-                                                                                                        ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; wrap = wrap ; } } "$@"
+                                                                                                        ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
                                                                                 }
