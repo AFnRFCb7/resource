@@ -79,34 +79,6 @@
                                                                 '' ;
                                                             targetPkgs =
                                                                 pkgs :
-                                                                    let
-                                                                        root =
-                                                                            pkgs.writeShellApplication
-                                                                                {
-                                                                                    name = "root" ;
-                                                                                    runtimeInputs = [ pkgs.coreutils failure ] ;
-                                                                                    text =
-                                                                                        ''
-                                                                                            ROOT_DIRECTORY="$1"
-                                                                                            MAGIC="$2"
-                                                                                            HASH="$( basename "$MAGIC" )" || failure 388f974f
-                                                                                            mkdir --parents "$ROOT_DIRECTORY/$INDEX"
-                                                                                            if [[ -L "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
-                                                                                            then
-                                                                                                CHECK="$( readlink "$ROOT_DIRECTORY/$INDEX/$HASH" )" || failure acce2ddb
-                                                                                                if [[ "$MAGIC" != "$CHECK" ]]
-                                                                                                then
-                                                                                                    failure 4745d66a
-                                                                                                fi
-                                                                                            elif [[ -e "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
-                                                                                            then
-                                                                                                failure 6513a7a8
-                                                                                            else
-                                                                                                ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX"
-                                                                                            fi
-                                                                                        '' ;
-                                                                                } ;
-                                                                        in
                                                                     [
                                                                         pkgs.bash
                                                                         pkgs.coreutils
@@ -227,30 +199,6 @@
                                                                                                         ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
-                                                                                }
-                                                                        )
-                                                                        (
-                                                                            pkgs.writeShellApplication
-                                                                                {
-                                                                                    name = "root-resource" ;
-                                                                                    runtimeInputs = [ root ] ;
-                                                                                    text =
-                                                                                        ''
-                                                                                            MAGIC="$1"
-                                                                                            root "${ resources-directory }/links" "$MAGIC"
-                                                                                        '' ;
-                                                                                }
-                                                                        )
-                                                                        (
-                                                                            pkgs.writeShellApplication
-                                                                                {
-                                                                                    name = "root-store" ;
-                                                                                    runtimeInputs = [ root ] ;
-                                                                                    text =
-                                                                                        ''
-                                                                                            MAGIC="$1"
-                                                                                            root "${ store-garbage-collection-root }" "$MAGIC"
-                                                                                        '' ;
                                                                                 }
                                                                         )
                                                                     ] ;
