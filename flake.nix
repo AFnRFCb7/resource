@@ -110,38 +110,6 @@
                                                                     [
                                                                         pkgs.bash
                                                                         pkgs.coreutils
-					                                                	(
-										                                    pkgs.writeShellApplication
-											                                    {
-												                                    name = "make-wrapper" ;
-												                                    runtimeInputs = [ pkgs.coreutils ] ;
-												                                    text =
-                                                                                        let
-														                                    wrapper =
-															                                    let
-																                                    application =
-																	                                    pkgs.writeShellApplication
-																		                                    {
-																			                                    name = "wrapper" ;
-																			                                        text =
-																				                                        ''
-																				                                        '' ;
-																		                                    } ;
-																                                    in "${ application }/bin/wrapper" ;
-														                                    in
-                                                                                                ''
-                                                                                                    INPUT="$1"
-                                                                                                    OUTPUT="$2"
-                                                                                                    MOUNT="$3"
-                                                                                                    cat ${ wrapper } > "$OUTPUT"
-                                                                                                    cat >> "$OUTPUT" <<EOF
-                                                                                                    export MOUNT="$MOUNT"
-                                                                                                    exec "$INPUT" "\$@"
-                                                                                                    EOF
-                                                                                                    chmod 0500 "$OUTPUT"
-                                                                                                '' ;
-                                                                                }
-									                                    )
                                                                         (
                                                                             pkgs.writeShellApplication
                                                                                 {
@@ -252,11 +220,11 @@
                                                                                                                     in "${ application }/bin/runScript" ;
                                                                                                         } ;
                                                                                             in
-                                                                                                if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; wrap = wrap ; } ) == "string" then
+                                                                                                if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
                                                                                                         # shellcheck source=/dev/null
                                                                                                         source ${ makeWrapper }/nix-support/setup-hook
-                                                                                                        ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; wrap = wrap ; } } "$@"
+                                                                                                        ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
                                                                                 }
