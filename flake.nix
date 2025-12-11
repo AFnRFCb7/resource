@@ -195,7 +195,7 @@
                                                                                                                                     mkdir --parents "$OUTPUT_DIRECTORY"
                                                                                                                                     shift
                                                                                                                                     PERMISSIONS="$1"
-                                                                                                                                    if [[ ! "$PERMISSIONS =~ ^-?[0-9]+$ ]]
+                                                                                                                                    if [[ ! $PERMISSIONS =~ ^-?[0-9]+$ ]]
                                                                                                                                     then
                                                                                                                                         failure 029e9461 "We were expecting the third argument to be an integer"
                                                                                                                                     fi
