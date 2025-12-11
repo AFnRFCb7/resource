@@ -176,33 +176,33 @@
                                                                                                                             runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
-                                                                                                                                    EXECUTABLE=false
-                                                                                                                                    if [[ 2 -gt "$#" ]]
+                                                                                                                                    if [[ 3 -gt "$#" ]]
                                                                                                                                     then
-                                                                                                                                        failure 4b5fcf01 "We are expecting at least two arguments but we observed $# arguments:  $*"
+                                                                                                                                        failure 4b5fcf01 "We were expecting input output permissions but we observed $# arguments:  $*"
                                                                                                                                     fi
                                                                                                                                     INPUT="$1"
                                                                                                                                     if [[ ! -f "$INPUT" ]]
                                                                                                                                     then
-                                                                                                                                        failure 2c068d47 "We are expecting the first argument $INPUT to be an executable"
+                                                                                                                                        failure 2c068d47 "We were expecting the first argument $INPUT to be a file"
                                                                                                                                     fi
                                                                                                                                     shift
                                                                                                                                     OUTPUT="$1"
                                                                                                                                     if [[ -e "/mount/$OUTPUT" ]]
                                                                                                                                     then
-                                                                                                                                        failure 9887df89 "We are expecting the second argument $OUTPUT to not (yet) exist"
+                                                                                                                                        failure 9887df89 "We were expecting the second argument $OUTPUT to not (yet) exist"
                                                                                                                                     fi
                                                                                                                                     OUTPUT_DIRECTORY="$( dirname "$OUTPUT" )" || failure a3308d94
                                                                                                                                     mkdir --parents "$OUTPUT_DIRECTORY"
                                                                                                                                     shift
+                                                                                                                                    PERMISSIONS="$1"
+                                                                                                                                    if [[ ! "$PERMISSIONS =~ ^-?[0-9]+$ ]]
+                                                                                                                                    then
+                                                                                                                                        failure 029e9461 "We were expecting the third argument to be an integer"
+                                                                                                                                    fi
                                                                                                                                     EXPORT_LINES=()
                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                     do
                                                                                                                                         case "$1" in
-                                                                                                                                            --executable)
-                                                                                                                                                EXECUTABLE=true
-                                                                                                                                                shift
-                                                                                                                                                ;;
                                                                                                                                             --inherit)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
@@ -238,17 +238,12 @@
                                                                                                                                                 failure d40b5fe2 "We are expecting --executable, --inherit, --link, or --set but we observed $1"
                                                                                                                                         esac
                                                                                                                                     done
+                                                                                                                                    EXPORT_LINES+=( "envsubt < \"$INPUT\" > \"/mount/$OUTPUT\"" )
+                                                                                                                                    EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
                                                                                                                                     for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
                                                                                                                                     do
                                                                                                                                         eval "$EXPORT_LINE"
                                                                                                                                     done
-                                                                                                                                    envsubst < "$INPUT" > "/mount/$OUTPUT"
-                                                                                                                                    if "$EXECUTABLE"
-                                                                                                                                    then
-                                                                                                                                        chmod 0500 "/mount/$OUTPUT"
-                                                                                                                                    else
-                                                                                                                                        chmod 0400 "/mount$OUTPUT"
-                                                                                                                                    fi
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                                     in "${ application }/bin/runScript" ;
