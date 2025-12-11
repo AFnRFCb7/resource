@@ -183,13 +183,13 @@
                                                                                                                                     INPUT="$1"
                                                                                                                                     if [[ ! -f "$INPUT" ]]
                                                                                                                                     then
-                                                                                                                                        failure 2c068d47 "We were expecting the first argument $INPUT to be a file"
+                                                                                                                                        failure 2c068d47 "We were expecting the first argument $INPUT to be a file but we observed $*"
                                                                                                                                     fi
                                                                                                                                     shift
                                                                                                                                     OUTPUT="$1"
                                                                                                                                     if [[ -e "/mount/$OUTPUT" ]]
                                                                                                                                     then
-                                                                                                                                        failure 9887df89 "We were expecting the second argument $OUTPUT to not (yet) exist"
+                                                                                                                                        failure 9887df89 "We were expecting the second argument $OUTPUT to not (yet) exist but we observed $*"
                                                                                                                                     fi
                                                                                                                                     OUTPUT_DIRECTORY="$( dirname "$OUTPUT" )" || failure a3308d94
                                                                                                                                     mkdir --parents "$OUTPUT_DIRECTORY"
@@ -197,7 +197,7 @@
                                                                                                                                     PERMISSIONS="$1"
                                                                                                                                     if [[ ! $PERMISSIONS =~ ^-?[0-9]+$ ]]
                                                                                                                                     then
-                                                                                                                                        failure 029e9461 "We were expecting the third argument to be an integer"
+                                                                                                                                        failure 029e9461 "We were expecting the third argument to be an integer but we observed $*"
                                                                                                                                     fi
                                                                                                                                     shift
                                                                                                                                     EXPORT_LINES=()
@@ -207,7 +207,7 @@
                                                                                                                                             --inherit)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
-                                                                                                                                                    failure 20b59d3f "We are expecting --inherit VARIABLE but we observed $*"
+                                                                                                                                                    failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
@@ -219,7 +219,7 @@
                                                                                                                                             --literal)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
-                                                                                                                                                    failure 55186955 "We are expecting --literal VARIABLE but we observed $*"
+                                                                                                                                                    failure 55186955 "We were expecting --literal VARIABLE but we observed $*"
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 EXPORT_LINES+=( "export $VARIABLE=\"\\\$$VARIABLE\"" )
@@ -228,7 +228,7 @@
                                                                                                                                             --set)
                                                                                                                                                 if [[ "$#" -lt 3 ]]
                                                                                                                                                 then
-                                                                                                                                                    failure ddcc84cc "We are expecting --set VARIABLE VALUE but we observed $*"
+                                                                                                                                                    failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
