@@ -133,7 +133,7 @@
                                                                                                                                     then
                                                                                                                                         failure 9887df89 "We were expecting the second argument $OUTPUT to not (yet) exist but we observed $*"
                                                                                                                                     fi
-                                                                                                                                    OUTPUT_DIRECTORY="$( dirname "$OUTPUT" )" || failure a3308d94
+                                                                                                                                    OUTPUT_DIRECTORY="$( dirname "/mount/$OUTPUT" )" || failure a3308d94
                                                                                                                                     mkdir --parents "$OUTPUT_DIRECTORY"
                                                                                                                                     shift
                                                                                                                                     PERMISSIONS="$1"
