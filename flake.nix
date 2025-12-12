@@ -116,8 +116,6 @@
                                                                                                                             runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
-                                                                                                                                    echo 7ef6e9f1
-                                                                                                                                    echo "$*"
                                                                                                                                     if [[ 3 -gt "$#" ]]
                                                                                                                                     then
                                                                                                                                         failure 4b5fcf01 "We were expecting input output permissions but we observed $# arguments:  $*"
