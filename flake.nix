@@ -79,34 +79,6 @@
                                                                 '' ;
                                                             targetPkgs =
                                                                 pkgs :
-                                                                    let
-                                                                        root =
-                                                                            pkgs.writeShellApplication
-                                                                                {
-                                                                                    name = "root" ;
-                                                                                    runtimeInputs = [ pkgs.coreutils failure ] ;
-                                                                                    text =
-                                                                                        ''
-                                                                                            ROOT_DIRECTORY="$1"
-                                                                                            MAGIC="$2"
-                                                                                            HASH="$( basename "$MAGIC" )" || failure 388f974f
-                                                                                            mkdir --parents "$ROOT_DIRECTORY/$INDEX"
-                                                                                            if [[ -L "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
-                                                                                            then
-                                                                                                CHECK="$( readlink "$ROOT_DIRECTORY/$INDEX/$HASH" )" || failure acce2ddb
-                                                                                                if [[ "$MAGIC" != "$CHECK" ]]
-                                                                                                then
-                                                                                                    failure 4745d66a
-                                                                                                fi
-                                                                                            elif [[ -e "$ROOT_DIRECTORY/$INDEX/$HASH" ]]
-                                                                                            then
-                                                                                                failure 6513a7a8
-                                                                                            else
-                                                                                                ln --symbolic "$MAGIC" "$ROOT_DIRECTORY/$INDEX"
-                                                                                            fi
-                                                                                        '' ;
-                                                                                } ;
-                                                                        in
                                                                     [
                                                                         pkgs.bash
                                                                         pkgs.coreutils
@@ -229,30 +201,6 @@
                                                                                                 else builtins.throw "WTF" ;
                                                                                 }
                                                                         )
-                                                                        (
-                                                                            pkgs.writeShellApplication
-                                                                                {
-                                                                                    name = "root-resource" ;
-                                                                                    runtimeInputs = [ root ] ;
-                                                                                    text =
-                                                                                        ''
-                                                                                            MAGIC="$1"
-                                                                                            root "${ resources-directory }/links" "$MAGIC"
-                                                                                        '' ;
-                                                                                }
-                                                                        )
-                                                                        (
-                                                                            pkgs.writeShellApplication
-                                                                                {
-                                                                                    name = "root-store" ;
-                                                                                    runtimeInputs = [ root ] ;
-                                                                                    text =
-                                                                                        ''
-                                                                                            MAGIC="$1"
-                                                                                            root "${ store-garbage-collection-root }" "$MAGIC"
-                                                                                        '' ;
-                                                                                }
-                                                                        )
                                                                     ] ;
                                                         } ;
                                             publish =
@@ -344,11 +292,6 @@
                                                                                         --arg TRANSIENT "$TRANSIENT" \
                                                                                         '{
                                                                                             "arguments" : $ARGUMENTS ,
-                                                                                            "dependencies" :
-                                                                                              {
-                                                                                                "resource" : $RESOURCE_DEPENDENCIES ,
-                                                                                                "store" : "$STORE_DEPENDENCIES"
-                                                                                              } ,
                                                                                             "hash" : $HASH ,
                                                                                             "index" : $INDEX ,
                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -415,11 +358,6 @@
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             '{
                                                                                                 "arguments" : $ARGUMENTS ,
-                                                                                                "dependencies" :
-                                                                                                  {
-                                                                                                    "resource" : $RESOURCE_DEPENDENCIES ,
-                                                                                                    "store" : $STORE_DEPENDENCIES
-                                                                                                  } ,
                                                                                                 "hash" : $HASH ,
                                                                                                 "index" : $INDEX ,
                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -441,8 +379,6 @@
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                            --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                            --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -456,11 +392,6 @@
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             '{
                                                                                                 "arguments" : $ARGUMENTS ,
-                                                                                                "dependencies" :
-                                                                                                  {
-                                                                                                    "resource" : $RESOURCE_DEPENDENCIES ,
-                                                                                                    "store" : $STORE_DEPENDENCIES
-                                                                                                  } ,
                                                                                                 "hash" : $HASH ,
                                                                                                 "index" : $INDEX ,
                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -575,8 +506,6 @@
                                         {
                                             arguments ? [ ] ,
                                             diffutils ,
-                                            expected-resource-dependencies ? [ ] ,
-                                            expected-store-dependencies ? [ ] ,
                                             expected-index ? 0 ,
                                             expected-originator-pid ,
                                             expected-provenance ? "new" ,
@@ -694,23 +623,6 @@
                                                                                             cat /build/payload >&2
                                                                                             failure 75431637 "We expected the payload arguments to be $EXPECTED_ARGUMENTS but it was $OBSERVED_ARGUMENTS"
                                                                                         fi
-                                                                                        echo 29d187dee3b012c489f8b8847915e28932b8022b9c6d2b5e7f1a083d71ba6838a38a577033d330acc32352493f3c6387006a0373cc389fa6dada9a4e48572dfe >&2
-                                                                                        EXPECTED_RESOURCE_DEPENDENCIES="$( jq --null-input '${ builtins.toJSON expected-resource-dependencies }' )" || failure 9a30de23
-                                                                                        cat /build/payload >&2
-                                                                                        OBSERVED_RESOURCE_DEPENDENCIES="$( jq ".dependencies.resource" /build/payload )" || failure c2b2d099
-                                                                                        if [[ "$EXPECTED_RESOURCE_DEPENDENCIES" != "$OBSERVED_RESOURCE_DEPENDENCIES" ]]
-                                                                                        then
-                                                                                            failure 93f8acb4 "We expected the payload resource dependencies to be $EXPECTED_RESOURCE_DEPENDENCIES but it was $OBSERVED_RESOURCE_DEPENDENCIES"
-                                                                                        fi
-                                                                                        EXPECTED_STORE_DEPENDENCIES="$( jq --null-input '${ builtins.toJSON expected-store-dependencies }' )" || failure f364c24b
-                                                                                        cat /build/payload >&2
-                                                                                        OBSERVED_STORE_DEPENDENCIES="$( jq ".dependencies.store" /build/payload )" || failure ebf0993a
-                                                                                        if [[ "$EXPECTED_STORE_DEPENDENCIES" != "$OBSERVED_STORE_DEPENDENCIES" ]]
-                                                                                        then
-                                                                                            cat /build/payload >&2
-                                                                                            failure 9597a6d7 "We expected the payload store dependencies to be $EXPECTED_STORE_DEPENDENCIES but it was $OBSERVED_STORE_DEPENDENCIES"
-                                                                                        fi
-                                                                                        echo 3352fc3e83a360ffcd717d31caa1b3f30f4beb598edb7aec9d5b6f9744823b121edd3d063f9b1eaa3c3c3f699aa629144cb1f0ddf3a0e453cb1f6d4ac4fdb95b >&2
                                                                                         EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure 338e000e
                                                                                         if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
@@ -807,7 +719,7 @@
                                                                                         then
                                                                                             failure f40a3551 "We expected the payload hash to be $EXPECTED_HASH but it was $OBSERVED_HASH"
                                                                                         fi
-                                                                                        EXPECTED_KEYS="$( echo '${ builtins.toJSON [ "arguments" "dependencies" "description" "has-standard-input" "hash" "index" "originator-pid" "provenance" "standard-error" "standard-input" "standard-output" "status" "targets" "transient" "type" ] }' | jq --raw-output "." )" || failure a90aef96
+                                                                                        EXPECTED_KEYS="$( echo '${ builtins.toJSON [ "arguments" "description" "has-standard-input" "hash" "index" "originator-pid" "provenance" "standard-error" "standard-input" "standard-output" "status" "targets" "transient" "type" ] }' | jq --raw-output "." )" || failure a90aef96
                                                                                         OBSERVED_KEYS="$( jq --raw-output "[keys[]]" /build/payload )" || failure ed34aceb
                                                                                         if [[ "$EXPECTED_KEYS" != "$OBSERVED_KEYS" ]]
                                                                                         then
