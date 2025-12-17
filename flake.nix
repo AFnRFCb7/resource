@@ -141,6 +141,7 @@
                                                                                                                                     fi
                                                                                                                                     shift
                                                                                                                                     EXPORT_LINES=()
+                                                                                                                                    VARIABLES=()
                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                     do
                                                                                                                                         case "$1" in
@@ -154,6 +155,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
+                                                                                                                                                VARIABLES+=( "$VARIABLE" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal)
@@ -163,6 +165,7 @@
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 EXPORT_LINES+=( "export $VARIABLE=\"\\\$$VARIABLE\"" )
+                                                                                                                                                VARIABLES+=( "$VARIABLE" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --set)
@@ -173,13 +176,14 @@
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
                                                                                                                                                 EXPORT_LINES+=( "export $VARIABLE=\"$VALUE\"" )
+                                                                                                                                                VARIABLES+=( "$VARIABLE" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit, --link, or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    EXPORT_LINES+=( "envsubst < \"$INPUT\" > \"/mount/$OUTPUT\"" )
+                                                                                                                                    EXPORT_LINES+=( "envsubst "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLES[@]" "}" ] }" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
                                                                                                                                     EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
                                                                                                                                     for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
                                                                                                                                     do
