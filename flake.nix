@@ -183,7 +183,7 @@
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit, --link, or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    EXPORT_LINES+=( "envsubst \"${ builtins.concatStringsSep "" [ "$" "{" "VARIABLES[@]" "}" ] }\" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
+                                                                                                                                    EXPORT_LINES+=( "envsubst --variables \"${ builtins.concatStringsSep "" [ "$" "{" "VARIABLES[@]" "}" ] }\" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
                                                                                                                                     EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
                                                                                                                                     for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
                                                                                                                                     do
