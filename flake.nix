@@ -183,7 +183,7 @@
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit, --link, or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    VARIABLES_STRING="$( printf "%s," "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLES[*]" "}" ] }" )" || failure 26290b41
+                                                                                                                                    VARIABLES_STRING="${ builtins.concatStringsSep "" [ "$" "{" "VARIABLES[*]// /," "}" ] }"
                                                                                                                                     EXPORT_LINES+=( "envsubst --variables \"$VARIABLES_STRING\" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
                                                                                                                                     EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
                                                                                                                                     for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
