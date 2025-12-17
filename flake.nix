@@ -184,7 +184,7 @@
                                                                                                                                         esac
                                                                                                                                     done
                                                                                                                                     VARIABLES_STRING="${ builtins.concatStringsSep "" [ "$" "{" "VARIABLES[@]" "}" ] }"
-                                                                                                                                    EXPORT_LINES+=( "envsubst --variables \$VARIABLES_STRING\" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
+                                                                                                                                    EXPORT_LINES+=( "envsubst --variables \"$VARIABLES_STRING\" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
                                                                                                                                     EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
                                                                                                                                     for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
                                                                                                                                     do
