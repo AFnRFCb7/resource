@@ -163,9 +163,6 @@
                                                                                                                                                 then
                                                                                                                                                     failure 55186955 "We were expecting --literal VARIABLE but we observed $*"
                                                                                                                                                 fi
-                                                                                                                                                VARIABLE="$2"
-                                                                                                                                                EXPORT_LINES+=( "export $VARIABLE=\"\\\$$VARIABLE\"" )
-                                                                                                                                                VARIABLES+=( "$VARIABLE" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --set)
