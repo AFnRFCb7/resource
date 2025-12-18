@@ -182,7 +182,7 @@
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
-                                                                                                                                                COMMANDS+=( -e "s#\\\$${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE" "}" ] }#$VALUE#g" )
+                                                                                                                                                COMMANDS+=( -e "s#\\\$$VARIABLE#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
