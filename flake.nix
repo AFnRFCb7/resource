@@ -167,7 +167,17 @@
                                                                                                                                                 # With sed we do not need to do anything for literal
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
-                                                                                                                                            --set)
+                                                                                                                                            --set-brace)
+                                                                                                                                                if [[ "$#" -lt 3 ]]
+                                                                                                                                                then
+                                                                                                                                                    failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                VARIABLE="$2"
+                                                                                                                                                VALUE="$3"
+                                                                                                                                                COMMANDS+=( -e "s#\\\$${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE" "}" ] }#$VALUE#g" )
+                                                                                                                                                shift 3
+                                                                                                                                                ;;
+                                                                                                                                            --set-plain)
                                                                                                                                                 if [[ "$#" -lt 3 ]]
                                                                                                                                                 then
                                                                                                                                                     failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
