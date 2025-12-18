@@ -105,7 +105,7 @@
                                                                                             wrap =
                                                                                                 pkgs.buildFHSUserEnv
                                                                                                     {
-                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount" ] ;
+                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount" "--tmpfs /scratch" ] ;
                                                                                                         name = "wrap" ;
                                                                                                         runScript =
                                                                                                             let
@@ -113,7 +113,7 @@
                                                                                                                     pkgs.writeShellApplication
                                                                                                                         {
                                                                                                                             name = "runScript" ;
-                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gettext pkgs.which failure ] ;
+                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     if [[ 3 -gt "$#" ]]
@@ -145,17 +145,6 @@
                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                     do
                                                                                                                                         case "$1" in
-                                                                                                                                            --envsubst)
-                                                                                                                                                if [[ "$#" -lt 2 ]]
-                                                                                                                                                then
-                                                                                                                                                    failure f8f3cc6a "We were expecting --envsubst PATH but we observed $*"
-                                                                                                                                                fi
-                                                                                                                                                ENVSUBST="$2"
-                                                                                                                                                if [[ -x "$ENVSUBST" ]]
-                                                                                                                                                then
-                                                                                                                                                    failure a1263ceb "We were expecting --envsubst $PATH to be an executable file but we observed $*"
-                                                                                                                                                fi
-                                                                                                                                                shift 2
                                                                                                                                             --inherit)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
@@ -166,7 +155,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
-                                                                                                                                                VARIABLES+=( "$VARIABLE" )
+                                                                                                                                                echo "export $VARIABLE" >> /scratch/wrap
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal)
@@ -174,6 +163,8 @@
                                                                                                                                                 then
                                                                                                                                                     failure 55186955 "We were expecting --literal VARIABLE but we observed $*"
                                                                                                                                                 fi
+                                                                                                                                                VARIABLE="$2
+                                                                                                                                                echo "export $VARIABLE=\"\$$VARIABLE\"" >> /scratch/wrap
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --set)
@@ -183,21 +174,17 @@
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
-                                                                                                                                                EXPORT_LINES+=( "export $VARIABLE=\"$VALUE\"" )
-                                                                                                                                                VARIABLES+=( "$VARIABLE" )
+                                                                                                                                                echo "export $VARIABLE=\"$VALUE\"" >> /scratch/wrap
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit, --link, --path or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    VARIABLES_STRING="${ builtins.concatStringsSep "" [ "$" "{" "VARIABLES[*]// /," "}" ] }"
-                                                                                                                                    EXPORT_LINES+=( "$ENVSUBST --variables \"$VARIABLES_STRING\" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
-                                                                                                                                    EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
-                                                                                                                                    for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
-                                                                                                                                    do
-                                                                                                                                        eval "$EXPORT_LINE"
-                                                                                                                                    done
+                                                                                                                                    echo "${ pkgs.gettext }/bin/envsubst < \"$INPUT\" > /mount/$OUTPUT" > /scratch/wrap
+                                                                                                                                    echo "${ pkgs.coreutils }/bin/chmod 0500 /mount/$OUTPUT" >> /scratch/wrap
+                                                                                                                                    chmod 0500 /scratch/wrap
+                                                                                                                                    /scratch/wrap
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                                     in "${ application }/bin/runScript" ;
