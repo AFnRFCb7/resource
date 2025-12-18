@@ -105,7 +105,7 @@
                                                                                             wrap =
                                                                                                 pkgs.buildFHSUserEnv
                                                                                                     {
-                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount" "--tmpfs /scratch" ] ;
+                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount"] ;
                                                                                                         name = "wrap" ;
                                                                                                         runScript =
                                                                                                             let
