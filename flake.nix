@@ -173,8 +173,7 @@
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
 
-                                                                                                                                                BRACED_1="${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE" "}" ] }"
-
+                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "VARIABLE" "}" ] }
                                                                                                                                                 COMMANDS+=( -e "s#\\\$$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
