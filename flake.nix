@@ -172,8 +172,10 @@
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
-                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE" "}" ] }"
-                                                                                                                                                COMMANDS+=( -e "s#\\\$${ builtins.concatStringsSep "" [ "$" "BRACED" "}" ] }#$VALUE#g" )
+
+                                                                                                                                                BRACED_1="${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE" "}" ] }"
+
+                                                                                                                                                COMMANDS+=( -e "s#\\\$$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             --set-plain)
@@ -190,7 +192,7 @@
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit, --link, --path or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    echo 07013358
+                                                                                                                                    echo 39531109
                                                                                                                                     cat <<EOF
                                                                                                                                     sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
                                                                                                                                     EOF
