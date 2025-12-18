@@ -175,7 +175,6 @@
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
                                                                                                                                                 COMMANDS+=( "-e \"s#\$$VARIABLE#$VALUE#\"" )
-                                                                                                                                                # COMMANDS+=( "-e \"s#\${ builtins.concatStringsStringSep "" [ "$" "{" ( ) "}" ] }
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
