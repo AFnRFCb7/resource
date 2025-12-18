@@ -105,7 +105,7 @@
                                                                                             wrap =
                                                                                                 pkgs.buildFHSUserEnv
                                                                                                     {
-                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount"] ;
+                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount" "--bind $LOCK /lock" ] ;
                                                                                                         name = "wrap" ;
                                                                                                         runScript =
                                                                                                             let
@@ -113,9 +113,11 @@
                                                                                                                     pkgs.writeShellApplication
                                                                                                                         {
                                                                                                                             name = "runScript" ;
-                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gnused failure ] ;
+                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.flock pkgs.gnused failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
+                                                                                                                                    exec 203> /lock/execute.lock
+                                                                                                                                    flock -x 203
                                                                                                                                     if [[ 3 -gt "$#" ]]
                                                                                                                                     then
                                                                                                                                         failure 4b5fcf01 "We were expecting input output permissions but we observed $# arguments:  $*"
@@ -182,6 +184,7 @@
                                                                                                                                     echo sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
                                                                                                                                     sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
                                                                                                                                     chmod "$PERMISSIONS" "/mount/$OUTPUT"
+                                                                                                                                    rm /lock/execute.lock
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                                     in "${ application }/bin/runScript" ;
@@ -305,6 +308,8 @@
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                                     flock -s 211
+                                                                                    LOCK="${ resources-directory }/locks/$INDEX"
+                                                                                    export LOCK
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     export MOUNT
