@@ -181,7 +181,6 @@
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit, --link, --path or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    echo sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e \"w/mount/$OUTPUT\" "$INPUT"
                                                                                                                                     sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
                                                                                                                                     chmod "$PERMISSIONS" "/mount/$OUTPUT"
                                                                                                                                     rm /lock/execute.lock
