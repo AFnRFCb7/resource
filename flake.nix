@@ -154,7 +154,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
-                                                                                                                                                COMMANDS+=( -e "s#\$${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE" "}" ] }#$VARIABLE#g" )
+                                                                                                                                                COMMANDS+=( -e "s#\$$VARIABLE#$VARIABLE#g" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal)
@@ -172,7 +172,7 @@
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
-                                                                                                                                                COMMANDS+=( -e "s#\\\$${ builtins.concatStringsSep "" [ "$" "{" ( builtins.concatStringsSep "" [ "$" "{" "VARIABLE" "}" ] ) "}" ] }#$VALUE#g" )
+                                                                                                                                                COMMANDS+=( -e "s#\\\$${ builtins.concatStringsSep "" [ "$" "{" "$VARIABLE" "}" ] }#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             --set-plain)
