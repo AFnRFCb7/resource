@@ -185,6 +185,7 @@
                                                                                                                                     EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
                                                                                                                                     for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
                                                                                                                                     do
+                                                                                                                                        echo "$EXPORT_LINE"
                                                                                                                                         eval "$EXPORT_LINE"
                                                                                                                                     done
                                                                                                                                 '' ;
