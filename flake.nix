@@ -172,7 +172,8 @@
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
-                                                                                                                                                COMMANDS+=( -e "s#\\\$${ builtins.concatStringsSep "" [ "$" "{" "$VARIABLE" "}" ] }#$VALUE#g" )
+                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE" "}" ] }"
+                                                                                                                                                COMMANDS+=( -e "s#\\\$$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             --set-plain)
