@@ -113,7 +113,7 @@
                                                                                                                     pkgs.writeShellApplication
                                                                                                                         {
                                                                                                                             name = "runScript" ;
-                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
+                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gnused failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     if [[ 3 -gt "$#" ]]
@@ -139,9 +139,8 @@
                                                                                                                                     then
                                                                                                                                         failure 029e9461 "We were expecting the third argument to be an integer but we observed $*"
                                                                                                                                     fi
+                                                                                                                                    COMMANDS=()
                                                                                                                                     shift
-                                                                                                                                    EXPORT_LINES=()
-                                                                                                                                    VARIABLES=()
                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                     do
                                                                                                                                         case "$1" in
@@ -155,7 +154,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
-                                                                                                                                                echo "export $VARIABLE" >> /scratch/wrap
+                                                                                                                                                COMMANDS+=( "-e \"s#\$$VARIABLE#$VARIABLE#\"" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal)
@@ -163,8 +162,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 55186955 "We were expecting --literal VARIABLE but we observed $*"
                                                                                                                                                 fi
-                                                                                                                                                VARIABLE="$2
-                                                                                                                                                echo "export $VARIABLE=\"\$$VARIABLE\"" >> /scratch/wrap
+                                                                                                                                                # With sed we do not need to do anything for literal
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --set)
@@ -174,17 +172,15 @@
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
-                                                                                                                                                echo "export $VARIABLE=\"$VALUE\"" >> /scratch/wrap
+                                                                                                                                                COMMANDS+=( "-e \"s#\$$VARIABLE#$VALUE#\"" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit, --link, --path or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    echo "${ pkgs.gettext }/bin/envsubst < \"$INPUT\" > /mount/$OUTPUT" > /scratch/wrap
-                                                                                                                                    echo "${ pkgs.coreutils }/bin/chmod 0500 /mount/$OUTPUT" >> /scratch/wrap
-                                                                                                                                    chmod 0500 /scratch/wrap
-                                                                                                                                    /scratch/wrap
+                                                                                                                                    sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] } -e "w/mount/$OUTPUT"
+                                                                                                                                    chmod "$PERMISSIONS" "/mount/$OUTPUT"
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                                     in "${ application }/bin/runScript" ;
