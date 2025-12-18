@@ -154,7 +154,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
-                                                                                                                                                COMMANDS+=( "-e \"s#\$$VARIABLE#$VARIABLE#\"" )
+                                                                                                                                                COMMANDS+=( -e "s#\$$VARIABLE#$VARIABLE#g" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal)
