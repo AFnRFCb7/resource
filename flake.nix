@@ -113,7 +113,7 @@
                                                                                                                     pkgs.writeShellApplication
                                                                                                                         {
                                                                                                                             name = "runScript" ;
-                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
+                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gettext pkgs.which failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     if [[ 3 -gt "$#" ]]
@@ -145,6 +145,17 @@
                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                     do
                                                                                                                                         case "$1" in
+                                                                                                                                            --envsubst)
+                                                                                                                                                if [[ "$#" -lt 2 ]]
+                                                                                                                                                then
+                                                                                                                                                    failure f8f3cc6a "We were expecting --envsubst PATH but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                ENVSUBST="$2"
+                                                                                                                                                if [[ -x "$ENVSUBST" ]]
+                                                                                                                                                then
+                                                                                                                                                    failure a1263ceb "We were expecting --envsubst $PATH to be an executable file but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                shift 2
                                                                                                                                             --inherit)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
@@ -177,15 +188,14 @@
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
-                                                                                                                                                failure d40b5fe2 "We were expecting --inherit, --link, or --set but we observed $*"
+                                                                                                                                                failure d40b5fe2 "We were expecting --inherit, --link, --path or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
                                                                                                                                     VARIABLES_STRING="${ builtins.concatStringsSep "" [ "$" "{" "VARIABLES[*]// /," "}" ] }"
-                                                                                                                                    EXPORT_LINES+=( "envsubst --variables \"$VARIABLES_STRING\" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
+                                                                                                                                    EXPORT_LINES+=( "$ENVSUBST --variables \"$VARIABLES_STRING\" < \"$INPUT\" > \"/mount/$OUTPUT\"" )
                                                                                                                                     EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
                                                                                                                                     for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
                                                                                                                                     do
-                                                                                                                                        echo "$EXPORT_LINE"
                                                                                                                                         eval "$EXPORT_LINE"
                                                                                                                                     done
                                                                                                                                 '' ;
