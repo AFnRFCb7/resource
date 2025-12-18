@@ -190,6 +190,10 @@
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit, --link, --path or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
+                                                                                                                                    echo 07013358
+                                                                                                                                    cat <<EOF
+                                                                                                                                    sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
+                                                                                                                                    EOF
                                                                                                                                     sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
                                                                                                                                     chmod "$PERMISSIONS" "/mount/$OUTPUT"
                                                                                                                                 '' ;
