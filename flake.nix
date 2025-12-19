@@ -259,6 +259,8 @@
                                                                                     echo 15d796aa >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
                                                                                     echo 7c494326 >> /tmp/a1d983ad-DEBUG
+                                                                                    echo "STANDARD_INPUT=$STANDARD_INPUT" >> /tmp/a1d983ad-DEBUG
+                                                                                    wc <<< "$STANDARD_INPUT" >> /tmp/a1d983ad-DEBUG
                                                                                 fi
                                                                                 mkdir --parents ${ resources-directory }
                                                                                 ARGUMENTS=( "$@" )
