@@ -262,16 +262,27 @@
                                                                                     echo 7c494326 "STANDARD_INPUT=$STANDARD_INPUT" >> /tmp/a1d983ad-DEBUG
                                                                                     wc <<< "$STANDARD_INPUT" >> /tmp/a1d983ad-DEBUG
                                                                                 fi
+                                                                                echo 43be8a64 >> /tmp/a1d983ad-DEBUG
                                                                                 mkdir --parents ${ resources-directory }
+                                                                                echo 930086a8 >> /tmp/a1d983ad-DEBUG
                                                                                 ARGUMENTS=( "$@" )
+                                                                                echo 3f4b2c41 >> /tmp/a1d983ad-DEBUG
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
+                                                                                echo 5b328e27 >> /tmp/a1d983ad-DEBUG
                                                                                 TRANSIENT=${ transient }
+                                                                                echo e18db20e >> /tmp/a1d983ad-DEBUG
                                                                                 PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
+                                                                                echo ccfd30b9 >> /tmp/a1d983ad-DEBUG
                                                                                 ORIGINATOR_PID=${ if follow-parent then ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' else ''"$PENULTIMATE_PID"'' }
+                                                                                echo 1bf1a896 >> /tmp/a1d983ad-DEBUG
                                                                                 export ORIGINATOR_PID
+                                                                                echo 7875ca22 >> /tmp/a1d983ad-DEBUG
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                                echo 9e03be32 >> /tmp/a1d983ad-DEBUG
                                                                                 export HASH
+                                                                                echo 47c3e175 >> /tmp/a1d983ad-DEBUG
                                                                                 mkdir --parents "${ resources-directory }/locks"
+                                                                                echo b739cd8a >> /tmp/a1d983ad-DEBUG
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
                                                                                 export STANDARD_INPUT
@@ -321,7 +332,7 @@
                                                                                 else
                                                                                     INDEX="$( sequential )" || failure 65a31c86
                                                                                     export INDEX
-                                                                                    echo e125d952 "INDEX=$INDEX" >> /tmp/a1d983ad-DEBUG
+                                                                                    echo e125d952 "${ resources-directory }/links/$INDEX" >> /tmp/a1d983ad-DEBUG
                                                                                     export PROVENANCE=new
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
@@ -347,10 +358,6 @@
                                                                                     export STANDARD_ERROR
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                                     export STANDARD_OUTPUT
-                                                                                    cat > /tmp/670ff1d0-DEBUG <<EOF
-                                                                                echo ebd910a6
-                                                                                mkdir --parents "${ resources-directory }/links/$INDEX"
-EOF
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 1e739712
                                                                                     mkdir --parents "${ store-garbage-collection-root }/$INDEX"
