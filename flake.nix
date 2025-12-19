@@ -321,7 +321,6 @@
                                                                                         --null-input \
                                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                         --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                        --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
