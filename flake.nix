@@ -299,15 +299,23 @@
                                                                                 then
                                                                                     echo 2532f6c4 >> /tmp/a1d983ad-DEBUG
                                                                                     MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
+                                                                                    echo 4b05e601 >> /tmp/a1d983ad-DEBUG
                                                                                     export MOUNT
+                                                                                    echo 762a3c93 >> /tmp/a1d983ad-DEBUG
                                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
+                                                                                    echo 36824c1d >> /tmp/a1d983ad-DEBUG
                                                                                     export INDEX
+                                                                                    echo 670dfce2 >> /tmp/a1d983ad-DEBUG
                                                                                     export PROVENANCE=cached
+                                                                                    echo 48e025a5 >> /tmp/a1d983ad-DEBUG
                                                                                     RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure b39ed4ef
+                                                                                    echo af024008 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ store-garbage-collection-root }/$INDEX"
-                                                                                    STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 8a54bbd4
+                                                                                    echo 6def8dd7 >> /tmp/a1d983ad-DEBUG
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
+                                                                                    echo 42101552 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                                    echo 433a610c >> /tmp/a1d983ad-DEBUG
                                                                                     # shellcheck disable=SC2016
                                                                                     jq \
                                                                                         --null-input \
@@ -334,7 +342,9 @@
                                                                                             "transient" : $TRANSIENT ,
                                                                                             "type" : "stale"
                                                                                         }' | publish > /dev/null 2>&1
+                                                                                    echo 1660227f >> /tmp/a1d983ad-DEBUG
                                                                                     echo -n "$MOUNT"
+                                                                                    echo d7517981 >> /tmp/a1d983ad-DEBUG
                                                                                 else
                                                                                     echo 0b9d9a47 >> /tmp/a1d983ad-DEBUG
                                                                                     INDEX="$( sequential )" || failure 65a31c86
