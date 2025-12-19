@@ -284,14 +284,20 @@
                                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                                 echo b739cd8a >> /tmp/a1d983ad-DEBUG
                                                                                 export HAS_STANDARD_INPUT
+                                                                                echo 17f7a215 >> /tmp/a1d983ad-DEBUG
                                                                                 export HASH
+                                                                                echo 298b7f37 >> /tmp/a1d983ad-DEBUG
                                                                                 export STANDARD_INPUT
+                                                                                echo f563211a >> /tmp/a1d983ad-DEBUG
                                                                                 export ORIGINATOR_PID
+                                                                                echo 44486214 >> /tmp/a1d983ad-DEBUG
                                                                                 export TRANSIENT
+                                                                                echo 0a943ba1 >> /tmp/a1d983ad-DEBUG
                                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                                 flock -s 210
                                                                                 if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                                 then
+                                                                                    echo 2532f6c4 >> /tmp/a1d983ad-DEBUG
                                                                                     MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
                                                                                     export MOUNT
                                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
@@ -330,7 +336,9 @@
                                                                                         }' | publish > /dev/null 2>&1
                                                                                     echo -n "$MOUNT"
                                                                                 else
+                                                                                    echo 0b9d9a47 >> /tmp/a1d983ad-DEBUG
                                                                                     INDEX="$( sequential )" || failure 65a31c86
+                                                                                    echo 486cdccd >> /tmp/a1d983ad-DEBUG
                                                                                     export INDEX
                                                                                     echo e125d952 "${ resources-directory }/links/$INDEX" >> /tmp/a1d983ad-DEBUG
                                                                                     export PROVENANCE=new
