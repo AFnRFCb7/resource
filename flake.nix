@@ -183,7 +183,8 @@
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
-                                                                                                                                                COMMANDS+=( -e "s#\\\$$VARIABLE#$VALUE#g" )
+                                                                                                                                                BRACED="\$$VARIABLE"
+                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
