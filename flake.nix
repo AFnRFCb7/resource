@@ -321,6 +321,7 @@
                                                                                 else
                                                                                     INDEX="$( sequential )" || failure 65a31c86
                                                                                     export INDEX
+                                                                                    echo e125d952 "INDEX=$INDEX" >> /tmp/a1d983ad-DEBUG
                                                                                     export PROVENANCE=new
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
