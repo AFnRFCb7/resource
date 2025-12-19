@@ -248,6 +248,7 @@
                                                                             ''
                                                                                 if [[ -t 0 ]]
                                                                                 then
+                                                                                    echo 84c78394 >> /tmp/a1d983ad-DEBUG
                                                                                     HAS_STANDARD_INPUT=false
                                                                                     STANDARD_INPUT=
                                                                                 else
@@ -255,7 +256,9 @@
                                                                                     export STANDARD_INPUT_FILE
                                                                                     HAS_STANDARD_INPUT=true
                                                                                     cat <&0 > "$STANDARD_INPUT_FILE"
+                                                                                    echo 15d796aa >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
+                                                                                    echo 7c494326 >> /tmp/a1d983ad-DEBUG
                                                                                 fi
                                                                                 mkdir --parents ${ resources-directory }
                                                                                 ARGUMENTS=( "$@" )
