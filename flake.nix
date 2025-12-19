@@ -246,6 +246,7 @@
                                                                             transient
                                                                         } :
                                                                             ''
+                                                                                echo 4799f99b >> /tmp/265fb2a4-DEBUG
                                                                                 if [[ -t 0 ]]
                                                                                 then
                                                                                     echo 84c78394 >> /tmp/a1d983ad-DEBUG
