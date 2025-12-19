@@ -343,8 +343,8 @@
                                                                                     export STANDARD_OUTPUT
                                                                                     cat > /tmp/DEBUG <<EOF
                                                                                     echo ebd910a6
-                                                                                    mkdir --parents "${ resources-directory }/links/$INDEX"
-                                                                                    EOF
+                                                                                mkdir --parents "${ resources-directory }/links/$INDEX"
+                                                                                EOF
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 1e739712
                                                                                     mkdir --parents "${ store-garbage-collection-root }/$INDEX"
