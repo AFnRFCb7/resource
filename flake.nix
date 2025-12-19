@@ -341,7 +341,7 @@
                                                                                     export STANDARD_ERROR
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                                     export STANDARD_OUTPUT
-                                                                                    cat > /tmp/DEBUG <<EOF
+                                                                                    cat > /tmp/670ff1d0-DEBUG <<EOF
                                                                                     echo ebd910a6
                                                                                 mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                 EOF
