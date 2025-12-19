@@ -351,25 +351,41 @@
                                                                                     export INDEX
                                                                                     echo e125d952 "${ resources-directory }/links/$INDEX" >> /tmp/a1d983ad-DEBUG
                                                                                     export PROVENANCE=new
+                                                                                    echo c1f85b10 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                                    echo 32232686 >> /tmp/a1d983ad-DEBUG
                                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                                     flock -s 211
+                                                                                    echo 89931d0b >> /tmp/a1d983ad-DEBUG
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
+                                                                                    echo 0106a4eb >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "$MOUNT"
+                                                                                    echo e3af6469 >> /tmp/a1d983ad-DEBUG
                                                                                     export MOUNT
+                                                                                    echo b0dc9ace >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "$MOUNT"
+                                                                                    echo b98bbebe >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
+                                                                                    echo 7f80e2e7 >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_ERROR_FILE
+                                                                                    echo 88ca3aa5 >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
+                                                                                    echo a65da6cb >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_OUTPUT_FILE
+                                                                                    echo 16e3c8de >> /tmp/a1d983ad-DEBUG
                                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                     then
+                                                                                        echo 1d5d97aa >> /tmp/a1d983ad-DEBUG
                                                                                         ${ has-standard-input-true }
                                                                                     else
+                                                                                        echo dea3ab92 >> /tmp/a1d983ad-DEBUG
                                                                                         ${ has-standard-input-false }
                                                                                     fi
+                                                                                    echo ffcfa46e >> /tmp/a1d983ad-DEBUG
                                                                                     export STATUS
+                                                                                    echo b1bc09c4 >> /tmp/a1d983ad-DEBUG
                                                                                     TARGET_HASH_EXPECTED=${ target-hash-expected }
+                                                                                    echo 1f4aafbd >> /tmp/a1d983ad-DEBUG
                                                                                     TARGET_HASH_OBSERVED="$( find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" | sha512sum | cut --characters 1-128 )" || failure f6bff0bc
                                                                                     STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure
                                                                                     export STANDARD_ERROR
