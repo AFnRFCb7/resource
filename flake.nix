@@ -402,7 +402,6 @@
                                                                                     true
                                                                                     echo "INDEX='$INDEX'" >> /tmp/a1d983ad-DEBUG
                                                                                     true
-                                                                                    echo 'mkdir --parents "${ resources-directory }/links/$INDEX"'  >> /tmp/a1d983ad-DEBUG
                                                                                     echo "mkdir --parents \"${ resources-directory }/links/$INDEX\""  >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     echo b5e8e49b >> /tmp/a1d983ad-DEBUG
