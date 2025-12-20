@@ -400,7 +400,12 @@
                                                                                     echo "INDEX='$INDEX'" >> /tmp/a1d983ad-DEBUG
                                                                                     true
                                                                                     echo "mkdir --parents \"${ resources-directory }/links/$INDEX\""  >> /tmp/a1d983ad-DEBUG
+                                                                                    true
+                                                                                    echo 6f25d941 >> /tmp/a1d983ad-DEBUG
+                                                                                    true
                                                                                     find "${ resources-directory }" -exec stat {} \; >> /tmp/a1d983ad-DEBUG
+                                                                                    true
+                                                                                    echo 208b1eb4 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     echo b5e8e49b >> /tmp/a1d983ad-DEBUG
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
