@@ -405,14 +405,16 @@
                                                                                     true
                                                                                     echo "${ findutils }/bin/find \"${ resources-directory }\" -exec stat {} \;" >> /tmp/a1d983ad-DEBUG
                                                                                     true
-                                                                                    # shellcheck disable=SC2012
-                                                                                    XXX="$(ls /proc/$$/fd | wc -l)" || failure 3b1e3716
-                                                                                    echo "FD COUNT: $XXX" >> /tmp/a1d983ad-DEBUG
+                                                                                    echo d593a02d >> /tmp/a1d983ad-DEBUG
                                                                                     true
                                                                                     # shellcheck disable=SC2012
                                                                                     ulimit -n >> /tmp/a1d983ad-DEBUG
                                                                                     true
-                                                                                    ${ findutils }/bin/find "${ resources-directory }" -exec stat {} \; >> /tmp/a1d983ad-DEBUG
+                                                                                    # shellcheck disable=SC2012
+                                                                                    XXX="$(ls /proc/$$/fd | wc -l)" || failure 3b1e3716
+                                                                                    echo "FD COUNT: $XXX" >> /tmp/a1d983ad-DEBUG
+                                                                                    true
+                                                                                    # ${ findutils }/bin/find "${ resources-directory }" -exec stat {} \; >> /tmp/a1d983ad-DEBUG
                                                                                     true
                                                                                     echo 208b1eb4 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
