@@ -387,23 +387,26 @@
                                                                                     TARGET_HASH_EXPECTED=${ target-hash-expected }
                                                                                     echo 1f4aafbd >> /tmp/a1d983ad-DEBUG
                                                                                     TARGET_HASH_OBSERVED="$( find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" | sha512sum | cut --characters 1-128 )" || failure f6bff0bc
+                                                                                    echo ed5385d0 >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure
+                                                                                    echo 298ab76f >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_ERROR
+                                                                                    echo b51a0f0b >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
+                                                                                    echo 3f059c29 >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_OUTPUT
+                                                                                    echo d57cf535 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
-                                                                                    RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 1e739712
-                                                                                    mkdir --parents "${ store-garbage-collection-root }/$INDEX"
-                                                                                    STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure c5553f2b
+                                                                                    echo b5e8e49b >> /tmp/a1d983ad-DEBUG
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
+                                                                                    echo 0477f14f >> /tmp/a1d983ad-DEBUG
                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                                     then
+                                                                                        echo 310ab823 >> /tmp/a1d983ad-DEBUG
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                            --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                            --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -431,10 +434,15 @@
                                                                                                 "transient" : $TRANSIENT ,
                                                                                                 "type" : "valid"
                                                                                             }' | publish > /dev/null 2>&1
+                                                                                        echo d1f06a32 >> /tmp/a1d983ad-DEBUG
                                                                                         mkdir --parents ${ resources-directory }/canonical
+                                                                                        echo 3877bfef >> /tmp/a1d983ad-DEBUG
                                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
+                                                                                        echo 3f8c0d27 >> /tmp/a1d983ad-DEBUG
                                                                                         echo -n "$MOUNT"
+                                                                                        echo 8ab298f0 >> /tmp/a1d983ad-DEBUG
                                                                                     else
+                                                                                        echo c2244d6c >> /tmp/a1d983ad-DEBUG
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
@@ -465,6 +473,7 @@
                                                                                                 "transient" : $TRANSIENT ,
                                                                                                 "type" : "invalid"
                                                                                             }' | publish
+                                                                                            echo 5c0b5279 >> /tmp/a1d983ad-DEBUG
                                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                                     fi
                                                                                 fi
