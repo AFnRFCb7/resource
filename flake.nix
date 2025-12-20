@@ -307,8 +307,6 @@
                                                                                     export INDEX
                                                                                     echo 670dfce2 >> /tmp/a1d983ad-DEBUG
                                                                                     export PROVENANCE=cached
-                                                                                    echo 48e025a5 >> /tmp/a1d983ad-DEBUG
-                                                                                    RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure b39ed4ef
                                                                                     echo af024008 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ store-garbage-collection-root }/$INDEX"
                                                                                     echo 6def8dd7 >> /tmp/a1d983ad-DEBUG
@@ -320,7 +318,6 @@
                                                                                     jq \
                                                                                         --null-input \
                                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                        --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
