@@ -246,7 +246,6 @@
                                                                             transient
                                                                         } :
                                                                             ''
-                                                                                echo 4799f99b >> /tmp/265fb2a4-DEBUG
                                                                                 if [[ -t 0 ]]
                                                                                 then
                                                                                     HAS_STANDARD_INPUT=false
@@ -339,6 +338,7 @@
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                                     export STANDARD_OUTPUT
                                                                                     echo 18feb56b mkdir --parents "${ resources-directory }/links/$INDEX" >> /tmp/shared/OUTPUT
+                                                                                    sleep 1
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     echo b5e8e49b >> /tmp/shared/OUTPUT
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
