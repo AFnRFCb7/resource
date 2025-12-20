@@ -395,8 +395,11 @@
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                                     echo 3f059c29 >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_OUTPUT
+                                                                                    true
                                                                                     echo d57cf535 >> /tmp/a1d983ad-DEBUG
+                                                                                    true
                                                                                     echo "resources-directory='${ resources-directory }'" >> /tmp/a1d983ad-DEBUG
+                                                                                    true
                                                                                     echo "INDEX='$INDEX'" >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     echo b5e8e49b >> /tmp/a1d983ad-DEBUG
