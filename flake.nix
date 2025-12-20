@@ -405,8 +405,10 @@
                                                                                     true
                                                                                     echo "${ findutils }/bin/find \"${ resources-directory }\" -exec stat {} \;" >> /tmp/a1d983ad-DEBUG
                                                                                     true
+                                                                                    # shellcheck disable=SC2012
                                                                                     echo "FD COUNT: $(ls /proc/$$/fd | wc -l)" >> /tmp/a1d983ad-DEBUG
                                                                                     true
+                                                                                    # shellcheck disable=SC2012
                                                                                     ulimit -n >> /tmp/a1d983ad-DEBUG
                                                                                     true
                                                                                     ${ findutils }/bin/find "${ resources-directory }" -exec stat {} \; >> /tmp/a1d983ad-DEBUG
