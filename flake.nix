@@ -403,7 +403,7 @@
                                                                                     true
                                                                                     echo 6f25d941 >> /tmp/a1d983ad-DEBUG
                                                                                     true
-                                                                                    find "${ resources-directory }" -exec stat {} \; >> /tmp/a1d983ad-DEBUG
+                                                                                    ${ pkgs.findutils }/bin/find "${ resources-directory }" -exec stat {} \; >> /tmp/a1d983ad-DEBUG
                                                                                     true
                                                                                     echo 208b1eb4 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
