@@ -396,6 +396,8 @@
                                                                                     echo 3f059c29 >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_OUTPUT
                                                                                     echo d57cf535 >> /tmp/a1d983ad-DEBUG
+                                                                                    echo "resources-directory='${ resources-directory }'" >> /tmp/a1d983ad-DEBUG
+                                                                                    echo "INDEX='$INDEX'" >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     echo b5e8e49b >> /tmp/a1d983ad-DEBUG
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
