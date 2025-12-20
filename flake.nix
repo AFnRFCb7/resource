@@ -249,7 +249,6 @@
                                                                                 echo 4799f99b >> /tmp/265fb2a4-DEBUG
                                                                                 if [[ -t 0 ]]
                                                                                 then
-                                                                                    echo 84c78394 >> /tmp/a1d983ad-DEBUG
                                                                                     HAS_STANDARD_INPUT=false
                                                                                     STANDARD_INPUT=
                                                                                 else
@@ -257,63 +256,35 @@
                                                                                     export STANDARD_INPUT_FILE
                                                                                     HAS_STANDARD_INPUT=true
                                                                                     cat <&0 > "$STANDARD_INPUT_FILE"
-                                                                                    echo 15d796aa >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
-                                                                                    echo 7c494326 "STANDARD_INPUT=$STANDARD_INPUT" >> /tmp/a1d983ad-DEBUG
-                                                                                    wc <<< "$STANDARD_INPUT" >> /tmp/a1d983ad-DEBUG
                                                                                 fi
-                                                                                echo 43be8a64 >> /tmp/a1d983ad-DEBUG
                                                                                 mkdir --parents ${ resources-directory }
-                                                                                echo 930086a8 >> /tmp/a1d983ad-DEBUG
                                                                                 ARGUMENTS=( "$@" )
-                                                                                echo 3f4b2c41 >> /tmp/a1d983ad-DEBUG
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
-                                                                                echo 5b328e27 >> /tmp/a1d983ad-DEBUG
                                                                                 TRANSIENT=${ transient }
-                                                                                echo e18db20e >> /tmp/a1d983ad-DEBUG
                                                                                 PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
-                                                                                echo ccfd30b9 >> /tmp/a1d983ad-DEBUG
                                                                                 ORIGINATOR_PID=${ if follow-parent then ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' else ''"$PENULTIMATE_PID"'' }
-                                                                                echo 1bf1a896 >> /tmp/a1d983ad-DEBUG
                                                                                 export ORIGINATOR_PID
-                                                                                echo 7875ca22 >> /tmp/a1d983ad-DEBUG
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
-                                                                                echo 9e03be32 >> /tmp/a1d983ad-DEBUG
                                                                                 export HASH
-                                                                                echo 47c3e175 >> /tmp/a1d983ad-DEBUG
                                                                                 mkdir --parents "${ resources-directory }/locks"
-                                                                                echo b739cd8a >> /tmp/a1d983ad-DEBUG
                                                                                 export HAS_STANDARD_INPUT
-                                                                                echo 17f7a215 >> /tmp/a1d983ad-DEBUG
                                                                                 export HASH
-                                                                                echo 298b7f37 >> /tmp/a1d983ad-DEBUG
                                                                                 export STANDARD_INPUT
-                                                                                echo f563211a >> /tmp/a1d983ad-DEBUG
                                                                                 export ORIGINATOR_PID
-                                                                                echo 44486214 >> /tmp/a1d983ad-DEBUG
                                                                                 export TRANSIENT
-                                                                                echo 0a943ba1 >> /tmp/a1d983ad-DEBUG
                                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                                 flock -s 210
                                                                                 if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                                 then
-                                                                                    echo 2532f6c4 >> /tmp/a1d983ad-DEBUG
                                                                                     MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
-                                                                                    echo 4b05e601 >> /tmp/a1d983ad-DEBUG
                                                                                     export MOUNT
-                                                                                    echo 762a3c93 >> /tmp/a1d983ad-DEBUG
                                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
-                                                                                    echo 36824c1d >> /tmp/a1d983ad-DEBUG
                                                                                     export INDEX
-                                                                                    echo 670dfce2 >> /tmp/a1d983ad-DEBUG
                                                                                     export PROVENANCE=cached
-                                                                                    echo af024008 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ store-garbage-collection-root }/$INDEX"
-                                                                                    echo 6def8dd7 >> /tmp/a1d983ad-DEBUG
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
-                                                                                    echo 42101552 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                                    echo 433a610c >> /tmp/a1d983ad-DEBUG
                                                                                     # shellcheck disable=SC2016
                                                                                     jq \
                                                                                         --null-input \
@@ -338,92 +309,41 @@
                                                                                             "transient" : $TRANSIENT ,
                                                                                             "type" : "stale"
                                                                                         }' | publish > /dev/null 2>&1
-                                                                                    echo 1660227f >> /tmp/a1d983ad-DEBUG
                                                                                     echo -n "$MOUNT"
-                                                                                    echo d7517981 >> /tmp/a1d983ad-DEBUG
                                                                                 else
-                                                                                    echo 0b9d9a47 >> /tmp/a1d983ad-DEBUG
                                                                                     INDEX="$( sequential )" || failure 65a31c86
-                                                                                    echo 486cdccd >> /tmp/a1d983ad-DEBUG
                                                                                     export INDEX
-                                                                                    echo e125d952 "${ resources-directory }/links/$INDEX" >> /tmp/a1d983ad-DEBUG
                                                                                     export PROVENANCE=new
-                                                                                    echo c1f85b10 >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                                    echo 32232686 >> /tmp/a1d983ad-DEBUG
                                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                                     flock -s 211
-                                                                                    echo 89931d0b >> /tmp/a1d983ad-DEBUG
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                                    echo 0106a4eb >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "$MOUNT"
-                                                                                    echo e3af6469 >> /tmp/a1d983ad-DEBUG
                                                                                     export MOUNT
-                                                                                    echo b0dc9ace >> /tmp/a1d983ad-DEBUG
                                                                                     mkdir --parents "$MOUNT"
-                                                                                    echo b98bbebe >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
-                                                                                    echo 7f80e2e7 >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_ERROR_FILE
-                                                                                    echo 88ca3aa5 >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
-                                                                                    echo a65da6cb >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_OUTPUT_FILE
-                                                                                    echo 16e3c8de >> /tmp/a1d983ad-DEBUG
                                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                     then
-                                                                                        echo 1d5d97aa >> /tmp/a1d983ad-DEBUG
                                                                                         ${ has-standard-input-true }
                                                                                     else
-                                                                                        echo dea3ab92 >> /tmp/a1d983ad-DEBUG
                                                                                         ${ has-standard-input-false }
                                                                                     fi
-                                                                                    echo ffcfa46e >> /tmp/a1d983ad-DEBUG
                                                                                     export STATUS
-                                                                                    echo b1bc09c4 >> /tmp/a1d983ad-DEBUG
                                                                                     TARGET_HASH_EXPECTED=${ target-hash-expected }
-                                                                                    echo 1f4aafbd >> /tmp/a1d983ad-DEBUG
                                                                                     TARGET_HASH_OBSERVED="$( find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" | sha512sum | cut --characters 1-128 )" || failure f6bff0bc
-                                                                                    echo ed5385d0 >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure
-                                                                                    echo 298ab76f >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_ERROR
-                                                                                    echo b51a0f0b >> /tmp/a1d983ad-DEBUG
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
-                                                                                    echo 3f059c29 >> /tmp/a1d983ad-DEBUG
                                                                                     export STANDARD_OUTPUT
-                                                                                    true
-                                                                                    echo d57cf535 >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    echo "resources-directory='${ resources-directory }'" >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    echo "INDEX='$INDEX'" >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    echo "mkdir --parents \"${ resources-directory }/links/$INDEX\""  >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    echo 6f25d941 >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    echo "${ findutils }/bin/find \"${ resources-directory }\" -exec stat {} \;" >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    echo d593a02d >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    # shellcheck disable=SC2012
-                                                                                    ulimit -n >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    # shellcheck disable=SC2012
-                                                                                    XXX="$(ls /proc/$$/fd | wc -l)" || failure 3b1e3716
-                                                                                    echo "FD COUNT: $XXX" >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    # ${ findutils }/bin/find "${ resources-directory }" -exec stat {} \; >> /tmp/a1d983ad-DEBUG
-                                                                                    true
-                                                                                    echo 208b1eb4 >> /tmp/a1d983ad-DEBUG
+                                                                                    echo 18feb56b > /tmp/shared/OUTPUT
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
-                                                                                    echo b5e8e49b >> /tmp/a1d983ad-DEBUG
+                                                                                    echo b5e8e49b >> /tmp/shared/OUTPUT
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
-                                                                                    echo 0477f14f >> /tmp/a1d983ad-DEBUG
                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                                     then
-                                                                                        echo 310ab823 >> /tmp/a1d983ad-DEBUG
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
@@ -455,15 +375,10 @@
                                                                                                 "transient" : $TRANSIENT ,
                                                                                                 "type" : "valid"
                                                                                             }' | publish > /dev/null 2>&1
-                                                                                        echo d1f06a32 >> /tmp/a1d983ad-DEBUG
                                                                                         mkdir --parents ${ resources-directory }/canonical
-                                                                                        echo 3877bfef >> /tmp/a1d983ad-DEBUG
                                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
-                                                                                        echo 3f8c0d27 >> /tmp/a1d983ad-DEBUG
                                                                                         echo -n "$MOUNT"
-                                                                                        echo 8ab298f0 >> /tmp/a1d983ad-DEBUG
                                                                                     else
-                                                                                        echo c2244d6c >> /tmp/a1d983ad-DEBUG
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
@@ -494,7 +409,6 @@
                                                                                                 "transient" : $TRANSIENT ,
                                                                                                 "type" : "invalid"
                                                                                             }' | publish
-                                                                                            echo 5c0b5279 >> /tmp/a1d983ad-DEBUG
                                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                                     fi
                                                                                 fi
