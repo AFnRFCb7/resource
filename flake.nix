@@ -113,11 +113,9 @@
                                                                                                                     pkgs.writeShellApplication
                                                                                                                         {
                                                                                                                             name = "runScript" ;
-                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gettext failure ] ;
+                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gnused failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
-                                                                                                                                    echo 7ef6e9f1
-                                                                                                                                    echo "$*"
                                                                                                                                     if [[ 3 -gt "$#" ]]
                                                                                                                                     then
                                                                                                                                         failure 4b5fcf01 "We were expecting input output permissions but we observed $# arguments:  $*"
@@ -133,7 +131,7 @@
                                                                                                                                     then
                                                                                                                                         failure 9887df89 "We were expecting the second argument $OUTPUT to not (yet) exist but we observed $*"
                                                                                                                                     fi
-                                                                                                                                    OUTPUT_DIRECTORY="$( dirname "$OUTPUT" )" || failure a3308d94
+                                                                                                                                    OUTPUT_DIRECTORY="$( dirname "/mount/$OUTPUT" )" || failure a3308d94
                                                                                                                                     mkdir --parents "$OUTPUT_DIRECTORY"
                                                                                                                                     shift
                                                                                                                                     PERMISSIONS="$1"
@@ -141,8 +139,8 @@
                                                                                                                                     then
                                                                                                                                         failure 029e9461 "We were expecting the third argument to be an integer but we observed $*"
                                                                                                                                     fi
+                                                                                                                                    COMMANDS=()
                                                                                                                                     shift
-                                                                                                                                    EXPORT_LINES=()
                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                     do
                                                                                                                                         case "$1" in
@@ -156,6 +154,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
+                                                                                                                                                COMMANDS+=( -e "s#\$$VARIABLE#$VARIABLE#g" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal)
@@ -163,30 +162,41 @@
                                                                                                                                                 then
                                                                                                                                                     failure 55186955 "We were expecting --literal VARIABLE but we observed $*"
                                                                                                                                                 fi
-                                                                                                                                                VARIABLE="$2"
-                                                                                                                                                EXPORT_LINES+=( "export $VARIABLE=\"\\\$$VARIABLE\"" )
+                                                                                                                                                # With sed we do not need to do anything for literal
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
-                                                                                                                                            --set)
+                                                                                                                                            --set-brace)
                                                                                                                                                 if [[ "$#" -lt 3 ]]
                                                                                                                                                 then
                                                                                                                                                     failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
-                                                                                                                                                EXPORT_LINES+=( "export $VARIABLE=\"$VALUE\"" )
+                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
+                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
+                                                                                                                                                shift 3
+                                                                                                                                                ;;
+                                                                                                                                            --set-plain)
+                                                                                                                                                if [[ "$#" -lt 3 ]]
+                                                                                                                                                then
+                                                                                                                                                    failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                VARIABLE="$2"
+                                                                                                                                                VALUE="$3"
+                                                                                                                                                BRACED="\$$VARIABLE"
+                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
-                                                                                                                                                failure d40b5fe2 "We were expecting --inherit, --link, or --set but we observed $*"
+                                                                                                                                                failure d40b5fe2 "We were expecting --inherit, --link, --path or --set but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    EXPORT_LINES+=( "envsubst < \"$INPUT\" > \"/mount/$OUTPUT\"" )
-                                                                                                                                    EXPORT_LINES+=( "chmod \"$PERMISSIONS\" \"/mount/$OUTPUT\"" )
-                                                                                                                                    for EXPORT_LINE in "${ builtins.concatStringsSep "" [ "$" "{" "EXPORT_LINES[@]" "}" ] }"
-                                                                                                                                    do
-                                                                                                                                        eval "$EXPORT_LINE"
-                                                                                                                                    done
+                                                                                                                                    echo 39531109
+                                                                                                                                    cat <<EOF
+                                                                                                                                    sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
+                                                                                                                                    EOF
+                                                                                                                                    sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
+                                                                                                                                    chmod "$PERMISSIONS" "/mount/$OUTPUT"
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                                     in "${ application }/bin/runScript" ;
@@ -271,17 +281,13 @@
                                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                                     export INDEX
                                                                                     export PROVENANCE=cached
-                                                                                    RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure b39ed4ef
                                                                                     mkdir --parents "${ store-garbage-collection-root }/$INDEX"
-                                                                                    STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 8a54bbd4
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                                     # shellcheck disable=SC2016
                                                                                     jq \
                                                                                         --null-input \
                                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                        --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                        --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -332,9 +338,6 @@
                                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
                                                                                     export STANDARD_OUTPUT
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
-                                                                                    RESOURCE_DEPENDENCIES="$( find "${ resources-directory }/links/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 1e739712
-                                                                                    mkdir --parents "${ store-garbage-collection-root }/$INDEX"
-                                                                                    STORE_DEPENDENCIES="$( find "${ store-garbage-collection-root }/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure c5553f2b
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                                     then
@@ -342,8 +345,6 @@
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                            --argjson RESOURCE_DEPENDENCIES "$RESOURCE_DEPENDENCIES" \
-                                                                                            --argjson STORE_DEPENDENCIES "$STORE_DEPENDENCIES" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
