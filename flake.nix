@@ -70,7 +70,8 @@
                                                             runScript =
                                                                 ''
                                                                     bash -c '
-                                                                        ln --symbolic /traces/init /trace
+                                                                        mkfifo /trace
+                                                                        tail --follow /trace > /trace/init &
                                                                         if [[ -t 0 ]]
                                                                         then
                                                                             execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
