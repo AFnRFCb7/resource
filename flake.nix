@@ -63,15 +63,12 @@
                                                             extraBwrapArgs =
                                                                 [
                                                                     "--bind $MOUNT /mount"
-                                                                    "--bind $TRACE /traces"
                                                                     "--tmpfs /scratch"
                                                                 ] ;
                                                             name = "init-application" ;
                                                             runScript =
                                                                 ''
                                                                     bash -c '
-                                                                        mkfifo /trace
-                                                                        tail --follow /trace > /trace/init &
                                                                         if [[ -t 0 ]]
                                                                         then
                                                                             execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
@@ -322,9 +319,6 @@
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     export MOUNT
-                                                                                    TRACE="${ resources-directory }/trace/$INDEX"
-                                                                                    mkdir --parents "$TRACE"
-                                                                                    export TRACE
                                                                                     mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                                     export STANDARD_ERROR_FILE
