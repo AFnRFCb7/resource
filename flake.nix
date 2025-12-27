@@ -324,7 +324,7 @@
                                                                                     export STANDARD_ERROR_FILE
                                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
                                                                                     export STANDARD_OUTPUT_FILE
-                                                                                    echo c338d313 "$HAS_STANDARD_INPUT" '${ builtins.typeOf init-application }' >&2 ## FINDME
+                                                                                    echo c338d313 "$HAS_STANDARD_INPUT" '${ if builtins.typeOf init-application == "string" then init-application else "NOT A STRING" }' >&2 ## FINDME
                                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                     then
                                                                                         ${ has-standard-input-true }
