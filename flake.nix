@@ -429,7 +429,7 @@
                                                                                             ''
                                                                                         else
                                                                                             ''
-                                                                                                echo b0adfa4b ${ input-application }
+                                                                                                echo b0adfa4b ${ init-application }
                                                                                                 if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                 then
                                                                                                     STATUS="$?"
