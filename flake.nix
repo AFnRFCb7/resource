@@ -325,7 +325,7 @@
                                                                                     export STANDARD_ERROR_FILE
                                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
                                                                                     export STANDARD_OUTPUT_FILE
-                                                                                    echo c338d313 "$HAS_STANDARD_INPUT" '${ if builtins.typeOf init-application == "string" then init-application else "NOT A STRING" }' >&2 ## FINDME
+
                                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                     then
                                                                                         ${ has-standard-input-true }
@@ -333,11 +333,6 @@
                                                                                         ${ has-standard-input-false }
                                                                                     fi
                                                                                     # shellcheck disable=SC2016
-                                                                                    echo 8ed60c86 "HAS_STANDARD_INPUT=$HAS_STANDARD_INPUT" "STATUS=$STATUS" 'HAS_STANDARD_INPUT=${ has-standard-input-false }' >&2
-                                                                                    echo STANDARD_OUTPUT >&2
-                                                                                    cat "$STANDARD_OUTPUT_FILE" >&2
-                                                                                    echo STANDARD_ERROR >&2
-                                                                                    cat "$STANDARD_ERROR_FILE" >&2
                                                                                     export STATUS
                                                                                     TARGET_HASH_EXPECTED=${ target-hash-expected }
                                                                                     TARGET_HASH_OBSERVED="$( find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" | sha512sum | cut --characters 1-128 )" || failure f6bff0bc
