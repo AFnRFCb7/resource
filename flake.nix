@@ -496,10 +496,13 @@
                                                         {
                                                             template = { setup , failure } : ''"$( ${ setup } )" || ${ failure }'' ;
                                                             values =
-                                                                {
+                                                                let
                                                                     setup = script "${ setup }/bin/setup" ;
-                                                                    failure = "${ failure }/bin/failure b06fc102" ;
-                                                                } ;
+                                                                    in
+                                                                        {
+                                                                            setup = script "${ setup }/bin/setup" ;
+                                                                            failure = "${ failure }/bin/failure b06fc102" "${ setup }" ;
+                                                                        } ;
                                                         } ;
                             pre-hash =
                                 { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
