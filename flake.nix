@@ -497,11 +497,11 @@
                                                             template = { setup , failure } : ''"$( ${ setup } )" || ${ failure }'' ;
                                                             values =
                                                                 let
-                                                                    setup = script "${ setup }/bin/setup" ;
+                                                                    setup- = script "${ setup }/bin/setup" ;
                                                                     in
                                                                         {
-                                                                            setup = script "${ setup }/bin/setup" ;
-                                                                            failure = "${ failure }/bin/failure b06fc102" "${ setup }" ;
+                                                                            setup = script "${ setup- }/bin/setup" ;
+                                                                            failure = "${ failure }/bin/failure b06fc102" "${ setup- }" ;
                                                                         } ;
                                                         } ;
                             pre-hash =
