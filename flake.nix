@@ -498,7 +498,7 @@
                                                             values =
                                                                 {
                                                                     setup = script "${ setup }/bin/setup" ;
-                                                                    failure = "${ failure }/bin/failure b06fc102" ( script "${ setup }/bin/setup" ) ;
+                                                                    failure = "${ failure }/bin/failure b06fc102" ;
                                                                 } ;
                                                         } ;
                             pre-hash =
