@@ -331,6 +331,7 @@
                                                                                     else
                                                                                         ${ has-standard-input-false }
                                                                                     fi
+                                                                                    # shellcheck disable=SC2016
                                                                                     echo 8ed60c86 "HAS_STANDARD_INPUT=$HAS_STANDARD_INPUT" "STATUS=$STATUS" 'HAS_STANDARD_INPUT=${ has-standard-input-false }' >&2
                                                                                     export STATUS
                                                                                     TARGET_HASH_EXPECTED=${ target-hash-expected }
