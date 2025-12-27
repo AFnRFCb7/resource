@@ -324,7 +324,7 @@
                                                                                     export STANDARD_ERROR_FILE
                                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
                                                                                     export STANDARD_OUTPUT_FILE
-                                                                                    echo c338d313 "$HAS_STANDARD_INPUT" "${ init-application }/bin/init-application" >&2
+                                                                                    echo c338d313 "$HAS_STANDARD_INPUT" '${ init { mount = "9211ad65" ; pkgs = "67735e51" ; root = "2b0433cb" ; wrap = "4ab8df4c" ; } }' >&2 ## FINDME
                                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                     then
                                                                                         ${ has-standard-input-true }
