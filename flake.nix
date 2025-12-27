@@ -494,7 +494,7 @@
                                                 script :
                                                     string
                                                         {
-                                                            template = { setup , failure } : ''"$( ${ setup } )" || ${ failure }'' ;
+                                                            template = { setup , failure } : ''"$( ${ setup } )" || ${ failure } '${ setup }''' ;
                                                             values =
                                                                 {
                                                                     setup = script "${ setup }/bin/setup" ;
