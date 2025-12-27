@@ -203,6 +203,7 @@
                                                                                                         } ;
                                                                                             in
                                                                                                 if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } ) == "string" then
+                                                                                                    builtins.trace ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } )
                                                                                                     ''
                                                                                                         # shellcheck source=/dev/null
                                                                                                         source ${ makeWrapper }/nix-support/setup-hook
@@ -430,7 +431,7 @@
                                                                                             ''
                                                                                         else
                                                                                             ''
-                                                                                                echo b0adfa4b ${ init-application }
+                                                                                                echo dd81d227
                                                                                                 if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                 then
                                                                                                     STATUS="$?"
