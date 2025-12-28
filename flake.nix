@@ -325,7 +325,7 @@
                                                                                     export STANDARD_ERROR_FILE
                                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
                                                                                     export STANDARD_OUTPUT_FILE
-
+                                                                                    cd /
                                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                     then
                                                                                         ${ has-standard-input-true }
