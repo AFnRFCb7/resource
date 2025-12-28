@@ -203,7 +203,6 @@
                                                                                                         } ;
                                                                                             in
                                                                                                 if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } ) == "string" then
-                                                                                                    builtins.trace ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } )
                                                                                                     ''
                                                                                                         # shellcheck source=/dev/null
                                                                                                         source ${ makeWrapper }/nix-support/setup-hook
