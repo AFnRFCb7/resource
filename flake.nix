@@ -144,7 +144,21 @@
                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                     do
                                                                                                                                         case "$1" in
-                                                                                                                                            --inherit)
+                                                                                                                                            --inherit-brace)
+                                                                                                                                                if [[ "$#" -lt 2 ]]
+                                                                                                                                                then
+                                                                                                                                                    failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                VARIABLE="$2"
+                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
+                                                                                                                                                if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
+                                                                                                                                                then
+                                                                                                                                                    failure 159a6642 "We were expecting $VARIABLE to be in the environment but it is not"
+                                                                                                                                                fi
+                                                                                                                                                COMMANDS+=( -e "s#\$$BRACED#$VARIABLE#g" )
+                                                                                                                                                shift 2
+                                                                                                                                                ;;
+                                                                                                                                            --inherit-plain)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
                                                                                                                                                     failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
@@ -197,7 +211,7 @@
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
-                                                                                                                                                failure d40b5fe2 "We were expecting --inherit, --literal-brace, --literal-plain, --set-brace, or --set-plain but we observed $*"
+                                                                                                                                                failure d40b5fe2 "We were expecting --inherit-brace, --inherit-plain, --literal-brace, --literal-plain, --set-brace, or --set-plain but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
                                                                                                                                     echo 39531109
