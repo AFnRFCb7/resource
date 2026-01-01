@@ -163,7 +163,7 @@
                                                                                                                                                     failure ad1f2615 "
                                                                                                                                                     We were expecting --literal-brace VARIABLE but we observed $*"
                                                                                                                                                 fi
-                                                                                                                                                # With sed we do not need to do anything for literal-plain
+                                                                                                                                                # With sed we do not need to do anything for literal-brace
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal-plain)
@@ -197,7 +197,7 @@
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             *)
-                                                                                                                                                failure d40b5fe2 "We were expecting --inherit, --link, --path or --set but we observed $*"
+                                                                                                                                                failure d40b5fe2 "We were expecting --inherit, --literal-brace, --literal-plain, --set-brace, or --set-plain but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
                                                                                                                                     echo 39531109
