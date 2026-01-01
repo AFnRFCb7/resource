@@ -157,12 +157,21 @@
                                                                                                                                                 COMMANDS+=( -e "s#\$$VARIABLE#$VARIABLE#g" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
-                                                                                                                                            --literal)
+                                                                                                                                            --literal-brace)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
-                                                                                                                                                    failure 55186955 "We were expecting --literal VARIABLE but we observed $*"
+                                                                                                                                                    failure ad1f2615 "
+                                                                                                                                                    We were expecting --literal-brace VARIABLE but we observed $*"
                                                                                                                                                 fi
-                                                                                                                                                # With sed we do not need to do anything for literal
+                                                                                                                                                # With sed we do not need to do anything for literal-plain
+                                                                                                                                                shift 2
+                                                                                                                                                ;;
+                                                                                                                                            --literal-plain)
+                                                                                                                                                if [[ "$#" -lt 2 ]]
+                                                                                                                                                then
+                                                                                                                                                    failure 55186955 "We were expecting --literal-plain VARIABLE but we observed $*"
+                                                                                                                                                fi
+                                                                                                                                                # With sed we do not need to do anything for literal-plain
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --set-brace)
