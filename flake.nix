@@ -113,7 +113,7 @@
                                                                                                                     pkgs.writeShellApplication
                                                                                                                         {
                                                                                                                             name = "runScript" ;
-                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gnused failure ] ;
+                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gnugrep pkgs.gnused failure ] ;
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     if [[ 3 -gt "$#" ]]
@@ -139,6 +139,7 @@
                                                                                                                                     then
                                                                                                                                         failure 029e9461 "We were expecting the third argument to be an integer but we observed $*"
                                                                                                                                     fi
+                                                                                                                                    ALLOWED_PLACEHOLDERS=()
                                                                                                                                     COMMANDS=()
                                                                                                                                     shift
                                                                                                                                     while [[ "$#" -gt 0 ]]
@@ -155,7 +156,12 @@
                                                                                                                                                 then
                                                                                                                                                     failure 159a6642 "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
-                                                                                                                                                COMMANDS+=( -e "s#\$$BRACED#$VARIABLE#g" )
+                                                                                                                                                if ! grep -F --quiet "$BRACED" "$INPUT"
+                                                                                                                                                then
+                                                                                                                                                    failure 545c8e1f "We were expecting inherit $BRACED to be in the input file but it was not" "$*"
+                                                                                                                                                fi
+                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "$BRACED" )
+                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --inherit-plain)
@@ -168,6 +174,11 @@
                                                                                                                                                 then
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
                                                                                                                                                 fi
+                                                                                                                                                if ! grep -F --quiet "$VARIABLE" "$INPUT"
+                                                                                                                                                then
+                                                                                                                                                    failure 50950711 "We were expecting inherit $VARIABLE to be in the input file but it was not" "$*"
+                                                                                                                                                fi
+                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
                                                                                                                                                 COMMANDS+=( -e "s#\$$VARIABLE#$VARIABLE#g" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
@@ -177,6 +188,11 @@
                                                                                                                                                     failure ad1f2615 "
                                                                                                                                                     We were expecting --literal-brace VARIABLE but we observed $*"
                                                                                                                                                 fi
+                                                                                                                                                if ! grep -F --quiet "$BRACED" "$INPUT"
+                                                                                                                                                then
+                                                                                                                                                    failure 4074aec1 "We were expecting literal $BRACED to be in the input file but it was not" "$*"
+                                                                                                                                                fi
+                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "$BRACED" )
                                                                                                                                                 # With sed we do not need to do anything for literal-brace
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
@@ -185,6 +201,11 @@
                                                                                                                                                 then
                                                                                                                                                     failure 55186955 "We were expecting --literal-plain VARIABLE but we observed $*"
                                                                                                                                                 fi
+                                                                                                                                                if ! grep -F --quiet "\$$VARIABLE" "$INPUT"
+                                                                                                                                                then
+                                                                                                                                                    failure 2a3b187d "We were expecting literal $VARIABLE to be in the input file but it was not" "$*"
+                                                                                                                                                fi
+                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
                                                                                                                                                 # With sed we do not need to do anything for literal-plain
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
@@ -196,6 +217,11 @@
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
                                                                                                                                                 BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
+                                                                                                                                                if ! grep -F --quiet "$BRACED" "$INPUT"
+                                                                                                                                                then
+                                                                                                                                                    failure 7e62972e "We were expecting set $BRACED to be in the input file but it was not" "$*"
+                                                                                                                                                fi
+                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "$BRACED" )
                                                                                                                                                 COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
@@ -207,6 +233,11 @@
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 VALUE="$3"
                                                                                                                                                 BRACED="\$$VARIABLE"
+                                                                                                                                                if ! grep -F --quiet "$VARIABLE" "$INPUT"
+                                                                                                                                                then
+                                                                                                                                                    failure 5f62a6be "We were expecting set $VARIABLE to be in the input file but it was not" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "$*"
+                                                                                                                                                fi
+                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
                                                                                                                                                 COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
@@ -214,10 +245,32 @@
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit-brace, --inherit-plain, --literal-brace, --literal-plain, --set-brace, or --set-plain but we observed $*"
                                                                                                                                         esac
                                                                                                                                     done
-                                                                                                                                    echo 39531109
-                                                                                                                                    cat <<EOF
-                                                                                                                                    sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
-                                                                                                                                    EOF
+                                                                                                                                    mapfile -t FOUND_PLACEHOLDERS < <(
+                                                                                                                                        grep -oE '\$\{[A-Za-z_][A-Za-z0-9_]*\}|\$[A-Za-z_][A-Za-z0-9_]*' "$INPUT" \
+                                                                                                                                        | sort -u
+                                                                                                                                    )
+                                                                                                                                    UNRESOLVED=()
+                                                                                                                                    for PH in "${ builtins.concatStringsSep "" [ "$" "{" "FOUND_PLACEHOLDERS[@]" "}" ] }"
+                                                                                                                                    do
+                                                                                                                                        FOUND=false
+                                                                                                                                        for ALLOWED in "${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[@]" "}" ] }"
+                                                                                                                                        do
+                                                                                                                                            if [[ "$PH" == "$ALLOWED" ]]
+                                                                                                                                            then
+                                                                                                                                                FOUND=true
+                                                                                                                                                break
+                                                                                                                                            fi
+                                                                                                                                        done
+
+                                                                                                                                        if ! $FOUND
+                                                                                                                                        then
+                                                                                                                                            UNRESOLVED+=( "$PH" )
+                                                                                                                                        fi
+                                                                                                                                    done
+                                                                                                                                    if [[ "${ builtins.concatStringsSep "" [ "$" "{" "#UNRESOLVED[@]" "}" ] }" -ne 0 ]]
+                                                                                                                                    then
+                                                                                                                                        failure d6899da6 "Unresolved placeholders in input file: ${ builtins.concatStringsSep "" [ "$" "{" "UNRESOLVED[*]" "}" ] }" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "ALLOWED_PLACEHOLDERS=${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[*]" "}" ] }"
+                                                                                                                                    fi
                                                                                                                                     sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
                                                                                                                                     chmod "$PERMISSIONS" "/mount/$OUTPUT"
                                                                                                                                 '' ;
