@@ -229,7 +229,7 @@
                                                                                                                                                 BRACED="\$$VARIABLE"
                                                                                                                                                 if ! grep -F --quiet "$VARIABLE" "$INPUT"
                                                                                                                                                 then
-                                                                                                                                                    failure 5f62a6be "We were expecting set $VARIABLE to be in the input file but it was not" "$*"
+                                                                                                                                                    failure 5f62a6be "We were expecting set $VARIABLE to be in the input file but it was not" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "$*"
                                                                                                                                                 fi
                                                                                                                                                 COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
