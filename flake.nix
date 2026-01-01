@@ -157,7 +157,7 @@
                                                                                                                                                 fi
                                                                                                                                                 if ! grep -F --quiet "$BRACED" "$INPUT"
                                                                                                                                                 then
-                                                                                                                                                    failure 545c8e1f "We were expecting inherit $BRACED to be in the input file but it was not"
+                                                                                                                                                    failure 545c8e1f "We were expecting inherit $BRACED to be in the input file but it was not" "$*"
                                                                                                                                                 fi
                                                                                                                                                 COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 2
@@ -174,7 +174,7 @@
                                                                                                                                                 fi
                                                                                                                                                 if ! grep -F --quiet "$VARIABLE" "$INPUT"
                                                                                                                                                 then
-                                                                                                                                                    failure 50950711 "We were expecting inherit $VARIABLE to be in the input file but it was not"
+                                                                                                                                                    failure 50950711 "We were expecting inherit $VARIABLE to be in the input file but it was not" "$*"
                                                                                                                                                 fi
                                                                                                                                                 COMMANDS+=( -e "s#\$$VARIABLE#$VARIABLE#g" )
                                                                                                                                                 shift 2
@@ -189,7 +189,7 @@
                                                                                                                                                 shift 2
                                                                                                                                                 if ! grep -F --quiet "$BRACED" "$INPUT"
                                                                                                                                                 then
-                                                                                                                                                    failure 4074aec1 "We were expecting literal $BRACED to be in the input file but it was not"
+                                                                                                                                                    failure 4074aec1 "We were expecting literal $BRACED to be in the input file but it was not" "$*"
                                                                                                                                                 fi
                                                                                                                                                 ;;
                                                                                                                                             --literal-plain)
@@ -199,7 +199,7 @@
                                                                                                                                                 fi
                                                                                                                                                 if ! grep -F --quiet "$VARIABLE" "$INPUT"
                                                                                                                                                 then
-                                                                                                                                                    failure 2a3b187d "We were expecting literal $VARIABLE to be in the input file but it was not"
+                                                                                                                                                    failure 2a3b187d "We were expecting literal $VARIABLE to be in the input file but it was not" "$*"
                                                                                                                                                 fi
                                                                                                                                                 # With sed we do not need to do anything for literal-plain
                                                                                                                                                 shift 2
@@ -214,7 +214,7 @@
                                                                                                                                                 BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
                                                                                                                                                 if ! grep -F --quiet "$BRACED" "$INPUT"
                                                                                                                                                 then
-                                                                                                                                                    failure 7e62972e "We were expecting set $BRACED to be in the input file but it was not"
+                                                                                                                                                    failure 7e62972e "We were expecting set $BRACED to be in the input file but it was not" "$*"
                                                                                                                                                 fi
                                                                                                                                                 COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
