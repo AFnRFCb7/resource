@@ -151,6 +151,7 @@
                                                                                                                                                     failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
+                                                                                                                                                VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
                                                                                                                                                 BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
                                                                                                                                                 if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
                                                                                                                                                 then
@@ -188,6 +189,8 @@
                                                                                                                                                     failure ad1f2615 "
                                                                                                                                                     We were expecting --literal-brace VARIABLE but we observed $*"
                                                                                                                                                 fi
+                                                                                                                                                VARIABLE="$2"
+                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
                                                                                                                                                 if ! grep -F --quiet "$BRACED" "$INPUT"
                                                                                                                                                 then
                                                                                                                                                     failure 4074aec1 "We were expecting literal $BRACED to be in the input file but it was not" "$*"
@@ -201,6 +204,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 55186955 "We were expecting --literal-plain VARIABLE but we observed $*"
                                                                                                                                                 fi
+                                                                                                                                                VARIABLE="$2"
                                                                                                                                                 if ! grep -F --quiet "\$$VARIABLE" "$INPUT"
                                                                                                                                                 then
                                                                                                                                                     failure 2a3b187d "We were expecting literal $VARIABLE to be in the input file but it was not" "$*"
