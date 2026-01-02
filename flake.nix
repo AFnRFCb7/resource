@@ -201,7 +201,7 @@
                                                                                                                                                 then
                                                                                                                                                     failure 55186955 "We were expecting --literal-plain VARIABLE but we observed $*"
                                                                                                                                                 fi
-                                                                                                                                                if ! grep -F --quiet "$VARIABLE" "$INPUT"
+                                                                                                                                                if ! grep -F --quiet "\$$VARIABLE" "$INPUT"
                                                                                                                                                 then
                                                                                                                                                     failure 2a3b187d "We were expecting literal $VARIABLE to be in the input file but it was not" "$*"
                                                                                                                                                 fi
