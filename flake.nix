@@ -186,8 +186,7 @@
                                                                                                                                             --literal-brace)
                                                                                                                                                 if [[ "$#" -lt 2 ]]
                                                                                                                                                 then
-                                                                                                                                                    failure ad1f2615 "
-                                                                                                                                                    We were expecting --literal-brace VARIABLE but we observed $*"
+                                                                                                                                                    failure ad1f2615 "We were expecting --literal-brace VARIABLE but we observed $*"
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
                                                                                                                                                 BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
