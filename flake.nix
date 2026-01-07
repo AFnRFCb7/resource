@@ -307,7 +307,7 @@
                                                 writeShellApplication
                                                     {
                                                         name = "setup" ;
-                                                        runtimeInputs = [ coreutils flock jq ps publish redis sequential yq-go failure ] ;
+                                                        runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             string
                                                                 {
