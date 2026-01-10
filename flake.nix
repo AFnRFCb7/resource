@@ -70,7 +70,6 @@
                                                             runScript =
                                                                 ''
                                                                     bash -c '
-                                                                        export MOUNT="${ mount }"
                                                                         if [[ -t 0 ]]
                                                                         then
                                                                             execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
