@@ -7,7 +7,7 @@
 		        lib =
                     {
                         buildFHSUserEnv ,
-                        channel ? "resource" ,
+                        channel ,
                         coreutils ,
                         failure ,
                         findutils ,
