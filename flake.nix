@@ -341,8 +341,7 @@
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
-                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
-                                                                                ORIGINATOR_PID=${ if follow-parent then ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' else ''"$PENULTIMATE_PID"'' }
+                                                                                ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
                                                                                 export ORIGINATOR_PID
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
@@ -398,7 +397,7 @@
                                                                                     flock -s 211
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
-                                                                                    QUARANTINE="${ resources-directory }/mounts/$INDEX
+                                                                                    QUARANTINE="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$QUARANTINE"
                                                                                     export MOUNT
                                                                                     mkdir --parents "$MOUNT"
