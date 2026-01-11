@@ -398,7 +398,7 @@
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     # TODO FIXME
-                                                                                    QUARANTINE="${ resources-directory }/mounts/$INDEX"
+                                                                                    QUARANTINE="${ resources-directory }/quarantine/$INDEX"
                                                                                     mkdir --parents "$QUARANTINE"
                                                                                     export MOUNT
                                                                                     GC_ROOTS_DIRECTORY="${ store-garbage-collection-root }/$INDEX"
