@@ -12,7 +12,6 @@
                         failure ,
                         findutils ,
                         flock ,
-                        gc-root-directory ,
                         jq ,
                         makeBinPath ,
                         makeWrapper ,
@@ -402,7 +401,7 @@
                                                                                     QUARANTINE="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$QUARANTINE"
                                                                                     export MOUNT
-                                                                                    GC_ROOTS_DIRECTORY="${ gc-roots-directory }/$INDEX"
+                                                                                    GC_ROOTS_DIRECTORY="${ store-garbage-collection-root }/$INDEX"
                                                                                     mkdir --parents "$GC_ROOTS_DIRECTORY"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
