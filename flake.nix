@@ -30,7 +30,7 @@
                         let
                             _string = string ;
                             description =
-                                { follow-parent ? false , init ? null , release ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
                                         seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
@@ -51,7 +51,6 @@
                                     {
                                         follow-parent ? false ,
                                         init ? null ,
-                                        release ? null ,
                                         seed ? null ,
                                         targets ? [ ] ,
                                         transient ? false
