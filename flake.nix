@@ -398,6 +398,8 @@
                                                                                     flock -s 211
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
+                                                                                    QUARANTINE="${ resources-directory }/mounts/$INDEX
+                                                                                    mkdir --parents "$QUARANTINE"
                                                                                     export MOUNT
                                                                                     mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
