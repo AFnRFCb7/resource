@@ -12,6 +12,7 @@
                         failure ,
                         findutils ,
                         flock ,
+                        gc-root-directory ,
                         jq ,
                         makeBinPath ,
                         makeWrapper ,
@@ -397,9 +398,12 @@
                                                                                     flock -s 211
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
+                                                                                    # TODO FIXME
                                                                                     QUARANTINE="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$QUARANTINE"
                                                                                     export MOUNT
+                                                                                    GC_ROOTS_DIRECTORY="${ gc-roots-directory }/$INDEX"
+                                                                                    mkdir --parents "$GC_ROOTS_DIRECTORY"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                                     export STANDARD_ERROR_FILE
@@ -600,6 +604,7 @@
                                             expected-transient ,
                                             expected-type ,
                                             follow-parent ? false ,
+                                            gc-roots-directory ,
                                             init ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
