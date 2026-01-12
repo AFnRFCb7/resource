@@ -7,6 +7,7 @@
 		        lib =
                     {
                         buildFHSUserEnv ,
+                        caller-pid-variable ,
                         channel ,
                         coreutils ,
                         failure ,
@@ -350,8 +351,14 @@
                                                                                 fi
                                                                                 export ORIGINATOR_PID
                                                                                 export ${ originator-pid-variable }="$ORIGINATOR_PID"
-                                                                                CALLER_PID="$( ps -o ppid= -p "$ORIGINATOR_PID" | tr -d '[:space:]')" || failure 2bf22876
+                                                                                if [[ -n "${ builtins.concatStringsSep "" [ "$" "{" caller-pid-variable "+x" "}" ] }" ]]
+                                                                                then
+                                                                                    CALLER_PID="${ builtins.concatStringsSep "" [ "$" caller-pid-variable ] }"
+                                                                                else
+                                                                                    CALLER_PID="$( ps -o ppid= -p "$ORIGINATOR_PID" | tr -d '[:space:]')" || failure 837a2a2f
+                                                                                fi
                                                                                 export CALLER_PID
+                                                                                export ${ caller-pid-variable }="$ORIGINATOR_PID"
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
