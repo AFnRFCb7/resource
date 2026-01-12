@@ -342,7 +342,7 @@
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
-                                                                                if [[ -n "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" ]]
+                                                                                if [[ -n "${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable "+x" "}" ] }" ]]
                                                                                 then
                                                                                     ORIGINATOR_PID="${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
                                                                                 else
