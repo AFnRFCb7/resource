@@ -347,6 +347,8 @@
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
+                                                                                mkdir --parents "${ resources-directory }/quarantine/$INDEX"
+                                                                                mkdir --parents "${ store-collection-garbage-root }/$INDEX"
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
                                                                                 export STANDARD_INPUT
