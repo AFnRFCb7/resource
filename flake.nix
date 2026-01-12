@@ -350,6 +350,8 @@
                                                                                 fi
                                                                                 export ORIGINATOR_PID
                                                                                 export ${ originator-pid-variable }="$ORIGINATOR_PID"
+                                                                                CALLER_PID="$( ps -o ppid= -p "$ORIGINATOR_PID" )" || failure 2bf22876
+                                                                                export CALLER_PID
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
@@ -375,6 +377,7 @@
                                                                                         --null-input \
                                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                         --arg HASH "$HASH" \
+                                                                                        --arg CALLER_PID "$CALLER_PID" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                         --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
@@ -438,6 +441,7 @@
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                            --arg CALLER_PID "$CALLER_PID" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -452,6 +456,7 @@
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             '{
                                                                                                 "arguments" : $ARGUMENTS ,
+                                                                                                "caller-pid" : $CALLER_PID ,
                                                                                                 "hash" : $HASH ,
                                                                                                 "index" : $INDEX ,
                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -473,6 +478,7 @@
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                            --arg CALLER_PID "$CALLER_PID" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -486,6 +492,7 @@
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             '{
                                                                                                 "arguments" : $ARGUMENTS ,
+                                                                                                "caller-pid" : $CALLER_PID ,
                                                                                                 "hash" : $HASH ,
                                                                                                 "index" : $INDEX ,
                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
