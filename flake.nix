@@ -348,7 +348,7 @@
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                                 mkdir --parents "${ resources-directory }/quarantine/$INDEX"
-                                                                                mkdir --parents "${ store-collection-garbage-root }/$INDEX"
+                                                                                mkdir --parents "${ store-garbage-collection-root }/$INDEX"
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
                                                                                 export STANDARD_INPUT
