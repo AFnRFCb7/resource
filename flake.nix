@@ -17,6 +17,7 @@
                         makeWrapper ,
                         mkDerivation ,
                         nix ,
+                        originator-pid-variable ,
                         ps ,
                         redis ,
                         resources ? null ,
@@ -341,8 +342,14 @@
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
-                                                                                ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
+                                                                                if [[ -n "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" ]]
+                                                                                then
+                                                                                    ORIGINATOR_PID="${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
+                                                                                else
+                                                                                    ORIGINATOR_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
+                                                                                fi
                                                                                 export ORIGINATOR_PID
+                                                                                export ${ originator-pid-variable }="$ORIGINATOR_PID"
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
