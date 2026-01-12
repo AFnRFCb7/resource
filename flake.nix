@@ -347,8 +347,6 @@
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
-                                                                                mkdir --parents "${ resources-directory }/quarantine/$INDEX"
-                                                                                mkdir --parents "${ store-garbage-collection-root }/$INDEX"
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
                                                                                 export STANDARD_INPUT
@@ -362,6 +360,8 @@
                                                                                     export MOUNT
                                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                                     export INDEX
+                                                                                    mkdir --parents "${ resources-directory }/quarantine/$INDEX"
+                                                                                    mkdir --parents "${ store-garbage-collection-root }/$INDEX"
                                                                                     export PROVENANCE=cached
                                                                                     mkdir --parents "${ store-garbage-collection-root }/$INDEX"
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
