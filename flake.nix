@@ -350,7 +350,7 @@
                                                                                 fi
                                                                                 export ORIGINATOR_PID
                                                                                 export ${ originator-pid-variable }="$ORIGINATOR_PID"
-                                                                                CALLER_PID="$( ps -o ppid= -p "$ORIGINATOR_PID" )" || failure 2bf22876
+                                                                                CALLER_PID="$( ps -o ppid= -p "$ORIGINATOR_PID" | tr -d '[:space:]')" || failure 2bf22876
                                                                                 export CALLER_PID
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
