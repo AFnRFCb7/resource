@@ -358,7 +358,7 @@
                                                                                     CALLER_PID="$( ps -o ppid= -p "$ORIGINATOR_PID" | tr -d '[:space:]')" || failure 837a2a2f
                                                                                 fi
                                                                                 export CALLER_PID
-                                                                                export ${ caller-pid-variable }="$ORIGINATOR_PID"
+                                                                                export ${ caller-pid-variable }="$CALLER_PID"
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
