@@ -17,6 +17,7 @@
                         makeWrapper ,
                         mkDerivation ,
                         nix ,
+                        originator-pid-variable ,
                         ps ,
                         redis ,
                         resources ? null ,
@@ -284,8 +285,6 @@
                                                                                             in
                                                                                                 if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
-                                                                                                        # shellcheck source=/dev/null
-                                                                                                        source ${ makeWrapper }/nix-support/setup-hook
                                                                                                         ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
@@ -341,16 +340,12 @@
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
-                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
-                                                                                ORIGINATOR_PID=${ if follow-parent then ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' else ''"$PENULTIMATE_PID"'' }
-                                                                                export ORIGINATOR_PID
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
                                                                                 export STANDARD_INPUT
-                                                                                export ORIGINATOR_PID
                                                                                 export TRANSIENT
                                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                                 flock -s 210
@@ -373,7 +368,7 @@
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                        --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                        --arg ORIGINATOR_PID "${ originator-pid-variable }" \
                                                                                         --arg PROVENANCE "$PROVENANCE" \
                                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                         --argjson TARGETS "$TARGETS" \
@@ -383,7 +378,7 @@
                                                                                             "hash" : $HASH ,
                                                                                             "index" : $INDEX ,
                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                            "originator-pid" : $ORIGINATOR_PID ,
+                                                                                            "originator-pid" : $ORIGINATOR_PIDi ,
                                                                                             "provenance" : $PROVENANCE ,
                                                                                             "standard-input" : $STANDARD_INPUT ,
                                                                                             "targets" : $TARGETS ,
@@ -432,7 +427,7 @@
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                            --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                            --arg ORIGINATOR_PID "${ originator-pid-variable }" \
                                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
@@ -467,7 +462,7 @@
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                            --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                            --arg ORIGINATOR_PID "${ originator-pid-variable }" \
                                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
@@ -572,16 +567,12 @@
                                                                 }
                                                                 transient ;
                                             in
-                                                script :
-                                                    string
-                                                        {
-                                                            template = { setup , failure } : ''"$( ${ setup } )" || ${ failure } ${ setup }'' ;
-                                                            values =
-                                                                {
-                                                                    setup = script "${ setup }/bin/setup" ;
-                                                                    failure = "${ failure }/bin/failure b06fc102" ;
-                                                                } ;
-                                                        } ;
+                                                {
+                                                    fun ? setup : setup ,
+                                                    failure ? failure "a004370d" ,
+                                                    originator-pid ? "$$"
+                                                } :
+                                                    ''$( : "${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":" "=" originator-pid "}" ] }" ; ${ fun "${ setup }/bin/setup " } || ${ failure }'' ;
                             pre-hash =
                                 { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
