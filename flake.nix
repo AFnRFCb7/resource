@@ -48,6 +48,7 @@
                                                     string = seed ;
                                                 }
                                                 { primary = primary ; secondary = secondary ; } ;
+                                failure_ = failure ;
                                 implementation =
                                     {
                                         follow-parent ? false ,
@@ -569,7 +570,7 @@
                                             in
                                                 {
                                                     fun ? setup : setup ,
-                                                    failure ? failure "a004370d" ,
+                                                    failure ? failure_ "a004370d" ,
                                                     originator-pid ? "$$"
                                                 } :
                                                     ''$( : "${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":" "=" originator-pid "}" ] }" ; ${ fun "${ setup }/bin/setup " } || ${ failure }'' ;
