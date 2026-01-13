@@ -570,7 +570,7 @@
                                             in
                                                 {
                                                     fun ? setup : setup ,
-                                                    failure ? failure_ "a004370d" ,
+                                                    failure ? "exit 65" ,
                                                     originator-pid ? "$$"
                                                 } :
                                                     ''$( : "${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":" "=" originator-pid "}" ] }" ; ${ fun "${ setup }/bin/setup " } || ${ failure }'' ;
