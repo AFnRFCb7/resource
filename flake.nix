@@ -341,6 +341,7 @@
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
+                                                                                ${ originator-pid-variable }="${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=\"$( ps -o ppid= -p \\\"$PPID\\\" | tr -d '[:space:]')\" || failure 9db056a1"}" ] }"
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
@@ -575,7 +576,7 @@
                                                 } :
                                                     ''
                                                         # spellcheck ignore=SC2031
-                                                        "$( : "${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":" "=" originator-pid "}" ] }" ; ${ fun "${ setup }/bin/setup " } )" || ${ failure }
+                                                        "$( ${ fun "${ setup }/bin/setup " } )" || ${ failure }
                                                     '' ;
                             pre-hash =
                                 { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
