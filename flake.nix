@@ -574,7 +574,7 @@
                                                     originator-pid ? "$$"
                                                 } :
                                                     ''
-                                                        # spellcheck ignore=SC2030
+                                                        # spellcheck ignore=SC2031
                                                         "$( : "${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":" "=" originator-pid "}" ] }" ; ${ fun "${ setup }/bin/setup " } )" || ${ failure }
                                                     '' ;
                             pre-hash =
