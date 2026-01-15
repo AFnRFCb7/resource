@@ -583,7 +583,7 @@
                                                 } :
                                                     ''"$( ${ setup setup_ } )" || ${ failure }'' ;
                             pre-hash =
-                                { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { follow-parent ? false , init ? null , originator-pid-variable ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
