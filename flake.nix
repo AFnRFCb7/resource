@@ -574,7 +574,7 @@
                                                     failure ? "exit 65" ,
                                                     originator-pid ? "$$"
                                                 } :
-                                                    ''"$( ${ fun "${ setup }/bin/setup " } )" || ${ failure }'' ;
+                                                    ''"$( ${ fun "${ setup }/bin/setup" } )" || ${ failure }'' ;
                             pre-hash =
                                 { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
