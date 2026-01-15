@@ -304,7 +304,7 @@
                                                                 redis-cli PUBLISH "${ channel }" "$JSON" > /dev/null 2>&1 || true
                                                             '' ;
                                                     } ;
-                                            setup =
+                                            setup_ =
                                                 writeShellApplication
                                                     {
                                                         name = "setup" ;
@@ -570,16 +570,11 @@
                                                                 }
                                                                 transient ;
                                             in
-                                                script :
-                                                    string
-                                                        {
-                                                            template = { setup , failure } : ''"$( ${ setup } )" || ${ failure } ${ setup }'' ;
-                                                            values =
-                                                                {
-                                                                    setup = script "${ setup }/bin/setup" ;
-                                                                    failure = "${ failure }/bin/failure b06fc102" ;
-                                                                } ;
-                                                        } ;
+                                                {
+                                                    setup ? setup : setup ,
+                                                    failure ? "exit 65"
+                                                } :
+                                                    ''"$( ${ setup setup_ } )" || ${ failure }'' ;
                             pre-hash =
                                 { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
