@@ -30,7 +30,7 @@
                         let
                             _string = string ;
                             description =
-                                { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { follow-parent ? false , init ? null , originator-pid-variable , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
                                         seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
@@ -51,6 +51,7 @@
                                     {
                                         follow-parent ? false ,
                                         init ? null ,
+                                        originator-pid-variable ,
                                         seed ? null ,
                                         targets ? [ ] ,
                                         transient ? false
@@ -330,27 +331,33 @@
                                                                                 then
                                                                                     HAS_STANDARD_INPUT=false
                                                                                     STANDARD_INPUT=
+                                                                                    if [[ -z "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" ]]
+                                                                                    then
+                                                                                        ${ originator-pid-variable }="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 7ccd1780
+                                                                                    fi
                                                                                 else
                                                                                     STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
                                                                                     export STANDARD_INPUT_FILE
                                                                                     HAS_STANDARD_INPUT=true
                                                                                     cat <&0 > "$STANDARD_INPUT_FILE"
                                                                                     STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
+                                                                                    if [[ -z "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" ]]
+                                                                                    then
+                                                                                        PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 7f278345
+                                                                                        ${ originator-pid-variable }="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5f8eae2f
+                                                                                    fi
                                                                                 fi
+                                                                                export ${ originator-pid-variable }
                                                                                 mkdir --parents ${ resources-directory }
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
-                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
-                                                                                ORIGINATOR_PID=${ if follow-parent then ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' else ''"$PENULTIMATE_PID"'' }
-                                                                                export ORIGINATOR_PID
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
                                                                                 export STANDARD_INPUT
-                                                                                export ORIGINATOR_PID
                                                                                 export TRANSIENT
                                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                                 flock -s 210
@@ -371,7 +378,7 @@
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                        --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                        --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                         --arg PROVENANCE "$PROVENANCE" \
                                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                         --argjson TARGETS "$TARGETS" \
@@ -430,7 +437,7 @@
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                            --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
@@ -465,7 +472,7 @@
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                            --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
