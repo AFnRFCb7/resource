@@ -341,7 +341,7 @@
                                                                                             cat <&0 > "$STANDARD_INPUT_FILE"
                                                                                             STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
                                                                                             PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 7f278345
-                                                                                            ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":" "=" ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5f8eae2f''"}" ] }
+                                                                                            ${ originator-pid-variable }="${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":" "=" ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5f8eae2f'' "}" ] }"
                                                                                         fi
                                                                                         export ${ originator-pid-variable }
                                                                                         mkdir --parents ${ resources-directory }
