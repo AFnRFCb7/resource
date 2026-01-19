@@ -475,6 +475,8 @@
                                                                                                     --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
                                                                                                     --arg STATUS "$STATUS" \
                                                                                                     --argjson TARGETS "$TARGETS" \
+                                                                                                    --arg TARGET_HASH_EXPECTED "$TARGET_HASH_EXPECTED" \
+                                                                                                    --arg TARGET_HASH_OBSERVED "$TARGET_HASH_OBSERVED" \
                                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                                     '{
                                                                                                         "arguments" : $ARGUMENTS ,
@@ -488,6 +490,8 @@
                                                                                                         "standard-output" : $STANDARD_OUTPUT ,
                                                                                                         "status" : $STATUS ,
                                                                                                         "targets" : $TARGETS ,
+                                                                                                        "target-hash-expected" : $TARGET_HASH_EXPECTED ,
+                                                                                                        "target-hash-observed" : $TARGET_HASH_OBSERVED ,
                                                                                                         "transient" : $TRANSIENT ,
                                                                                                         "type" : "invalid"
                                                                                                     }' | publish
