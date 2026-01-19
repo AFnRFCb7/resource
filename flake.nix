@@ -576,7 +576,7 @@
                                             in
                                                 {
                                                     setup ? setup : setup ,
-                                                    failure ? "exit 65"
+                                                    failure ? "${ failure }/bin/failure 6164af73"
                                                 } :
                                                     ''"$( ${ setup setup_ } )" || ${ failure }'' ;
                             pre-hash =
