@@ -91,6 +91,45 @@
                                                                                     runtimeInputs = [ ] ;
                                                                                     text =
                                                                                         let
+                                                                                            pid =
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "pid" ;
+                                                                                                        runtimeInputs = [ pkgs.coreutils pkgs.procps wrap failure ] ;
+                                                                                                        text =
+                                                                                                            let
+                                                                                                                stall =
+                                                                                                                    let
+                                                                                                                        application =
+                                                                                                                            pkgs.writeShellApplication
+                                                                                                                                {
+                                                                                                                                    name = "stall" ;
+                                                                                                                                    runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                                                    text =
+                                                                                                                                        ''
+                                                                                                                                            tail --follow /dev/null --pid "$PID"
+                                                                                                                                        '' ;
+                                                                                                                                } ;
+                                                                                                                        in "${ application }/bin/stall" ;
+                                                                                                                in
+                                                                                                                    ''
+                                                                                                                        TARGET_INDEX="$1"
+                                                                                                                        TARGET_PATH="$2"
+                                                                                                                        PID="$ORIGIN_PID"
+                                                                                                                        INDEX=0
+                                                                                                                        while [[ "$PID" -ne 0 ]] && [[ "$INDEX" -lt "$TARGET_INDEX" ]]
+                                                                                                                        do
+                                                                                                                            INDEX="$(( INDEX + 1 ))"
+                                                                                                                            PID="$( ps -o ppid= -p "$PID" | tr -d ' ' )" || failure d00bbdb3
+                                                                                                                        done
+                                                                                                                        if [[ "$INDEX" -eq "$TARGET_INDEX" ]]
+                                                                                                                        then
+                                                                                                                            wrap stall "$TARGET_PATH" 0500 --inherit-plain PID
+                                                                                                                        else
+                                                                                                                            failure 164eb296
+                                                                                                                        fi
+                                                                                                                    '' ;
+                                                                                                    } ;
                                                                                             root =
                                                                                                 pkgs.writeShellApplication
                                                                                                     {
@@ -283,11 +322,10 @@
                                                                                                                     in "${ application }/bin/runScript" ;
                                                                                                         } ;
                                                                                             in
-                                                                                                if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } ) == "string" then
+                                                                                                if builtins.typeOf ( init { pid = pid ; pkgs = pkgs ; resources = resources ; root = root ; sequential = sequential ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
-                                                                                                        # shellcheck source=/dev/null
-                                                                                                        source ${ makeWrapper }/nix-support/setup-hook
-                                                                                                        ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } } "$@"
+                                                                                                        export MOUNT="${ resources-directory }/mounts/$INDEX"
+                                                                                                        ${ init { pid = pid ; pkgs = pkgs ; resources = resources ; root = root ; sequential = sequential ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
                                                                                 }
