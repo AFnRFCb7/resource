@@ -115,13 +115,13 @@
                                                                                                                     ''
                                                                                                                         TARGET_INDEX="$1"
                                                                                                                         TARGET_PATH="$2"
-                                                                                                                        PID="$ORIGIN_PID"
+                                                                                                                        PID="${ builtins.concatStringsSep "" [ "$" origin-id-variable ] }"
                                                                                                                         INDEX=0
                                                                                                                         while [[ "$PID" -ne 0 ]] && [[ "$INDEX" -lt "$TARGET_INDEX" ]]
                                                                                                                         do
                                                                                                                             INDEX="$(( INDEX + 1 ))"
                                                                                                                             PID="$( ps -o ppid= -p "$PID" | tr -d ' ' )" || failure d00bbdb3
-                                                                                                                            echo "INDEX=$INDEX" "ORIGIN_PID=$ORIGIN_PID" "PID=$PID"
+                                                                                                                            echo "INDEX=$INDEX" "PID=$PID"
                                                                                                                         done
                                                                                                                         if [[ "$INDEX" -eq "$TARGET_INDEX" ]]
                                                                                                                         then
