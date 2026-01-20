@@ -125,7 +125,7 @@
                                                                                                                         done
                                                                                                                         if [[ "$INDEX" -eq "$TARGET_INDEX" ]]
                                                                                                                         then
-                                                                                                                            wrap ${ stall } "$TARGET_PATH" 0500 --inherit-plain PID
+                                                                                                                            wrap ${ stall } "$TARGET_PATH" 0500 --literal-plain PATH --inherit-plain PID
                                                                                                                         else
                                                                                                                             failure 164eb296
                                                                                                                         fi
