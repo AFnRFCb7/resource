@@ -121,6 +121,7 @@
                                                                                                                         do
                                                                                                                             INDEX="$(( INDEX + 1 ))"
                                                                                                                             PID="$( ps -o ppid= -p "$PID" | tr -d ' ' )" || failure d00bbdb3
+                                                                                                                            echo "INDEX=$INDEX" "ORIGIN_PID=$ORIGIN_PID" "PID=$PID"
                                                                                                                         done
                                                                                                                         if [[ "$INDEX" -eq "$TARGET_INDEX" ]]
                                                                                                                         then
