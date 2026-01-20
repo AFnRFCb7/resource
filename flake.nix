@@ -115,7 +115,7 @@
                                                                                                                     ''
                                                                                                                         TARGET_INDEX="$1"
                                                                                                                         TARGET_PATH="$2"
-                                                                                                                        PID="${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
+                                                                                                                        PID="${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":?" "must be set" "}" ] }"
                                                                                                                         INDEX=0
                                                                                                                         while [[ "$PID" -ne 0 ]] && [[ "$INDEX" -lt "$TARGET_INDEX" ]]
                                                                                                                         do
