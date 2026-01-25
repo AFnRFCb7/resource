@@ -406,7 +406,7 @@
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                        --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
+                                                                                        --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                         --arg PROVENANCE "$PROVENANCE" \
                                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                         --argjson TARGETS "$TARGETS" \
@@ -465,7 +465,7 @@
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
+                                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
@@ -500,7 +500,7 @@
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
+                                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
