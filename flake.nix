@@ -217,7 +217,6 @@
                                                                                                                                                     failure 50950711 "We were expecting inherit $VARIABLE to be in the input file but it was not" "$*"
                                                                                                                                                 fi
                                                                                                                                                 ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
-                                                                                                                                                COMMANDS+=( -e "s#\$$VARIABLE#$VARIABLE#g" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal-brace)
