@@ -208,6 +208,8 @@
                                                                                                                                                     failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
                                                                                                                                                 fi
                                                                                                                                                 VARIABLE="$2"
+                                                                                                                                                VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
+                                                                                                                                                BRACED="\$$VARIABLE"
                                                                                                                                                 if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
                                                                                                                                                 then
                                                                                                                                                     failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
@@ -217,6 +219,7 @@
                                                                                                                                                     failure 50950711 "We were expecting inherit $VARIABLE to be in the input file but it was not" "$*"
                                                                                                                                                 fi
                                                                                                                                                 ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
+                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             --literal-brace)
