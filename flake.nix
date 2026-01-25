@@ -17,6 +17,7 @@
                         makeWrapper ,
                         mkDerivation ,
                         nix ,
+                        originator-pid-variable ,
                         ps ,
                         redis ,
                         resources ? null ,
@@ -30,7 +31,7 @@
                         let
                             _string = string ;
                             description =
-                                { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
                                         seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
@@ -49,7 +50,6 @@
                                                 { primary = primary ; secondary = secondary ; } ;
                                 implementation =
                                     {
-                                        follow-parent ? false ,
                                         init ? null ,
                                         seed ? null ,
                                         targets ? [ ] ,
@@ -90,6 +90,42 @@
                                                                                     runtimeInputs = [ ] ;
                                                                                     text =
                                                                                         let
+                                                                                            pid =
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "pid" ;
+                                                                                                        runtimeInputs = [ pkgs.procps wrap failure ] ;
+                                                                                                        text =
+                                                                                                            let
+                                                                                                                stall =
+                                                                                                                    let
+                                                                                                                        application =
+                                                                                                                            pkgs.writeShellApplication
+                                                                                                                                {
+                                                                                                                                    name = "stall" ;
+                                                                                                                                    runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                                                    text =
+                                                                                                                                        ''
+                                                                                                                                            echo "STALLING FOR PID=$PID"
+                                                                                                                                            tail --follow /dev/null --pid "$PID"
+                                                                                                                                        '' ;
+                                                                                                                                } ;
+                                                                                                                        in "${ application }/bin/stall" ;
+                                                                                                                in
+                                                                                                                    ''
+                                                                                                                        STALL_INDEX="$1"
+                                                                                                                        STALL_PATH="$2"
+                                                                                                                        INDEX=0
+                                                                                                                        PID="${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
+                                                                                                                        while [[ "$INDEX" -lt "$STALL_INDEX" ]] && [[ "$PID" -ne 1 ]]
+                                                                                                                        do
+                                                                                                                            PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]')" || failure caade9f0
+                                                                                                                            INDEX=$(( INDEX + 1 ))
+                                                                                                                            echo "INDEX=$INDEX PID=$PID STALL_INDEX=$STALL_INDEX STALL_PATH=$STALL_PATH"
+                                                                                                                        done
+                                                                                                                        wrap stall "$STALL_PATH" 0500 --inherit-plain PID --literal-plain PATH
+                                                                                                                    '' ;
+                                                                                                    } ;
                                                                                             root =
                                                                                                 pkgs.writeShellApplication
                                                                                                     {
@@ -282,10 +318,10 @@
                                                                                                                     in "${ application }/bin/runScript" ;
                                                                                                         } ;
                                                                                             in
-                                                                                                if builtins.typeOf ( init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } ) == "string" then
+                                                                                                if builtins.typeOf ( init { pid = pid ; pkgs = pkgs ; resources = resources ; root = root ; sequential = sequential ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
                                                                                                         export MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                                                        ${ init { mount = "${ resources-directory }/mounts/$INDEX" ; pkgs = pkgs ; resources = resources ; root = root ; wrap = wrap ; } } "$@"
+                                                                                                        ${ init { pid = pid ;pkgs = pkgs ; resources = resources ; root = root ; sequential = sequential ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
                                                                                 }
@@ -329,27 +365,27 @@
                                                                                 then
                                                                                     HAS_STANDARD_INPUT=false
                                                                                     STANDARD_INPUT=
+                                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$$" | tr -d '[:space:]')'' "}" ] } || failure 2bd52e9b
                                                                                 else
                                                                                     STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
                                                                                     export STANDARD_INPUT_FILE
                                                                                     HAS_STANDARD_INPUT=true
                                                                                     cat <&0 > "$STANDARD_INPUT_FILE"
                                                                                     STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
+                                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure e1556ee8
                                                                                 fi
                                                                                 mkdir --parents ${ resources-directory }
                                                                                 ARGUMENTS=( "$@" )
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
-                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')" || failure 9db056a1
-                                                                                ORIGINATOR_PID=${ if follow-parent then ''"$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')" || failure 5cd9ec93'' else ''"$PENULTIMATE_PID"'' }
-                                                                                export ORIGINATOR_PID
+                                                                                export ${ originator-pid-variable }
                                                                                 HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
                                                                                 export STANDARD_INPUT
-                                                                                export ORIGINATOR_PID
+                                                                                export ${ originator-pid-variable }
                                                                                 export TRANSIENT
                                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                                 flock -s 210
@@ -370,7 +406,7 @@
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                        --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                        --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
                                                                                         --arg PROVENANCE "$PROVENANCE" \
                                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                         --argjson TARGETS "$TARGETS" \
@@ -429,7 +465,7 @@
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                            --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
                                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
@@ -464,7 +500,7 @@
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                            --arg ORIGINATOR_PID "$ORIGINATOR_PID" \
+                                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
                                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
@@ -580,7 +616,7 @@
                                                                 } ;
                                                         } ;
                             pre-hash =
-                                { follow-parent ? false , init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
@@ -597,7 +633,6 @@
                                             expected-targets ,
                                             expected-transient ,
                                             expected-type ,
-                                            follow-parent ? false ,
                                             init ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
@@ -666,8 +701,8 @@
                                                                                 resource =
                                                                                     visitor
                                                                                         {
-                                                                                            null = path : value : implementation { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
-                                                                                            string = path : value : implementation { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ) ;
+                                                                                            null = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ) ;
+                                                                                            string = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } ( setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ) ;
                                                                                         }
                                                                                         standard-input ;
                                                                                 in
@@ -705,7 +740,7 @@
                                                                                             cat /build/payload >&2
                                                                                             failure 75431637 "We expected the payload arguments to be $EXPECTED_ARGUMENTS but it was $OBSERVED_ARGUMENTS"
                                                                                         fi
-                                                                                        EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
+                                                                                        EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure 338e000e
                                                                                         if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
                                                                                         then
@@ -792,7 +827,7 @@
                                                                                             failure b132ce9b "We expected the payload type to be $EXPECTED_TYPE but it was $OBSERVED_TYPE"
                                                                                         fi
                                                                                         echo bd094b80d0c86c33b0915838ea6474176585685e3246de6338b69709dbf0554318fc7596edf98a1203c8aeb70c2792686540866f0e4a11763d590f5afad75bba >&2
-                                                                                        PRE_HASH="${ pre-hash { follow-parent = follow-parent ; init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
+                                                                                        PRE_HASH="${ pre-hash { init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
                                                                                         echo 51ecd77c8f30740a52efc520a7efc5bff5ab90c5f76fbfbf9f8800d5c293db75ebc64c22670c3e29a997d71394c6ab2604293141f9c3a7ba07183fd075b07371 >&2
                                                                                         FORMATTED_ARGUMENTS="${ builtins.concatStringsSep " " arguments }"
                                                                                         EXPECTED_HASH="$( echo "$PRE_HASH $EXPECTED_TRANSIENT$FORMATTED_ARGUMENTS $EXPECTED_STANDARD_INPUT $EXPECTED_HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 291ae43b
