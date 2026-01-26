@@ -116,7 +116,7 @@
                                                                                                                         STALL_INDEX="$1"
                                                                                                                         STALL_PATH="$2"
                                                                                                                         INDEX=0
-                                                                                                                        : "${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":?the originator-pid must be available" "}" ] }
+                                                                                                                        : "${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":?the originator-pid must be available" "}" ] }"
                                                                                                                         PID="${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
                                                                                                                         while [[ "$INDEX" -lt "$STALL_INDEX" ]] && [[ "$PID" -ne 1 ]]
                                                                                                                         do
