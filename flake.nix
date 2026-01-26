@@ -124,6 +124,7 @@
                                                                                                                             INDEX=$(( INDEX + 1 ))
                                                                                                                             echo "INDEX=$INDEX PID=$PID STALL_INDEX=$STALL_INDEX STALL_PATH=$STALL_PATH"
                                                                                                                         done
+                                                                                                                        export PID
                                                                                                                         wrap ${ stall } "$STALL_PATH" 0500 --inherit-plain PID --literal-plain PATH
                                                                                                                     '' ;
                                                                                                     } ;
