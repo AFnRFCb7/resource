@@ -715,7 +715,7 @@
                                                                                         echo cd88cbba913f8cbd7c808bdb9fee733a302661a486c6ba3236071491878afad91c6504bcbfac09ce282797d3914dcf949f64950ca5aabbebfeb6651eb9355910 "$0" >&2
                                                                                         subscribe &
                                                                                         echo f23eca599a6c3834474d3469ce8bce8c178d7e9da38a34685d1dbcba0605c8c6e02414efd2e9be088f73cfdf7d62751daa8784b4066700ccb4cecf3aa1e0ea60 >&2
-                                                                                        if RESOURCE=${ resource }
+                                                                                        if RESOURCE=${ builtins.trace resource resource }
                                                                                         then
                                                                                             STATUS="$?"
                                                                                         else
@@ -733,7 +733,7 @@
                                                                                         then
                                                                                             echo PAYLOAD >&2
                                                                                             cat /build/payload >&2
-                                                                                            failure 75431637 "We expected the payload arguments to be $EXPECTED_ARGUMENTS but it was $OBSERVED_ARGUMENTS"
+                                                                                            failure 75431637 "We expected the payload arguments to be" "$EXPECTED_ARGUMENTS" "but it was" "$OBSERVED_ARGUMENTS"
                                                                                         fi
                                                                                         EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure 338e000e
