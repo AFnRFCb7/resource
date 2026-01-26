@@ -608,7 +608,8 @@
                                                                 }
                                                                 transient ;
                                             in
-                                                { setup ? setup : setup , failure ? "${ failure }/bin/failure f50c916d" } : ''"${ setup setup_ }" || ${ failure }'' ;
+                                                { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"${ setup setup_ }" || ${ failure }'' ;
+                            failure_ = failure ;
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
