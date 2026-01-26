@@ -610,7 +610,7 @@
                                                                 }
                                                                 transient ;
                                             in
-                                                { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ failure }'' ;
+                                                { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || exit 65'' ;
                             failure_ = failure ;
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
