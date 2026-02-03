@@ -284,6 +284,9 @@
                                                                                                                                                 COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
+                                                                                                                                            --uuid)
+                                                                                                                                                shift 2
+                                                                                                                                                ;;
                                                                                                                                             *)
                                                                                                                                                 failure d40b5fe2 "We were expecting --inherit-brace, --inherit-plain, --literal-brace, --literal-plain, --set-brace, or --set-plain but we observed $*"
                                                                                                                                         esac
