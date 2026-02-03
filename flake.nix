@@ -367,6 +367,7 @@
                                                                             transient
                                                                         } :
                                                                             ''
+                                                                                export SETUP="$0"
                                                                                 if [[ -t 0 ]]
                                                                                 then
                                                                                     HAS_STANDARD_INPUT=false
