@@ -528,7 +528,7 @@
                                                                                                 "status" : $STATUS ,
                                                                                                 "targets" : $TARGETS ,
                                                                                                 "transient" : $TRANSIENT ,
-                                                                                                "type" : "invalid"
+                                                                                                "type" : "invalid-init"
                                                                                             }' | publish
                                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                                     fi
