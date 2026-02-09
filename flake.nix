@@ -372,14 +372,15 @@
                                                                                 then
                                                                                     HAS_STANDARD_INPUT=false
                                                                                     STANDARD_INPUT=
-                                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$$" | tr -d '[:space:]')'' "}" ] } || failure 2bd52e9b
+                                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure 2bd52e9b
                                                                                 else
                                                                                     STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
                                                                                     export STANDARD_INPUT_FILE
                                                                                     HAS_STANDARD_INPUT=true
                                                                                     cat <&0 > "$STANDARD_INPUT_FILE"
                                                                                     STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
-                                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure e1556ee8
+                                                                                    PENULTIMATE_PID=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure d79214f2
+                                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')'' "}" ] } || failure e1556ee8
                                                                                 fi
                                                                                 mkdir --parents ${ resources-directory }
                                                                                 ARGUMENTS=( "$@" )
@@ -441,7 +442,6 @@
                                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                                     mkdir --parents "$MOUNT"
                                                                                     export MOUNT
-                                                                                    mkdir --parents "$MOUNT"
                                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                                     export STANDARD_ERROR_FILE
                                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
@@ -528,7 +528,7 @@
                                                                                                 "status" : $STATUS ,
                                                                                                 "targets" : $TARGETS ,
                                                                                                 "transient" : $TRANSIENT ,
-                                                                                                "type" : "invalid"
+                                                                                                "type" : "invalid-init"
                                                                                             }' | publish
                                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                                     fi
