@@ -325,10 +325,10 @@
                                                                                                                     in "${ application }/bin/runScript" ;
                                                                                                         } ;
                                                                                             in
-                                                                                                if builtins.typeOf ( init { failure = failure ; pid = pid ; pkgs = pkgs ; resources = resources ; root = root ; sequential = sequential ; wrap = wrap ; } ) == "string" then
+                                                                                                if builtins.typeOf ( init { failure = failure ; pid = pid ; pkgs = pkgs ; resources = resources ; root = root ; seed = seed ; sequential = sequential ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
                                                                                                         export MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                                                        ${ init { failure = failure ; pid = pid ;pkgs = pkgs ; resources = resources ; root = root ; sequential = sequential ; wrap = wrap ; } } "$@"
+                                                                                                        ${ init { failure = failure ; pid = pid ;pkgs = pkgs ; resources = resources ; root = root ; seed = seed ; sequential = sequential ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
                                                                                 }
