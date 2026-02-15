@@ -22,6 +22,7 @@
                         redis ,
                         resources ? null ,
                         resources-directory ,
+                        sequential-start ,
                         store-garbage-collection-root ,
                         string ,
                         visitor ,
@@ -598,7 +599,7 @@
                                                                         then
                                                                             CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure d3cb7aeb
                                                                         else
-                                                                            CURRENT=0
+                                                                            CURRENT=${ sequential-start }
                                                                         fi
                                                                         NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
                                                                         echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
@@ -638,6 +639,7 @@
                                             resources-directory-fixture ? null ,
                                             seed ? null ,
                                             self ? null ,
+                                            sequential-start ? 1021 ,
                                             standard-input ? null ,
                                             standard-error ? "" ,
                                             standard-output ? "" ,
