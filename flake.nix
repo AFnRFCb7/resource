@@ -741,6 +741,7 @@
                                                                                             cat /build/payload >&2
                                                                                             failure 75431637 "We expected the payload arguments to be" "$EXPECTED_ARGUMENTS" "but it was" "$OBSERVED_ARGUMENTS"
                                                                                         fi
+                                                                                        # shellcheck disable=SC2016
                                                                                         EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure 338e000e
                                                                                         if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
