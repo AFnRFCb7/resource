@@ -137,7 +137,7 @@
                                                                                                                 TARGET="$1"
                                                                                                                 DIRECTORY="$( dirname "$TARGET" )" || failure ec2ee582
                                                                                                                 mkdir --parents "${ store-garbage-collection-root }/$INDEX/$DIRECTORY"
-                                                                                                                ln --symbolic --force "$TARGET" "${ store-garbage-collection-root }/$INDEX/$DIRECTORY"
+                                                                                                                ln --symbolic --force "$TARGET" "${ store-garbage-collection-root }/$INDEX$DIRECTORY"
                                                                                                             '' ;
                                                                                                     } ;
                                                                                             wrap =
