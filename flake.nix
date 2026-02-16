@@ -22,6 +22,7 @@
                         redis ,
                         resources ? null ,
                         resources-directory ,
+                        sequential-start ,
                         store-garbage-collection-root ,
                         string ,
                         visitor ,
@@ -136,7 +137,7 @@
                                                                                                                 TARGET="$1"
                                                                                                                 DIRECTORY="$( dirname "$TARGET" )" || failure ec2ee582
                                                                                                                 mkdir --parents "${ store-garbage-collection-root }/$INDEX/$DIRECTORY"
-                                                                                                                ln --symbolic --force "$TARGET" "${ store-garbage-collection-root }/$INDEX/$DIRECTORY"
+                                                                                                                ln --symbolic --force "$TARGET" "${ store-garbage-collection-root }/$INDEX$DIRECTORY"
                                                                                                             '' ;
                                                                                                     } ;
                                                                                             wrap =
@@ -598,7 +599,7 @@
                                                                         then
                                                                             CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure d3cb7aeb
                                                                         else
-                                                                            CURRENT=0
+                                                                            CURRENT=${ sequential-start }
                                                                         fi
                                                                         NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
                                                                         echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
@@ -612,7 +613,7 @@
                                                                 }
                                                                 transient ;
                                             in
-                                                { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ failure }'' ;
+                                                { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
@@ -638,6 +639,7 @@
                                             resources-directory-fixture ? null ,
                                             seed ? null ,
                                             self ? null ,
+                                            sequential-start ? 1021 ,
                                             standard-input ? null ,
                                             standard-error ? "" ,
                                             standard-output ? "" ,
@@ -739,6 +741,7 @@
                                                                                             cat /build/payload >&2
                                                                                             failure 75431637 "We expected the payload arguments to be" "$EXPECTED_ARGUMENTS" "but it was" "$OBSERVED_ARGUMENTS"
                                                                                         fi
+                                                                                        # shellcheck disable=SC2016
                                                                                         EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
                                                                                         OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure 338e000e
                                                                                         if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
