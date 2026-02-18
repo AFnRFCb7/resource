@@ -116,3 +116,39 @@ expected-standard-output = "hello world";
 arguments = [ "arg1" ];
 diffutils = ...;
 };
+
+## Lifecycle
+
+This flake is the start of the resource life cycle.
+The execution of the setup command can either be a success or a failure.
+Either way it will publish a redis message.
+If it is a success it will output the path of the resource.
+If it is a failure it will create a "quarantine directory".
+
+### success init
+The published success message contains an originator pid.
+This is the pid of the process that invoked the setup command.
+The published success message also contains the assigned path of the resource.
+A release listener can spawn a process that
+1. waits for the originator pid to finish
+2. waits while there still are references to the assigned path of the resource in ~/.gc-roots
+
+and then execute the user provided release script (also in the message).
+After that, the script deletes the resource and any files associated with the resource in ~/.gc-roots
+After this, the resource no longer exists and this is success.
+
+### failed init
+In the event of failure, a resolve listener can create a quarantine directory.
+This quarantine directory can contain the failure message.
+It also contains one or more resolution scripts.
+Invoking one of the resolution script, the user can indicate manual resolution of the problem.
+The resource goes back into the flow as a "now" successful init.
+
+### failed release
+Whether the init succeeded or failed, the release script will eventually be invoked.
+Assuming it failed much the same thing will happen as if the init failed.
+A quarantine directory will be created.
+The message will be recorded.
+One or more resolution scripts will be generated.
+Invoking one of the resolution scripts will put the resource back in flow.
+But the next step is success and that is terminal.
