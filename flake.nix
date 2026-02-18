@@ -163,6 +163,7 @@
                                                                                                                                     then
                                                                                                                                         failure 2c068d47 "We were expecting the first argument $INPUT to be a file but we observed $*"
                                                                                                                                     fi
+                                                                                                                                    UUID=""
                                                                                                                                     shift
                                                                                                                                     OUTPUT="$1"
                                                                                                                                     if [[ -e "/mount/$OUTPUT" ]]
@@ -286,6 +287,7 @@
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             --uuid)
+                                                                                                                                                UUID="$1"
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             *)
@@ -308,7 +310,6 @@
                                                                                                                                                 break
                                                                                                                                             fi
                                                                                                                                         done
-
                                                                                                                                         if ! $FOUND
                                                                                                                                         then
                                                                                                                                             UNRESOLVED+=( "$PH" )
@@ -316,7 +317,7 @@
                                                                                                                                     done
                                                                                                                                     if [[ "${ builtins.concatStringsSep "" [ "$" "{" "#UNRESOLVED[@]" "}" ] }" -ne 0 ]]
                                                                                                                                     then
-                                                                                                                                        failure d6899da6 "Unresolved placeholders in input file: ${ builtins.concatStringsSep "" [ "$" "{" "UNRESOLVED[*]" "}" ] }" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "ALLOWED_PLACEHOLDERS=${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[*]" "}" ] }"
+                                                                                                                                        failure d6899da6 "Unresolved placeholders in input file: ${ builtins.concatStringsSep "" [ "$" "{" "UNRESOLVED[*]" "}" ] }" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "ALLOWED_PLACEHOLDERS=${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[*]" "}" ] }" "UUID=$UUID"
                                                                                                                                     fi
                                                                                                                                     sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
                                                                                                                                     chmod "$PERMISSIONS" "/mount/$OUTPUT"
