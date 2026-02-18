@@ -287,7 +287,7 @@
                                                                                                                                                 shift 3
                                                                                                                                                 ;;
                                                                                                                                             --uuid)
-                                                                                                                                                UUID="$1"
+                                                                                                                                                UUID="$2"
                                                                                                                                                 shift 2
                                                                                                                                                 ;;
                                                                                                                                             *)
