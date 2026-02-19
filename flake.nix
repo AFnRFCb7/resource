@@ -578,7 +578,7 @@
                                                                                                 fi
                                                                                             '' ;
                                                                                     init-application = init-application ;
-                                                                                    pre-hash = pre-hash secondary ;
+                                                                                    pre-hash = pre-hash ( secondary // init-application = init-application } ;
                                                                                     resources-directory = resources-directory ;
                                                                                     store-garbage-collection-root = store-garbage-collection-root ;
                                                                                     target-hash-expected = "${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }" ;
@@ -617,7 +617,7 @@
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
                             pre-hash =
-                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { init ? null , init-application , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
