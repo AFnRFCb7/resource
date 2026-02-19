@@ -578,7 +578,7 @@
                                                                                                 fi
                                                                                             '' ;
                                                                                     init-application = init-application ;
-                                                                                    pre-hash = pre-hash ( secondary // { init-application = init-application } ) ;
+                                                                                    pre-hash = pre-hash ( secondary // { init-application = init-application ; } ) ;
                                                                                     resources-directory = resources-directory ;
                                                                                     store-garbage-collection-root = store-garbage-collection-root ;
                                                                                     target-hash-expected = "${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }" ;
