@@ -329,7 +329,7 @@
                                                                                                 if builtins.typeOf ( init { failure = failure ; pid = pid ; pkgs = pkgs ; resources = resources ; root = root ; seed = seed ; sequential = sequential ; wrap = wrap ; } ) == "string" then
                                                                                                     ''
                                                                                                         export MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                                                        ${ init { failure = failure ; pid = pid ;pkgs = pkgs ; resources = resources ; root = root ; seed = seed ; sequential = sequential ; wrap = wrap ; } } "$@"
+                                                                                                        ${ init { failure = failure ; pid = pid ; pkgs = pkgs ; resources = resources ; root = root ; seed = seed ; sequential = sequential ; wrap = wrap ; } } "$@"
                                                                                                     ''
                                                                                                 else builtins.throw "WTF" ;
                                                                                 }
@@ -389,7 +389,7 @@
                                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
                                                                                 export ${ originator-pid-variable }
-                                                                                HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                                HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" "$0" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                                 export HAS_STANDARD_INPUT
@@ -616,9 +616,21 @@
                                             in
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
+                            init-script =
+                                { init , seed , targets , transient } :
+                                    let
+                                        application =
+                                            pkgs.writeShellApplication
+                                                {
+                                                    name = "init-script" ;
+                                                    text = "" ;
+                                                } ;
+                                        in "${ application }/bin/init-script" ;
                             pre-hash =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
-                                    builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
+                                    let
+                                        init-script_ = init-script secondary ;
+                                        in builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
                                     check =
