@@ -32,7 +32,7 @@
                         let
                             _string = string ;
                             description =
-                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { init ? null , init-application , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
                                         seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
