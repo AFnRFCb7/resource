@@ -286,6 +286,7 @@
                                                                                                     wrap stall "$STALL_PATH" 0500 --inherit-plain PID --literal-plain PATH
                                                                                                 '' ;
                                                                                 } ;
+                                                                        pkgs = pkgs ;
                                                                         resources = resources ;
                                                                         root =
                                                                             pkgs.writeShellApplication
