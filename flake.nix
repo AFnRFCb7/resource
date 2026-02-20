@@ -58,41 +58,7 @@
                                     } @secondary :
                                         let
                                             scripts =
-                                                {
-                                                    echo =
-                                                        {
-                                                            init =
-                                                                visitor
-                                                                    {
-                                                                        lambda =
-                                                                            path : value :
-                                                                                let
-                                                                                    application =
-                                                                                        buildFHSUserEnv
-                                                                                            {
-                                                                                                name = "echo-init" ;
-                                                                                                runScript = "echo-init" ;
-                                                                                                targetPkgs =
-                                                                                                    pkgs :
-                                                                                                        [
-                                                                                                            (
-                                                                                                                pkgs.writeShellApplication
-                                                                                                                    {
-                                                                                                                        name = "echo-init" ;
-                                                                                                                        runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                                        text =
-                                                                                                                            let
-                                                                                                                                t = tools pkgs ;
-                                                                                                                                in "echo '${ init { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; sequential = t.sequential ; wrap = t.wrap ; } }'" ;
-                                                                                                                    }
-                                                                                                            )
-                                                                                                        ] ;
-                                                                                            } ;
-                                                                                        in ''"$( ${ application }/bin/echo-init )" || failure 5f7d7000'' ;
-                                                                        null = path : value : "d3c28349" ;
-                                                                    }
-                                                                    init ;
-                                                            } ;
+                                                let
                                                     tools =
                                                         pkgs :
                                                             let
@@ -358,7 +324,43 @@
                                                                                 } ;
                                                                         wrap = wrap ;
                                                                     } ;
-                                                } ;
+                                                    in
+                                                        {
+                                                            echo =
+                                                                {
+                                                                    init =
+                                                                        visitor
+                                                                            {
+                                                                                lambda =
+                                                                                    path : value :
+                                                                                        let
+                                                                                            application =
+                                                                                                buildFHSUserEnv
+                                                                                                    {
+                                                                                                        name = "echo-init" ;
+                                                                                                        runScript = "echo-init" ;
+                                                                                                        targetPkgs =
+                                                                                                            pkgs :
+                                                                                                                [
+                                                                                                                    (
+                                                                                                                        pkgs.writeShellApplication
+                                                                                                                            {
+                                                                                                                                name = "echo-init" ;
+                                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                                                text =
+                                                                                                                                    let
+                                                                                                                                        t = tools pkgs ;
+                                                                                                                                        in "echo '${ init { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; sequential = t.sequential ; wrap = t.wrap ; } }'" ;
+                                                                                                                            }
+                                                                                                                    )
+                                                                                                                ] ;
+                                                                                                    } ;
+                                                                                                in ''"$( ${ application }/bin/echo-init )" || failure 5f7d7000'' ;
+                                                                                null = path : value : "d3c28349" ;
+                                                                            }
+                                                                            init ;
+                                                                    } ;
+                                                        } ;
                                             init-application =
                                                 if builtins.typeOf init == "null" then null
                                                 else # init is a lambda
