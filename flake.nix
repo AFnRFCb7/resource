@@ -73,7 +73,7 @@
                                                                                                 name = "echo-init" ;
                                                                                                 runScript = "echo-init" ;
                                                                                                 targetPkgs =
-                                                                                                    pkgs
+                                                                                                    pkgs :
                                                                                                         [
                                                                                                             (
                                                                                                                 pkgs.writeShellApplication
