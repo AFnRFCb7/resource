@@ -721,6 +721,7 @@
                                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                         --arg HASH "$HASH" \
                                                                                         --arg INDEX "$INDEX" \
+                                                                                        --arg INIT_SCRIPT "$INIT_SCRIPT" \
                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                         --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                         --arg PROVENANCE "$PROVENANCE" \
@@ -731,6 +732,7 @@
                                                                                             "arguments" : $ARGUMENTS ,
                                                                                             "hash" : $HASH ,
                                                                                             "index" : $INDEX ,
+                                                                                            "init-script" : $INIT_SCRIPT ,
                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                             "originator-pid" : $ORIGINATOR_PID ,
                                                                                             "provenance" : $PROVENANCE ,
@@ -779,6 +781,7 @@
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
+                                                                                            --arg INIT_SCRIPT "$INIT_SCRIPT" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                             --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                             --arg PROVENANCE "$PROVENANCE" \
@@ -793,6 +796,7 @@
                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                 "hash" : $HASH ,
                                                                                                 "index" : $INDEX ,
+                                                                                                "init-script" : $INIT_SCRIPT ,
                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                 "originator-pid" : $ORIGINATOR_PID ,
                                                                                                 "provenance" : $PROVENANCE ,
@@ -814,6 +818,7 @@
                                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                             --arg HASH "$HASH" \
                                                                                             --arg INDEX "$INDEX" \
+                                                                                            --arg INIT_SCRIPT "$INIT_SCRIPT" \
                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                             --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                                             --arg PROVENANCE "$PROVENANCE" \
@@ -827,6 +832,7 @@
                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                 "hash" : $HASH ,
                                                                                                 "index" : $INDEX ,
+                                                                                                "init-script" : $INIT_SCRIPT ,
                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                 "originator-pid" : $ORIGINATOR_PID ,
                                                                                                 "provenance" : $PROVENANCE ,
