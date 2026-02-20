@@ -68,7 +68,7 @@
                                                                             path : value :
                                                                                 let
                                                                                     application =
-                                                                                        pkgs.buildFHSUserEnv
+                                                                                        buildFHSUserEnv
                                                                                             {
                                                                                                 name = "echo-init" ;
                                                                                                 runScript = "echo-init" ;
