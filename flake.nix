@@ -1147,7 +1147,7 @@
                                                                                         FORMATTED_ARGUMENTS="${ builtins.concatStringsSep " " arguments }"
 
                                                                                         jq --raw-output "." /build/payload
-                                                                                        EXPECTED_INIT_SCRIPT="$( jq --raw-output ".init-script" /build/payload )" || failure 2c7054bc
+                                                                                        EXPECTED_INIT_SCRIPT="$( jq --raw-output '.["init-script"] /build/payload )" || failure 2c7054bc
 
                                                                                         EXPECTED_HASH="$( echo "$PRE_HASH $EXPECTED_TRANSIENT$FORMATTED_ARGUMENTS $EXPECTED_STANDARD_INPUT $EXPECTED_HAS_STANDARD_INPUT" "$EXPECTED_INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 291ae43b
                                                                                         OBSERVED_HASH="$( jq --raw-output ".hash" /build/payload )" || failure ad74a1ed
