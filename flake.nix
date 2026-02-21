@@ -1013,6 +1013,7 @@
                                                                             ] ;
                                                                         text =
                                                                             let
+                                                                                double-quote = builtins.concatStringsSep "" [ "'" "'" ] ;
                                                                                 expected-json = builtins.toFile "expected.json" ( builtins.toJSON expected ) ;
                                                                                 resource =
                                                                                     visitor
@@ -1071,7 +1072,7 @@
                                                                                                  | join("\n")) +
                                                                                                 "\n" + ind + "]"
                                                                                               elif type == "string" then
-                                                                                                "''" + . + "''"
+                                                                                                "${ double-quote }" + . + "${ double-quote }"
                                                                                               elif type == "number" or type == "boolean" then
                                                                                                 tostring
                                                                                               elif type == "null" then
