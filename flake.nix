@@ -1013,7 +1013,7 @@
                                                                             ] ;
                                                                         text =
                                                                             let
-                                                                                double-quote = builtins.concatStringsSep "" [ "'" "'" ] ;
+                                                                                double-quote = builtins.concatStringsSep "" [ "\'" "\'" ] ;
                                                                                 expected-json = builtins.toFile "expected.json" ( builtins.toJSON expected ) ;
                                                                                 resource =
                                                                                     visitor
