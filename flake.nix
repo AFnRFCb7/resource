@@ -1054,26 +1054,32 @@
                                                                                         if ! jd ${ expected-json } /build/payload
                                                                                         then
                                                                                             jq '
-                                                                                              def to_nix:
-                                                                                                if type == "object" then
-                                                                                                  "{\n" +
-                                                                                                  (to_entries
-                                                                                                   | map("  \(.key) = \(.value | to_nix);")
-                                                                                                   | join("\n")) +
-                                                                                                  "\n}"
-                                                                                                elif type == "array" then
-                                                                                                  "[ " + (map(to_nix) | join(" ")) + " ]"
-                                                                                                elif type == "string" then
-                                                                                                  "\"" + . + "\""
-                                                                                                elif type == "boolean" or type == "number" then
-                                                                                                  tostring
-                                                                                                elif type == "null" then
-                                                                                                  "null"
-                                                                                                else
-                                                                                                  error("unsupported type")
-                                                                                                end;
+                                                                                            def to_nix(indent_level):
+                                                                                              def ind: "  " * indent_level;
+                                                                                              if type == "object" then
+                                                                                                "{\n" +
+                                                                                                (to_entries
+                                                                                                 | sort_by(.key)
+                                                                                                 | map(ind + "  " + .key + " = " + (.value | to_nix(indent_level + 1)) + ";")
+                                                                                                 | join("\n")) +
+                                                                                                "\n" + ind + "}"
+                                                                                              elif type == "array" then
+                                                                                                "[\n" +
+                                                                                                (map(to_nix(indent_level + 1))
+                                                                                                 | map(ind + "  " + .)
+                                                                                                 | join("\n")) +
+                                                                                                "\n" + ind + "]"
+                                                                                              elif type == "string" then
+                                                                                                "\"" + . + "\""
+                                                                                              elif type == "boolean" or type == "number" then
+                                                                                                tostring
+                                                                                              elif type == "null" then
+                                                                                                "null"
+                                                                                              else
+                                                                                                error("unsupported type")
+                                                                                              end;
 
-                                                                                              to_nix
+                                                                                            to_nix(0)
                                                                                             ' /build/payload > "$OUT/expected.nix"
                                                                                             failure 2bc4ce7b "EXPECTED=$OUT/expected.nix"
                                                                                         fi
