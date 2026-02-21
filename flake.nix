@@ -1072,7 +1072,7 @@ def to_nix(indent):
      | join("\n")) +
     "\n" + ind + "]"
   elif type == "string" then
-    "''" + . + "''"
+    "${ double-quote }" + . + "${ double-quote }"
   elif type == "number" or type == "boolean" then
     tostring
   elif type == "null" then
