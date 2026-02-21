@@ -938,7 +938,8 @@
                                             arguments ? [ ] ,
                                             diffutils ,
 
-                                            expected ,
+                                            expected ? { } ,
+                                            expected-status ? 0 ,
 
                                             init ,
 
