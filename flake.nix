@@ -939,6 +939,7 @@
                                             diffutils ,
 
                                             expected ? { } ,
+                                            expected-resource ? "" ,
                                             expected-status ? 0 ,
 
                                             init ,
@@ -1039,6 +1040,10 @@
                                                                                         if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
+                                                                                        fi
+                                                                                        if [[ "${ expected-resource }" != "$RESOURCE" ]]
+                                                                                        then
+                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$RESOURCE"
                                                                                         fi
                                                                                         while [[ ! -f /build/payload ]]
                                                                                         do
