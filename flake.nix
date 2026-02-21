@@ -1035,6 +1035,10 @@
                                                                                         else
                                                                                             STATUS="$?"
                                                                                         fi
+                                                                                        if [[ ${ expected-status } != "$STATUS" ]]
+                                                                                        then
+                                                                                            failure 94defd57 "EXPECTED_STATUS=${ expected-status }" "OBSERVED_STATUS=$STATUS"
+                                                                                        fi
                                                                                         while [[ ! -f /build/payload ]]
                                                                                         do
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
