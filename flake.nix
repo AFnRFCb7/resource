@@ -937,16 +937,13 @@
                                         {
                                             arguments ? [ ] ,
                                             diffutils ,
-                                            expected-index ? 0 ,
-                                            expected-originator-pid ,
-                                            expected-provenance ? "new" ,
-                                            expected-standard-error ,
-                                            expected-standard-output ,
-                                            expected-status ,
-                                            expected-targets ,
-                                            expected-transient ,
-                                            expected-type ,
+
+                                            expected ,
+
                                             init ,
+
+                                            jd ,
+
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
                                             resources-directory-fixture ? null ,
@@ -1029,155 +1026,20 @@
                                                                                         do
                                                                                             sleep 0
                                                                                         done
-                                                                                        echo b05a609e7e3d8c9674412ea01428dcd05923f4685f54ab4b8bc72698eeb39e13dbd0448605fa2df05f0cea571e74126bc6e15309f5943153ca83dce5afc2f4b7 "$0" >&2
                                                                                         fixture
-                                                                                        echo cd88cbba913f8cbd7c808bdb9fee733a302661a486c6ba3236071491878afad91c6504bcbfac09ce282797d3914dcf949f64950ca5aabbebfeb6651eb9355910 "$0" >&2
                                                                                         subscribe &
-                                                                                        echo f23eca599a6c3834474d3469ce8bce8c178d7e9da38a34685d1dbcba0605c8c6e02414efd2e9be088f73cfdf7d62751daa8784b4066700ccb4cecf3aa1e0ea60 >&2
-                                                                                        if RESOURCE=${ builtins.trace resource resource }
+                                                                                        if RESOURCE=${ resource }
                                                                                         then
                                                                                             STATUS="$?"
                                                                                         else
                                                                                             STATUS="$?"
                                                                                         fi
-                                                                                        echo e32340d2f3d1ff5cd9d197a8f2574643d81cffaf68ac495eead443c2cdb5fc68a3561efa303606e0ba072047c60d6dc986d9be6da6f1a927cb85af01d98aa826 "$0" >&2
                                                                                         while [[ ! -f /build/payload ]]
                                                                                         do
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
                                                                                         done
-                                                                                        echo 6f9fe2879dff2ae71781351c64b5057da4350e0b403691653e78c6ad5c61c071210afa550e9f8c7f8a1035b548e97a0c2c1a176bc3a201262c112d24b10ab5bc >&2
-                                                                                        EXPECTED_ARGUMENTS="$( jq --null-input '${ builtins.toJSON arguments }' )" || failure 20634b7e
-                                                                                        OBSERVED_ARGUMENTS="$( jq ".arguments" /build/payload )" || failure 022394ca
-                                                                                        if [[ "$EXPECTED_ARGUMENTS" != "$OBSERVED_ARGUMENTS" ]]
-                                                                                        then
-                                                                                            echo PAYLOAD >&2
-                                                                                            cat /build/payload >&2
-                                                                                            failure 75431637 "We expected the payload arguments to be" "$EXPECTED_ARGUMENTS" "but it was" "$OBSERVED_ARGUMENTS"
-                                                                                        fi
-                                                                                        # shellcheck disable=SC2016
-                                                                                        EXPECTED_DESCRIPTION="$( echo '${ builtins.toJSON ( description { init = init ; seed = seed ; targets = targets ; transient = transient ; } ) }' | jq '.' )" || failure 504d55c5
-                                                                                        OBSERVED_DESCRIPTION="$( jq ".description" /build/payload )" || failure 338e000e
-                                                                                        if [[ "$EXPECTED_DESCRIPTION" != "$OBSERVED_DESCRIPTION" ]]
-                                                                                        then
-                                                                                            failure 2057af05 "We expected the payload description to be $EXPECTED_DESCRIPTION but it was $OBSERVED_DESCRIPTION"
-                                                                                        fi
-                                                                                        EXPECTED_INDEX="${ expected-index }"
-                                                                                        OBSERVED_INDEX="$( jq --raw-output ".index" /build/payload )" || failure 0f907573
-                                                                                        if [[ "$EXPECTED_INDEX" != "$OBSERVED_INDEX" ]]
-                                                                                        then
-                                                                                            failure 778fa410 "We expected the payload index to be $EXPECTED_INDEX but it was $OBSERVED_INDEX"
-                                                                                        fi
-                                                                                        echo 8203c90fd1bc42ecbeb27679d364c0102fad5d480ed9263ffe1844f08dc4ed273f314b83dc7c312b5bbfe3900d1e1e1ed38953b72c61f3fce80dce5b59ea5dfa >&2
-                                                                                        EXPECTED_HAS_STANDARD_INPUT="${ if builtins.typeOf standard-input == "null" then "false" else "true" }"
-                                                                                        OBSERVED_HAS_STANDARD_INPUT="$( jq --raw-output '."has-standard-input"' /build/payload )" || failure de76f4b9
-                                                                                        if [[ "$EXPECTED_HAS_STANDARD_INPUT" != "$OBSERVED_HAS_STANDARD_INPUT" ]]
-                                                                                        then
-                                                                                            failure 9a4d9e4d "We expected the payload has-standard-input to be $EXPECTED_STANDARD_INPUT but it was $OBSERVED_STANDARD_INPUT"
-                                                                                        fi
-                                                                                        echo 1763f54ece3e60be327e7e32587b1aaf69128d636cdc118dbb7890d87511d547c22505e8a2531cac57aa23c3ac289bb8562d173e64c0dd3e5c0e0818dd77983c >&2
-                                                                                        EXPECTED_ORIGINATOR_PID="${ builtins.toString expected-originator-pid }"
-                                                                                        OBSERVED_ORIGINATOR_PID="$( jq --raw-output '."originator-pid"' /build/payload )" || failure a3893bb0
-                                                                                        if [[ "$EXPECTED_ORIGINATOR_PID" != "$OBSERVED_ORIGINATOR_PID" ]]
-                                                                                        then
-                                                                                            failure 2f8a9617 "We expected the payload originator-pid to be $EXPECTED_ORIGINATOR_PID but it was $OBSERVED_ORIGINATOR_PID"
-                                                                                        fi
-                                                                                        echo 043542631b87c60c516dbca29e7cd7042005fdf43d32d8ec4b3810ab365c3674c9c33b597e12f7b463bf7c29d2092949c913fc85dd947b49e660284bba0aa7fc >&2
-                                                                                        EXPECTED_PROVENANCE="${ expected-provenance }"
-                                                                                        OBSERVED_PROVENANCE="$( jq --raw-output ".provenance" /build/payload )" || failure 028e5f26
-                                                                                        if [[ "$EXPECTED_PROVENANCE" != "$OBSERVED_PROVENANCE" ]]
-                                                                                        then
-                                                                                            failure f2004c0e "We expected the payload provenance to be $EXPECTED_PROVENANCE but it was $OBSERVED_PROVENANCE"
-                                                                                        fi
-                                                                                        EXPECTED_TARGETS="$( jq --null-input '${ builtins.toJSON expected-targets }' )" || failure 07d64c0d
-                                                                                        OBSERVED_TARGETS="$( jq ".targets" /build/payload )" || failure 1f77984f
-                                                                                        if [[ "$EXPECTED_TARGETS" != "$OBSERVED_TARGETS" ]]
-                                                                                        then
-                                                                                            failure 1cd1def6 "We expected the payload targets to be $EXPECTED_TARGETS but it was $OBSERVED_TARGETS"
-                                                                                        fi
-                                                                                        echo b14d06629264984b8f276fff0c9b6112f64736ac00c04890b54ce584270bc1ce07ad83f1861bfe8cd5c236f8a5b05b802da4626c8b60c52da43a7d90098c22ac >&2
-                                                                                        EXPECTED_STANDARD_ERROR="${ expected-standard-error }"
-                                                                                        OBSERVED_STANDARD_ERROR="$( jq --raw-output '."standard-error"' /build/payload )" || failure 1f1ee25c
-                                                                                        if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
-                                                                                        then
-                                                                                            failure d2646d82 "We expected the payload standard-error to be $EXPECTED_STANDARD_ERROR but it was $OBSERVED_STANDARD_ERROR"
-                                                                                        fi
-                                                                                        EXPECTED_STANDARD_INPUT="${ if builtins.typeOf standard-input == "null" then "" else standard-input }"
-                                                                                        OBSERVED_STANDARD_INPUT="$( jq --raw-output '."standard-input"' /build/payload )" || failure e4c24bb8
-                                                                                        if [[ "$EXPECTED_STANDARD_INPUT" != "$OBSERVED_STANDARD_INPUT" ]]
-                                                                                        then
-                                                                                            failure 724dbca6 "We expected the payload standard-input to be $EXPECTED_STANDARD_INPUT but it was $OBSERVED_STANDARD_INPUT"
-                                                                                        fi
-                                                                                        echo 457f5df94d4d034df1b81a84bcf79db1a68d1b074b4150e5892e75e07df7a99be15055ed35c67460a6ab85fa74929b4137031fca146ed4fc640f27fb1f4aa7e5 >&2
-                                                                                        EXPECTED_STANDARD_OUTPUT="${ builtins.toFile "standard-output" expected-standard-output }"
-                                                                                        echo e25353a73db53ec30cdd4ee7a59c6a51135c65867330fe6b419e6b36f8fb42bca619c0bc18a685709ecaaded651a824e201b0ce6b6a8658d8eac241edab1623b >&2
-                                                                                        echo "a848eba021e0006248fc6d98217a58c30dacba6cec4e23c29b5bed81991e60f514648588aeea34e6559a9c57f3e5fc948c577b6b35649504fbf64a2e13d3b31c $OUT/payload" >&2
-                                                                                        mkdir --parents "/build/observed/payload"
-                                                                                        echo 831dc85c382d50c75d93e31082d489a8aa0024194321f80aad30c4bb02c8e925d10dc9a8d9aa21b444cf76de1b7703c06135ad4bffb7dcd07d5d560b85aee010 >&2
-                                                                                        jq --raw-output '."standard-output"' /build/payload > "/build/observed/payload/standard-output"
-                                                                                        echo 8e85f21da99e7ecedb49022cce6a7dc8e9b1720a6d2e7489ab2478740fe87d9b0335eac575b7f21dea8da77de0da3645aea8a37231062ef33e54506e79c854bc >&2
-                                                                                        if ! diff --unified "$EXPECTED_STANDARD_OUTPUT" "/build/observed/payload/standard-output"
-                                                                                        then
-                                                                                            mkdir --parents "$OUT/payload"
-                                                                                            cp /build/observed/payload/standard-output "$OUT/payload/standard-output"
-                                                                                            failure 0d3810c3 "We expected the payload standard-output to be $EXPECTED_STANDARD_OUTPUT but it was $OUT/payload/standard-output"
-                                                                                        fi
-                                                                                        echo 412334ef83627ae9156840c2b8f2e1874ee0a42ca6ad06776ba0b806b26ed312b658f8f9af9619c2fa61c1c026433db697a2a4dfd5a1082c2bf6fe4bddb7221a >&2
-                                                                                        EXPECTED_STATUS="${ builtins.toString expected-status }"
-                                                                                        OBSERVED_STATUS="$( jq --raw-output ".status" /build/payload )" || failure ef32fe9f
-                                                                                        if [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
-                                                                                        then
-                                                                                            failure 8a455ee1 "We expected the payload status to be $EXPECTED_STATUS but it was $OBSERVED_STATUS"
-                                                                                        fi
-                                                                                        echo 7bb9c6f19f9e2cd621024703291f2aad6cb593fc8ba3710ebb3e7c8511f9291c9f60ac5af7178fd853f2754c0fa91770c7fdc98a5f75ae91953755f0147bc6d3 >&2
-                                                                                        EXPECTED_TRANSIENT="${ builtins.toString expected-transient }"
-                                                                                        OBSERVED_TRANSIENT="$( jq --raw-output ".transient" /build/payload )" || failure c51dee8f
-                                                                                        if [[ "$EXPECTED_TRANSIENT" != "$OBSERVED_TRANSIENT" ]]
-                                                                                        then
-                                                                                            failure ba808c74 "We expected the payload transient to be $EXPECTED_TRANSIENT but it was $OBSERVED_TRANSIENT"
-                                                                                        fi
-                                                                                        EXPECTED_TYPE="${ builtins.toString expected-type }"
-                                                                                        OBSERVED_TYPE="$( jq --raw-output ".type" /build/payload )" || failure f8b99a4d
-                                                                                        if [[ "$EXPECTED_TYPE" != "$OBSERVED_TYPE" ]]
-                                                                                        then
-                                                                                            failure b132ce9b "We expected the payload type to be $EXPECTED_TYPE but it was $OBSERVED_TYPE"
-                                                                                        fi
-                                                                                        echo bd094b80d0c86c33b0915838ea6474176585685e3246de6338b69709dbf0554318fc7596edf98a1203c8aeb70c2792686540866f0e4a11763d590f5afad75bba >&2
-                                                                                        PRE_HASH="${ pre-hash { init = init ; seed = seed ; targets = targets ; transient = transient ; } }"
-                                                                                        echo 51ecd77c8f30740a52efc520a7efc5bff5ab90c5f76fbfbf9f8800d5c293db75ebc64c22670c3e29a997d71394c6ab2604293141f9c3a7ba07183fd075b07371 >&2
-                                                                                        FORMATTED_ARGUMENTS="${ builtins.concatStringsSep " " arguments }"
 
-                                                                                        jq --raw-output "." /build/payload
-                                                                                        EXPECTED_INIT_SCRIPT="$( jq --raw-output '.["init-script"]' /build/payload )" || failure 2c7054bc
-
-                                                                                        EXPECTED_HASH="$( echo "$PRE_HASH $EXPECTED_TRANSIENT$FORMATTED_ARGUMENTS $EXPECTED_STANDARD_INPUT $EXPECTED_HAS_STANDARD_INPUT" "$EXPECTED_INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 291ae43b
-                                                                                        OBSERVED_HASH="$( jq --raw-output ".hash" /build/payload )" || failure ad74a1ed
-                                                                                        if [[ "$EXPECTED_HASH" != "$OBSERVED_HASH" ]]
-                                                                                        then
-                                                                                            failure f40a3551 "We expected the payload hash to be $EXPECTED_HASH but it was $OBSERVED_HASH"
-                                                                                        fi
-                                                                                        EXPECTED_KEYS="$( echo '${ builtins.toJSON [ "arguments" "description" "has-standard-input" "hash" "index" "init-script" "originator-pid" "provenance" "standard-error" "standard-input" "standard-output" "status" "targets" "transient" "type" ] }' | jq --raw-output "." )" || failure a90aef96
-                                                                                        OBSERVED_KEYS="$( jq --raw-output "[keys[]]" /build/payload )" || failure ed34aceb
-                                                                                        if [[ "$EXPECTED_KEYS" != "$OBSERVED_KEYS" ]]
-                                                                                        then
-                                                                                            failure 7e35fa52 "We expected the payload keys to be $EXPECTED_KEYS but it was $OBSERVED_KEYS"
-                                                                                        fi
-                                                                                        if [[ "${ standard-output }" != "$RESOURCE" ]]
-                                                                                        then
-                                                                                            failure 5f110695 "We expected the standard output to be ${ standard-output } but it was $RESOURCE"
-                                                                                        fi
-                                                                                        if [[ "${ builtins.toString status }" != "$STATUS" ]]
-                                                                                        then
-                                                                                            failure 85b629ef "We expected the status to be ${ builtins.toString status } but it was $STATUS"
-                                                                                        fi
-                                                                                        echo 3d91c76e34e174908af328b36c07bf31e1ffd82f709a1bd4668f252a3882eb30c5e400cbfcbc8fef7ddbe24af5d9e337cd6f46edfee3bcb489f3700e9056d5fe /build/standard-error "$OUT/standard-error" >&2
-                                                                                        echo 5070b76a530a48e5c61c41880674dc3a850e28e974a9a6adcf5021d6363e71a1b4a83538df4afb7588b5d94e9d80226446447d5226f1dac94a47231c9b2dbc23 >&2
-                                                                                        if ! diff --unified ${ builtins.toFile "standard-error" standard-error } /build/standard-error
-                                                                                        then
-                                                                                            echo 0aadd697be4a826aa1d6a0a023065aefded13a789407c7705eaf73e4322e218ffd56c14cc4fe3ab1f801581f026115e318464ebc49f125726025c220294f4566 >&2
-                                                                                            cp /build/standard-error "$OUT/standard-error"
-                                                                                            echo 7f5ebff2cac0591df963be03c307617684981c85bc9b7c3960a064c543951ec175fc9ee98e1e6592d0ad68fa18abbd146ad5e43c8ad3c5ce75449035f91376fa >&2
-                                                                                            failure 19e7dbe8 "We expected the standard error file to be ${ builtins.toFile "standard-error" standard-error } but it was $OUT/standard-error"
-                                                                                        fi
+                                                                                        jd ${ builtins.toFile "expected.json "( builtins.toJSON expected ) } /build/payload
                                                                                     '' ;
                                                                     }
                                                             )
