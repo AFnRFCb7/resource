@@ -1146,7 +1146,7 @@
                                                                                         echo 51ecd77c8f30740a52efc520a7efc5bff5ab90c5f76fbfbf9f8800d5c293db75ebc64c22670c3e29a997d71394c6ab2604293141f9c3a7ba07183fd075b07371 >&2
                                                                                         FORMATTED_ARGUMENTS="${ builtins.concatStringsSep " " arguments }"
 
-                                                                                        yq eval --prettyPrint "." /build/payload
+                                                                                        jq --raw-output "." /build/payload
                                                                                         EXPECTED_INIT_SCRIPT="$( jq --raw-output ".init-script" /build/payload )" || failure 2c7054bc
 
                                                                                         EXPECTED_HASH="$( echo "$PRE_HASH $EXPECTED_TRANSIENT$FORMATTED_ARGUMENTS $EXPECTED_STANDARD_INPUT $EXPECTED_HAS_STANDARD_INPUT" "$EXPECTED_INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 291ae43b
