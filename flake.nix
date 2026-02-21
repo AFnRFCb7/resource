@@ -973,6 +973,7 @@
                                                                             [
                                                                                 coreutils
                                                                                 failure
+                                                                                jd
                                                                                 jq
                                                                                 redis
                                                                                 (
