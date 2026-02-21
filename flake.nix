@@ -1074,7 +1074,7 @@ def to_nix(indent):
 
 to_nix("")
 ' /build/payload > "$OUT/expected-1.nix"
-                                                                                            sed -e "s#cc97f31f#\'\'#" -w "$OUT/expected-2.nix" "$OUT/expected-1.nix
+                                                                                            sed -i "s#cc97f31f#${ double-quote }#g" "$OUT/expected-1.nix
                                                                                             failure 2bc4ce7b "EXPECTED=$OUT/expected.nix"
                                                                                         fi
                                                                                     '' ;
