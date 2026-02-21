@@ -1074,8 +1074,8 @@
                                                                                                 end;
 
                                                                                               to_nix
-                                                                                            ' /build/payload
-                                                                                            failure 2bc4ce7b
+                                                                                            ' /build/payload > "$OUT/expected.nix"
+                                                                                            failure 2bc4ce7b "EXPECTED=$OUT/expected.nix"
                                                                                         fi
                                                                                     '' ;
                                                                     }
