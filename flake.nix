@@ -1009,6 +1009,7 @@
                                                                             ] ;
                                                                         text =
                                                                             let
+                                                                                expected-json = builtins.toFile "expected.json" ( builtins.toJSON expected ) ;
                                                                                 resource =
                                                                                     visitor
                                                                                         {
@@ -1039,7 +1040,7 @@
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
                                                                                         done
 
-                                                                                        if ! jd ${ builtins.toFile "expected.json" "( builtins.toJSON expected ) } /build/payload
+                                                                                        if ! jd ${ expected-json } /build/payload
                                                                                         then
                                                                                             jq '
                                                                                               def to_nix:
