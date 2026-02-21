@@ -1079,7 +1079,7 @@
                                                                                                 error("unsupported type")
                                                                                               end;
 
-                                                                                            to_nix(0)
+                                                                                            fromjson | to_nix(0)
                                                                                             ' /build/payload > "$OUT/expected.nix"
                                                                                             failure 2bc4ce7b "EXPECTED=$OUT/expected.nix"
                                                                                         fi
