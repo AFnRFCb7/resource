@@ -1036,9 +1036,9 @@
                                                                                         else
                                                                                             STATUS="$?"
                                                                                         fi
-                                                                                        if [[ ${ expected-status } != "$STATUS" ]]
+                                                                                        if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
-                                                                                            failure 94defd57 "EXPECTED_STATUS=${ expected-status }" "OBSERVED_STATUS=$STATUS"
+                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
                                                                                         fi
                                                                                         while [[ ! -f /build/payload ]]
                                                                                         do
