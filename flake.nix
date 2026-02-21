@@ -1053,34 +1053,34 @@
 
                                                                                         if ! jd ${ expected-json } /build/payload
                                                                                         then
-                                                                                            jq -Rsr '
-                                                                                            def to_nix(indent):
-                                                                                              def ind: "  " * indent;
-                                                                                              if type == "object" then
-                                                                                                "{\n" +
-                                                                                                (to_entries
-                                                                                                 | sort_by(.key)
-                                                                                                 | map(ind + "  " + .key + " = " + (.value | to_nix(indent+1)) + ";")
-                                                                                                 | join("\n")) +
-                                                                                                "\n" + ind + "}"
-                                                                                              elif type == "array" then
-                                                                                                "[\n" +
-                                                                                                (map(. as $v | $v | to_nix(indent+1))
-                                                                                                 | map("  " + ind + .)
-                                                                                                 | join("\n")) +
-                                                                                                "\n" + ind + "]"
-                                                                                              elif type == "string" then
-                                                                                                "\"" + . + "\""
-                                                                                              elif type == "number" or type == "boolean" then
-                                                                                                tostring
-                                                                                              elif type == "null" then
-                                                                                                "null"
-                                                                                              else
-                                                                                                error("unsupported type")
-                                                                                              end;
+jq -Rsr '
+def to_nix(indent):
+  def ind: "  " * indent;
+  if type == "object" then
+    "{\n" +
+    (to_entries
+     | sort_by(.key)
+     | map(ind + "  " + .key + " = " + (.value | to_nix(indent+1)) + ";")
+     | join("\n")) +
+    "\n" + ind + "}"
+  elif type == "array" then
+    "[\n" +
+    (map(. as $v | $v | to_nix(indent+1))
+     | map("  " + ind + .)
+     | join("\n")) +
+    "\n" + ind + "]"
+  elif type == "string" then
+    "''" + . + "''"
+  elif type == "number" or type == "boolean" then
+    tostring
+  elif type == "null" then
+    "null"
+  else
+    error("unsupported type")
+  end;
 
-                                                                                            fromjson | to_nix(0)
-                                                                                            ' -r /build/payload > "$OUT/expected.nix"
+fromjson | to_nix(0)
+' -r /build/payload > "$OUT/expected.nix"
                                                                                             failure 2bc4ce7b "EXPECTED=$OUT/expected.nix"
                                                                                         fi
                                                                                     '' ;
