@@ -1052,6 +1052,7 @@
                                                                                         do
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
                                                                                         done
+                                                                                        cat /build/payload > "$OUT/observed.json"
 
                                                                                         if ! jd ${ expected-json } /build/payload
                                                                                         then
