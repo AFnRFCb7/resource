@@ -1053,25 +1053,25 @@
 
                                                                                         if ! jd ${ expected-json } /build/payload
                                                                                         then
-                                                                                            jq '
-                                                                                            def to_nix(indent_level):
-                                                                                              def ind: "  " * indent_level;
+                                                                                            jq -Rs '
+                                                                                            def to_nix(indent):
+                                                                                              def ind: "  " * indent;
                                                                                               if type == "object" then
                                                                                                 "{\n" +
                                                                                                 (to_entries
                                                                                                  | sort_by(.key)
-                                                                                                 | map(ind + "  " + .key + " = " + (.value | to_nix(indent_level + 1)) + ";")
+                                                                                                 | map(ind + "  " + .key + " = " + (.value | to_nix(indent+1)) + ";")
                                                                                                  | join("\n")) +
                                                                                                 "\n" + ind + "}"
                                                                                               elif type == "array" then
                                                                                                 "[\n" +
-                                                                                                (map(to_nix(indent_level + 1))
-                                                                                                 | map(ind + "  " + .)
+                                                                                                (map(. as $v | $v | to_nix(indent+1))
+                                                                                                 | map("  " + ind + .)
                                                                                                  | join("\n")) +
                                                                                                 "\n" + ind + "]"
                                                                                               elif type == "string" then
                                                                                                 "\"" + . + "\""
-                                                                                              elif type == "boolean" or type == "number" then
+                                                                                              elif type == "number" or type == "boolean" then
                                                                                                 tostring
                                                                                               elif type == "null" then
                                                                                                 "null"
