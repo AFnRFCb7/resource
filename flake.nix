@@ -1057,22 +1057,22 @@
                                                                                         if ! jd ${ expected-json } /build/payload
                                                                                         then
 jq -r '
-  def to_nix(indent):
-    if type == "object" then
-      "{\n" +
-      (to_entries
-       | map(" \(.key) = " + (.value | to_nix(indent + "  ")) + ";")
-       | join("\n")) +
-      "\n" + indent + "}"
-    elif type == "array" then
-      "[\n" + (map(indent + "  " + to_nix(indent + "  ")) | join("\n")) + "\n" + indent + "]"
-    elif type == "string" or type == "number" or type == "boolean" or type == "null" then
-      "${ double-quote }" + tostring + "${ double-quote }"
-    else
-      error("unsupported type")
-    end;
+def to_nix(indent):
+  if type == "object" then
+    "{\n" +
+    (to_entries
+      | map(indent + "  " + .key + " = " + (.value | to_nix(indent + "  ")) + ";")
+      | join("\n")) +
+    "\n" + indent + "}"
+  elif type == "array" then
+    "[\n" + (map(indent + "  " + to_nix(indent + "  ")) | join("\n")) + "\n" + indent + "]"
+  elif type == "string" or type == "number" or type == "boolean" or type == "null" then
+    "${ double-quote }" + tostring + "${ double-quote }"
+  else
+    error("unsupported type")
+  end;
 
-  to_nix("")
+to_nix("")
 ' /build/payload > "$OUT/expected.nix"
                                                                                             failure 2bc4ce7b "EXPECTED=$OUT/expected.nix"
                                                                                         fi
