@@ -1053,7 +1053,7 @@
 
                                                                                         if ! jd ${ expected-json } /build/payload
                                                                                         then
-                                                                                            jq -Rs '
+                                                                                            jq -Rsr '
                                                                                             def to_nix(indent):
                                                                                               def ind: "  " * indent;
                                                                                               if type == "object" then
@@ -1080,7 +1080,7 @@
                                                                                               end;
 
                                                                                             fromjson | to_nix(0)
-                                                                                            ' /build/payload > "$OUT/expected.nix"
+                                                                                            ' -r /build/payload > "$OUT/expected.nix"
                                                                                             failure 2bc4ce7b "EXPECTED=$OUT/expected.nix"
                                                                                         fi
                                                                                     '' ;
