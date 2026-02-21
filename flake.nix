@@ -1039,7 +1039,7 @@
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
                                                                                         done
 
-                                                                                        if ! jd ${ builtins.toFile "expected.json "( builtins.toJSON expected ) } /build/payload
+                                                                                        if ! jd ${ builtins.toFile "expected.json" "( builtins.toJSON expected ) } /build/payload
                                                                                         then
                                                                                             jq '
                                                                                               def to_nix:
