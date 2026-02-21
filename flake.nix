@@ -1039,7 +1039,32 @@
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
                                                                                         done
 
-                                                                                        jd ${ builtins.toFile "expected.json "( builtins.toJSON expected ) } /build/payload
+                                                                                        if ! jd ${ builtins.toFile "expected.json "( builtins.toJSON expected ) } /build/payload
+                                                                                        then
+                                                                                            jq '
+                                                                                              def to_nix:
+                                                                                                if type == "object" then
+                                                                                                  "{\n" +
+                                                                                                  (to_entries
+                                                                                                   | map("  \(.key) = \(.value | to_nix);")
+                                                                                                   | join("\n")) +
+                                                                                                  "\n}"
+                                                                                                elif type == "array" then
+                                                                                                  "[ " + (map(to_nix) | join(" ")) + " ]"
+                                                                                                elif type == "string" then
+                                                                                                  "\"" + . + "\""
+                                                                                                elif type == "boolean" or type == "number" then
+                                                                                                  tostring
+                                                                                                elif type == "null" then
+                                                                                                  "null"
+                                                                                                else
+                                                                                                  error("unsupported type")
+                                                                                                end;
+
+                                                                                              to_nix
+                                                                                            ' /build/payload
+                                                                                            failure 2bc4ce7b
+                                                                                        fi
                                                                                     '' ;
                                                                     }
                                                             )
