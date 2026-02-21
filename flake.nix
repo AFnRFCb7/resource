@@ -1067,7 +1067,7 @@ def to_nix(indent):
   elif type == "array" then
     "[\n" + (map(indent + "  " + to_nix(indent + "  ")) | join("\n")) + "\n" + indent + "]"
   elif type == "string" or type == "number" or type == "boolean" or type == "null" then
-    "${ double-quote }" + tostring + "${ double-quote }"
+    "\"" + tostring + "\""
   else
     error("unsupported type")
   end;
