@@ -1067,7 +1067,7 @@ def to_nix(indent):
   elif type == "array" then
     "[\n" + (map(indent + "  " + to_nix(indent + "  ")) | join("\n")) + "\n" + indent + "]"
   elif type == "string" or type == "number" or type == "boolean" or type == "null" then
-    "\"" + tostring + "\""
+    "cc97f31f" + tostring + "cc97f31f"
   else
     error("unsupported type")
   end;
