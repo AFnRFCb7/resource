@@ -944,7 +944,7 @@
 
                                             init ,
 
-                                            jd ,
+                                            jdiff-patch ,
 
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
@@ -973,7 +973,7 @@
                                                                             [
                                                                                 coreutils
                                                                                 failure
-                                                                                jd
+                                                                                jdiff-patch
                                                                                 jq
                                                                                 redis
                                                                                 (
