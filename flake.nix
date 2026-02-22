@@ -425,7 +425,6 @@
                                                                 {
                                                                     template =
                                                                         {
-                                                                            hash ,
                                                                             has-standard-input-false ,
                                                                             has-standard-input-true ,
                                                                             init-application ,
@@ -457,7 +456,7 @@
                                                                                 TRANSIENT=${ transient }
                                                                                 export ${ originator-pid-variable }
                                                                                 INIT_SCRIPT=${ scripts.init }
-                                                                                HASH="$( echo "${ pre-hash } ${ hash } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                                HASH="$( echo "${ pre-hash } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                                 export HAS_STANDARD_INPUT
@@ -615,7 +614,6 @@
                                                                             arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                             in
                                                                                 {
-                                                                                    hash = "${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] }" ;
                                                                                     has-standard-input-false =
                                                                                         if builtins.typeOf init == "null"
                                                                                         then
