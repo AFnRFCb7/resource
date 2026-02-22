@@ -511,15 +511,8 @@
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd a1a58267 >> /build/DEBUG
                                                                         else
                                                                             STATUS="$?"
-                                                                            # shellcheck disable=SC2129
-                                                                            echo 7e1212fd 04cf3443 "STATUS=$STATUS" >> /build/DEBUG
-                                                                            # shellcheck disable=SC2129
-                                                                            cat "$STANDARD_ERROR_FILE" >> /build/DEBUG
-                                                                            # shellcheck disable=SC2129
-                                                                            echo 7e1212fd 1f1be466 >> /build/DEBUG
                                                                         fi
                                                                     else
                                                                         echo 7e1212fd b4efbe3c >> /build/DEBUG
