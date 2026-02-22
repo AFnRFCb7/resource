@@ -622,40 +622,6 @@
                                                                             arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                             in
                                                                                 {
-                                                                                    has-standard-input-false =
-                                                                                        if builtins.typeOf init == "null"
-                                                                                        then
-                                                                                            ''
-                                                                                                touch "$STANDARD_OUTPUT_FILE"
-                                                                                                touch "$STANDARD_ERROR_FILE"
-                                                                                                STATUS=A
-                                                                                            ''
-                                                                                        else
-                                                                                            ''
-                                                                                                if ${ applications.init } "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                                then
-                                                                                                    STATUS="$?"
-                                                                                                else
-                                                                                                    STATUS="$?"
-                                                                                                fi
-                                                                                            '' ;
-                                                                                    has-standard-input-true =
-                                                                                        if builtins.typeOf init == "null"
-                                                                                        then
-                                                                                            ''
-                                                                                                touch "$STANDARD_OUTPUT_FILE"
-                                                                                                touch "$STANDARD_ERROR_FILE"
-                                                                                                STATUS=B
-                                                                                            ''
-                                                                                        else
-                                                                                            ''
-                                                                                                if ${ applications.init }/bin/init "${ arguments-nix }" < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                                then
-                                                                                                    STATUS="$?"
-                                                                                                else
-                                                                                                    STATUS="$?"
-                                                                                                fi
-                                                                                            '' ;
                                                                                     init-application = applications.init ;
                                                                                     pre-hash = pre-hash secondary ;
                                                                                     resources-directory = resources-directory ;
