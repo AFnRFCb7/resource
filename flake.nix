@@ -623,6 +623,7 @@
                                                                                             ''
                                                                                         else
                                                                                             ''
+                                                                                                echo 7e1212fd ed43dd39 ${ applications.init } >&2
                                                                                                 if ${ applications.init } "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                 then
                                                                                                     STATUS="$?"
