@@ -742,6 +742,9 @@
                                                                                         else
                                                                                             STATUS="$?"
                                                                                         fi
+                                                                                        cat <<EOF
+                                                                                        ${ init }
+                                                                                        EOF
                                                                                         if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
                                                                                             ${ findutils }/bin/find ${ resources-directory }
