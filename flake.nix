@@ -209,7 +209,7 @@
                                                                                                                 failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
                                                                                                             fi
                                                                                                             VARIABLE="$2"
-                                                                                                            export VARIABLE
+                                                                                                            : "${ builtins.concatStringsSep "" [ "{" "!VARIABLE:?Environment variable $VARIABLE must be exported" "}" ] }"
                                                                                                             VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
                                                                                                             BRACED="\$$VARIABLE"
                                                                                                             if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
