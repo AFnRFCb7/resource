@@ -425,7 +425,6 @@
                                                                 {
                                                                     template =
                                                                         {
-                                                                            arguments-nix ,
                                                                             hash ,
                                                                             has-standard-input-false ,
                                                                             has-standard-input-true ,
@@ -454,7 +453,7 @@
                                                                                 fi
                                                                                 mkdir --parents ${ resources-directory }
                                                                                 ARGUMENTS=( "$@" )
-                                                                                ARGUMENTS_JSON="$( printf '%s\n' "${ arguments-nix }" | jq -R . | jq -s . )"
+                                                                                ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                                 TRANSIENT=${ transient }
                                                                                 export ${ originator-pid-variable }
                                                                                 INIT_SCRIPT=${ scripts.init }
@@ -616,7 +615,6 @@
                                                                             arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                             in
                                                                                 {
-                                                                                    arguments-nix = arguments-nix ;
                                                                                     hash = "${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] }" ;
                                                                                     has-standard-input-false =
                                                                                         if builtins.typeOf init == "null"
