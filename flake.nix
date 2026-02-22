@@ -91,7 +91,7 @@
                                                                                                     in [ ( value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ) ] ;
                                                                                     } ;
                                                                             in "${ user-environment }/bin/init" ;
-                                                                null = path : value : null ;
+                                                                null = path : value : "${ pkgs.coreutils }/bin/true" ;
                                                             }
                                                             init ;
                                                 } ;
@@ -568,7 +568,7 @@
                                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
                                                                                         echo -n "$MOUNT"
                                                                                     else
-                                                                                        echo 7e1212fd 645d77e0 1dac10f6 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGET_HASH_EXPECTED=$TARGET_HASH_EXPECTED" "TARGET_HASH_OBSERVED=$TARGET_HASH_OBSERVED >&2
+                                                                                        echo 7e1212fd 645d77e0 1dac10f6 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGET_HASH_EXPECTED=$TARGET_HASH_EXPECTED" "TARGET_HASH_OBSERVED=$TARGET_HASH_OBSERVED" >&2
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
