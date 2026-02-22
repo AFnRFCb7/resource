@@ -7,23 +7,22 @@
 		        lib =
                     {
                         buildFHSUserEnv ,
-                        channel ? "resource" ,
+                        channel ,
                         coreutils ,
                         failure ,
                         findutils ,
                         flock ,
                         jq ,
-                        makeBinPath ,
                         makeWrapper ,
                         mkDerivation ,
                         nix ,
                         originator-pid-variable ,
                         ps ,
                         redis ,
-                        resources ? null ,
+                        resources ,
                         resources-directory ,
+                        root-directory ,
                         sequential-start ,
-                        store-garbage-collection-root ,
                         string ,
                         visitor ,
                         writeShellApplication ,
@@ -297,8 +296,8 @@
                                                                                         ''
                                                                                             TARGET="$1"
                                                                                             DIRECTORY="$( dirname "$TARGET" )" || failure ec2ee582
-                                                                                            mkdir --parents "${ store-garbage-collection-root }/$INDEX/$DIRECTORY"
-                                                                                            ln --symbolic --force "$TARGET" "${ store-garbage-collection-root }/$INDEX$DIRECTORY"
+                                                                                            mkdir --parents "${ root-directory }/$INDEX/$DIRECTORY"
+                                                                                            ln --symbolic --force "$TARGET" "${ root-directory }/$INDEX$DIRECTORY"
                                                                                         '' ;
                                                                                 } ;
                                                                         seed = seed ;
@@ -441,8 +440,8 @@
                                                                                                             ''
                                                                                                                 TARGET="$1"
                                                                                                                 DIRECTORY="$( dirname "$TARGET" )" || failure ec2ee582
-                                                                                                                mkdir --parents "${ store-garbage-collection-root }/$INDEX/$DIRECTORY"
-                                                                                                                ln --symbolic --force "$TARGET" "${ store-garbage-collection-root }/$INDEX$DIRECTORY"
+                                                                                                                mkdir --parents "${ root-directory }/$INDEX/$DIRECTORY"
+                                                                                                                ln --symbolic --force "$TARGET" "${ root-directory }/$INDEX$DIRECTORY"
                                                                                                             '' ;
                                                                                                     } ;
                                                                                             wrap =
@@ -669,7 +668,7 @@
                                                                             init-application ,
                                                                             pre-hash ,
                                                                             resources-directory ,
-                                                                            store-garbage-collection-root ,
+                                                                            root-directory ,
                                                                             target-hash-expected ,
                                                                             transient
                                                                         } :
@@ -712,7 +711,7 @@
                                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                                     export INDEX
                                                                                     export PROVENANCE=cached
-                                                                                    mkdir --parents "${ store-garbage-collection-root }/$INDEX"
+                                                                                    mkdir --parents "${ root-directory }/$INDEX"
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
                                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                                     # shellcheck disable=SC2016
@@ -892,7 +891,7 @@
                                                                                     init-application = init-application ;
                                                                                     pre-hash = pre-hash secondary ;
                                                                                     resources-directory = resources-directory ;
-                                                                                    store-garbage-collection-root = store-garbage-collection-root ;
+                                                                                    root-directory = root-directory ;
                                                                                     target-hash-expected = "${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }" ;
                                                                                     transient = transient_ ;
                                                                                 } ;
