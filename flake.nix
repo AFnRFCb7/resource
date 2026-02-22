@@ -646,16 +646,11 @@
                                         {
                                             arguments ? [ ] ,
                                             diffutils ,
-
                                             expected ? { } ,
-                                            expected-shims ? { } ,
                                             expected-resource ? "" ,
                                             expected-status ? 0 ,
-
                                             init ,
-
                                             jd-diff-patch ,
-
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
                                             resources-directory-fixture ? null ,
@@ -749,6 +744,7 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
+                                                                                            ${ pkgs.findutils }/bin/find ${ resources-directory }
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$RESOURCE" ]]
