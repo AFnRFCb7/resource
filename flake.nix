@@ -425,7 +425,6 @@
                                                                 {
                                                                     template =
                                                                         {
-                                                                            init-application ,
                                                                             pre-hash ,
                                                                             resources-directory ,
                                                                             root-directory ,
@@ -624,7 +623,6 @@
                                                                             arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                             in
                                                                                 {
-                                                                                    init-application = applications.init ;
                                                                                     pre-hash = pre-hash secondary ;
                                                                                     resources-directory = resources-directory ;
                                                                                     root-directory = root-directory ;
