@@ -23,13 +23,11 @@
                         resources-directory ,
                         root-directory ,
                         sequential-start ,
-                        string ,
                         visitor ,
                         writeShellApplication ,
                         yq-go
                     } @primary :
                         let
-                            _string = string ;
                             description =
                                 { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
                                     let
