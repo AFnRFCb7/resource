@@ -420,7 +420,7 @@
                                                         runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             ''
-                                                                # echo 7e1212fd 1ea4d488 >&2
+                                                                echo 7e1212fd 1ea4d488 >> /build/DEBUG
                                                                 export SETUP="$0"
                                                                 if [[ -t 0 ]]
                                                                 then
@@ -743,6 +743,7 @@
                                                                                         else
                                                                                             STATUS="$?"
                                                                                         fi
+                                                                                        cat /build/DEBUG
                                                                                         if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
