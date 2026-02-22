@@ -533,11 +533,16 @@
                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                     echo 7e1212fd 96830bc4 >> /build/DEBUG
                                                                     export STANDARD_ERROR_FILE
+                                                                    echo 7e1212fd c414c3a7 >> /build/DEBUG
                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
+                                                                    echo 7e1212fd 14fcb221 >> /build/DEBUG
                                                                     export STANDARD_OUTPUT_FILE
+                                                                    echo 7e1212fd 98e26ed1 >> /build/DEBUG
                                                                     cd /
+                                                                    echo 7e1212fd bbb40432 >> /build/DEBUG
                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                     then
+                                                                        echo 7e1212fd 9580b133 >> /build/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
@@ -546,6 +551,7 @@
                                                                             STATUS="$?"
                                                                         fi
                                                                     else
+                                                                        echo 7e1212fd b4efbe3c >> /build/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
