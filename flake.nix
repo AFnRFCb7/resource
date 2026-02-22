@@ -521,16 +521,16 @@
                                                                                     export STATUS
                                                                                     TARGET_HASH_EXPECTED=${ target-hash-expected }
                                                                                     TARGET_HASH_OBSERVED="$( find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" | sha512sum | cut --characters 1-128 )" || failure f6bff0bc
-                                                                                    STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure
+                                                                                    STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 395f8da8
                                                                                     export STANDARD_ERROR
-                                                                                    STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure
+                                                                                    STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
                                                                                     export STANDARD_OUTPUT
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
                                                                                     echo 7e1212fd dd871283 >&2
                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                                     then
-                                                                                        echo 7e1212fd 72c869b7 >&2
+                                                                                        echo 7e1212fd 72c869b7 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGET_HASH_EXPECTED=$TARGET_HASH_EXPECTED" "TARGET_HASH_OBSERVED=$TARGET_HASH_OBSERVED" >&2
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
