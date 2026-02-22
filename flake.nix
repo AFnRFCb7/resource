@@ -114,14 +114,14 @@
                                                                                 buildFHSUserEnv
                                                                                     {
                                                                                         name = "init" ;
-                                                                                        runScript = "echo-init" ;
+                                                                                        runScript = "init" ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 [
                                                                                                     (
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
-                                                                                                                name = "echo-init" ;
+                                                                                                                name = "init" ;
                                                                                                                 runtimeInputs = [ pkgs.coreutils ] ;
                                                                                                                 text =
                                                                                                                     let
@@ -544,7 +544,7 @@
                                                                     then
                                                                         echo 7e1212fd 9580b133 >> /build/DEBUG
                                                                         # shellcheck disable=SC2068
-                                                                        if ${ applications.init }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
                                                                             echo 7e1212fd a1a58267 >> /build/DEBUG
@@ -552,7 +552,9 @@
                                                                             STATUS="$?"
                                                                             # shellcheck disable=SC2129
                                                                             echo 7e1212fd 04cf3443 "STATUS=$STATUS" >> /build/DEBUG
+                                                                            # shellcheck disable=SC2129
                                                                             cat "$STANDARD_ERROR_FILE" >> /build/DEBUG
+                                                                            # shellcheck disable=SC2129
                                                                             echo 7e1212fd 1f1be466 >> /build/DEBUG
                                                                         fi
                                                                     else
