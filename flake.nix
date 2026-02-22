@@ -1056,25 +1056,25 @@
 
                                                                                         if ! jd ${ expected-json } /build/payload
                                                                                         then
-jq -r '
-def to_nix(indent):
-  if type == "object" then
-    "{\n" +
-    (to_entries
-      | map(indent + "  " + .key + " = " + (.value | to_nix(indent + "  ")) + ";")
-      | join("\n")) +
-    "\n" + indent + "}"
-  elif type == "array" then
-    "[\n" + (map(indent + "  " + to_nix(indent + "  ")) | join("\n")) + "\n" + indent + "]"
-  elif type == "string" or type == "number" or type == "boolean" or type == "null" then
-    "cc97f31f" + tostring + "cc97f31f"
-  else
-    error("unsupported type")
-  end;
+                                                                                            jq -r '
+                                                                                            def to_nix(indent):
+                                                                                              if type == "object" then
+                                                                                                "{\n" +
+                                                                                                (to_entries
+                                                                                                  | map(indent + "  " + .key + " = " + (.value | to_nix(indent + "  ")) + ";")
+                                                                                                  | join("\n")) +
+                                                                                                "\n" + indent + "}"
+                                                                                              elif type == "array" then
+                                                                                                "[\n" + (map(indent + "  " + to_nix(indent + "  ")) | join("\n")) + "\n" + indent + "]"
+                                                                                              elif type == "string" or type == "number" or type == "boolean" or type == "null" then
+                                                                                                "cc97f31f" + tostring + "cc97f31f"
+                                                                                              else
+                                                                                                error("unsupported type")
+                                                                                              end;
 
-to_nix("")
-' /build/payload > "$OUT/expected-1.nix"
-                                                                                            sed -i "s#cc97f31f#${ double-quote }#g" "$OUT/expected-1.nix
+                                                                                            to_nix("")
+                                                                                            ' /build/payload > "$OUT/expected-1.nix"
+                                                                                            sed -i "s#cc97f31f#${ double-quote }#g" "$OUT/expected-1.nix"
                                                                                             failure 2bc4ce7b "EXPECTED=$OUT/expected.nix"
                                                                                         fi
                                                                                     '' ;
