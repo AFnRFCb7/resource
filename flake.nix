@@ -697,7 +697,7 @@
                                             expected-resource ? "" ,
                                             expected-status ? 0 ,
                                             init ? null ,
-                                            init-resolution ? null ,
+                                            init-resolutions ? null ,
                                             jd-diff-patch ,
                                             release ? null ,
                                             release-resolutions ? null ,
