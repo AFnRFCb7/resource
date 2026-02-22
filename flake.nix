@@ -422,12 +422,18 @@
                                                             ''
                                                                 echo 7e1212fd 1ea4d488 >> /build/DEBUG
                                                                 export SETUP="$0"
+                                                                echo 7e1212fd dab7bc46 >> /build/DEBUG
                                                                 if [[ -t 0 ]]
                                                                 then
+                                                                    echo 7e1212fd 081d5ccb >> /build/DEBUG
                                                                     HAS_STANDARD_INPUT=false
+                                                                    echo 7e1212fd 72d9c1b8 >> /build/DEBUG
                                                                     STANDARD_INPUT=
+                                                                    echo 7e1212fd 772a0351 >> /build/DEBUG
                                                                     ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure 2bd52e9b
+                                                                    echo 7e1212fd 19650f89 >> /build/DEBUG
                                                                 else
+                                                                    echo 7e1212fd 87a0ff07 >> /build/DEBUG
                                                                     STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
                                                                     export STANDARD_INPUT_FILE
                                                                     HAS_STANDARD_INPUT=true
