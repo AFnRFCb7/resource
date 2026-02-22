@@ -70,7 +70,7 @@
                                                                                         extraBwrapArgs =
                                                                                             [
                                                                                                 "--bind $MOUNT /mount"
-                                                                                                "--tempfs /scratch"
+                                                                                                "--tmpfs /scratch"
                                                                                             ] ;
                                                                                         name = "init" ;
                                                                                         runScript =
