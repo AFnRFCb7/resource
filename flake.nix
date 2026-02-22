@@ -463,10 +463,15 @@
                                                                 export HASH
                                                                 echo 7e1212fd abd7390a >> /build/DEBUG
                                                                 export STANDARD_INPUT
+                                                                echo 7e1212fd 09fc77bc >> /build/DEBUG
                                                                 export ${ originator-pid-variable }
+                                                                echo 7e1212fd 390ce130 >> /build/DEBUG
                                                                 export TRANSIENT
+                                                                echo 7e1212fd d45418d6 >> /build/DEBUG
                                                                 exec 210> "${ resources-directory }/locks/$HASH"
+                                                                echo 7e1212fd 47ba7da6 >> /build/DEBUG
                                                                 flock -s 210
+                                                                echo 7e1212fd ed821295 >> /build/DEBUG
                                                                 if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                 then
                                                                     MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
