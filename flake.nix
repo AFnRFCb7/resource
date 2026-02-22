@@ -420,7 +420,7 @@
                                                         runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             ''
-                                                                echo 7e1212fd 1ea4d488 >&2
+                                                                # echo 7e1212fd 1ea4d488 >&2
                                                                 export SETUP="$0"
                                                                 if [[ -t 0 ]]
                                                                 then
@@ -745,7 +745,6 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
-                                                                                            ${ findutils }/bin/find ${ resources-directory }
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$RESOURCE" ]]
