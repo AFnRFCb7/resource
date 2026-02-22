@@ -527,8 +527,10 @@
                                                                                     export STANDARD_OUTPUT
                                                                                     mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
+                                                                                    echo 7e1212fd dd871283 >&2
                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                                     then
+                                                                                        echo 7e1212fd 72c869b7 >&2
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
@@ -566,6 +568,7 @@
                                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
                                                                                         echo -n "$MOUNT"
                                                                                     else
+                                                                                        echo 7e1212fd 645d77e0 >&2
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
@@ -600,6 +603,7 @@
                                                                                             }' | publish
                                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                                     fi
+                                                                                    echo 7e1212fd 4b1a58e3 >&2
                                                                                 fi
                                                                             '' ;
                                                                     values =
