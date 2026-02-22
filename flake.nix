@@ -91,7 +91,7 @@
                                                                                                     in [ ( value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ) ] ;
                                                                                     } ;
                                                                             in "${ user-environment }/bin/init" ;
-                                                                null = path : value : "${ pkgs.coreutils }/bin/true" ;
+                                                                null = path : value : "true" ;
                                                             }
                                                             init ;
                                                 } ;
