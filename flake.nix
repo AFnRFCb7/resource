@@ -474,6 +474,7 @@
                                                                 echo 7e1212fd ed821295 >> /build/DEBUG
                                                                 if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                 then
+                                                                    echo 7e1212fd 76d44633 >> /build/DEBUG
                                                                     MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
                                                                     export MOUNT
                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
@@ -510,6 +511,7 @@
                                                                         }' | publish > /dev/null 2>&1
                                                                     echo -n "$MOUNT"
                                                                 else
+                                                                    echo 7e1212fd e0cc0ac9 >> /build/DEBUG
                                                                     INDEX="$( sequential )" || failure 65a31c86
                                                                     export INDEX
                                                                     export PROVENANCE=new
@@ -625,6 +627,7 @@
                                                                             }' | publish
                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                     fi
+                                                                    echo 7e1212fd 19ee82bc >> /build/DEBUG
                                                                 fi
                                                             '' ;
                                                         } ;
