@@ -1054,7 +1054,7 @@
                                                                                         if ! jd ${ expected } /build/payload
                                                                                         then
                                                                                             jq "." /build/payload > "$OUT/candidate.json"
-                                                                                            failure 2bc4ce7b "EXPECTED=$OUT/candidate.nix"
+                                                                                            failure 2bc4ce7b "EXPECTED=$OUT/candidate.json"
                                                                                         fi
                                                                                     '' ;
                                                                     }
