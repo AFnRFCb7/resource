@@ -492,27 +492,16 @@
                                                                     echo -n "$MOUNT"
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
-                                                                    echo 7e1212fd da43cc83 >> /build/DEBUG
                                                                     export INDEX
-                                                                    echo 7e1212fd 6b8c1c16 >> /build/DEBUG
                                                                     export PROVENANCE=new
-                                                                    echo 7e1212fd 81cf0c1f >> /build/DEBUG
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                    echo 7e1212fd 5866ec47 >> /build/DEBUG
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
-                                                                    echo 7e1212fd 86d0c7e7 >> /build/DEBUG
                                                                     flock -s 211
-                                                                    echo 7e1212fd 9cda5394 >> /build/DEBUG
                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                    echo 7e1212fd 32a837c7 >> /build/DEBUG
                                                                     mkdir --parents "$MOUNT"
-                                                                    echo 7e1212fd da8be629 >> /build/DEBUG
                                                                     export MOUNT
-                                                                    echo 7e1212fd 96830bc4 >> /build/DEBUG
                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
-                                                                    echo 7e1212fd 96830bc4 >> /build/DEBUG
                                                                     export STANDARD_ERROR_FILE
-                                                                    echo 7e1212fd c414c3a7 >> /build/DEBUG
                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
                                                                     echo 7e1212fd 14fcb221 >> /build/DEBUG
                                                                     export STANDARD_OUTPUT_FILE
