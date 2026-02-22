@@ -1038,7 +1038,6 @@
                                                                                         else
                                                                                             STATUS="$?"
                                                                                         fi
-                                                                                        ${ expected } > /build/expected
                                                                                         if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
@@ -1053,7 +1052,7 @@
                                                                                         done
                                                                                         cat /build/payload > "$OUT/observed.json"
 
-                                                                                        if ! jd /build/expected /build/payload
+                                                                                        if ! jd ${ expected } /build/payload
                                                                                         then
                                                                                             jq "." /build/payload > "$OUT/candidate.json"
                                                                                             failure 2bc4ce7b "EXPECTED=$OUT/candidate.nix"
