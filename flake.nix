@@ -442,10 +442,15 @@
                                                                     PENULTIMATE_PID=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure d79214f2
                                                                     ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')'' "}" ] } || failure e1556ee8
                                                                 fi
+                                                                echo 7e1212fd a77fe177 >> /build/DEBUG
                                                                 mkdir --parents ${ resources-directory }
+                                                                echo 7e1212fd 7c4ae03f >> /build/DEBUG
                                                                 ARGUMENTS=( "$@" )
+                                                                echo 7e1212fd 00e45caa >> /build/DEBUG
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
+                                                                echo 7e1212fd 6c38ebb9 >> /build/DEBUG
                                                                 TRANSIENT=${ transient_ }
+                                                                echo 7e1212fd 02e7ffb6 >> /build/DEBUG
                                                                 export ${ originator-pid-variable }
                                                                 INIT_SCRIPT=${ scripts.init }
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
