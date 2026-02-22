@@ -56,10 +56,13 @@
                                                 { primary = primary ; secondary = secondary ; } ;
                                 implementation =
                                     {
-                                        init ? null ,
-                                        seed ? null ,
-                                        targets ? [ ] ,
-                                        transient ? false
+                                        init ,
+                                        init-resolutions ,
+                                        release ,
+                                        release-resolutions ,
+                                        seed ,
+                                        targets ,
+                                        transient
                                     } @secondary :
                                         let
                                             applications =
