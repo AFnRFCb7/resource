@@ -209,7 +209,7 @@
                                                                                                                 failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
                                                                                                             fi
                                                                                                             VARIABLE="$2"
-                                                                                                            echo "55665347 VARIABLE=$VARIABLE"
+                                                                                                            export VARIABLE
                                                                                                             VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
                                                                                                             BRACED="\$$VARIABLE"
                                                                                                             if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
