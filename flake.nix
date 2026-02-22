@@ -420,6 +420,7 @@
                                                         runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             ''
+                                                                export SETUP="0"
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
