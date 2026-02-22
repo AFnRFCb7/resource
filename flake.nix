@@ -425,12 +425,10 @@
                                                                 echo 7e1212fd f514ee16 >> /build/DEBUG
                                                                 if [[ -t 0 ]]
                                                                 then
-                                                                    echo 7e1212fd 31feea4b >> /build/DEBUG
                                                                     HAS_STANDARD_INPUT=false
                                                                     STANDARD_INPUT=
                                                                     ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure 2bd52e9b
                                                                 else
-                                                                    echo 7e1212fd df2385dd >> /build/DEBUG
                                                                     STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
                                                                     export STANDARD_INPUT_FILE
                                                                     HAS_STANDARD_INPUT=true
@@ -439,17 +437,11 @@
                                                                     PENULTIMATE_PID=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure d79214f2
                                                                     ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')'' "}" ] } || failure e1556ee8
                                                                 fi
-                                                                echo 7e1212fd a211d990 >> /build/DEBUG
                                                                 mkdir --parents ${ resources-directory }
-                                                                echo 7e1212fd 20bf55c4 >> /build/DEBUG
                                                                 ARGUMENTS=( "$@" )
-                                                                echo 7e1212fd 75841b7b >> /build/DEBUG
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
-                                                                echo 7e1212fd 8d946273 >> /build/DEBUG
                                                                 TRANSIENT=${ transient_ }
-                                                                echo 7e1212fd 26c142f0 >> /build/DEBUG
                                                                 export ${ originator-pid-variable }
-                                                                echo 7e1212fd 3e89bf74 >> /build/DEBUG
                                                                 INIT_SCRIPT=${ scripts.init }
                                                                 echo 7e1212fd 4e7868f1 >> /build/DEBUG
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
