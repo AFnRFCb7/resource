@@ -547,8 +547,10 @@
                                                                         if ${ applications.init }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd a1a58267 >> /build/DEBUG
                                                                         else
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd 04cf3443 >> /build/DEBUG
                                                                         fi
                                                                     else
                                                                         echo 7e1212fd b4efbe3c >> /build/DEBUG
