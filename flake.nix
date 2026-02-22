@@ -420,13 +420,17 @@
                                                         runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             ''
+                                                                echo 7e1212fd 9c6085bb >> /build/DEBUG
                                                                 export SETUP="$0"
+                                                                echo 7e1212fd f514ee16 >> /build/DEBUG
                                                                 if [[ -t 0 ]]
                                                                 then
+                                                                    echo 7e1212fd 31feea4b >> /build/DEBUG
                                                                     HAS_STANDARD_INPUT=false
                                                                     STANDARD_INPUT=
                                                                     ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure 2bd52e9b
                                                                 else
+                                                                    echo 7e1212fd df2385dd >> /build/DEBUG
                                                                     STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
                                                                     export STANDARD_INPUT_FILE
                                                                     HAS_STANDARD_INPUT=true
@@ -435,7 +439,9 @@
                                                                     PENULTIMATE_PID=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure d79214f2
                                                                     ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')'' "}" ] } || failure e1556ee8
                                                                 fi
+                                                                echo 7e1212fd a211d990 >> /build/DEBUG
                                                                 mkdir --parents ${ resources-directory }
+                                                                echo 7e1212fd 20bf55c4 >> /build/DEBUG
                                                                 ARGUMENTS=( "$@" )
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
@@ -742,6 +748,9 @@
                                                                                         else
                                                                                             STATUS="$?"
                                                                                         fi
+                                                                                        echo 7e1212fd 85da6a74 >&2
+                                                                                        cat /build/DEBUG
+                                                                                        echo 7e1212fd fe8348a5 >&2
                                                                                         if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
