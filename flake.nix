@@ -65,7 +65,7 @@
                                                                     path : value :
                                                                         let
                                                                             user-environment =
-                                                                                pkgs.buildFSHUserEnv
+                                                                                buildFSHUserEnv
                                                                                     {
                                                                                         extraBwrapArgs =
                                                                                             [
