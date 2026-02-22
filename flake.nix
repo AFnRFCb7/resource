@@ -29,7 +29,15 @@
                     } @primary :
                         let
                             description =
-                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                {
+                                    init ,
+                                    init-resolutions ,
+                                    release ,
+                                    release-resolutions ,
+                                    seed ,
+                                    targets ,
+                                    transient
+                                } @secondary :
                                     let
                                         seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
@@ -132,9 +140,40 @@
                                                                                                 ] ;
                                                                                     } ;
                                                                                 in ''"$( ${ user-environment }/bin/init )" || failure 5f7d7000'' ;
-                                                                null = path : value : "d3c28349" ;
+                                                                null = path : value : null ;
                                                             }
                                                             init ;
+                                                    release =
+                                                        visitor
+                                                            {
+                                                                lambda =
+                                                                    path : value :
+                                                                        let
+                                                                            user-environment =
+                                                                                buildFHSUserEnv
+                                                                                    {
+                                                                                        name = "init" ;
+                                                                                        runScript = "init" ;
+                                                                                        targetPkgs =
+                                                                                            pkgs :
+                                                                                                [
+                                                                                                    (
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "release" ;
+                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                                text =
+                                                                                                                    let
+                                                                                                                        t = tools pkgs ;
+                                                                                                                        in "echo '${ value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } }'" ;
+                                                                                                            }
+                                                                                                    )
+                                                                                                ] ;
+                                                                                    } ;
+                                                                                in ''"$( ${ user-environment }/bin/release" )" || failure 5f7d7000'' ;
+                                                                null = path : value : null ;
+                                                            }
+                                                            release ;
                                                 } ;
                                             tools =
                                                 pkgs :
@@ -440,6 +479,7 @@
                                                                 TRANSIENT=${ transient_ }
                                                                 export ${ originator-pid-variable }
                                                                 INIT_SCRIPT=${ scripts.init }
+                                                                RELEASE_SCRIPT=${ scripts.release }
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                 export HASH
                                                                 mkdir --parents "${ resources-directory }/locks"
@@ -467,6 +507,7 @@
                                                                         --arg HASH "$HASH" \
                                                                         --arg INDEX "$INDEX" \
                                                                         --arg INIT_SCRIPT "$INIT_SCRIPT" \
+                                                                        --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                         --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                         --arg PROVENANCE "$PROVENANCE" \
@@ -478,6 +519,7 @@
                                                                             "hash" : $HASH ,
                                                                             "index" : $INDEX ,
                                                                             "init-script" : $INIT_SCRIPT ,
+                                                                            "release-script" : $RELEASE_SCRIPT ,
                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                             "originator-pid" : $ORIGINATOR_PID ,
                                                                             "provenance" : $PROVENANCE ,
@@ -539,6 +581,7 @@
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
+                                                                            --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
@@ -554,6 +597,7 @@
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
                                                                                 "init-script" : $INIT_SCRIPT ,
+                                                                                "release-script" : $RELEASE_SCRIPT ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "originator-pid" : $ORIGINATOR_PID ,
                                                                                 "provenance" : $PROVENANCE ,
@@ -576,6 +620,7 @@
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
+                                                                            --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
