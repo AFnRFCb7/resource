@@ -619,7 +619,7 @@
                                                                                             ''
                                                                                         else
                                                                                             ''
-                                                                                                if ${ init-application }/bin/init-application "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                if ${ applications.init }/bin/applications.init "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                 then
                                                                                                     STATUS="$?"
                                                                                                 else
@@ -636,7 +636,7 @@
                                                                                             ''
                                                                                         else
                                                                                             ''
-                                                                                                if ${ init-application }/bin/init-application "${ arguments-nix }" < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                if ${ applications.init }/bin/applications.init "${ arguments-nix }" < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                 then
                                                                                                     STATUS="$?"
                                                                                                 else
