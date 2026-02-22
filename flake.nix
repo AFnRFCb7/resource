@@ -425,7 +425,6 @@
                                                                 {
                                                                     template =
                                                                         {
-                                                                            pre-hash ,
                                                                             resources-directory ,
                                                                             root-directory ,
                                                                             target-hash-expected ,
@@ -453,7 +452,7 @@
                                                                                 TRANSIENT=${ transient }
                                                                                 export ${ originator-pid-variable }
                                                                                 INIT_SCRIPT=${ scripts.init }
-                                                                                HASH="$( echo "${ pre-hash } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                                 export HASH
                                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                                 export HAS_STANDARD_INPUT
@@ -623,7 +622,6 @@
                                                                             arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                             in
                                                                                 {
-                                                                                    pre-hash = pre-hash secondary ;
                                                                                     resources-directory = resources-directory ;
                                                                                     root-directory = root-directory ;
                                                                                     target-hash-expected = "${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }" ;
