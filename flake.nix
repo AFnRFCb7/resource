@@ -513,10 +513,15 @@
                                                                 else
                                                                     echo 7e1212fd e0cc0ac9 >> /build/DEBUG
                                                                     INDEX="$( sequential )" || failure 65a31c86
+                                                                    echo 7e1212fd da43cc83 >> /build/DEBUG
                                                                     export INDEX
+                                                                    echo 7e1212fd 6b8c1c16 >> /build/DEBUG
                                                                     export PROVENANCE=new
+                                                                    echo 7e1212fd 81cf0c1f >> /build/DEBUG
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                    echo 7e1212fd 5866ec47 >> /build/DEBUG
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
+                                                                    echo 7e1212fd 86d0c7e7 >> /build/DEBUG
                                                                     flock -s 211
                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                     mkdir --parents "$MOUNT"
