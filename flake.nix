@@ -619,7 +619,7 @@
                                                                                             ''
                                                                                         else
                                                                                             ''
-                                                                                                if ${ applications.init }/bin/init "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                if ${ applications.init } "${ arguments-nix }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                 then
                                                                                                     STATUS="$?"
                                                                                                 else
