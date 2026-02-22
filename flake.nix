@@ -425,8 +425,6 @@
                                                                 {
                                                                     template =
                                                                         {
-                                                                            resources-directory ,
-                                                                            root-directory ,
                                                                             target-hash-expected ,
                                                                             transient
                                                                         } :
@@ -622,8 +620,6 @@
                                                                             arguments-nix = "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" ;
                                                                             in
                                                                                 {
-                                                                                    resources-directory = resources-directory ;
-                                                                                    root-directory = root-directory ;
                                                                                     target-hash-expected = "${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }" ;
                                                                                     transient = transient_ ;
                                                                                 } ;
