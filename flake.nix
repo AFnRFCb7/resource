@@ -550,7 +550,9 @@
                                                                             echo 7e1212fd a1a58267 >> /build/DEBUG
                                                                         else
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd 04cf3443 >> /build/DEBUG
+                                                                            echo 7e1212fd 04cf3443 "STATUS=$STATUS" >> /build/DEBUG
+                                                                            cat "$STANDARD_ERROR_FILE" >> /build/DEBUG
+                                                                            echo 7e1212fd 1f1be466 >> /build/DEBUG
                                                                         fi
                                                                     else
                                                                         echo 7e1212fd b4efbe3c >> /build/DEBUG
