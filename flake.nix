@@ -518,6 +518,7 @@
                                                                                     cd /
                                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                     then
+                                                                                        # shellcheck disable=SC2068
                                                                                         if ${ applications.init }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                         then
                                                                                             STATUS="$?"
@@ -525,6 +526,7 @@
                                                                                             STATUS="$?"
                                                                                         fi
                                                                                     else
+                                                                                        # shellcheck disable=SC2068
                                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                         then
                                                                                             STATUS="$?"
