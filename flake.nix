@@ -420,9 +420,6 @@
                                                         runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             ''
-                                                                echo 7e1212fd 9c6085bb >> /build/DEBUG
-                                                                export SETUP="$0"
-                                                                echo 7e1212fd f514ee16 >> /build/DEBUG
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
@@ -515,7 +512,6 @@
                                                                             STATUS="$?"
                                                                         fi
                                                                     else
-                                                                        echo 7e1212fd b4efbe3c >> /build/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
@@ -607,7 +603,6 @@
                                                                             }' | publish
                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                     fi
-                                                                    echo 7e1212fd 19ee82bc >> /build/DEBUG
                                                                 fi
                                                             '' ;
                                                         } ;
@@ -746,9 +741,6 @@
                                                                                         else
                                                                                             STATUS="$?"
                                                                                         fi
-                                                                                        echo 7e1212fd 85da6a74 >&2
-                                                                                        cat /build/DEBUG
-                                                                                        echo 7e1212fd fe8348a5 >&2
                                                                                         if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
                                                                                         then
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
