@@ -453,10 +453,15 @@
                                                                 INIT_SCRIPT=${ scripts.init }
                                                                 echo 7e1212fd 4e7868f1 >> /build/DEBUG
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                echo 7e1212fd c063a59d >> /build/DEBUG
                                                                 export HASH
+                                                                echo 7e1212fd 396085e1 >> /build/DEBUG
                                                                 mkdir --parents "${ resources-directory }/locks"
+                                                                echo 7e1212fd 8a757092 >> /build/DEBUG
                                                                 export HAS_STANDARD_INPUT
+                                                                echo 7e1212fd e1ad16f2 >> /build/DEBUG
                                                                 export HASH
+                                                                echo 7e1212fd abd7390a >> /build/DEBUG
                                                                 export STANDARD_INPUT
                                                                 export ${ originator-pid-variable }
                                                                 export TRANSIENT
