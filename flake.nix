@@ -56,6 +56,45 @@
                                         transient ? false
                                     } @secondary :
                                         let
+                                            applications =
+                                                {
+                                                    init =
+                                                        visitor
+                                                            {
+                                                                lambda =
+                                                                    path : value :
+                                                                        let
+                                                                            user-environment =
+                                                                                pkgs.buildFSHUserEnv
+                                                                                    {
+                                                                                        extraBwrapArgs =
+                                                                                            [
+                                                                                                "--bind $MOUNT /mount"
+                                                                                                "--tempfs /scratch"
+                                                                                            ] ;
+                                                                                        name = "init" ;
+                                                                                        runScript =
+                                                                                            ''
+                                                                                                bash -c '
+                                                                                                    if [[ -t 0 ]]
+                                                                                                    then
+                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                    else
+                                                                                                        cat | init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                    fi
+                                                                                                ' "$0" "$@"
+                                                                                            '' ;
+                                                                                        targetPkgs =
+                                                                                            pkgs :
+                                                                                                let
+                                                                                                    t = tools pkgs ;
+                                                                                                    in [ ( value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ) ] ;
+                                                                                    } ;
+                                                                            in "${ user-environment }/bin/init" ;
+                                                                null = path : value : null ;
+                                                            }
+                                                            init ;
+                                                } ;
                                             scripts =
                                                 {
                                                     init =
@@ -64,10 +103,10 @@
                                                                 lambda =
                                                                     path : value :
                                                                         let
-                                                                            application =
+                                                                            user-environment =
                                                                                 buildFHSUserEnv
                                                                                     {
-                                                                                        name = "echo-init" ;
+                                                                                        name = "init" ;
                                                                                         runScript = "echo-init" ;
                                                                                         targetPkgs =
                                                                                             pkgs :
@@ -80,12 +119,12 @@
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         t = tools pkgs ;
-                                                                                                                        in "echo '${ init { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } }'" ;
+                                                                                                                        in "echo '${ value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } }'" ;
                                                                                                             }
                                                                                                     )
                                                                                                 ] ;
                                                                                     } ;
-                                                                                in ''"$( ${ application }/bin/echo-init )" || failure 5f7d7000'' ;
+                                                                                in ''"$( ${ user-environment }/bin/init )" || failure 5f7d7000'' ;
                                                                 null = path : value : "d3c28349" ;
                                                             }
                                                             init ;
@@ -356,285 +395,6 @@
                                                                         } ;
                                                                 wrap = wrap ;
                                                             } ;
-                                            init-application =
-                                                if builtins.typeOf init == "null" then null
-                                                else # init is a lambda
-                                                    buildFHSUserEnv
-                                                        {
-                                                            extraBwrapArgs =
-                                                                [
-                                                                    "--bind $MOUNT /mount"
-                                                                    "--tmpfs /scratch"
-                                                                ] ;
-                                                            name = "init-application" ;
-                                                            runScript =
-                                                                ''
-                                                                    bash -c '
-                                                                        if [[ -t 0 ]]
-                                                                        then
-                                                                            execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                        else
-                                                                            cat | execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                        fi
-                                                                    ' "$0" "$@"
-                                                                '' ;
-                                                            targetPkgs =
-                                                                pkgs :
-                                                                    [
-                                                                        pkgs.bash
-                                                                        pkgs.coreutils
-                                                                        (
-                                                                            pkgs.writeShellApplication
-                                                                                {
-                                                                                    name = "execute-init" ;
-                                                                                    runtimeInputs = [ ] ;
-                                                                                    text =
-                                                                                        let
-                                                                                            pid =
-                                                                                                pkgs.writeShellApplication
-                                                                                                    {
-                                                                                                        name = "pid" ;
-                                                                                                        runtimeInputs = [ pkgs.procps wrap failure ] ;
-                                                                                                        text =
-                                                                                                            let
-                                                                                                                stall =
-                                                                                                                    let
-                                                                                                                        application =
-                                                                                                                            pkgs.writeShellApplication
-                                                                                                                                {
-                                                                                                                                    name = "stall" ;
-                                                                                                                                    runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                                                    text =
-                                                                                                                                        ''
-                                                                                                                                            echo "STALLING FOR PID=$PID"
-                                                                                                                                            tail --follow /dev/null --pid "$PID"
-                                                                                                                                        '' ;
-                                                                                                                                } ;
-                                                                                                                        in "${ application }/bin/stall" ;
-                                                                                                                in
-                                                                                                                    ''
-                                                                                                                        STALL_INDEX="$1"
-                                                                                                                        STALL_PATH="$2"
-                                                                                                                        INDEX=0
-                                                                                                                        PID="${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
-                                                                                                                        while [[ "$INDEX" -lt "$STALL_INDEX" ]] && [[ "$PID" -ne 1 ]]
-                                                                                                                        do
-                                                                                                                            PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]')" || failure caade9f0
-                                                                                                                            INDEX=$(( INDEX + 1 ))
-                                                                                                                            echo "INDEX=$INDEX PID=$PID STALL_INDEX=$STALL_INDEX STALL_PATH=$STALL_PATH"
-                                                                                                                        done
-                                                                                                                        wrap stall "$STALL_PATH" 0500 --inherit-plain PID --literal-plain PATH
-                                                                                                                    '' ;
-                                                                                                    } ;
-                                                                                            root =
-                                                                                                pkgs.writeShellApplication
-                                                                                                    {
-                                                                                                        name = "root" ;
-                                                                                                        runtimeInputs = [ pkgs.coreutils failure ] ;
-                                                                                                        text =
-                                                                                                            ''
-                                                                                                                TARGET="$1"
-                                                                                                                DIRECTORY="$( dirname "$TARGET" )" || failure ec2ee582
-                                                                                                                mkdir --parents "${ root-directory }/$INDEX/$DIRECTORY"
-                                                                                                                ln --symbolic --force "$TARGET" "${ root-directory }/$INDEX$DIRECTORY"
-                                                                                                            '' ;
-                                                                                                    } ;
-                                                                                            wrap =
-                                                                                                pkgs.buildFHSUserEnv
-                                                                                                    {
-                                                                                                        extraBwrapArgs = [ "--bind $MOUNT /mount" ] ;
-                                                                                                        name = "wrap" ;
-                                                                                                        runScript =
-                                                                                                            let
-                                                                                                                application =
-                                                                                                                    pkgs.writeShellApplication
-                                                                                                                        {
-                                                                                                                            name = "runScript" ;
-                                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.gnugrep pkgs.gnused failure ] ;
-                                                                                                                            text =
-                                                                                                                                ''
-                                                                                                                                    if [[ 3 -gt "$#" ]]
-                                                                                                                                    then
-                                                                                                                                        failure 4b5fcf01 "We were expecting input output permissions but we observed $# arguments:  $*"
-                                                                                                                                    fi
-                                                                                                                                    INPUT="$1"
-                                                                                                                                    if [[ ! -f "$INPUT" ]]
-                                                                                                                                    then
-                                                                                                                                        failure 2c068d47 "We were expecting the first argument $INPUT to be a file but we observed $*"
-                                                                                                                                    fi
-                                                                                                                                    UUID=""
-                                                                                                                                    shift
-                                                                                                                                    OUTPUT="$1"
-                                                                                                                                    if [[ -e "/mount/$OUTPUT" ]]
-                                                                                                                                    then
-                                                                                                                                        failure 9887df89 "We were expecting the second argument $OUTPUT to not (yet) exist but we observed $*"
-                                                                                                                                    fi
-                                                                                                                                    OUTPUT_DIRECTORY="$( dirname "/mount/$OUTPUT" )" || failure a3308d94
-                                                                                                                                    mkdir --parents "$OUTPUT_DIRECTORY"
-                                                                                                                                    shift
-                                                                                                                                    PERMISSIONS="$1"
-                                                                                                                                    if [[ ! $PERMISSIONS =~ ^-?[0-9]+$ ]]
-                                                                                                                                    then
-                                                                                                                                        failure 029e9461 "We were expecting the third argument to be an integer but we observed $*"
-                                                                                                                                    fi
-                                                                                                                                    ALLOWED_PLACEHOLDERS=()
-                                                                                                                                    COMMANDS=()
-                                                                                                                                    shift
-                                                                                                                                    while [[ "$#" -gt 0 ]]
-                                                                                                                                    do
-                                                                                                                                        case "$1" in
-                                                                                                                                            --inherit-brace)
-                                                                                                                                                if [[ "$#" -lt 2 ]]
-                                                                                                                                                then
-                                                                                                                                                    failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
-                                                                                                                                                fi
-                                                                                                                                                VARIABLE="$2"
-                                                                                                                                                VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
-                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
-                                                                                                                                                if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
-                                                                                                                                                then
-                                                                                                                                                    failure 159a6642 "We were expecting $VARIABLE to be in the environment but it is not"
-                                                                                                                                                fi
-                                                                                                                                                if ! grep -F --quiet "$BRACED" "$INPUT"
-                                                                                                                                                then
-                                                                                                                                                    failure 545c8e1f "We were expecting inherit $BRACED to be in the input file but it was not" "$*"
-                                                                                                                                                fi
-                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "$BRACED" )
-                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
-                                                                                                                                                shift 2
-                                                                                                                                                ;;
-                                                                                                                                            --inherit-plain)
-                                                                                                                                                if [[ "$#" -lt 2 ]]
-                                                                                                                                                then
-                                                                                                                                                    failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
-                                                                                                                                                fi
-                                                                                                                                                VARIABLE="$2"
-                                                                                                                                                echo "55665347 VARIABLE=$VARIABLE"
-                                                                                                                                                VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
-                                                                                                                                                BRACED="\$$VARIABLE"
-                                                                                                                                                if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
-                                                                                                                                                then
-                                                                                                                                                    failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
-                                                                                                                                                fi
-                                                                                                                                                if ! grep -F --quiet "$VARIABLE" "$INPUT"
-                                                                                                                                                then
-                                                                                                                                                    failure 50950711 "We were expecting inherit $VARIABLE to be in the input file but it was not" "$*"
-                                                                                                                                                fi
-                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
-                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
-                                                                                                                                                shift 2
-                                                                                                                                                ;;
-                                                                                                                                            --literal-brace)
-                                                                                                                                                if [[ "$#" -lt 2 ]]
-                                                                                                                                                then
-                                                                                                                                                    failure ad1f2615 "We were expecting --literal-brace VARIABLE but we observed $*"
-                                                                                                                                                fi
-                                                                                                                                                VARIABLE="$2"
-                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
-                                                                                                                                                if ! grep -F --quiet "$BRACED" "$INPUT"
-                                                                                                                                                then
-                                                                                                                                                    failure 4074aec1 "We were expecting literal $BRACED to be in the input file but it was not" "$*"
-                                                                                                                                                fi
-                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "$BRACED" )
-                                                                                                                                                # With sed we do not need to do anything for literal-brace
-                                                                                                                                                shift 2
-                                                                                                                                                ;;
-                                                                                                                                            --literal-plain)
-                                                                                                                                                if [[ "$#" -lt 2 ]]
-                                                                                                                                                then
-                                                                                                                                                    failure 55186955 "We were expecting --literal-plain VARIABLE but we observed $*"
-                                                                                                                                                fi
-                                                                                                                                                VARIABLE="$2"
-                                                                                                                                                if ! grep -F --quiet "\$$VARIABLE" "$INPUT"
-                                                                                                                                                then
-                                                                                                                                                    failure 2a3b187d "We were expecting literal $VARIABLE to be in the input file but it was not" "$*"
-                                                                                                                                                fi
-                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
-                                                                                                                                                # With sed we do not need to do anything for literal-plain
-                                                                                                                                                shift 2
-                                                                                                                                                ;;
-                                                                                                                                            --set-brace)
-                                                                                                                                                if [[ "$#" -lt 3 ]]
-                                                                                                                                                then
-                                                                                                                                                    failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
-                                                                                                                                                fi
-                                                                                                                                                VARIABLE="$2"
-                                                                                                                                                VALUE="$3"
-                                                                                                                                                BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
-                                                                                                                                                if ! grep -F --quiet "$BRACED" "$INPUT"
-                                                                                                                                                then
-                                                                                                                                                    failure 7e62972e "We were expecting set $BRACED to be in the input file but it was not" "$*"
-                                                                                                                                                fi
-                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "$BRACED" )
-                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
-                                                                                                                                                shift 3
-                                                                                                                                                ;;
-                                                                                                                                            --set-plain)
-                                                                                                                                                if [[ "$#" -lt 3 ]]
-                                                                                                                                                then
-                                                                                                                                                    failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
-                                                                                                                                                fi
-                                                                                                                                                VARIABLE="$2"
-                                                                                                                                                VALUE="$3"
-                                                                                                                                                BRACED="\$$VARIABLE"
-                                                                                                                                                if ! grep -F --quiet "$VARIABLE" "$INPUT"
-                                                                                                                                                then
-                                                                                                                                                    failure 5f62a6be "We were expecting set $VARIABLE to be in the input file but it was not" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "$*"
-                                                                                                                                                fi
-                                                                                                                                                ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
-                                                                                                                                                COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
-                                                                                                                                                shift 3
-                                                                                                                                                ;;
-                                                                                                                                            --uuid)
-                                                                                                                                                UUID="$2"
-                                                                                                                                                shift 2
-                                                                                                                                                ;;
-                                                                                                                                            *)
-                                                                                                                                                failure d40b5fe2 "We were expecting --inherit-brace, --inherit-plain, --literal-brace, --literal-plain, --set-brace, or --set-plain but we observed $*"
-                                                                                                                                        esac
-                                                                                                                                    done
-                                                                                                                                    mapfile -t FOUND_PLACEHOLDERS < <(
-                                                                                                                                        grep -oE '\$\{[A-Za-z_][A-Za-z0-9_]*\}|\$[A-Za-z_][A-Za-z0-9_]*' "$INPUT" \
-                                                                                                                                        | sort -u
-                                                                                                                                    )
-                                                                                                                                    UNRESOLVED=()
-                                                                                                                                    for PH in "${ builtins.concatStringsSep "" [ "$" "{" "FOUND_PLACEHOLDERS[@]" "}" ] }"
-                                                                                                                                    do
-                                                                                                                                        FOUND=false
-                                                                                                                                        for ALLOWED in "${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[@]" "}" ] }"
-                                                                                                                                        do
-                                                                                                                                            if [[ "$PH" == "$ALLOWED" ]]
-                                                                                                                                            then
-                                                                                                                                                FOUND=true
-                                                                                                                                                break
-                                                                                                                                            fi
-                                                                                                                                        done
-                                                                                                                                        if ! $FOUND
-                                                                                                                                        then
-                                                                                                                                            UNRESOLVED+=( "$PH" )
-                                                                                                                                        fi
-                                                                                                                                    done
-                                                                                                                                    if [[ "${ builtins.concatStringsSep "" [ "$" "{" "#UNRESOLVED[@]" "}" ] }" -ne 0 ]]
-                                                                                                                                    then
-                                                                                                                                        failure d6899da6 "Unresolved placeholders in input file: ${ builtins.concatStringsSep "" [ "$" "{" "UNRESOLVED[*]" "}" ] }" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "ALLOWED_PLACEHOLDERS=${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[*]" "}" ] }" "UUID=$UUID"
-                                                                                                                                    fi
-                                                                                                                                    sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
-                                                                                                                                    chmod "$PERMISSIONS" "/mount/$OUTPUT"
-                                                                                                                                '' ;
-                                                                                                                        } ;
-                                                                                                                    in "${ application }/bin/runScript" ;
-                                                                                                        } ;
-                                                                                            in
-                                                                                                if builtins.typeOf ( init { failure = failure ; pid = pid ; pkgs = pkgs ; resources = resources ; root = root ; seed = seed ; sequential = sequential ; wrap = wrap ; } ) == "string" then
-                                                                                                    ''
-                                                                                                        export MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                                                        ${ init { failure = failure ; pid = pid ;pkgs = pkgs ; resources = resources ; root = root ; seed = seed ; sequential = sequential ; wrap = wrap ; } } "$@"
-                                                                                                    ''
-                                                                                                else builtins.throw "WTF" ;
-                                                                                }
-                                                                        )
-                                                                    ] ;
-                                                        } ;
                                             publish =
                                                 writeShellApplication
                                                     {
@@ -883,7 +643,7 @@
                                                                                                     STATUS="$?"
                                                                                                 fi
                                                                                             '' ;
-                                                                                    init-application = init-application ;
+                                                                                    init-application = applications.init ;
                                                                                     pre-hash = pre-hash secondary ;
                                                                                     resources-directory = resources-directory ;
                                                                                     root-directory = root-directory ;
