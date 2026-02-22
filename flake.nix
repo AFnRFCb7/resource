@@ -721,8 +721,8 @@
                                                                                 resource =
                                                                                     visitor
                                                                                         {
-                                                                                            null = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ; failure = failure 13024 ; } ;
-                                                                                            string = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ; failure = failure 28617 ; } ;
+                                                                                            null = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ; failure = 13024 ; } ;
+                                                                                            string = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ; failure = 28617 ; } ;
                                                                                         }
                                                                                         standard-input ;
                                                                                 in
