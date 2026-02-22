@@ -425,8 +425,6 @@
                                                                 {
                                                                     template =
                                                                         {
-                                                                            has-standard-input-false ,
-                                                                            has-standard-input-true ,
                                                                             init-application ,
                                                                             pre-hash ,
                                                                             resources-directory ,
@@ -520,9 +518,19 @@
                                                                                     cd /
                                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                                     then
-                                                                                        ${ has-standard-input-true }
+                                                                                        if ${ applications.init }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                        then
+                                                                                            STATUS="$?"
+                                                                                        else
+                                                                                            STATUS="$?"
+                                                                                        fi
                                                                                     else
-                                                                                        ${ has-standard-input-false }
+                                                                                        if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                        then
+                                                                                            STATUS="$?"
+                                                                                        else
+                                                                                            STATUS="$?"
+                                                                                        fi
                                                                                     fi
                                                                                     # shellcheck disable=SC2016
                                                                                     export STATUS
