@@ -568,7 +568,7 @@
                                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
                                                                                         echo -n "$MOUNT"
                                                                                     else
-                                                                                        echo 7e1212fd 645d77e0 1dac10f6 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGET_HASH_EXPECTED=$TARGET_HASH_EXPECTED" "TARGET_HASH_OBSERVED=$TARGET_HASH_OBSERVED" >&2
+                                                                                        echo 7e1212fd 645d77e0 1dac10f6 "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGET_HASH_EXPECTED=$TARGET_HASH_EXPECTED" "TARGET_HASH_OBSERVED=$TARGET_HASH_OBSERVED" >&2
                                                                                         # shellcheck disable=SC2016
                                                                                         jq \
                                                                                             --null-input \
@@ -640,6 +640,7 @@
                                                                                             ''
                                                                                         else
                                                                                             ''
+                                                                                                echo 7e1212fd 7a07f5c0 ${ applications.init } >&2
                                                                                                 if ${ applications.init }/bin/init "${ arguments-nix }" < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                 then
                                                                                                     STATUS="$?"
