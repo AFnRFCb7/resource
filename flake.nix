@@ -81,9 +81,9 @@
                                                                                             ''
                                                                                                 if [[ -t 0 ]]
                                                                                                 then
-                                                                                                    ${ user-environment }/bin/init "$@"
+                                                                                                    exec ${ user-environment }/bin/init "$@"
                                                                                                 else
-                                                                                                    cat | ${ user-environment }/bin/init "$@"
+                                                                                                    exec ${ user-environment }/bin/init "$@" <&0
                                                                                                 fi
                                                                                             '' ;
                                                                                     } ;
