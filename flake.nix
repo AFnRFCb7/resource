@@ -87,9 +87,9 @@
                                                                                                 bash -c '
                                                                                                     if [[ -t 0 ]]
                                                                                                     then
-                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                        init $@
                                                                                                     else
-                                                                                                        cat | init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                        cat | init $@
                                                                                                     fi
                                                                                                 ' "$0" "$@"
                                                                                             '' ;
