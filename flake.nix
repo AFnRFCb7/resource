@@ -90,6 +90,7 @@
                                                                                                             name = "runScript" ;
                                                                                                             text =
                                                                                                                 ''
+                                                                                                                    # shellcheck disable=SC2068
                                                                                                                     exec init $@
                                                                                                                 '' ;
                                                                                                         } ;
