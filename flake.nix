@@ -85,7 +85,7 @@
                                                                                         runScript =
                                                                                             let
                                                                                                 application =
-                                                                                                    pkgs.writeShellApplication
+                                                                                                    writeShellApplication
                                                                                                         {
                                                                                                             name = "runScript" ;
                                                                                                             text =
