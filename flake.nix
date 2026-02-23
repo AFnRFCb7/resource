@@ -83,24 +83,9 @@
                                                                                             ] ;
                                                                                         name = "init" ;
                                                                                         runScript =
-                                                                                            let
-                                                                                                application =
-                                                                                                    writeShellApplication
-                                                                                                        {
-                                                                                                            name = "runScript" ;
-                                                                                                            runtimeInputs = [ coreutils ] ;
-                                                                                                            text =
-                                                                                                                ''
-                                                                                                                    set -- "$@"
-                                                                                                                    if [[ -t 0 ]]
-                                                                                                                    then
-                                                                                                                        exec init "$@"
-                                                                                                                    else
-                                                                                                                        exec init "$@" <&0
-                                                                                                                    fi
-                                                                                                                '' ;
-                                                                                                        } ;
-                                                                                                in "${ application }/bin/runScript $@" ;
+                                                                                            ''
+                                                                                                exec init $@
+                                                                                            '' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 let
