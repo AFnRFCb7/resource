@@ -90,7 +90,7 @@
                                                                                                             name = "runScript" ;
                                                                                                             text =
                                                                                                                 ''
-                                                                                                                    exit init $@
+                                                                                                                    exec init $@
                                                                                                                 '' ;
                                                                                                         } ;
                                                                                                     in "${ application }/bin/runScript" ;
