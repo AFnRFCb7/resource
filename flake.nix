@@ -104,8 +104,7 @@
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         t = tools pkgs ;
-                                                                                                                        # in value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
-                                                                                                                        in "echo hi" ;
+                                                                                                                        in value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
                                                                                                             }
                                                                                                     )
                                                                                                 ] ;
