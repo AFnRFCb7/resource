@@ -481,8 +481,8 @@
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
                                                                 export ${ originator-pid-variable }
-                                                                INIT_SCRIPT=${ scripts.init }
-                                                                RELEASE_SCRIPT=${ scripts.release }
+                                                                INIT_SCRIPT=${ builtins.toString scripts.init }
+                                                                RELEASE_SCRIPT=${ builtins.toString scripts.release }
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                 export HASH
                                                                 mkdir --parents "${ resources-directory }/locks"
