@@ -173,7 +173,7 @@
                                                                                                     )
                                                                                                 ] ;
                                                                                     } ;
-                                                                                in ''"$( ${ user-environment }/bin/release" )" || failure 5f7d7000'' ;
+                                                                                in ''"$( ${ user-environment }/bin/release )" || failure 5f7d7000'' ;
                                                                 null = path : value : null ;
                                                             }
                                                             release ;
