@@ -509,7 +509,7 @@
                                                                                     flock 203
                                                                                     yq eval --prettyPrint "[.]" <&0 >> ${ resources-directory }/logs/log.yaml
                                                                                 '' ;
-                                                                        } ;
+                                                                        }
                                                                 )
                                                             ] ;
                                                         text =
