@@ -98,7 +98,7 @@
                                                                                         name = "init" ;
                                                                                         runScript = "init" ;
                                                                                         targetPkgs =
-                                                                                            pkgs
+                                                                                            pkgs :
                                                                                                 [
                                                                                                     (
                                                                                                         pkgs.writeShellApplication
