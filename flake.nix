@@ -155,8 +155,8 @@
                                                                             user-environment =
                                                                                 buildFHSUserEnv
                                                                                     {
-                                                                                        name = "init" ;
-                                                                                        runScript = "init" ;
+                                                                                        name = "release" ;
+                                                                                        runScript = "release" ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 [
