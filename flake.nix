@@ -87,11 +87,11 @@
                                                                                                 bash -c '
                                                                                                     if [[ -t 0 ]]
                                                                                                     then
-                                                                                                        init $@
+                                                                                                        init "$@"
                                                                                                     else
-                                                                                                        cat | init $@
+                                                                                                        cat | init "$@"
                                                                                                     fi
-                                                                                                ' "$0" "$@"
+                                                                                                ' _ "$@"
                                                                                             '' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
