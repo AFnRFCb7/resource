@@ -100,7 +100,7 @@
                                                                                                                     fi
                                                                                                                 '' ;
                                                                                                         } ;
-                                                                                                in builtins.trace "${ application }/bin/runScript" "${ application }/bin/runScript" ;
+                                                                                                in "${ application }/bin/runScript $@" ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 let
