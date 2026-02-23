@@ -91,7 +91,7 @@
                                                                                                             runtimeInputs = [ coreutils ] ;
                                                                                                             text =
                                                                                                                 ''
-                                                                                                                    set -- $*
+                                                                                                                    set -- "$*"
                                                                                                                     if [[ -t 0 ]]
                                                                                                                     then
                                                                                                                         exec init "$@"
