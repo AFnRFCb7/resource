@@ -502,7 +502,7 @@
                                                                     writeShellApplication
                                                                         {
                                                                             name = "log" ;
-                                                                            runtimeInputs = [ coreutils flock yq ] ;
+                                                                            runtimeInputs = [ coreutils flock yq-go ] ;
                                                                             text =
                                                                                 ''
                                                                                     exec 203> ${ resources-directory }/logs/log.lock
