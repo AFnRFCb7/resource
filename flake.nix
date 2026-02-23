@@ -251,7 +251,7 @@
                                                                                                                 failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
                                                                                                             fi
                                                                                                             VARIABLE="$2"
-                                                                                                            echo "55665347 VARIABLE=$VARIABLE"
+                                                                                                            : "${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE:?Environment variable $VARIABLE must be exported" "}" ] }"
                                                                                                             VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
                                                                                                             BRACED="\$$VARIABLE"
                                                                                                             if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
@@ -462,6 +462,7 @@
                                                         runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             ''
+                                                                export SETUP="$0"
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
