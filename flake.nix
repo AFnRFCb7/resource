@@ -570,7 +570,8 @@
                                                                         fi
                                                                         echo 7e1212fd 082b7b62 >> /tmp/DEBUG
                                                                     else
-                                                                        echo 7e1212fd 1cd5adea ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } >> /tmp/DEBUG
+                                                                        # shellcheck disable=SC2068
+                                                                        echo 7e1212fd 1cd5adea ${ applications.init } "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" >> /tmp/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
