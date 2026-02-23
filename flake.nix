@@ -73,20 +73,6 @@
                                                                 lambda =
                                                                     path : value :
                                                                         let
-                                                                            application =
-                                                                                writeShellApplication
-                                                                                    {
-                                                                                        name = "init" ;
-                                                                                        text =
-                                                                                            ''
-                                                                                                if [[ -t 0 ]]
-                                                                                                then
-                                                                                                    exec ${ user-environment }/bin/init "$@"
-                                                                                                else
-                                                                                                    exec ${ user-environment }/bin/init "$@" <&0
-                                                                                                fi
-                                                                                            '' ;
-                                                                                    } ;
                                                                             user-environment =
                                                                                 buildFHSUserEnv
                                                                                     {
@@ -96,7 +82,17 @@
                                                                                                 "--tmpfs /scratch"
                                                                                             ] ;
                                                                                         name = "init" ;
-                                                                                        runScript = "init" ;
+                                                                                        runScript =
+                                                                                            ''
+                                                                                                bash -c '
+                                                                                                    if [[ -t 0 ]]
+                                                                                                    then
+                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                    else
+                                                                                                        cat | init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                    fi
+                                                                                                ' "$0" "$@"
+                                                                                            '' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 [
@@ -112,7 +108,7 @@
                                                                                                     )
                                                                                                 ] ;
                                                                                     } ;
-                                                                            in "${ application }/bin/init" ;
+                                                                            in "${ user-environment }/bin/init" ;
                                                             }
                                                             init ;
                                                     init1 =
