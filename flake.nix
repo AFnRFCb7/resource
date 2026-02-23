@@ -491,22 +491,37 @@
                                                                         } ;
                                                                 wrap = wrap ;
                                                             } ;
-                                            publish =
+                                            log =
                                                 writeShellApplication
                                                     {
-                                                        name = "publish" ;
-                                                        runtimeInputs = [ coreutils failure jq redis ] ;
+                                                        name = "log" ;
+                                                        runtimeInputs =
+                                                            [
+                                                                coreutils
+                                                                (
+                                                                    writeShellApplication
+                                                                        {
+                                                                            name = "log" ;
+                                                                            runtimeInputs = [ coreutils flock yq-go ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    exec 203> ${ resources-directory }/logs/log.lock
+                                                                                    flock 203
+                                                                                    yq eval --prettyPrint "[.]" <&0 >> ${ resources-directory }/logs/log.yaml
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                            ] ;
                                                         text =
                                                             ''
-                                                                JSON="$( cat | jq --compact-output '. + { "description" : ${ builtins.toJSON ( description secondary ) } }' )" || failure d8cf8058 publish
-                                                                redis-cli PUBLISH "${ channel }" "$JSON" > /dev/null 2>&1 || true
+                                                                nohup log <&0 > /dev/null 2>&1 &
                                                             '' ;
                                                     } ;
                                             setup_ =
                                                 writeShellApplication
                                                     {
                                                         name = "setup" ;
-                                                        runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
+                                                        runtimeInputs = [ coreutils findutils flock jq ps redis sequential yq-go failure log ] ;
                                                         text =
                                                             ''
                                                                 export SETUP="$0"
@@ -578,7 +593,7 @@
                                                                             "targets" : $TARGETS ,
                                                                             "transient" : $TRANSIENT ,
                                                                             "type" : "stale"
-                                                                        }' | publish > /dev/null 2>&1
+                                                                        }' | log > /dev/null 2>&1
                                                                     echo -n "$MOUNT"
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
@@ -668,7 +683,7 @@
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "valid"
-                                                                            }' | publish > /dev/null 2>&1
+                                                                            }' | log > /dev/null 2>&1
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
@@ -705,7 +720,7 @@
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "invalid-init"
-                                                                            }' | publish
+                                                                            }' | log
                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                     fi
                                                                 fi
