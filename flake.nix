@@ -558,14 +558,19 @@
                                                                     cd /
                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                     then
+                                                                        echo 7e1212fd 7555816d /tmp/tmp.xxTBLmdBQr/resource/flake.nix >> /tmp/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd aa03ede2 >> /tmp/DEBUG
                                                                         else
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd ffa8718d >> /tmp/DEBUG
                                                                         fi
+                                                                        echo 7e1212fd 082b7b62 >> /tmp/DEBUG
                                                                     else
+                                                                        echo
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
