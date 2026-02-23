@@ -84,7 +84,7 @@
                                                                                         name = "init" ;
                                                                                         runScript =
                                                                                             ''
-                                                                                                exec init $@
+                                                                                                init $@
                                                                                             '' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
