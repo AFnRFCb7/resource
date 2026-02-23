@@ -113,7 +113,8 @@
                                                                                                 ] ;
                                                                                     } ;
                                                                             in "${ application }/bin/init" ;
-                                                            } ;
+                                                            }
+                                                            init ;
                                                     init1 =
                                                         visitor
                                                             {
