@@ -87,9 +87,9 @@
                                                                                                 bash -c '
                                                                                                     if [[ -t 0 ]]
                                                                                                     then
-                                                                                                        init "$@"
+                                                                                                        exec init "$@"
                                                                                                     else
-                                                                                                        cat | init "$@"
+                                                                                                        cat | exec init "$@"
                                                                                                     fi
                                                                                                 ' _ "$@"
                                                                                             '' ;
