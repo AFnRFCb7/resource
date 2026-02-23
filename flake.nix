@@ -77,41 +77,37 @@
                                                                                 pkgs.writeShellApplication
                                                                                     {
                                                                                         name = "init" ;
-                                                                                        runtimeInputs =
-                                                                                            [
-                                                                                                (
-                                                                                                    pkgs.buildFHSUserEnv
-                                                                                                        {
-                                                                                                            extraBwrapArgs =
-                                                                                                                [
-                                                                                                                    "--bind $MOUNT /mount"
-                                                                                                                    "--tmpfs /scratch"
-                                                                                                                ] ;
-                                                                                                            name = "init" ;
-                                                                                                            runScript = "init" ;
-                                                                                                            targetPkgs =
-                                                                                                                pkgs
-                                                                                                                    [
-                                                                                                                        (
-                                                                                                                            pkgs.writeShellApplication
-                                                                                                                                {
-                                                                                                                                    name = "init" ;
-                                                                                                                                    text = value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
-                                                                                                                                }
-                                                                                                                        )
-                                                                                                                    ] ;
-                                                                                                        }
-                                                                                                )
-                                                                                            ] ;
                                                                                         text =
                                                                                             ''
                                                                                                 if [[ -t 0 ]]
                                                                                                 then
-                                                                                                    exec init "$@"
+                                                                                                    ${ user-environment }/bin/init "$@"
                                                                                                 else
-                                                                                                    cat | exec init "$@"
+                                                                                                    cat | ${ user-environment }/bin/init "$@"
                                                                                                 fi
                                                                                             '' ;
+                                                                                    } ;
+                                                                            user-environment =
+                                                                                pkgs.buildFHSUserEnv
+                                                                                    {
+                                                                                        extraBwrapArgs =
+                                                                                            [
+                                                                                                "--bind $MOUNT /mount"
+                                                                                                "--tmpfs /scratch"
+                                                                                            ] ;
+                                                                                        name = "init" ;
+                                                                                        runScript = "init" ;
+                                                                                        targetPkgs =
+                                                                                            pkgs
+                                                                                                [
+                                                                                                    (
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "init" ;
+                                                                                                                text = value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
+                                                                                                            }
+                                                                                                    )
+                                                                                                ] ;
                                                                                     } ;
                                                                             in "${ application }/bin/init" ;
                                                             } ;
