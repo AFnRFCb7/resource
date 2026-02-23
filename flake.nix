@@ -497,7 +497,7 @@
                                                         name = "log" ;
                                                         runtimeInputs =
                                                             [
-                                                                pkgs.coreutils
+                                                                coreutils
                                                                 (
                                                                     writeShellApplication
                                                                         {
