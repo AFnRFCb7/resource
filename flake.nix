@@ -83,9 +83,17 @@
                                                                                             ] ;
                                                                                         name = "init" ;
                                                                                         runScript =
-                                                                                            ''
-                                                                                                init $@
-                                                                                            '' ;
+                                                                                            let
+                                                                                                application =
+                                                                                                    pkgs.writeShellApplication
+                                                                                                        {
+                                                                                                            name = "runScript" ;
+                                                                                                            text =
+                                                                                                                ''
+                                                                                                                    exit init $@
+                                                                                                                '' ;
+                                                                                                        } ;
+                                                                                                    in "${ application }/bin/runScript" ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 let
