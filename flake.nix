@@ -83,16 +83,24 @@
                                                                                             ] ;
                                                                                         name = "init" ;
                                                                                         runScript =
-                                                                                            ''
-                                                                                                bash -c '
-                                                                                                    if [[ -t 0 ]]
-                                                                                                    then
-                                                                                                        exec init "$@"
-                                                                                                    else
-                                                                                                        cat | exec init "$@"
-                                                                                                    fi
-                                                                                                ' _ "$@"
-                                                                                            '' ;
+                                                                                            let
+                                                                                                application =
+                                                                                                    pkgs.writeShellApplication
+                                                                                                        {
+                                                                                                            name = "runScript" ;
+                                                                                                            runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                            text =
+                                                                                                                ''
+                                                                                                                    set -- $*
+                                                                                                                    if [[ -t 0 ]]
+                                                                                                                    then
+                                                                                                                        exec init "$@"
+                                                                                                                    else
+                                                                                                                        cat | exec init "$@"
+                                                                                                                    fi
+                                                                                                                '' ;
+                                                                                                        } ;
+                                                                                                in "${ application }/bin/runScript" ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 let
