@@ -81,15 +81,15 @@
                                                                                                 "--bind $MOUNT /mount"
                                                                                                 "--tmpfs /scratch"
                                                                                             ] ;
-                                                                                        name = "init" ;
+                                                                                        name = "init-b81c50da" ;
                                                                                         runScript =
                                                                                             ''
                                                                                                 bash -c '
                                                                                                     if [[ -t 0 ]]
                                                                                                     then
-                                                                                                        execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                        init-3c104e17 "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                                                     else
-                                                                                                        execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                                        init-3c104e17 "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                                                                     fi
                                                                                                 ' "$0" "$@"
                                                                                             '' ;
@@ -99,7 +99,7 @@
                                                                                                     (
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
-                                                                                                                name = "execute-init" ;
+                                                                                                                name = "init-3c104e17" ;
                                                                                                                 runtimeInputs = [ ] ;
                                                                                                                 text =
                                                                                                                     let
@@ -109,7 +109,7 @@
                                                                                                     )
                                                                                                 ] ;
                                                                                     } ;
-                                                                            in "${ user-environment }/bin/init" ;
+                                                                            in "${ user-environment }/bin/init-b81c50da" ;
                                                             }
                                                             init ;
                                                     init1 =
