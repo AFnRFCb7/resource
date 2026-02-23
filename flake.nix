@@ -94,7 +94,7 @@
                                                                                                                     exec init $@
                                                                                                                 '' ;
                                                                                                         } ;
-                                                                                                    in "${ application }/bin/runScript" ;
+                                                                                                    in ''${ application }/bin/runScript "$@"'' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 let
