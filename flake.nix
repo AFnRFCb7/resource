@@ -685,7 +685,7 @@
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
                             pre-hash =
-                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { init , init-resolutions , release , release-resolutions , seed , targets , transient } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
