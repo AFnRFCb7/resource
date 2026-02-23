@@ -91,12 +91,12 @@
                                                                                                             runtimeInputs = [ coreutils ] ;
                                                                                                             text =
                                                                                                                 ''
-                                                                                                                    set -- "$*"
+                                                                                                                    set -- "$@"
                                                                                                                     if [[ -t 0 ]]
                                                                                                                     then
                                                                                                                         exec init "$@"
                                                                                                                     else
-                                                                                                                        cat | exec init "$@"
+                                                                                                                        exec init "$@" <&0
                                                                                                                     fi
                                                                                                                 '' ;
                                                                                                         } ;
