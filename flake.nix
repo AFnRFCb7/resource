@@ -29,7 +29,15 @@
                     } @primary :
                         let
                             description =
-                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                {
+                                    init ,
+                                    init-resolutions ,
+                                    release ,
+                                    release-resolutions ,
+                                    seed ,
+                                    targets ,
+                                    transient
+                                } @secondary :
                                     let
                                         seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
                                         in
@@ -48,10 +56,13 @@
                                                 { primary = primary ; secondary = secondary ; } ;
                                 implementation =
                                     {
-                                        init ? null ,
-                                        seed ? null ,
-                                        targets ? [ ] ,
-                                        transient ? false
+                                        init ,
+                                        init-resolutions ,
+                                        release ,
+                                        release-resolutions ,
+                                        seed ,
+                                        targets ,
+                                        transient
                                     } @secondary :
                                         let
                                             applications =
@@ -70,18 +81,65 @@
                                                                                                 "--bind $MOUNT /mount"
                                                                                                 "--tmpfs /scratch"
                                                                                             ] ;
-                                                                                        name = "init" ;
+                                                                                        name = "init-b81c50da" ;
                                                                                         runScript =
                                                                                             ''
                                                                                                 bash -c '
                                                                                                     if [[ -t 0 ]]
                                                                                                     then
-                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                        init-3c104e17 "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                                                     else
-                                                                                                        cat | init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                        init-3c104e17 "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                                                                     fi
                                                                                                 ' "$0" "$@"
                                                                                             '' ;
+                                                                                        targetPkgs =
+                                                                                            pkgs :
+                                                                                                [
+                                                                                                    (
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "init-3c104e17" ;
+                                                                                                                runtimeInputs = [ ] ;
+                                                                                                                text =
+                                                                                                                    let
+                                                                                                                        t = tools pkgs ;
+                                                                                                                        v = value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
+                                                                                                                        in ''${ v } "$@"'' ;
+                                                                                                            }
+                                                                                                    )
+                                                                                                ] ;
+                                                                                    } ;
+                                                                            in "${ user-environment }/bin/init-b81c50da" ;
+                                                            }
+                                                            init ;
+                                                    init1 =
+                                                        visitor
+                                                            {
+                                                                lambda =
+                                                                    path : value :
+                                                                        let
+                                                                            user-environment =
+                                                                                buildFHSUserEnv
+                                                                                    {
+                                                                                        extraBwrapArgs =
+                                                                                            [
+                                                                                                "--bind $MOUNT /mount"
+                                                                                                "--tmpfs /scratch"
+                                                                                            ] ;
+                                                                                        name = "init" ;
+                                                                                        runScript =
+                                                                                            let
+                                                                                                application =
+                                                                                                    writeShellApplication
+                                                                                                        {
+                                                                                                            name = "runScript" ;
+                                                                                                            text =
+                                                                                                                ''
+                                                                                                                    exec init "$@"
+                                                                                                                '' ;
+                                                                                                        } ;
+                                                                                                    in ''${ application }/bin/runScript "$@"'' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 let
@@ -132,9 +190,40 @@
                                                                                                 ] ;
                                                                                     } ;
                                                                                 in ''"$( ${ user-environment }/bin/init )" || failure 5f7d7000'' ;
-                                                                null = path : value : "d3c28349" ;
+                                                                null = path : value : null ;
                                                             }
                                                             init ;
+                                                    release =
+                                                        visitor
+                                                            {
+                                                                lambda =
+                                                                    path : value :
+                                                                        let
+                                                                            user-environment =
+                                                                                buildFHSUserEnv
+                                                                                    {
+                                                                                        name = "release" ;
+                                                                                        runScript = "release" ;
+                                                                                        targetPkgs =
+                                                                                            pkgs :
+                                                                                                [
+                                                                                                    (
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "release" ;
+                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                                text =
+                                                                                                                    let
+                                                                                                                        t = tools pkgs ;
+                                                                                                                        in "echo '${ value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } }'" ;
+                                                                                                            }
+                                                                                                    )
+                                                                                                ] ;
+                                                                                    } ;
+                                                                                in ''"$( ${ user-environment }/bin/release )" || failure 5f7d7000'' ;
+                                                                null = path : value : null ;
+                                                            }
+                                                            release ;
                                                 } ;
                                             tools =
                                                 pkgs :
@@ -209,7 +298,7 @@
                                                                                                                 failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
                                                                                                             fi
                                                                                                             VARIABLE="$2"
-                                                                                                            echo "55665347 VARIABLE=$VARIABLE"
+                                                                                                            : "${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE:?Environment variable $VARIABLE must be exported" "}" ] }"
                                                                                                             VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
                                                                                                             BRACED="\$$VARIABLE"
                                                                                                             if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
@@ -420,6 +509,7 @@
                                                         runtimeInputs = [ coreutils findutils flock jq ps publish redis sequential yq-go failure ] ;
                                                         text =
                                                             ''
+                                                                export SETUP="$0"
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
@@ -439,7 +529,8 @@
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
                                                                 export ${ originator-pid-variable }
-                                                                INIT_SCRIPT=${ scripts.init }
+                                                                INIT_SCRIPT=${ builtins.toString scripts.init }
+                                                                RELEASE_SCRIPT=${ builtins.toString scripts.release }
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                 export HASH
                                                                 mkdir --parents "${ resources-directory }/locks"
@@ -467,6 +558,7 @@
                                                                         --arg HASH "$HASH" \
                                                                         --arg INDEX "$INDEX" \
                                                                         --arg INIT_SCRIPT "$INIT_SCRIPT" \
+                                                                        --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                         --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                         --arg PROVENANCE "$PROVENANCE" \
@@ -478,6 +570,7 @@
                                                                             "hash" : $HASH ,
                                                                             "index" : $INDEX ,
                                                                             "init-script" : $INIT_SCRIPT ,
+                                                                            "release-script" : $RELEASE_SCRIPT ,
                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                             "originator-pid" : $ORIGINATOR_PID ,
                                                                             "provenance" : $PROVENANCE ,
@@ -504,21 +597,30 @@
                                                                     cd /
                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                     then
+                                                                        echo 7e1212fd 7555816d  >> /tmp/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd aa03ede2 >> /tmp/DEBUG
                                                                         else
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd ffa8718d >> /tmp/DEBUG
                                                                         fi
+                                                                        echo 7e1212fd 082b7b62 >> /tmp/DEBUG
                                                                     else
+                                                                        # shellcheck disable=SC2068
+                                                                        echo 7e1212fd 1cd5adea ${ applications.init } "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" >> /tmp/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd 1be6eab9 >> /tmp/DEBUG
                                                                         else
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd 5beade7b >> /tmp/DEBUG
                                                                         fi
+                                                                        echo 7e1212fd 38eecd9d >> /tmp/DEBUG
                                                                     fi
                                                                     # shellcheck disable=SC2016
                                                                     export STATUS
@@ -539,6 +641,7 @@
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
+                                                                            --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
@@ -554,6 +657,7 @@
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
                                                                                 "init-script" : $INIT_SCRIPT ,
+                                                                                "release-script" : $RELEASE_SCRIPT ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "originator-pid" : $ORIGINATOR_PID ,
                                                                                 "provenance" : $PROVENANCE ,
@@ -576,6 +680,7 @@
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
+                                                                            --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
@@ -637,7 +742,7 @@
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
                             pre-hash =
-                                { init ? null , seed ? null , targets ? [ ] , transient ? false } @secondary :
+                                { init , init-resolutions , release , release-resolutions , seed , targets , transient } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
@@ -648,8 +753,11 @@
                                             expected ? { } ,
                                             expected-resource ? "" ,
                                             expected-status ? 0 ,
-                                            init ,
+                                            init ? null ,
+                                            init-resolutions ? null ,
                                             jd-diff-patch ,
+                                            release ? null ,
+                                            release-resolutions ? null ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
                                             resources-directory-fixture ? null ,
@@ -719,8 +827,8 @@
                                                                                 resource =
                                                                                     visitor
                                                                                         {
-                                                                                            null = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ; failure = 13024 ; } ;
-                                                                                            string = path : value : implementation { init = init ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ; failure = 28617 ; } ;
+                                                                                            null = path : value : implementation { init = init ; init-resolutions = init-resolutions ; release = release ; release-resolutions = release-resolutions ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ; failure = 13024 ; } ;
+                                                                                            string = path : value : implementation { init = init ; init-resolutions = init-resolutions ; release = release ; release-resolutions = release-resolutions ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ; failure = 28617 ; } ;
                                                                                         }
                                                                                         standard-input ;
                                                                                 in
