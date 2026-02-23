@@ -88,7 +88,7 @@
                                                                                             '' ;
                                                                                     } ;
                                                                             user-environment =
-                                                                                pkgs.buildFHSUserEnv
+                                                                                buildFHSUserEnv
                                                                                     {
                                                                                         extraBwrapArgs =
                                                                                             [
