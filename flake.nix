@@ -73,6 +73,54 @@
                                                                 lambda =
                                                                     path : value :
                                                                         let
+                                                                            application =
+                                                                                pkgs.writeShellApplication
+                                                                                    {
+                                                                                        name = "init" ;
+                                                                                        runtimeInputs =
+                                                                                            [
+                                                                                                (
+                                                                                                    pkgs.buildFHSUserEnv
+                                                                                                        {
+                                                                                                            extraBwrapArgs =
+                                                                                                                [
+                                                                                                                    "--bind $MOUNT /mount"
+                                                                                                                    "--tmpfs /scratch"
+                                                                                                                ] ;
+                                                                                                            name = "init" ;
+                                                                                                            runScript = "init" ;
+                                                                                                            targetPkgs =
+                                                                                                                pkgs
+                                                                                                                    [
+                                                                                                                        (
+                                                                                                                            pkgs.writeShellApplication
+                                                                                                                                {
+                                                                                                                                    name = "init" ;
+                                                                                                                                    text = value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
+                                                                                                                                }
+                                                                                                                        )
+                                                                                                                    ] ;
+                                                                                                        }
+                                                                                                )
+                                                                                            ] ;
+                                                                                        text =
+                                                                                            ''
+                                                                                                if [[ -t 0 ]]
+                                                                                                then
+                                                                                                    exec init "$@"
+                                                                                                else
+                                                                                                    cat | exec init "$@"
+                                                                                                fi
+                                                                                            '' ;
+                                                                                    } ;
+                                                                            in "${ application }/bin/init" ;
+                                                            } ;
+                                                    init1 =
+                                                        visitor
+                                                            {
+                                                                lambda =
+                                                                    path : value :
+                                                                        let
                                                                             user-environment =
                                                                                 buildFHSUserEnv
                                                                                     {
