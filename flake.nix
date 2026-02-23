@@ -74,7 +74,7 @@
                                                                     path : value :
                                                                         let
                                                                             application =
-                                                                                pkgs.writeShellApplication
+                                                                                writeShellApplication
                                                                                     {
                                                                                         name = "init" ;
                                                                                         text =
