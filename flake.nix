@@ -558,7 +558,7 @@
                                                                     cd /
                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                     then
-                                                                        echo 7e1212fd 7555816d /tmp/tmp.xxTBLmdBQr/resource/flake.nix >> /tmp/DEBUG
+                                                                        echo 7e1212fd 7555816d  >> /tmp/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
@@ -570,14 +570,17 @@
                                                                         fi
                                                                         echo 7e1212fd 082b7b62 >> /tmp/DEBUG
                                                                     else
-                                                                        echo
+                                                                        echo 7e1212fd 1cd5adea ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } >> /tmp/DEBUG
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd 1be6eab9 >> /tmp/DEBUG
                                                                         else
                                                                             STATUS="$?"
+                                                                            echo 7e1212fd 5beade7b >> /tmp/DEBUG
                                                                         fi
+                                                                        echo 7e1212fd 38eecd9d >> /tmp/DEBUG
                                                                     fi
                                                                     # shellcheck disable=SC2016
                                                                     export STATUS
