@@ -90,8 +90,7 @@
                                                                                                             name = "runScript" ;
                                                                                                             text =
                                                                                                                 ''
-                                                                                                                    # shellcheck disable=SC2068
-                                                                                                                    exec init $@
+                                                                                                                    exec init "$@"
                                                                                                                 '' ;
                                                                                                         } ;
                                                                                                     in ''${ application }/bin/runScript "$@"'' ;
