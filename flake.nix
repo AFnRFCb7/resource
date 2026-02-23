@@ -87,9 +87,9 @@
                                                                                                 bash -c '
                                                                                                     if [[ -t 0 ]]
                                                                                                     then
-                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                        execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                                                     else
-                                                                                                        cat | init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                        execute-init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                                                                     fi
                                                                                                 ' "$0" "$@"
                                                                                             '' ;
@@ -99,7 +99,8 @@
                                                                                                     (
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
-                                                                                                                name = "init" ;
+                                                                                                                name = "execute-init" ;
+                                                                                                                runtimeInputs = [ ] ;
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         t = tools pkgs ;
