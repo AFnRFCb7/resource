@@ -12,6 +12,7 @@
                         failure ,
                         findutils ,
                         flock ,
+                        inotify-tools ,m
                         jq ,
                         makeWrapper ,
                         mkDerivation ,
