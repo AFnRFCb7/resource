@@ -24,6 +24,7 @@
                         resources-directory ,
                         root-directory ,
                         sequential-start ,
+                        util-linux ,
                         visitor ,
                         writeShellApplication ,
                         yq-go
@@ -517,7 +518,7 @@
                                                 writeShellApplication
                                                     {
                                                         name = "setup" ;
-                                                        runtimeInputs = [ coreutils findutils flock jq ps redis yq-go log sequential teardown failure ] ;
+                                                        runtimeInputs = [ coreutils findutils flock jq ps redis util-linx yq-go log sequential teardown failure ] ;
                                                         text =
                                                             ''
                                                                 export SETUP="$0"
@@ -678,7 +679,7 @@
                                                                                 "type" : "valid"
                                                                             }' | log
                                                                         echo 7e1212fd 2f1df5a9 BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
-                                                                        nohup teardown "$HASH" "$INDEX" </dev/null >/dev/null 2>&1 &
+                                                                        ( setsid teardown "$HASH" "$INDEX" < /dev/null >/dev/null 2>&1 & )
                                                                         echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
