@@ -749,21 +749,18 @@
                                                                 }
                                                                 transient ;
                                             teardown =
-                                                let
-                                                    application =
-                                                        writeShellApplication
-                                                            {
-                                                                name = "teardown" ;
-                                                                runtimeInputs = [ coreutils findutils inotify-tools jq log ] ;
-                                                                text =
-                                                                    ''
-                                                                        HASH="$1"
-                                                                        INDEX="$2"
-                                                                        echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
+                                                writeShellApplication
+                                                    {
+                                                        name = "teardown" ;
+                                                        runtimeInputs = [ coreutils findutils inotify-tools jq log ] ;
+                                                        text =
+                                                            ''
+                                                                HASH="$1"
+                                                                INDEX="$2"
+                                                                echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
 
-                                                                    '' ;
-                                                            } ;
-                                                    in "${ application }/bin/teardown" ;
+                                                            '' ;
+                                                    } ;
                                             in
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
