@@ -518,7 +518,7 @@
                                                 writeShellApplication
                                                     {
                                                         name = "setup" ;
-                                                        runtimeInputs = [ coreutils findutils flock jq ps redis util-linx yq-go log sequential teardown failure ] ;
+                                                        runtimeInputs = [ coreutils findutils flock jq ps redis util-linux yq-go log sequential teardown failure ] ;
                                                         text =
                                                             ''
                                                                 export SETUP="$0"
