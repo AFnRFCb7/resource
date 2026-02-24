@@ -601,6 +601,7 @@
                                                                             "transient" : $TRANSIENT ,
                                                                             "type" : "stale"
                                                                         }' | log
+                                                                    nohup teardown "$HASH" "$INDEX" > /dev/null 2>&1 &
                                                                     echo -n "$MOUNT"
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
@@ -634,17 +635,12 @@
                                                                         echo 7e1212fd 082b7b62 >> /tmp/DEBUG
                                                                     else
                                                                         # shellcheck disable=SC2068
-                                                                        echo 7e1212fd 1cd5adea ${ applications.init } "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" >> /tmp/DEBUG
-                                                                        # shellcheck disable=SC2068
                                                                         if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd 1be6eab9 >> /tmp/DEBUG
                                                                         else
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd 5beade7b >> /tmp/DEBUG
                                                                         fi
-                                                                        echo 7e1212fd 38eecd9d >> /tmp/DEBUG
                                                                     fi
                                                                     # shellcheck disable=SC2016
                                                                     export STATUS
@@ -770,8 +766,8 @@
                                                                 runtimeInputs = [ coreutils findutils inotify-tools jq log ] ;
                                                                 text =
                                                                     ''
-                                                                        INDEX="$1"
-                                                                        HASH="$2"
+                                                                        HASH="$1"
+                                                                        INDEX="$2"
                                                                         while IFS= read -r -d "" ORIGINATOR_PID
                                                                         do
                                                                             tail --follow /dev/null --pid "$ORIGINATOR_PID
