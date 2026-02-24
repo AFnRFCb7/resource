@@ -756,7 +756,7 @@
                                                 writeShellApplication
                                                     {
                                                         name = "teardown" ;
-                                                        runtimeInputs = [ coreutils findutils inotify-tools jq log ] ;
+                                                        runtimeInputs = [ coreutils findutils flock inotify-tools jq log ] ;
                                                         text =
                                                             ''
                                                                 HASH="$1"
@@ -788,6 +788,38 @@
                                                                         fi
                                                                     done
                                                                 done
+                                                                exec 203> ${ resources-directory }/locks/$HASH
+                                                                flock -x 203
+                                                                rm ${ resources-directory }/canonical/$HASH
+                                                                STANDARD_ERROR_FILE="$( mktemp )" || failure a0fa4d6f
+                                                                STANDARD_OUTPUT_FILE="$( mktemp )" || failure f88456b1
+                                                                if ${ applications.release } > "$STANDARD_ERROR_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                then
+                                                                    STATUS="$?"
+                                                                else
+                                                                    STATUS="$?"
+                                                                fi
+                                                                STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 42e81eda
+                                                                STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9122979d
+                                                                if [[ "$STATUS" == 0 ]] && [[ -s "$STANDARD_ERROR_FILE" ]]
+                                                                then
+                                                                    jq \
+                                                                        --null-input \
+                                                                        --arg HASH "$HASH" \
+                                                                        --arg INDEX "$INDEX" \
+                                                                        --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                        --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                        --arg STATUS "$STATUS" \
+                                                                        '{
+                                                                            "hash" : $HASH ,
+                                                                            "index" : $INDEX ,
+                                                                            "standard-error" : $STANDARD_ERROR ,
+                                                                            "standard-output" : $STANDARD_OUTPUT
+                                                                            "status" : $STATUS
+                                                                        }' | log
+                                                                else
+                                                                    : # TBD
+                                                                fi
                                                             '' ;
                                                     } ;
                                             in
