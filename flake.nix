@@ -763,7 +763,7 @@
                                                                 INDEX="$2"
                                                                 echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
                                                                 HAS_ORIGINATOR_PID=true
-                                                                while "$HAS_ORIGINATOR_PID"
+                                                                while $HAS_ORIGINATOR_PID
                                                                 do
                                                                     HAS_ORIGINATOR_PID=false
                                                                     for ORIGINATOR_PID_COMPLETE in ${ resources-directory }/originator-pids/*
@@ -777,7 +777,7 @@
                                                                 while $HAS_ROOT
                                                                 do
                                                                     HAS_ROOT=false
-                                                                    ROOTS="$( find "${ root-directory } -mindepth 1 -type l )" || failure fbd2f344
+                                                                    ROOTS="$( find ${ root-directory } -mindepth 1 -type l )" || failure fbd2f344
                                                                     for ROOT in "${ builtins.concatStringsSep "" [ "$" "{" "ROOTS[@]" "}" ] }"
                                                                     do
                                                                         CANDIDATE="$( readlink --canonicalize "$ROOT" )" || failure 7920dbf0
