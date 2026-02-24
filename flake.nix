@@ -771,28 +771,6 @@
                                                                     rm "${ resources-directory }/originator-pids/$INDEX/$ORIGINATOR_PID"
                                                                     echo 7e1212fd 242f5215 >> /tmp/DEBUG
                                                                 done < <( find "${ resources-directory }/originator-pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -print0 )
-                                                                echo 7e1212fd 7b84cfac >> /tmp/DEBUG
-                                                                rm --recursive --force "${ resources-directory }/originator-pids/$INDEX"
-                                                                echo 7e1212fd a0bf57b8 >> /tmp/DEBUG
-                                                                rmdir ${ resources-directory }/originator-pids || true
-                                                                echo 7e1212fd 776cdb4e >> /tmp/DEBUG
-                                                                while IFS= read -r -d "" LINK
-                                                                do
-                                                                    echo 7e1212fd ffb976df >> /tmp/DEBUG
-                                                                    TARGET="$( readlink "$LINK" 2>/dev/null )" || true
-                                                                    echo 7e1212fd a11e83d9 >> /tmp/DEBUG
-                                                                    if [[ "$TARGET" == "${resources-directory}/mounts/$HASH" ]]
-                                                                    then
-                                                                        echo 7e1212fd 4ac0e55f >> /tmp/DEBUG
-                                                                        inotifywait --event delete-self "$LINK"
-                                                                        echo 7e1212fd d0ccf7cd >> /tmp/DEBUG
-                                                                    fi
-                                                                done < <( find "${ root-directory }" -type l -print0 )
-                                                                echo 7e1212fd 3887fa7b >> /tmp/DEBUG
-                                                                STANDARD_OUTPUT_FILE="$( mktemp --directory )" || failure 47fd8287
-                                                                STANDARD_ERROR_FILE="$( mktemp --directory )" || failure b9771474
-                                                                export MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                echo "$MOUNT" "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
                                                             '' ;
                                                     } ;
                                             in
