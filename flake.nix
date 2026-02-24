@@ -758,7 +758,78 @@
                                                                 HASH="$1"
                                                                 INDEX="$2"
                                                                 echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
-
+                                                                while IFS= read -r -d "" ORIGINATOR_PID
+                                                                do
+                                                                    echo 7e1212fd 8b881a7f "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
+                                                                    tail --follow /dev/null --pid "$ORIGINATOR_PID
+                                                                    echo 7e1212fd dc926f49 "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
+                                                                    rm "${ resources-directory }/originator-pids/$INDEX/$ORIGINATOR_PID"
+                                                                    echo 7e1212fd 242f5215 >> /tmp/DEBUG
+                                                                done < <( find "${ resources-directory }/originator-pids/$INDEX -t f -print0 )
+                                                                echo 7e1212fd 7b84cfac >> /tmp/DEBUG
+                                                                rm --recursive --force "${ resources-directory }/originator-pids/$INDEX"
+                                                                echo 7e1212fd a0bf57b8 >> /tmp/DEBUG
+                                                                rmdir ${ resources-directory }/originator-pids
+                                                                echo 7e1212fd 776cdb4e >> /tmp/DEBUG
+                                                                while IFS= read -r -d "" LINK
+                                                                do
+                                                                    echo 7e1212fd ffb976df >> /tmp/DEBUG
+                                                                    TARGET="$( readlink "$LINK" 2>/dev/null )" || true
+                                                                    echo 7e1212fd a11e83d9 >> /tmp/DEBUG
+                                                                    if [[ "$TARGET" == "${resources-directory}/mounts/$HASH" ]]
+                                                                    then
+                                                                        echo 7e1212fd 4ac0e55f >> /tmp/DEBUG
+                                                                        inotifywait --event DELETE_SELF "$LINK"
+                                                                        echo 7e1212fd d0ccf7cd >> /tmp/DEBUG
+                                                                    fi
+                                                                done < <( find "${ root-directory }" -type l -print0 )
+                                                                echo 7e1212fd 3887fa7b >> /tmp/DEBUG
+                                                                STANDARD_OUTPUT_FILE="$( mktemp --directory )" || failure 47fd8287
+                                                                STANDARD_ERROR_FILE="$( mktemp --directory )" || failure b9771474
+                                                                export MOUNT="${ resources-directory }/mounts/$INDEX"
+                                                                if ${ applications.release } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                then
+                                                                    STATUS="$?"
+                                                                else
+                                                                    STATUS="$?"
+                                                                fi
+                                                                echo 7e1212fd 66dc3749 "STATUS=$STATUS" >> /tmp/DEBUG
+                                                                STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE )" || failure
+                                                                STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE )" || failure
+                                                                if [[ "$STATUS" == 0 ]] && [ -s "$STANDARD_ERROR_FILE" ]]
+                                                                then
+                                                                    echo 7e1212fd 693ca033 >> /tmp/DEBUG
+                                                                    jq \
+                                                                        --null-input \
+                                                                        --arg HASH "$HASH" \
+                                                                        --arg INDEX "$INDEX" \
+                                                                        --arg RELEASE "${ scripts.release }" \
+                                                                        --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                        --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                        --arg STATUS "$STATUS" \
+                                                                        {
+                                                                            "hash" : $HASH ,
+                                                                            "index" : $INDEX ,
+                                                                            "release" : $RELEASE ,
+                                                                            "standard-error" : $STANDARD_ERROR ,
+                                                                            "standard-output" : $STANDARD_OUTPUT ,
+                                                                            "status" : "$STATUS"
+                                                                        } | log
+                                                                        rm "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
+                                                                        echo 7e1212fd 5f3ff151 >> /tmp/DEBUG
+                                                                        ARCHIVE="$( mktemp --suffix ".tar.zst" )" || failure d5b51db8
+                                                                        echo 7e1212fd 1bc28864 >> /tmp/DEBUG
+                                                                        tar --create --file "${ resources-directory }/canonical/$HASH" "$MOUNT" "${ resources-directory }/locks/$INDEX" | zstd --ultra -22 -T0 -o "$ARCHIVE"
+                                                                        echo 7e1212fd 92ff91f7 >> /tmp/DEBUG
+                                                                        rm  "${ resources-directory }/canonical/$HASH" "$MOUNT" ${ resources-directory }/locks/$INDEX
+                                                                        echo 7e1212fd 8f9a4db1 >> /tmp/DEBUG
+                                                                        rm --recursive --force "${ resources-directory }/canonical/$HASH" "$MOUNT" "${ resources-directory }/locks/$INDEX"
+                                                                        echo 7e1212fd c387d1a9 >> /tmp/DEBUG
+                                                                else
+                                                                    echo 7e1212fd 0e061683 >> /tmp/DEBUG
+                                                                    rm "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
+                                                                    failure 334cbb89
+                                                                fi
                                                             '' ;
                                                     } ;
                                             in
