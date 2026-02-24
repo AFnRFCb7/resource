@@ -149,7 +149,7 @@
                                                                                     } ;
                                                                             in "${ user-environment }/bin/release" ;
                                                             }
-                                                            init ;
+                                                            release ;
                                                 } ;
                                             scripts =
                                                 {
