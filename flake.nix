@@ -759,7 +759,7 @@
                                                                     ''
                                                                         HASH="$1"
                                                                         INDEX="$2"
-                                                                        echo 7e1212fd 7284e858 START OF TEARDOWN>> /tmp/DEBUG
+                                                                        echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
 
                                                                     '' ;
                                                             } ;
