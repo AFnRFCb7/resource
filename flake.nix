@@ -687,9 +687,9 @@
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "valid"
                                                                             }' | log
-                                                                        echo 7e1212fd 2f1df5a9 >> /tmp/DEBUG
+                                                                        echo 7e1212fd 2f1df5a9 BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
                                                                         nohup teardown "$HASH" "$INDEX" > /dev/null 2>&1 &
-                                                                        echo 7e1212fd 667c35e6 >> /tmp/DEBUG
+                                                                        echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         echo -n "$MOUNT"
                                                                     else
@@ -769,7 +769,7 @@
                                                                     ''
                                                                         HASH="$1"
                                                                         INDEX="$2"
-                                                                        echo 7e1212fd 7284e858 >> /tmp/DEBUG
+                                                                        echo 7e1212fd 7284e858 START OF TEARDOWN>> /tmp/DEBUG
                                                                         while IFS= read -r -d "" ORIGINATOR_PID
                                                                         do
                                                                             echo 7e1212fd 8b881a7f "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
