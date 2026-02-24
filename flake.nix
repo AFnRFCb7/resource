@@ -149,7 +149,7 @@
                                                                                                 ] ;
                                                                                     } ;
                                                                             in "${ user-environment }/bin/release" ;
-                                                                null = path : value : null ;
+                                                                null = path : value : "" ;
                                                             }
                                                             release ;
                                                 } ;
