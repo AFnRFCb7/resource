@@ -788,11 +788,6 @@
                                                                 STANDARD_ERROR_FILE="$( mktemp --directory )" || failure b9771474
                                                                 export MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                 echo "$MOUNT" "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$STATUS"
-                                                                else
-                                                                    echo 7e1212fd 0e061683 >> /tmp/DEBUG
-                                                                    rm "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
-                                                                    failure 334cbb89
-                                                                fi
                                                             '' ;
                                                     } ;
                                             in
