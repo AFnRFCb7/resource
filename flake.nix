@@ -562,6 +562,7 @@
                                                                     export MOUNT
                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                     export INDEX
+                                                                    touch "${ resources-directory }/originator-pids/$INDEX/${ originator-pid-variable }"
                                                                     export PROVENANCE=cached
                                                                     mkdir --parents "${ root-directory }/$INDEX"
                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
@@ -593,7 +594,7 @@
                                                                             "targets" : $TARGETS ,
                                                                             "transient" : $TRANSIENT ,
                                                                             "type" : "stale"
-                                                                        }' | log > /dev/null 2>&1
+                                                                        }' | log
                                                                     echo -n "$MOUNT"
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
@@ -605,6 +606,8 @@
                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                     mkdir --parents "$MOUNT"
                                                                     export MOUNT
+                                                                    mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
+                                                                    touch "${ resources-directory }/originator-pids/$INDEX/${ originator-pid-variable }"
                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                     export STANDARD_ERROR_FILE
                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
@@ -645,7 +648,6 @@
                                                                     export STANDARD_ERROR
                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
                                                                     export STANDARD_OUTPUT
-                                                                    mkdir --parents "${ resources-directory }/links/$INDEX"
                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                     then
@@ -683,7 +685,7 @@
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "valid"
-                                                                            }' | log > /dev/null 2>&1
+                                                                            }' | log
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
@@ -753,6 +755,73 @@
                                                                     bool = path : value : if value then "$( sequential ) || failure 0da02db4" else "-1" ;
                                                                 }
                                                                 transient ;
+                                            teardown =
+                                                let
+                                                    application =
+                                                        writeShellApplication
+                                                            {
+                                                                name = "teardown" ;
+                                                                runtimeInputs = [ coreutils findutils inotifytools jq log ] ;
+                                                                text =
+                                                                    ''
+                                                                        INDEX="$1"
+                                                                        HASH="$2"
+                                                                        while IFS= read -r -d "" ORIGINATOR_PID
+                                                                        do
+                                                                            tail --follow /dev/null --pid "$ORIGINATOR_PID
+                                                                            rm "${ resources-directory }/originator-pids/$INDEX/$ORIGINATOR_PID"
+                                                                        done < <( find "${ resources-directory }/originator-pids/$INDEX -t f -print0 )
+                                                                        rm --recursive --force "${ resources-directory }/originator-pids/$INDEX"
+                                                                        rmdir ${ resources-directory }/originator-pids
+                                                                        while IFS= read -r -d "" LINK
+                                                                        do
+                                                                            TARGET="$( readlink "$LINK" 2>/dev/null )" || true
+                                                                            if [[ "$TARGET" == "${resources-directory}/mounts/$HASH" ]]
+                                                                            then
+                                                                                inotifywait --event DELETE_SELF "$LINK"
+                                                                            fi
+                                                                        done < <( find "${ root-directory }" -type l -print0 )
+                                                                        STANDARD_OUTPUT_FILE="$( mktemp --directory )" || failure 47fd8287
+                                                                        STANDARD_ERROR_FILE="$( mktemp --directory )" || failure b9771474
+                                                                        export MOUNT="${ resources-directory }/mounts/$INDEX"
+                                                                        if ${ applications.release } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        then
+                                                                            STATUS="$?"
+                                                                        else
+                                                                            STATUS="$?"
+                                                                        fi
+                                                                        STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE )" || failure
+                                                                        STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE )" || failure
+                                                                        if [[ "$STATUS" == 0 ]] && [ -s "$STANDARD_ERROR_FILE" ]]
+                                                                        then
+                                                                            jq \
+                                                                                --null-input \
+                                                                                --arg HASH "$HASH" \
+                                                                                --arg INDEX "$INDEX" \
+                                                                                --arg RELEASE "${ scripts.release }" \
+                                                                                --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                                --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                                --arg STATUS "$STATUS" \
+                                                                                {
+                                                                                    "hash" : $HASH ,
+                                                                                    "index" : $INDEX ,
+                                                                                    "release" : $RELEASE ,
+                                                                                    "standard-error" : $STANDARD_ERROR ,
+                                                                                    "standard-output" : $STANDARD_OUTPUT ,
+                                                                                    "status" : "$STATUS"
+                                                                                } | log
+                                                                                rm "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
+                                                                                ARCHIVE="$( mktemp --suffix ".tar.zst" )" || failure d5b51db8
+                                                                                tar --create --file "${ resources-directory }/canonical/$HASH" "$MOUNT" "${ resources-directory }/locks/$INDEX" | zstd --ultra -22 -T0 -o "$ARCHIVE"
+                                                                                rm  "${ resources-directory }/canonical/$HASH" "$MOUNT" ${ resources-directory }/locks/$INDEX
+                                                                                rm --recursive --force "${ resources-directory }/canonical/$HASH" "$MOUNT" ${ resources-directory }/locks/$INDEX
+                                                                        else
+                                                                            rm "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
+                                                                            failure 334cbb89
+                                                                        fi
+                                                                    '' ;
+                                                            } ;
+                                                    in "${ application }/bin/teardown" ;
                                             in
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
