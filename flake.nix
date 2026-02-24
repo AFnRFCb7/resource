@@ -678,9 +678,10 @@
                                                                                 "type" : "valid"
                                                                             }' | log
                                                                         echo 7e1212fd 2f1df5a9 BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
-                                                                        nohup teardown "$HASH" "$INDEX" > /dev/null 2>&1 &
+                                                                        nohup teardown "$HASH" "$INDEX" </dev/null >/dev/null 2>&1 &
                                                                         echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
                                                                         mkdir --parents ${ resources-directory }/canonical
+                                                                        ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
                                                                     else
                                                                         # shellcheck disable=SC2016
