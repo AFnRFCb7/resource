@@ -762,6 +762,17 @@
                                                                 HASH="$1"
                                                                 INDEX="$2"
                                                                 echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
+                                                                HAS_ORIGINATOR_PID=true
+                                                                while "$HAS_ORIGINATOR_PID
+                                                                do
+                                                                    HAS_ORIGINATOR_PID=false
+                                                                    for ORIGINATOR_PID_COMPLETE in "${ resources-directory }/originator-pids/*
+                                                                    do
+                                                                        HAS_ORIGINATOR_PID=true
+                                                                        ORIGINATOR_PID="$( basename "$ORIGINATOR_PID_COMPLETE" )" || failure e486b234
+                                                                        tail --follow /dev/null --pid "$ORIGINATOR_PID"
+                                                                    done
+                                                                done
                                                             '' ;
                                                     } ;
                                             in
