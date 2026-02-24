@@ -758,8 +758,9 @@
                                                                 HASH="$1"
                                                                 INDEX="$2"
                                                                 echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
-                                                                while IFS= read -r -d "" ORIGINATOR_PID
+                                                                while IFS= read -r -d "" ORIGINATOR_PID_FILE
                                                                 do
+                                                                    ORIGINATOR_PID="$( basename "ORIGINATOR_PID_FILE" )" || failure 22267384
                                                                     echo 7e1212fd 8b881a7f "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
                                                                     tail --follow /dev/null --pid "$ORIGINATOR_PID"
                                                                     echo 7e1212fd dc926f49 "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
