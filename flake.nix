@@ -774,11 +774,11 @@
                                                                     done
                                                                 done
                                                                 HAS_ROOT=true
-                                                                while "$HAS_ROOT"
+                                                                while $HAS_ROOT
                                                                 do
                                                                     HAS_ROOT=false
                                                                     ROOTS="$( find "${ root-directory } -mindepth 1 -type l )" || failure fbd2f344
-                                                                    for ROOT in "$ROOTS"
+                                                                    for ROOT in "${ builtins.concatStringsSep "" [ "$" "{" "ROOTS[@]" "}" ] }"
                                                                     do
                                                                         CANDIDATE="$( readlink --canonicalize "$ROOT" )" || failure 7920dbf0
                                                                         if [[ "$CANDIDATE" == "${ resources-directory }/mounts/$INDEX" ]]
