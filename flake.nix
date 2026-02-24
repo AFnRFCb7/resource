@@ -603,7 +603,7 @@
                                                                     mkdir --parents "$MOUNT"
                                                                     export MOUNT
                                                                     mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
-                                                                    touch "${ resources-directory }/originator-pids/$INDEX/${ originator-pid-variable }"
+                                                                    touch "${ resources-directory }/originator-pids/$INDEX/${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable "}" ] }"
                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                     export STANDARD_ERROR_FILE
                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
