@@ -762,7 +762,7 @@
                                                         writeShellApplication
                                                             {
                                                                 name = "teardown" ;
-                                                                runtimeInputs = [ coreutils findutils inotifytools jq log ] ;
+                                                                runtimeInputs = [ coreutils findutils inotify-tools jq log ] ;
                                                                 text =
                                                                     ''
                                                                         INDEX="$1"
