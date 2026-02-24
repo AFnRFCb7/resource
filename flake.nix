@@ -787,44 +787,7 @@
                                                                 STANDARD_OUTPUT_FILE="$( mktemp --directory )" || failure 47fd8287
                                                                 STANDARD_ERROR_FILE="$( mktemp --directory )" || failure b9771474
                                                                 export MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                if ${ applications.release } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                then
-                                                                    STATUS="$?"
-                                                                else
-                                                                    STATUS="$?"
-                                                                fi
-                                                                echo 7e1212fd 66dc3749 "STATUS=$STATUS" >> /tmp/DEBUG
-                                                                STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE )" || failure
-                                                                STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE )" || failure
-                                                                if [[ "$STATUS" == 0 ]] && [ -s "$STANDARD_ERROR_FILE" ]]
-                                                                then
-                                                                    echo 7e1212fd 693ca033 >> /tmp/DEBUG
-                                                                    jq \
-                                                                        --null-input \
-                                                                        --arg HASH "$HASH" \
-                                                                        --arg INDEX "$INDEX" \
-                                                                        --arg RELEASE "${ scripts.release }" \
-                                                                        --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                        --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
-                                                                        --arg STATUS "$STATUS" \
-                                                                        {
-                                                                            "hash" : $HASH ,
-                                                                            "index" : $INDEX ,
-                                                                            "release" : $RELEASE ,
-                                                                            "standard-error" : $STANDARD_ERROR ,
-                                                                            "standard-output" : $STANDARD_OUTPUT ,
-                                                                            "status" : "$STATUS"
-                                                                        } | log
-                                                                        rm "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
-                                                                        echo 7e1212fd 5f3ff151 >> /tmp/DEBUG
-                                                                        ARCHIVE="$( mktemp --suffix ".tar.zst" )" || failure d5b51db8
-                                                                        echo 7e1212fd 1bc28864 >> /tmp/DEBUG
-                                                                        tar --create --file "${ resources-directory }/canonical/$HASH" "$MOUNT" "${ resources-directory }/locks/$INDEX" | zstd --ultra -22 -T0 -o "$ARCHIVE"
-                                                                        echo 7e1212fd 92ff91f7 >> /tmp/DEBUG
-                                                                        rm  "${ resources-directory }/canonical/$HASH" "$MOUNT" ${ resources-directory }/locks/$INDEX
-                                                                        echo 7e1212fd 8f9a4db1 >> /tmp/DEBUG
-                                                                        rm --recursive --force "${ resources-directory }/canonical/$HASH" "$MOUNT" "${ resources-directory }/locks/$INDEX"
-                                                                        echo 7e1212fd c387d1a9 >> /tmp/DEBUG
+                                                                echo "$MOUNT" "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$STATUS"
                                                                 else
                                                                     echo 7e1212fd 0e061683 >> /tmp/DEBUG
                                                                     rm "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
