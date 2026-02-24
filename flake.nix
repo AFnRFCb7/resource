@@ -766,7 +766,7 @@
                                                                 while "$HAS_ORIGINATOR_PID"
                                                                 do
                                                                     HAS_ORIGINATOR_PID=false
-                                                                    for ORIGINATOR_PID_COMPLETE in "${ resources-directory }/originator-pids/*"
+                                                                    for ORIGINATOR_PID_COMPLETE in ${ resources-directory }/originator-pids/*
                                                                     do
                                                                         HAS_ORIGINATOR_PID=true
                                                                         ORIGINATOR_PID="$( basename "$ORIGINATOR_PID_COMPLETE" )" || failure e486b234
