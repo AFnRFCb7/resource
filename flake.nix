@@ -678,7 +678,7 @@
                                                                                 "type" : "valid"
                                                                             }' | log
                                                                         echo 7e1212fd 2f1df5a9 BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
-                                                                        nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG 2>&1 &
+                                                                        nohup teardown "$HASH" "$INDEX" > /dev/null 2>&1 &
                                                                         echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         echo -n "$MOUNT"
