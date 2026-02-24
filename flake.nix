@@ -558,7 +558,7 @@
                                                                     export MOUNT
                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                     export INDEX
-                                                                    touch "${ resources-directory }/originator-pids/$INDEX/${ originator-pid-variable }"
+                                                                    touch "${ resources-directory }/originator-pids/$INDEX/${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable "}" ] }"
                                                                     export PROVENANCE=cached
                                                                     mkdir --parents "${ root-directory }/$INDEX"
                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
@@ -765,7 +765,7 @@
                                                                     echo 7e1212fd dc926f49 "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
                                                                     rm "${ resources-directory }/originator-pids/$INDEX/$ORIGINATOR_PID"
                                                                     echo 7e1212fd 242f5215 >> /tmp/DEBUG
-                                                                done < <( find "${ resources-directory }/originator-pids/$INDEX" -type f -print0 )
+                                                                done < <( find "${ resources-directory }/originator-pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -print0 )
                                                                 echo 7e1212fd 7b84cfac >> /tmp/DEBUG
                                                                 rm --recursive --force "${ resources-directory }/originator-pids/$INDEX"
                                                                 echo 7e1212fd a0bf57b8 >> /tmp/DEBUG
