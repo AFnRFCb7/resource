@@ -678,7 +678,7 @@
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "valid"
                                                                             }' | log
-                                                                        echo 7e1212fd 7d638123 BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
+                                                                        echo 7e1212fd b2b4af8d BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
                                                                         nohup teardown "$HASH" "$INDEX" < /dev/null > /tmp/teardown.log 2>&1 < /dev/null &
                                                                         disown
                                                                         echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
