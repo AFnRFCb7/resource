@@ -114,7 +114,7 @@
                                                                             in "${ user-environment }/bin/init-b81c50da" ;
                                                             }
                                                             init ;
-                                                    init1 =
+                                                    release =
                                                         visitor
                                                             {
                                                                 lambda =
@@ -128,36 +128,26 @@
                                                                                                 "--bind $MOUNT /mount"
                                                                                                 "--tmpfs /scratch"
                                                                                             ] ;
-                                                                                        name = "init" ;
-                                                                                        runScript =
-                                                                                            let
-                                                                                                application =
-                                                                                                    writeShellApplication
-                                                                                                        {
-                                                                                                            name = "runScript" ;
-                                                                                                            text =
-                                                                                                                ''
-                                                                                                                    exec init "$@"
-                                                                                                                '' ;
-                                                                                                        } ;
-                                                                                                    in ''${ application }/bin/runScript "$@"'' ;
+                                                                                        name = "release" ;
+                                                                                        runScript = "release" ;
                                                                                         targetPkgs =
                                                                                             pkgs :
-                                                                                                let
-                                                                                                    t = tools pkgs ;
-                                                                                                    in
-                                                                                                        [
-                                                                                                            (
-                                                                                                                writeShellApplication
-                                                                                                                    {
-                                                                                                                        name = "init" ;
-                                                                                                                        text = value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
-                                                                                                                    }
-                                                                                                            )
-                                                                                                        ] ;
+                                                                                                [
+                                                                                                    (
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "release" ;
+                                                                                                                runtimeInputs = [ ] ;
+                                                                                                                text =
+                                                                                                                    let
+                                                                                                                        t = tools pkgs ;
+                                                                                                                        v = value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                        in ''${ v } "$@"'' ;
+                                                                                                            }
+                                                                                                    )
+                                                                                                ] ;
                                                                                     } ;
-                                                                            in "${ user-environment }/bin/init" ;
-                                                                null = path : value : "true" ;
+                                                                            in "${ user-environment }/bin/release" ;
                                                             }
                                                             init ;
                                                 } ;
