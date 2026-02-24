@@ -601,7 +601,6 @@
                                                                             "transient" : $TRANSIENT ,
                                                                             "type" : "stale"
                                                                         }' | log
-                                                                    nohup teardown "$HASH" "$INDEX" > /dev/null 2>&1 &
                                                                     echo -n "$MOUNT"
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
@@ -688,8 +687,10 @@
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "valid"
                                                                             }' | log
+                                                                        echo 7e1212fd 2f1df5a9 >> /tmp/DEBUG
+                                                                        nohup teardown "$HASH" "$INDEX" > /dev/null 2>&1 &
+                                                                        echo 7e1212fd 667c35e6 >> /tmp/DEBUG
                                                                         mkdir --parents ${ resources-directory }/canonical
-                                                                        ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
                                                                     else
                                                                         # shellcheck disable=SC2016
