@@ -765,11 +765,11 @@
                                                                     echo 7e1212fd dc926f49 "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
                                                                     rm "${ resources-directory }/originator-pids/$INDEX/$ORIGINATOR_PID"
                                                                     echo 7e1212fd 242f5215 >> /tmp/DEBUG
-                                                                done < <( find "${ resources-directory }/originator-pids/$INDEX -type f -print0 )
+                                                                done < <( find "${ resources-directory }/originator-pids/$INDEX" -type f -print0 )
                                                                 echo 7e1212fd 7b84cfac >> /tmp/DEBUG
                                                                 rm --recursive --force "${ resources-directory }/originator-pids/$INDEX"
                                                                 echo 7e1212fd a0bf57b8 >> /tmp/DEBUG
-                                                                rmdir ${ resources-directory }/originator-pids
+                                                                rmdir ${ resources-directory }/originator-pids || true
                                                                 echo 7e1212fd 776cdb4e >> /tmp/DEBUG
                                                                 while IFS= read -r -d "" LINK
                                                                 do
@@ -779,7 +779,7 @@
                                                                     if [[ "$TARGET" == "${resources-directory}/mounts/$HASH" ]]
                                                                     then
                                                                         echo 7e1212fd 4ac0e55f >> /tmp/DEBUG
-                                                                        inotifywait --event DELETE_SELF "$LINK"
+                                                                        inotifywait --event delete-self "$LINK"
                                                                         echo 7e1212fd d0ccf7cd >> /tmp/DEBUG
                                                                     fi
                                                                 done < <( find "${ root-directory }" -type l -print0 )
