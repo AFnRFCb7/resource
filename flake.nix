@@ -82,15 +82,15 @@
                                                                                                 "--bind $MOUNT /mount"
                                                                                                 "--tmpfs /scratch"
                                                                                             ] ;
-                                                                                        name = "init-b81c50da" ;
+                                                                                        name = "init" ;
                                                                                         runScript =
                                                                                             ''
                                                                                                 bash -c '
                                                                                                     if [[ -t 0 ]]
                                                                                                     then
-                                                                                                        init-3c104e17 "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                                                     else
-                                                                                                        init-3c104e17 "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                                                                     fi
                                                                                                 ' "$0" "$@"
                                                                                             '' ;
@@ -100,7 +100,7 @@
                                                                                                     (
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
-                                                                                                                name = "init-3c104e17" ;
+                                                                                                                name = "init" ;
                                                                                                                 runtimeInputs = [ ] ;
                                                                                                                 text =
                                                                                                                     let
@@ -111,7 +111,7 @@
                                                                                                     )
                                                                                                 ] ;
                                                                                     } ;
-                                                                            in "${ user-environment }/bin/init-b81c50da" ;
+                                                                            in "${ user-environment }/bin/init" ;
                                                             }
                                                             init ;
                                                     release =
@@ -678,7 +678,7 @@
                                                                                 "type" : "valid"
                                                                             }' | log
                                                                         echo 7e1212fd 2f1df5a9 BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
-                                                                        nohup teardown "$HASH" "$INDEX" > /dev/null 2>&1 &
+                                                                        nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG 2>&1 &
                                                                         echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         echo -n "$MOUNT"
