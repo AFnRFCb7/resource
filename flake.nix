@@ -506,16 +506,21 @@
                                                                             runtimeInputs = [ coreutils flock yq-go ] ;
                                                                             text =
                                                                                 ''
+                                                                                    echo 7e1212fd 25ad4854 >> /tmp/DEBUG
+                                                                                    mkdir --parents ${ resources-directory }/logs
                                                                                     exec 203> ${ resources-directory }/logs/log.lock
                                                                                     flock 203
                                                                                     yq eval --prettyPrint "[.]" <&0 >> ${ resources-directory }/logs/log.yaml
+                                                                                    echo 7e1212fd d28ab25a >> /tmp/DEBUG
                                                                                 '' ;
                                                                         }
                                                                 )
                                                             ] ;
                                                         text =
                                                             ''
+                                                                echo 7e1212fd 0f5c2980 >> /tmp/DEBUG
                                                                 nohup log <&0 > /dev/null 2>&1 &
+                                                                echo 7e1212fd 822de2e4 >> /tmp/DEBUG
                                                             '' ;
                                                     } ;
                                             setup_ =
