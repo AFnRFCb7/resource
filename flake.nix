@@ -791,7 +791,7 @@
                                                                 done
                                                                 exec 203> ${ resources-directory }/locks/$HASH
                                                                 flock -x 203
-                                                                rm ${ resources-directory }/canonical/$HASH
+                                                                rm "${ resources-directory }/canonical/$HASH"
                                                                 STANDARD_ERROR_FILE="$( mktemp )" || failure a0fa4d6f
                                                                 STANDARD_OUTPUT_FILE="$( mktemp )" || failure f88456b1
                                                                 if ${ applications.release } > "$STANDARD_ERROR_FILE" 2> "$STANDARD_ERROR_FILE"
