@@ -560,6 +560,8 @@
                                                                     export MOUNT
                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                     export INDEX
+                                                                    mkdir --parents ${ resources-directory }/marks
+                                                                    touch "${ resources-directory }/marks/$INDEX"
                                                                     touch "${ resources-directory }/originator-pids/$INDEX/${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable "}" ] }"
                                                                     export PROVENANCE=cached
                                                                     mkdir --parents "${ root-directory }/$INDEX"
@@ -601,6 +603,11 @@
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                     flock -s 211
+                                                                    mkdir --parents "${ resources-directory }/applications/$INDEX"
+                                                                    ln --symbolic ${ applications.init } "${ resources-directory }/applications/$INDEX/init"
+                                                                    ln --symbolic ${ applications.release } "${ resources-directory }/applications/$INDEX/release"
+                                                                    mkdir --parents ${ resources-directory }/marks
+                                                                    touch "${ resources-directory }/marks/$INDEX"
                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                     mkdir --parents "$MOUNT"
                                                                     export MOUNT
@@ -757,70 +764,88 @@
                                                 writeShellApplication
                                                     {
                                                         name = "teardown" ;
-                                                        runtimeInputs = [ coreutils findutils flock inotify-tools jq log ] ;
+                                                        runtimeInputs = [ coreutils findutils flock gnutar inotify-tools zstd jq log ] ;
                                                         text =
                                                             ''
                                                                 HASH="$1"
                                                                 INDEX="$2"
                                                                 echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
-                                                                HAS_ORIGINATOR_PID=true
-                                                                while $HAS_ORIGINATOR_PID
+                                                                rm "${ resources-directory }/marks/$INDEX"
+                                                                PROCEED=true
+                                                                while $PROCEED
                                                                 do
-                                                                    HAS_ORIGINATOR_PID=false
-                                                                    for ORIGINATOR_PID_COMPLETE in ${ resources-directory }/originator-pids/*
+                                                                    PROCEED=false
+                                                                    HAS_ORIGINATOR_PID=true
+                                                                    while $HAS_ORIGINATOR_PID
                                                                     do
-                                                                        HAS_ORIGINATOR_PID=true
-                                                                        ORIGINATOR_PID="$( basename "$ORIGINATOR_PID_COMPLETE" )" || failure e486b234
-                                                                        tail --follow /dev/null --pid "$ORIGINATOR_PID"
+                                                                        HAS_ORIGINATOR_PID=false
+                                                                        for ORIGINATOR_PID_COMPLETE in ${ resources-directory }/originator-pids/*
+                                                                        do
+                                                                            HAS_ORIGINATOR_PID=true
+                                                                            ORIGINATOR_PID="$( basename "$ORIGINATOR_PID_COMPLETE" )" || failure e486b234
+                                                                            tail --follow /dev/null --pid "$ORIGINATOR_PID"
+                                                                        done
                                                                     done
-                                                                done
-                                                                HAS_ROOT=true
-                                                                while $HAS_ROOT
-                                                                do
-                                                                    HAS_ROOT=false
-                                                                    ROOTS="$( find ${ root-directory } -mindepth 1 -type l )" || failure fbd2f344
-                                                                    for ROOT in "${ builtins.concatStringsSep "" [ "$" "{" "ROOTS[@]" "}" ] }"
+                                                                    HAS_ROOT=true
+                                                                    while $HAS_ROOT
                                                                     do
-                                                                        CANDIDATE="$( readlink --canonicalize "$ROOT" )" || failure 7920dbf0
-                                                                        if [[ "$CANDIDATE" == "${ resources-directory }/mounts/$INDEX" ]]
+                                                                        HAS_ROOT=false
+                                                                        ROOTS="$( find ${ root-directory } -mindepth 1 -type l )" || failure fbd2f344
+                                                                        for ROOT in "${ builtins.concatStringsSep "" [ "$" "{" "ROOTS[@]" "}" ] }"
+                                                                        do
+                                                                            CANDIDATE="$( readlink --canonicalize "$ROOT" )" || failure 7920dbf0
+                                                                            if [[ "$CANDIDATE" == "${ resources-directory }/mounts/$INDEX" ]]
+                                                                            then
+                                                                                HAS_ROOT=true
+                                                                                inotifywait --event delete-self "$ROOT"
+                                                                            fi
+                                                                        done
+                                                                    done
+                                                                    exec 203> "${ resources-directory }/locks/$HASH"
+                                                                    flock -x 203
+                                                                    if [[ -f "${ resources-directory }/marks/$INDEX" ]]
+                                                                    then
+                                                                        rm "${ resources-directory }/canonical/$HASH"
+                                                                        rmdir "${ resources-directory }/canonical" || true
+                                                                        STANDARD_ERROR_FILE="$( mktemp )" || failure a0fa4d6f
+                                                                        STANDARD_OUTPUT_FILE="$( mktemp )" || failure f88456b1
+                                                                        if ${ applications.release } > "$STANDARD_ERROR_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
-                                                                            HAS_ROOT=true
-                                                                            inotifywait --event delete-self "$ROOT"
+                                                                            STATUS="$?"
+                                                                        else
+                                                                            STATUS="$?"
                                                                         fi
-                                                                    done
+                                                                        STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 42e81eda
+                                                                        STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9122979d
+                                                                        if [[ "$STATUS" == 0 ]] && [[ -s "$STANDARD_ERROR_FILE" ]]
+                                                                        then
+                                                                            jq \
+                                                                                --null-input \
+                                                                                --arg HASH "$HASH" \
+                                                                                --arg INDEX "$INDEX" \
+                                                                                --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                                --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                                --arg STATUS "$STATUS" \
+                                                                                '{
+                                                                                    "hash" : $HASH ,
+                                                                                    "index" : $INDEX ,
+                                                                                    "standard-error" : $STANDARD_ERROR ,
+                                                                                    "standard-output" : $STANDARD_OUTPUT
+                                                                                    "status" : $STATUS
+                                                                                }' | log
+                                                                            ARCHIVE="$( mktemp --suffix ".tar.zstd" )" || failure 192819d6
+                                                                            tar --create --file "$ARCHIVE" "${ root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX"
+                                                                            rm --recursive --force "${ root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX"
+                                                                            rmdir ${ root-directory } || true
+                                                                            rmdir ${ resources-directory }/marks || true
+                                                                            rmdir ${ resources-directory }/mounts || true
+                                                                        else
+                                                                            : # TBD
+                                                                        fi
+                                                                    else
+                                                                        PROCEED=true
+                                                                    fi
                                                                 done
-                                                                exec 203> "${ resources-directory }/locks/$HASH"
-                                                                flock -x 203
-                                                                rm "${ resources-directory }/canonical/$HASH"
-                                                                STANDARD_ERROR_FILE="$( mktemp )" || failure a0fa4d6f
-                                                                STANDARD_OUTPUT_FILE="$( mktemp )" || failure f88456b1
-                                                                if ${ applications.release } > "$STANDARD_ERROR_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                then
-                                                                    STATUS="$?"
-                                                                else
-                                                                    STATUS="$?"
-                                                                fi
-                                                                STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 42e81eda
-                                                                STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9122979d
-                                                                if [[ "$STATUS" == 0 ]] && [[ -s "$STANDARD_ERROR_FILE" ]]
-                                                                then
-                                                                    jq \
-                                                                        --null-input \
-                                                                        --arg HASH "$HASH" \
-                                                                        --arg INDEX "$INDEX" \
-                                                                        --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                        --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
-                                                                        --arg STATUS "$STATUS" \
-                                                                        '{
-                                                                            "hash" : $HASH ,
-                                                                            "index" : $INDEX ,
-                                                                            "standard-error" : $STANDARD_ERROR ,
-                                                                            "standard-output" : $STANDARD_OUTPUT
-                                                                            "status" : $STATUS
-                                                                        }' | log
-                                                                else
-                                                                    : # TBD
-                                                                fi
                                                             '' ;
                                                     } ;
                                             in
