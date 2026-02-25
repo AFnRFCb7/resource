@@ -578,7 +578,6 @@
                                                                         --arg TRANSIENT "$TRANSIENT" \
                                                                         '{
                                                                             "arguments" : $ARGUMENTS ,
-                                                                            "description" : $DESCRIPTION ,
                                                                             "hash" : $HASH ,
                                                                             "index" : $INDEX ,
                                                                             "init-script" : $INIT_SCRIPT ,
@@ -668,7 +667,6 @@
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
-                                                                                "description" : $DESCRIPTION ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
                                                                                 "init-script" : $INIT_SCRIPT ,
@@ -708,7 +706,6 @@
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
-                                                                                "description" : $DESCRIPTION ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
                                                                                 "init-script" : $INIT_SCRIPT ,
