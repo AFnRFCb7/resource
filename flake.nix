@@ -1,4 +1,4 @@
-# 4afc258b
+# 712d69f5
 {
 	inputs = { } ;
 	outputs =
@@ -811,7 +811,7 @@
                                                                         rmdir "${ resources-directory }/canonical" || true
                                                                         STANDARD_ERROR_FILE="$( mktemp )" || failure a0fa4d6f
                                                                         STANDARD_OUTPUT_FILE="$( mktemp )" || failure f88456b1
-                                                                        if ${ applications.release } > "$STANDARD_ERROR_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        if "${ resources-directory }/applications/release" > "$STANDARD_ERROR_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
                                                                         else
