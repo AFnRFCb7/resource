@@ -12,6 +12,7 @@
                         failure ,
                         findutils ,
                         flock ,
+                        gnutar ,
                         inotify-tools ,
                         jq ,
                         makeWrapper ,
@@ -27,7 +28,8 @@
                         util-linux ,
                         visitor ,
                         writeShellApplication ,
-                        yq-go
+                        yq-go ,
+                        zstd
                     } @primary :
                         let
                             description =
