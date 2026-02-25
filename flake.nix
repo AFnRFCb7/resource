@@ -789,7 +789,7 @@
                                                                         fi
                                                                     done
                                                                 done
-                                                                exec 203> ${ resources-directory }/locks/$HASH
+                                                                exec 203> "${ resources-directory }/locks/$HASH"
                                                                 flock -x 203
                                                                 rm "${ resources-directory }/canonical/$HASH"
                                                                 STANDARD_ERROR_FILE="$( mktemp )" || failure a0fa4d6f
