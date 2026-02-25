@@ -689,9 +689,11 @@
                                                                                 "type" : "valid"
                                                                             }' | log
                                                                         echo 7e1212fd b2b4af8d BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
-
-                                                                        setsid nohup teardown "$HASH" "$INDEX" >> /tmp/teardown.log 2>&1 < /dev/null &
-
+                                                                        (
+                                                                          exec </dev/null >/dev/null 2>&1
+                                                                          teardown "$HASH" "$INDEX"
+                                                                        ) &
+                                                                        disown
                                                                         echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
