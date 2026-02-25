@@ -783,7 +783,7 @@
                                                                     do
                                                                         echo 7e1212fd b086e475 >> /tmp/DEBUG
                                                                         HAS_ORIGINATOR_PID=false
-                                                                        for ORIGINATOR_PID_COMPLETE in ${ resources-directory }/originator-pids/*
+                                                                        for ORIGINATOR_PID_COMPLETE in ${ resources-directory }/originator-pids/$INDEX/*
                                                                         do
                                                                             HAS_ORIGINATOR_PID=true
                                                                             ORIGINATOR_PID="$( basename "$ORIGINATOR_PID_COMPLETE" )" || failure e486b234
