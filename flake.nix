@@ -488,42 +488,32 @@
                                                                         } ;
                                                                 wrap = wrap ;
                                                             } ;
-                                            log =
-                                                writeShellApplication
-                                                    {
-                                                        name = "log" ;
-                                                        runtimeInputs =
-                                                            [
-                                                                coreutils
-                                                                (
-                                                                    writeShellApplication
-                                                                        {
-                                                                            name = "log" ;
-                                                                            runtimeInputs = [ coreutils flock yq-go ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    echo 7e1212fd 25ad4854 >> /tmp/DEBUG
-                                                                                    mkdir --parents ${ resources-directory }/logs
-                                                                                    exec 203> ${ resources-directory }/logs/log.lock
-                                                                                    flock 203
-                                                                                    yq eval --prettyPrint "[.]" <&0 >> ${ resources-directory }/logs/log.yaml
-                                                                                    echo 7e1212fd d28ab25a >> /tmp/DEBUG
-                                                                                '' ;
-                                                                        }
-                                                                )
-                                                            ] ;
-                                                        text =
-                                                            ''
-                                                                echo 7e1212fd 0f5c2980 >> /tmp/DEBUG
-                                                                nohup log <&0 > /dev/null 2>&1 &
-                                                                echo 7e1212fd 822de2e4 >> /tmp/DEBUG
-                                                            '' ;
-                                                    } ;
                                             setup_ =
                                                 writeShellApplication
                                                     {
                                                         name = "setup" ;
-                                                        runtimeInputs = [ coreutils findutils flock jq ps redis util-linux yq-go log sequential teardown failure ] ;
+                                                        runtimeInputs =
+                                                            [
+                                                                coreutils
+                                                                findutils
+                                                                flock
+                                                                jq
+                                                                ps
+                                                                (
+                                                                    writeShellApplication
+                                                                        {
+                                                                            name = "publish" ;
+                                                                            runtimeInputs = [ coreutils redis failure ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    JSON="$( cat )" || failure 64cec474
+                                                                                    redis-cli PUBLISH ${ channel } "$JSON" > /dev/null || true
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                                sequential
+                                                                failure
+                                                            ] ;
                                                         text =
                                                             ''
                                                                 export SETUP="$0"
@@ -575,6 +565,7 @@
                                                                     jq \
                                                                         --null-input \
                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                        --argjson DESCRIPTION '${ builtins.toJSON ( description secondary ) }' \
                                                                         --arg HASH "$HASH" \
                                                                         --arg INDEX "$INDEX" \
                                                                         --arg INIT_SCRIPT "$INIT_SCRIPT" \
@@ -587,6 +578,7 @@
                                                                         --arg TRANSIENT "$TRANSIENT" \
                                                                         '{
                                                                             "arguments" : $ARGUMENTS ,
+                                                                            "description" : $DESCRIPTION ,
                                                                             "hash" : $HASH ,
                                                                             "index" : $INDEX ,
                                                                             "init-script" : $INIT_SCRIPT ,
@@ -598,7 +590,7 @@
                                                                             "targets" : $TARGETS ,
                                                                             "transient" : $TRANSIENT ,
                                                                             "type" : "stale"
-                                                                        }' | log
+                                                                        }' | publish
                                                                     echo -n "$MOUNT"
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
@@ -659,6 +651,7 @@
                                                                         jq \
                                                                             --null-input \
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                            --argjson DESCRIPTION '${ builtins.toJSON ( description secondary ) }' \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
@@ -675,6 +668,7 @@
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
+                                                                                "description" : $DESCRIPTION ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
                                                                                 "init-script" : $INIT_SCRIPT ,
@@ -689,15 +683,7 @@
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "valid"
-                                                                            }' | log
-                                                                        echo 7e1212fd b2b4af8d BEFORE TEARDOWN nohup teardown "$HASH" "$INDEX" >> /tmp/DEBUG
-                                                                        (
-                                                                          exec </dev/null >/dev/null 2>&1
-                                                                          teardown "$HASH" "$INDEX"
-                                                                        ) &
-                                                                        disown
-                                                                        echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
-                                                                        echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
+                                                                            }' | publish
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
@@ -706,6 +692,7 @@
                                                                         jq \
                                                                             --null-input \
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                            --argjson DESCRIPTION '${ builtins.toJSON ( description secondary ) } \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
@@ -721,6 +708,7 @@
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
+                                                                                "description" : $DESCRIPTION ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
                                                                                 "init-script" : $INIT_SCRIPT ,
@@ -734,7 +722,7 @@
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "invalid-init"
-                                                                            }' | log
+                                                                            }' | publish
                                                                         failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
                                                                     fi
                                                                 fi
@@ -767,97 +755,6 @@
                                                                     bool = path : value : if value then "$( sequential ) || failure 0da02db4" else "-1" ;
                                                                 }
                                                                 transient ;
-                                            teardown =
-                                                writeShellApplication
-                                                    {
-                                                        name = "teardown" ;
-                                                        runtimeInputs = [ coreutils findutils flock gnutar inotify-tools zstd jq log ] ;
-                                                        text =
-                                                            ''
-                                                                HASH="$1"
-                                                                INDEX="$2"
-                                                                echo 7e1212fd 7284e858 START OF TEARDOWN "HASH=$HASH" "INDEX=$INDEX" >> /tmp/DEBUG
-                                                                rm "${ resources-directory }/marks/$INDEX"
-                                                                PROCEED=true
-                                                                while $PROCEED
-                                                                do
-                                                                    echo 7e1212fd 8928d9a0 >> /tmp/DEBUG
-                                                                    PROCEED=false
-                                                                    HAS_ORIGINATOR_PID=true
-                                                                    while $HAS_ORIGINATOR_PID
-                                                                    do
-                                                                        echo 7e1212fd b086e475 >> /tmp/DEBUG
-                                                                        HAS_ORIGINATOR_PID=false
-                                                                        for ORIGINATOR_PID_COMPLETE in ${ resources-directory }/originator-pids/"$INDEX"/*
-                                                                        do
-                                                                            HAS_ORIGINATOR_PID=true
-                                                                            ORIGINATOR_PID="$( basename "$ORIGINATOR_PID_COMPLETE" )" || failure e486b234
-                                                                            echo 7e1212fd d673aeed "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
-                                                                            tail --follow /dev/null --pid "$ORIGINATOR_PID"
-                                                                        done
-                                                                    done
-                                                                    HAS_ROOT=true
-                                                                    while $HAS_ROOT
-                                                                    do
-                                                                        HAS_ROOT=false
-                                                                        ROOTS="$( find ${ root-directory } -mindepth 1 -type l )" || failure fbd2f344
-                                                                        for ROOT in "${ builtins.concatStringsSep "" [ "$" "{" "ROOTS[@]" "}" ] }"
-                                                                        do
-                                                                            CANDIDATE="$( readlink --canonicalize "$ROOT" )" || failure 7920dbf0
-                                                                            if [[ "$CANDIDATE" == "${ resources-directory }/mounts/$INDEX" ]]
-                                                                            then
-                                                                                HAS_ROOT=true
-                                                                                inotifywait --event delete-self "$ROOT"
-                                                                            fi
-                                                                        done
-                                                                    done
-                                                                    exec 203> "${ resources-directory }/locks/$HASH"
-                                                                    flock -x 203
-                                                                    if [[ -f "${ resources-directory }/marks/$INDEX" ]]
-                                                                    then
-                                                                        rm "${ resources-directory }/canonical/$HASH"
-                                                                        rmdir "${ resources-directory }/canonical" || true
-                                                                        STANDARD_ERROR_FILE="$( mktemp )" || failure a0fa4d6f
-                                                                        STANDARD_OUTPUT_FILE="$( mktemp )" || failure f88456b1
-                                                                        if "${ resources-directory }/applications/release" > "$STANDARD_ERROR_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                        then
-                                                                            STATUS="$?"
-                                                                        else
-                                                                            STATUS="$?"
-                                                                        fi
-                                                                        STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 42e81eda
-                                                                        STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9122979d
-                                                                        if [[ "$STATUS" == 0 ]] && [[ -s "$STANDARD_ERROR_FILE" ]]
-                                                                        then
-                                                                            jq \
-                                                                                --null-input \
-                                                                                --arg HASH "$HASH" \
-                                                                                --arg INDEX "$INDEX" \
-                                                                                --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                                --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
-                                                                                --arg STATUS "$STATUS" \
-                                                                                '{
-                                                                                    "hash" : $HASH ,
-                                                                                    "index" : $INDEX ,
-                                                                                    "standard-error" : $STANDARD_ERROR ,
-                                                                                    "standard-output" : $STANDARD_OUTPUT
-                                                                                    "status" : $STATUS
-                                                                                }' | log
-                                                                            ARCHIVE="$( mktemp --suffix ".tar.zstd" )" || failure 192819d6
-                                                                            tar --create --file "$ARCHIVE" "${ root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX"
-                                                                            rm --recursive --force "${ root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX"
-                                                                            rmdir ${ root-directory } || true
-                                                                            rmdir ${ resources-directory }/marks || true
-                                                                            rmdir ${ resources-directory }/mounts || true
-                                                                        else
-                                                                            : # TBD
-                                                                        fi
-                                                                    else
-                                                                        PROCEED=true
-                                                                    fi
-                                                                done
-                                                            '' ;
-                                                    } ;
                                             in
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
