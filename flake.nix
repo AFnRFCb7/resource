@@ -776,15 +776,18 @@
                                                                 PROCEED=true
                                                                 while $PROCEED
                                                                 do
+                                                                    echo 7e1212fd 8928d9a0 >> /tmp/DEBUG
                                                                     PROCEED=false
                                                                     HAS_ORIGINATOR_PID=true
                                                                     while $HAS_ORIGINATOR_PID
                                                                     do
+                                                                        echo 7e1212fd b086e475 >> /tmp/DEBUG
                                                                         HAS_ORIGINATOR_PID=false
                                                                         for ORIGINATOR_PID_COMPLETE in ${ resources-directory }/originator-pids/*
                                                                         do
                                                                             HAS_ORIGINATOR_PID=true
                                                                             ORIGINATOR_PID="$( basename "$ORIGINATOR_PID_COMPLETE" )" || failure e486b234
+                                                                            echo 7e1212fd d673aeed "ORIGINATOR_PID=$ORIGINATOR_PID" >> /tmp/DEBUG
                                                                             tail --follow /dev/null --pid "$ORIGINATOR_PID"
                                                                         done
                                                                     done
