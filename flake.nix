@@ -34,6 +34,7 @@
                         let
                             description =
                                 {
+                                    depth ,
                                     init ,
                                     init-resolutions ,
                                     release ,
@@ -60,6 +61,7 @@
                                                 { primary = primary ; secondary = secondary ; } ;
                                 implementation =
                                     {
+                                        depth ,
                                         init ,
                                         init-resolutions ,
                                         release ,
@@ -695,6 +697,7 @@
                                                                         ) &
                                                                         disown
                                                                         echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
+                                                                        echo 7e1212fd 667c35e6 AFTER TEARDOWN >> /tmp/DEBUG
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
@@ -859,7 +862,16 @@
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
                             pre-hash =
-                                { init , init-resolutions , release , release-resolutions , seed , targets , transient } @secondary :
+                                {
+                                    depth ,
+                                    init ,
+                                    init-resolutions ,
+                                    release ,
+                                    release-resolutions ,
+                                    seed ,
+                                    targets ,
+                                    transient
+                                } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
