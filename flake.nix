@@ -70,6 +70,23 @@
                                         transient
                                     } @secondary :
                                         let
+                                            applicatio en =
+                                                visitor
+                                                    {
+
+                                                    }
+                                                    {
+                                                        init =
+                                                            {
+                                                                application = init ;
+                                                                resolutions = init-resolutions ;
+                                                            } ;
+                                                        release =
+                                                            {
+                                                                application = release ;
+                                                                resolutions = release-resolutions ;
+                                                            } ;
+                                                    }
                                             applications =
                                                 {
                                                     init =
