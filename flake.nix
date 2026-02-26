@@ -74,9 +74,45 @@
                                                 visitor
                                                     {
                                                         lambda =
-                                                            path : value : null ;
-                                                        list = path : list : builtins.concatLists list ;
-                                                        set = path : set : builtins.concatLists [ ( builtins.attrValues set ) ] ;
+                                                            path : value :
+                                                                writeShellApplication
+                                                                    {
+                                                                        name = if builtins.length path == 2 then builtins.elemAt path 1 else "resolve" ;
+                                                                        runScript =
+                                                                            ''
+                                                                                bash -c '
+                                                                                    if [[ -t 0 ]]
+                                                                                    then
+                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                    else
+                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                    fi
+                                                                                ' "$0" "$@"
+                                                                            '' ;
+                                                                        targetPkgs =
+                                                                            pkgs :
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "init" ;
+                                                                                                runtimeInputs = [ ] ;
+                                                                                                text =
+                                                                                                    let
+                                                                                                        t = tools pkgs ;
+                                                                                                        v =
+                                                                                                            let
+                                                                                                                arguments =
+                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
+                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                in value arguments ;
+                                                                                                        in ''${ v } "$@"'' ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
+                                                                    } ;
+                                                        list = path : list : list ;
+                                                        set = path : set : set ;
                                                     }
                                                     {
                                                         init =
