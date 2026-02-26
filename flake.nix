@@ -77,7 +77,7 @@
                                                             path : value :
                                                                 buildFHSUserEnv
                                                                     {
-                                                                        name = if builtins.length path == 2 then builtins.elemAt path 1 else "resolve" ;
+                                                                        name = if builtins.length path == 2 then builtins.elemAt path 0 else "resolve" ;
                                                                         runScript =
                                                                             ''
                                                                                 bash -c '
