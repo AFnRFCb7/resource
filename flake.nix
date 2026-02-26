@@ -503,10 +503,10 @@
                                                                     writeShellApplication
                                                                         {
                                                                             name = "publish" ;
-                                                                            runtimeInputs = [ coreutils redis failure ] ;
+                                                                            runtimeInputs = [ coreutils jq redis failure ] ;
                                                                             text =
                                                                                 ''
-                                                                                    JSON="$( cat )" || failure 64cec474
+                                                                                    JSON="$( cat | jq --compact-form )" || failure 64cec474
                                                                                     redis-cli PUBLISH ${ channel } "$JSON" > /dev/null || true
                                                                                 '' ;
                                                                         }
