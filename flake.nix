@@ -878,10 +878,6 @@
                                                                                         then
                                                                                             failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
                                                                                         fi
-                                                                                        while [[ ! -f /build/payload ]]
-                                                                                        do
-                                                                                            redis-cli PUBLISH ${ channel } '{"test" : true}'
-                                                                                        done
                                                                                         sleep 10s
                                                                                         cat /build/payload > "$OUT/payload.observed.json"
                                                                                         failure 9ef03235 "$OUT/payload.observed.json"
