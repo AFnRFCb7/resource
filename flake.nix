@@ -464,7 +464,7 @@
                                                             ] ;
                                                         text =
                                                             ''
-                                                                echo 7e1212fd 14eeb31d >> /build/DEBUG
+                                                                echo 7e1212fd 14eeb31d "SETUP=$SETUP" >> /build/DEBUG
                                                                 export SETUP="$0"
                                                                 echo 7e1212fd e0218e47 >> /build/DEBUG
                                                                 if [[ -t 0 ]]
@@ -541,8 +541,11 @@
                                                                     export INDEX
                                                                     echo 7e1212fd 36acac2e >> /build/DEBUG
                                                                     originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
+                                                                    echo 7e1212fd 20310573 >> /build/DEBUG
                                                                     export PROVENANCE=new
+                                                                    echo 7e1212fd 0c90586a >> /build/DEBUG
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                    echo 7e1212fd 180def49 >> /build/DEBUG
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                     flock -s 211
                                                                     mkdir --parents "${ resources-directory }/applications/$INDEX"
