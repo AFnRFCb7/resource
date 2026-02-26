@@ -472,7 +472,7 @@
                                                                                     INDEX="$1"
                                                                                     DEPTH="$2"
                                                                                     PID="$3"
-                                                                                    echo mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
+                                                                                    mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
                                                                                     touch "${ resources-directory }/originator-pids/$INDEX/$PID"
                                                                                     if [[ "$PID" -lt 1 ]] || [[ "$PID" -eq 1 ]]
                                                                                     then
