@@ -593,11 +593,11 @@
                                                                     # shellcheck disable=SC2016
                                                                     export STATUS
                                                                     echo 7e1212fd d5077213 >> /build/DEBUG
-                                                                    TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --raw-input --slurp '.' )" || failure f9da34c2
+                                                                    TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                     STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 395f8da8
                                                                     export STANDARD_ERROR
                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
-                                                                    export STANDARD_OUTPUT
+                                                                    export STANDARD_OUTPUTb2fcc
                                                                     # shellcheck disable=SC2129
                                                                     echo 7e1212fd b2fcc59a "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" >> /build/DEBUG
                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
