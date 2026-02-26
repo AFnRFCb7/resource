@@ -117,6 +117,7 @@
                                                                                 ] ;
                                                                     } ;
                                                         list = path : list : list ;
+                                                        null = path : value : true ;
                                                         set = path : set : set ;
                                                     }
                                                     {
@@ -173,6 +174,7 @@
                                                                                 ] ;
                                                                     } ;
                                                         list = path : list : list ;
+                                                        null = path : value : null ;
                                                         set = path : set : set ;
                                                     }
                                                     {
