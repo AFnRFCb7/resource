@@ -537,8 +537,7 @@
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                     flock -s 211
                                                                     mkdir --parents "${ resources-directory }/applications/$INDEX"
-                                                                    ln --symbolic ${ applications.init } "${ resources-directory }/applications/$INDEX/init"
-                                                                    ln --symbolic ${ applications.release } "${ resources-directory }/applications/$INDEX/release"
+                                                                    ###
                                                                     mkdir --parents ${ resources-directory }/marks
                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
@@ -553,7 +552,7 @@
                                                                     then
                                                                         echo 7e1212fd 7555816d  >> /tmp/DEBUG
                                                                         # shellcheck disable=SC2068
-                                                                        if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        if ${ applications.init }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
                                                                             echo 7e1212fd aa03ede2 >> /tmp/DEBUG
@@ -564,7 +563,7 @@
                                                                         echo 7e1212fd 082b7b62 >> /tmp/DEBUG
                                                                     else
                                                                         # shellcheck disable=SC2068
-                                                                        if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        if ${ applications.init }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
                                                                         else
