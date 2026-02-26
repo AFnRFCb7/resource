@@ -70,10 +70,13 @@
                                         transient
                                     } @secondary :
                                         let
-                                            applicatio en =
+                                            applications_ =
                                                 visitor
                                                     {
-
+                                                        lambda =
+                                                            path : value : null ;
+                                                        list = path : list : builtins.concatLists list ;
+                                                        set = path : set : builtins.concatLists [ ( builtins.attrValues set ) ] ;
                                                     }
                                                     {
                                                         init =
@@ -86,7 +89,7 @@
                                                                 application = release ;
                                                                 resolutions = release-resolutions ;
                                                             } ;
-                                                    }
+                                                    } ;
                                             applications =
                                                 {
                                                     init =
