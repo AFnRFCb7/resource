@@ -18,7 +18,6 @@
                         makeWrapper ,
                         mkDerivation ,
                         nix ,
-                        originator-pid-variable ,
                         ps ,
                         redis ,
                         resources ,
@@ -413,42 +412,6 @@
                                                         in
                                                             {
                                                                 failure = failure ;
-                                                                pid =
-                                                                    pkgs.writeShellApplication
-                                                                        {
-                                                                            name = "pid" ;
-                                                                            runtimeInputs = [ pkgs.procps wrap failure ] ;
-                                                                            text =
-                                                                                let
-                                                                                    stall =
-                                                                                        let
-                                                                                            application =
-                                                                                                pkgs.writeShellApplication
-                                                                                                    {
-                                                                                                        name = "stall" ;
-                                                                                                        runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                        text =
-                                                                                                            ''
-                                                                                                                echo "STALLING FOR PID=$PID"
-                                                                                                                tail --follow /dev/null --pid "$PID"
-                                                                                                            '' ;
-                                                                                                    } ;
-                                                                                            in "${ application }/bin/stall" ;
-                                                                                    in
-                                                                                        ''
-                                                                                            STALL_INDEX="$1"
-                                                                                            STALL_PATH="$2"
-                                                                                            INDEX=0
-                                                                                            PID="${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
-                                                                                            while [[ "$INDEX" -lt "$STALL_INDEX" ]] && [[ "$PID" -ne 1 ]]
-                                                                                            do
-                                                                                                PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]')" || failure caade9f0
-                                                                                                INDEX=$(( INDEX + 1 ))
-                                                                                                echo "INDEX=$INDEX PID=$PID STALL_INDEX=$STALL_INDEX STALL_PATH=$STALL_PATH"
-                                                                                            done
-                                                                                            wrap stall "$STALL_PATH" 0500 --inherit-plain PID --literal-plain PATH
-                                                                                        '' ;
-                                                                        } ;
                                                                 pkgs = pkgs ;
                                                                 resources = resources ;
                                                                 root =
@@ -502,6 +465,26 @@
                                                                 (
                                                                     writeShellApplication
                                                                         {
+                                                                            name = "originator-pid" ;
+                                                                            runtimeInputs = [ coreutils procps failure ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    DEPTH="$1"
+                                                                                    PID="$2"
+                                                                                    mkdir --parents ${ resources-directory }/$INDEX/originator-pids
+                                                                                    touch "$ resources-directory }/$INDEX/originator-pids/$PID"
+                                                                                    if [[ "$PID" -gt 0 ]]
+                                                                                    then
+                                                                                        NEXT_DEPTH=$(( PID - 1 ))
+                                                                                        NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
+                                                                                        "$0" "$NEXT_DEPTH" "$NEXT_PID"
+                                                                                    fi
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                                (
+                                                                    writeShellApplication
+                                                                        {
                                                                             name = "publish" ;
                                                                             runtimeInputs = [ coreutils jq redis failure ] ;
                                                                             text =
@@ -523,21 +506,21 @@
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
                                                                     STANDARD_INPUT=
-                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure 2bd52e9b
+                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 2bd52e9b
                                                                 else
                                                                     STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
                                                                     export STANDARD_INPUT_FILE
                                                                     HAS_STANDARD_INPUT=true
                                                                     cat <&0 > "$STANDARD_INPUT_FILE"
                                                                     STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
-                                                                    PENULTIMATE_PID=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure d79214f2
-                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')'' "}" ] } || failure e1556ee8
+                                                                    PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
+                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                 fi
+                                                                originator-pid-variable ${ depth } "$ULTIMATE_PID"
                                                                 mkdir --parents ${ resources-directory }
                                                                 ARGUMENTS=( "$@" )
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
-                                                                export ${ originator-pid-variable }
                                                                 INIT_SCRIPT=${ builtins.toString scripts.init }
                                                                 RELEASE_SCRIPT=${ builtins.toString scripts.release }
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
@@ -546,7 +529,6 @@
                                                                 export HAS_STANDARD_INPUT
                                                                 export HASH
                                                                 export STANDARD_INPUT
-                                                                export ${ originator-pid-variable }
                                                                 export TRANSIENT
                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                 flock -s 210
@@ -558,7 +540,6 @@
                                                                     export INDEX
                                                                     mkdir --parents ${ resources-directory }/marks
                                                                     touch "${ resources-directory }/marks/$INDEX"
-                                                                    touch "${ resources-directory }/originator-pids/$INDEX/${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable "}" ] }"
                                                                     export PROVENANCE=cached
                                                                     mkdir --parents "${ root-directory }/$INDEX"
                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
@@ -572,7 +553,6 @@
                                                                         --arg INIT_SCRIPT "$INIT_SCRIPT" \
                                                                         --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                        --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                         --arg PROVENANCE "$PROVENANCE" \
                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                         --argjson TARGETS "$TARGETS" \
@@ -584,7 +564,6 @@
                                                                             "init-script" : $INIT_SCRIPT ,
                                                                             "release-script" : $RELEASE_SCRIPT ,
                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                            "originator-pid" : $ORIGINATOR_PID ,
                                                                             "provenance" : $PROVENANCE ,
                                                                             "standard-input" : $STANDARD_INPUT ,
                                                                             "targets" : $TARGETS ,
@@ -607,8 +586,6 @@
                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                     mkdir --parents "$MOUNT"
                                                                     export MOUNT
-                                                                    mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
-                                                                    touch "${ resources-directory }/originator-pids/$INDEX/${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable "}" ] }"
                                                                     STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
                                                                     export STANDARD_ERROR_FILE
                                                                     STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
@@ -656,7 +633,6 @@
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
                                                                             --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
@@ -672,7 +648,6 @@
                                                                                 "init-script" : $INIT_SCRIPT ,
                                                                                 "release-script" : $RELEASE_SCRIPT ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                "originator-pid" : $ORIGINATOR_PID ,
                                                                                 "provenance" : $PROVENANCE ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
@@ -695,7 +670,6 @@
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
                                                                             --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
@@ -709,7 +683,6 @@
                                                                                 "index" : $INDEX ,
                                                                                 "init-script" : $INIT_SCRIPT ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                "originator-pid" : $ORIGINATOR_PID ,
                                                                                 "provenance" : $PROVENANCE ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
