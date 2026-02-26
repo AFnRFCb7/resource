@@ -474,7 +474,7 @@
                                                                                     PID="$3"
                                                                                     echo mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
                                                                                     touch "${ resources-directory }/originator-pids/$PID/$INDEX"
-                                                                                    if [[ "$PID" -lte 1 ]]
+                                                                                    if [[ "$PID" -lt 1 ]] || [[ "$PID" -eq 1 ]]
                                                                                     then
                                                                                         failure 9003521f "PID=$PID"
                                                                                     elif [[ "$DEPTH" -gt 0 ]]
