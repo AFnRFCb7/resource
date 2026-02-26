@@ -464,7 +464,7 @@
                                                             ] ;
                                                         text =
                                                             ''
-                                                                echo 7e1212fd 14eeb31d >> /tmp/DEBUG
+                                                                echo 7e1212fd 14eeb31d >> /build/DEBUG
                                                                 export SETUP="$0"
                                                                 if [[ -t 0 ]]
                                                                 then
