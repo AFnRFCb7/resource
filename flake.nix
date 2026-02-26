@@ -473,16 +473,16 @@
                                                                                     DEPTH="$2"
                                                                                     PID="$3"
                                                                                     mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
-                                                                                    touch "${ resources-directory }/originator-pids/$INDEX/$PID"
-                                                                                    if [[ "$PID" -lt 1 ]] || [[ "$PID" -eq 1 ]]
-                                                                                    then
-                                                                                        failure 9003521f "PID=$PID"
-                                                                                    elif [[ "$DEPTH" -gt 0 ]]
-                                                                                    then
-                                                                                        NEXT_DEPTH=$(( DEPTH - 1 ))
-                                                                                        NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
-                                                                                        "$0" "$INDEX" "$NEXT_DEPTH" "$NEXT_PID"
-                                                                                    fi
+                                                                                    # touch "${ resources-directory }/originator-pids/$INDEX/$PID"
+                                                                                    # if [[ "$PID" -lt 1 ]] || [[ "$PID" -eq 1 ]]
+                                                                                    # then
+                                                                                    #     failure 9003521f "PID=$PID"
+                                                                                    # elif [[ "$DEPTH" -gt 0 ]]
+                                                                                    # then
+                                                                                    #     NEXT_DEPTH=$(( DEPTH - 1 ))
+                                                                                    #     NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
+                                                                                    #     "$0" "$INDEX" "$NEXT_DEPTH" "$NEXT_PID"
+                                                                                    # fi
                                                                                 '' ;
                                                                         }
                                                                 )
