@@ -471,11 +471,11 @@
                                                                                 ''
                                                                                     DEPTH="$1"
                                                                                     PID="$2"
-                                                                                    mkdir --parents ${ resources-directory }/$INDEX/originator-pids
+                                                                                    mkdir --parents "${ resources-directory }/$INDEX/originator-pids"
                                                                                     touch "$ resources-directory }/$INDEX/originator-pids/$PID"
                                                                                     if [[ "$PID" -gt 0 ]]
                                                                                     then
-                                                                                        NEXT_DEPTH=$(( PID - 1 ))
+                                                                                        NEXT_DEPTH=$(( DEPTH - 1 ))
                                                                                         NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
                                                                                         "$0" "$NEXT_DEPTH" "$NEXT_PID"
                                                                                     fi
