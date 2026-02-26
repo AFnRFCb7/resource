@@ -650,7 +650,7 @@
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "invalid-init"
                                                                             }' | publish
-                                                                        failure a05ad0c3 "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "EXPECTED_TARGETS=$EXPECTED_TARGETS" "OBSERVED_TARGETS=$OBSERVED_TARGETS"
+                                                                        failure a05ad0c3 "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                     fi
                                                                 fi
                                                             '' ;
