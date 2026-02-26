@@ -476,7 +476,7 @@
                                                                                     export INDEX
                                                                                     export DEPTH
                                                                                     export PID
-                                                                                    # touch "${ resources-directory }/originator-pids/$INDEX/$PID"
+                                                                                    touch "${ resources-directory }/originator-pids/$INDEX/$PID"
                                                                                     # if [[ "$PID" -lt 1 ]] || [[ "$PID" -eq 1 ]]
                                                                                     # then
                                                                                     #     failure 9003521f "PID=$PID"
