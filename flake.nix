@@ -538,15 +538,10 @@
                                                                     echo -n "$MOUNT"
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
-                                                                    echo 7e1212fd 3f5f6562 >> /build/DEBUG
                                                                     export INDEX
-                                                                    echo 7e1212fd 36acac2e >> /build/DEBUG
                                                                     originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
-                                                                    echo 7e1212fd 20310573 >> /build/DEBUG
                                                                     export PROVENANCE=new
-                                                                    echo 7e1212fd 0c90586a >> /build/DEBUG
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                    echo 7e1212fd 180def49 >> /build/DEBUG
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                     flock -s 211
                                                                     mkdir --parents "${ resources-directory }/applications/$INDEX"
@@ -567,12 +562,9 @@
                                                                         if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd aa03ede2 >> /build/DEBUG
                                                                         else
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd ffa8718d >> /build/DEBUG
                                                                         fi
-                                                                        echo 7e1212fd 082b7b62 >> /build/DEBUG
                                                                     else
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
@@ -584,17 +576,14 @@
                                                                     fi
                                                                     # shellcheck disable=SC2016
                                                                     export STATUS
-                                                                    echo 7e1212fd d5077213 >> /build/DEBUG
                                                                     TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                     STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 395f8da8
                                                                     export STANDARD_ERROR
                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
                                                                     export STANDARD_OUTPUT
                                                                     # shellcheck disable=SC2129
-                                                                    echo 7e1212fd b2fcc59a "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" >> /build/DEBUG
                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                     then
-                                                                        echo 7e1212fd c345acbc >> /build/DEBUG
                                                                         # shellcheck disable=SC2016
                                                                         jq \
                                                                             --null-input \
