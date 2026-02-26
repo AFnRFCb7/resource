@@ -597,7 +597,7 @@
                                                                     STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 395f8da8
                                                                     export STANDARD_ERROR
                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
-                                                                    export STANDARD_OUTPUTb2fcc
+                                                                    export STANDARD_OUTPUT
                                                                     # shellcheck disable=SC2129
                                                                     echo 7e1212fd b2fcc59a "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" >> /build/DEBUG
                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
@@ -822,7 +822,6 @@
                                                                                         else
                                                                                             OBSERVED_STATUS="$?"
                                                                                         fi
-                                                                                        cat /build/DEBUG
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
@@ -831,14 +830,11 @@
                                                                                         then
                                                                                             failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
                                                                                         fi
-                                                                                        sleep 10s
-                                                                                        cat /build/payload > "$OUT/payload.observed.json"
-                                                                                        failure 9ef03235 "$OUT/payload.observed.json"
-                                                                                        # if ! jd ${ expected } "$OUT/payload.observed.json"
-                                                                                        # then
-                                                                                        #     jq "." "$OUT/payload.observed.json" > "$OUT/candidate.json"
-                                                                                        #     failure 2bc4ce7b "EXPECTED=$OUT/candidate.json"
-                                                                                        # fi
+                                                                                        if ! jd ${ expected } "/build/payload"
+                                                                                        then
+                                                                                            jq "." "/build/payload" > "$OUT/candidate.json"
+                                                                                            failure 2bc4ce7b "EXPECTED=$OUT/candidate.json"
+                                                                                        fi
                                                                                     '' ;
                                                                     }
                                                             )
