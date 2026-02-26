@@ -864,31 +864,30 @@
                                                                                         done
                                                                                         fixture
                                                                                         subscribe &
-                                                                                        if RESOURCE=${ resource }
+                                                                                        if OBSERVED_RESOURCE=${ resource }
                                                                                         then
-                                                                                            STATUS="$?"
+                                                                                            OBSERVED_STATUS="$?"
                                                                                         else
-                                                                                            STATUS="$?"
+                                                                                            OBSERVED_STATUS="$?"
                                                                                         fi
-                                                                                        if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
+                                                                                        if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
-                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
+                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
-                                                                                        if [[ "${ expected-resource }" != "$RESOURCE" ]]
+                                                                                        if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
                                                                                         then
-                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$RESOURCE"
+                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
                                                                                         fi
                                                                                         while [[ ! -f /build/payload ]]
                                                                                         do
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
                                                                                         done
-                                                                                        cat /build/payload > "$OUT/observed.json"
-
-                                                                                        # if ! jd ${ expected } /build/payload
-                                                                                        # then
-                                                                                        #     jq "." /build/payload > "$OUT/candidate.json"
-                                                                                        #     failure 2bc4ce7b "EXPECTED=$OUT/candidate.json"
-                                                                                        # fi
+                                                                                        cat /build/payload > "$OUT/payload.observed.json"
+                                                                                        if ! jd ${ expected } "$OUT/payload.observed.json"
+                                                                                        then
+                                                                                            jq "." /build/payload > "$OUT/candidate.json"
+                                                                                            failure 2bc4ce7b "EXPECTED=$OUT/candidate.json"
+                                                                                        fi
                                                                                     '' ;
                                                                     }
                                                             )
