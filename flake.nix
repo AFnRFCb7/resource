@@ -499,6 +499,7 @@
                                                                 export HAS_STANDARD_INPUT
                                                                 export HASH
                                                                 export STANDARD_INPUT
+                                                                TARGETS_EXPECTED='${ builtins.builtins.toJSON ( builtins.sort builtins.lessThan targets ) }'
                                                                 export TRANSIENT
                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                 flock -s 210
@@ -514,7 +515,6 @@
                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                     export PROVENANCE=cached
                                                                     mkdir --parents "${ root-directory }/$INDEX"
-                                                                    TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                     # shellcheck disable=SC2016
                                                                     jq \
@@ -525,7 +525,7 @@
                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                         --arg PROVENANCE "$PROVENANCE" \
                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                        --argjson TARGETS "$TARGETS" \
+                                                                        --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                         --arg TRANSIENT "$TRANSIENT" \
                                                                         '{
                                                                             "arguments" : $ARGUMENTS ,
@@ -589,6 +589,7 @@
                                                                     # shellcheck disable=SC2016
                                                                     export STATUS
                                                                     echo 7e1212fd d5077213 >> /build/DEBUG
+                                                                    TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure f9da34c2
                                                                     TARGET_HASH_EXPECTED=${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }
                                                                     echo 7e1212fd 24ca8380 >> /build/DEBUG
                                                                     TARGET_HASH_OBSERVED="$( find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" | sha512sum | cut --characters 1-128 )" || failure f6bff0bc
@@ -603,7 +604,7 @@
                                                                     echo '${ builtins.toJSON ( builtins.sort builtins.lessThan targets ) }' >> /build/DEBUG
                                                                     echo >> /build/DEBUG
                                                                     find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" >> /build/DEBUG
-                                                                    if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
+                                                                    if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGET_OBSERVED" ]]
                                                                     then
                                                                         echo 7e1212fd c345acbc >> /build/DEBUG
                                                                         # shellcheck disable=SC2016
@@ -619,6 +620,7 @@
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
                                                                             --arg STATUS "$STATUS" \
+                                                                            --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
@@ -638,8 +640,6 @@
                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
                                                                     else
-                                                                        TARGETS_EXPECTED='${ builtins.builtins.toJSON ( builtins.sort builtins.lessThan targets ) }'
-                                                                        TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure f9da34c2
                                                                         # shellcheck disable=SC2016
                                                                         jq \
                                                                             --null-input \
