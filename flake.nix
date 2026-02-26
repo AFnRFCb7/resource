@@ -520,7 +520,6 @@
                                                                     PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
                                                                     ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                 fi
-                                                                originator-pid ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                 mkdir --parents ${ resources-directory }
                                                                 ARGUMENTS=( "$@" )
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
@@ -542,6 +541,7 @@
                                                                     export MOUNT
                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                     export INDEX
+                                                                    originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                     mkdir --parents ${ resources-directory }/marks
                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                     export PROVENANCE=cached
@@ -578,6 +578,7 @@
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
                                                                     export INDEX
+                                                                    originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                     export PROVENANCE=new
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
