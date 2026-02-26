@@ -506,8 +506,7 @@
                                                                             runtimeInputs = [ coreutils jq redis failure ] ;
                                                                             text =
                                                                                 ''
-                                                                                    DESCRIPTION="${ builtins.toJSON ( description secondary ) } }"
-                                                                                    JSON="$( cat | jq --compact-output --arg description "$DESCRIPTION" '. + {description: $description}' )" || failure 64cec474
+                                                                                    JSON="$( cat | jq --compact-output '.' )" || failure 64cec474
                                                                                     redis-cli PUBLISH "${channel}" "$JSON" > /dev/null || true
                                                                                 '' ;
                                                                         }
