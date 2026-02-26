@@ -477,6 +477,7 @@
                                                                                     export DEPTH
                                                                                     export PID
                                                                                     touch "${ resources-directory }/originator-pids/$INDEX/$PID"
+                                                                                    echo "PID=$PID" > /build/DEBUG
                                                                                     # if [[ "$PID" -lt 1 ]] || [[ "$PID" -eq 1 ]]
                                                                                     # then
                                                                                     #     failure 9003521f "PID=$PID"
@@ -862,6 +863,7 @@
                                                                                             failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
                                                                                         fi
                                                                                         sleep 10s
+                                                                                        cat /build/DEBUG
                                                                                         cat /build/payload > "$OUT/payload.observed.json"
                                                                                         failure 9ef03235 "$OUT/payload.observed.json"
                                                                                         # if ! jd ${ expected } "$OUT/payload.observed.json"
