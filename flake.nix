@@ -466,7 +466,7 @@
                                                                     writeShellApplication
                                                                         {
                                                                             name = "originator-pid" ;
-                                                                            runtimeInputs = [ coreutils procps failure ] ;
+                                                                            runtimeInputs = [ coreutils ps failure ] ;
                                                                             text =
                                                                                 ''
                                                                                     DEPTH="$1"
