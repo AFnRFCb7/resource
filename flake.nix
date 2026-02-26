@@ -70,7 +70,7 @@
                                         transient
                                     } @secondary :
                                         let
-                                            applications_ =
+                                            applications =
                                                 visitor
                                                     {
                                                         lambda =
@@ -126,157 +126,62 @@
                                                                 resolutions = release-resolutions ;
                                                             } ;
                                                     } ;
-                                            applications =
-                                                {
-                                                    init =
-                                                        visitor
-                                                            {
-                                                                lambda =
-                                                                    path : value :
-                                                                        let
-                                                                            user-environment =
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        extraBwrapArgs =
-                                                                                            [
-                                                                                                "--bind $MOUNT /mount"
-                                                                                                "--tmpfs /scratch"
-                                                                                            ] ;
-                                                                                        name = "init" ;
-                                                                                        runScript =
-                                                                                            ''
-                                                                                                bash -c '
-                                                                                                    if [[ -t 0 ]]
-                                                                                                    then
-                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                                    else
-                                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                                    fi
-                                                                                                ' "$0" "$@"
-                                                                                            '' ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                [
-                                                                                                    (
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "init" ;
-                                                                                                                runtimeInputs = [ ] ;
-                                                                                                                text =
-                                                                                                                    let
-                                                                                                                        t = tools pkgs ;
-                                                                                                                        v = value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
-                                                                                                                        in ''${ v } "$@"'' ;
-                                                                                                            }
-                                                                                                    )
-                                                                                                ] ;
-                                                                                    } ;
-                                                                            in "${ user-environment }/bin/init" ;
-                                                            }
-                                                            init ;
-                                                    release =
-                                                        visitor
-                                                            {
-                                                                lambda =
-                                                                    path : value :
-                                                                        let
-                                                                            user-environment =
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        extraBwrapArgs =
-                                                                                            [
-                                                                                                "--bind $MOUNT /mount"
-                                                                                                "--tmpfs /scratch"
-                                                                                            ] ;
-                                                                                        name = "release" ;
-                                                                                        runScript = "release" ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                [
-                                                                                                    (
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "release" ;
-                                                                                                                runtimeInputs = [ ] ;
-                                                                                                                text =
-                                                                                                                    let
-                                                                                                                        t = tools pkgs ;
-                                                                                                                        v = value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
-                                                                                                                        in ''${ v } "$@"'' ;
-                                                                                                            }
-                                                                                                    )
-                                                                                                ] ;
-                                                                                    } ;
-                                                                            in "${ user-environment }/bin/release" ;
-                                                                null = path : value : "true" ;
-                                                            }
-                                                            release ;
-                                                } ;
                                             scripts =
-                                                {
-                                                    init =
-                                                        visitor
+                                                visitor
+                                                    {
+                                                        lambda =
+                                                            path : value :
+                                                                writeShellApplication
+                                                                    {
+                                                                        name = if builtins.length path == 2 then builtins.elemAt path 1 else "resolve" ;
+                                                                        runScript =
+                                                                            ''
+                                                                                bash -c '
+                                                                                    if [[ -t 0 ]]
+                                                                                    then
+                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                    else
+                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                    fi
+                                                                                ' "$0" "$@"
+                                                                            '' ;
+                                                                        targetPkgs =
+                                                                            pkgs :
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "init" ;
+                                                                                                runtimeInputs = [ ] ;
+                                                                                                text =
+                                                                                                    let
+                                                                                                        t = tools pkgs ;
+                                                                                                        v =
+                                                                                                            let
+                                                                                                                arguments =
+                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
+                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                in value arguments ;
+                                                                                                        in ''echo ${ v } "$@"'' ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
+                                                                    } ;
+                                                        list = path : list : list ;
+                                                        set = path : set : set ;
+                                                    }
+                                                    {
+                                                        init =
                                                             {
-                                                                lambda =
-                                                                    path : value :
-                                                                        let
-                                                                            user-environment =
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        name = "init" ;
-                                                                                        runScript = "init" ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                [
-                                                                                                    (
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "init" ;
-                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                                text =
-                                                                                                                    let
-                                                                                                                        t = tools pkgs ;
-                                                                                                                        in "echo '${ value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } }'" ;
-                                                                                                            }
-                                                                                                    )
-                                                                                                ] ;
-                                                                                    } ;
-                                                                                in ''"$( ${ user-environment }/bin/init )" || failure 5f7d7000'' ;
-                                                                null = path : value : null ;
-                                                            }
-                                                            init ;
-                                                    release =
-                                                        visitor
+                                                                application = init ;
+                                                                resolutions = init-resolutions ;
+                                                            } ;
+                                                        release =
                                                             {
-                                                                lambda =
-                                                                    path : value :
-                                                                        let
-                                                                            user-environment =
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        name = "release" ;
-                                                                                        runScript = "release" ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                [
-                                                                                                    (
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "release" ;
-                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                                text =
-                                                                                                                    let
-                                                                                                                        t = tools pkgs ;
-                                                                                                                        in "echo '${ value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } }'" ;
-                                                                                                            }
-                                                                                                    )
-                                                                                                ] ;
-                                                                                    } ;
-                                                                                in ''"$( ${ user-environment }/bin/release )" || failure 5f7d7000'' ;
-                                                                null = path : value : null ;
-                                                            }
-                                                            release ;
-                                                } ;
+                                                                application = release ;
+                                                                resolutions = release-resolutions ;
+                                                            } ;
+                                                    } ;
                                             tools =
                                                 pkgs :
                                                     let
@@ -578,9 +483,7 @@
                                                                 ARGUMENTS=( "$@" )
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
-                                                                INIT_SCRIPT=${ builtins.toString scripts.init }
-                                                                RELEASE_SCRIPT=${ builtins.toString scripts.release }
-                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                 export HASH
                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                 export HAS_STANDARD_INPUT
@@ -608,8 +511,6 @@
                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                         --arg HASH "$HASH" \
                                                                         --arg INDEX "$INDEX" \
-                                                                        --arg INIT_SCRIPT "$INIT_SCRIPT" \
-                                                                        --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                         --arg PROVENANCE "$PROVENANCE" \
                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
@@ -619,8 +520,6 @@
                                                                             "arguments" : $ARGUMENTS ,
                                                                             "hash" : $HASH ,
                                                                             "index" : $INDEX ,
-                                                                            "init-script" : $INIT_SCRIPT ,
-                                                                            "release-script" : $RELEASE_SCRIPT ,
                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                             "provenance" : $PROVENANCE ,
                                                                             "standard-input" : $STANDARD_INPUT ,
@@ -689,8 +588,6 @@
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
-                                                                            --arg INIT_SCRIPT "$INIT_SCRIPT" \
-                                                                            --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
@@ -704,8 +601,6 @@
                                                                                 "arguments" : $ARGUMENTS ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
-                                                                                "init-script" : $INIT_SCRIPT ,
-                                                                                "release-script" : $RELEASE_SCRIPT ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "provenance" : $PROVENANCE ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
@@ -726,8 +621,6 @@
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
-                                                                            --arg INIT_SCRIPT "$INIT_SCRIPT" \
-                                                                            --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
@@ -740,7 +633,6 @@
                                                                                 "arguments" : $ARGUMENTS ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
-                                                                                "init-script" : $INIT_SCRIPT ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "provenance" : $PROVENANCE ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
