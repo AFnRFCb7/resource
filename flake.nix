@@ -594,7 +594,6 @@
                                                                     export STANDARD_ERROR
                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
                                                                     export STANDARD_OUTPUT
-                                                                    TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
                                                                     # shellcheck disable=SC2129
                                                                     echo 7e1212fd b2fcc59a "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" >> /build/DEBUG
                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
