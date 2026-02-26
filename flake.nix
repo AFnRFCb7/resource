@@ -592,7 +592,7 @@
                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
                                                                     export STANDARD_OUTPUT
                                                                     TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
-                                                                    echo 7e1212fd b2fcc59a >> /build/DEBUG
+                                                                    echo 7e1212fd b2fcc59a "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGET_HASH_EXPECTED=$TARGET_HASH_EXPECTED" "TARGET_HASH_OBSERVED=$TARGET_HASH_OBSERVED" >> /build/DEBUG
                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
                                                                     then
                                                                         echo 7e1212fd c345acbc >> /build/DEBUG
