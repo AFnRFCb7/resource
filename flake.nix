@@ -516,6 +516,7 @@
                                                                     PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
                                                                     ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                 fi
+                                                                export ULTIMATE_PID
                                                                 # originator-pid-variable ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                 mkdir --parents ${ resources-directory }
                                                                 ARGUMENTS=( "$@" )
