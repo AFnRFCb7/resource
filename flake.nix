@@ -565,7 +565,6 @@
                                                                     jq \
                                                                         --null-input \
                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                        --argjson DESCRIPTION '${ builtins.toJSON ( description secondary ) }' \
                                                                         --arg HASH "$HASH" \
                                                                         --arg INDEX "$INDEX" \
                                                                         --arg INIT_SCRIPT "$INIT_SCRIPT" \
@@ -650,7 +649,6 @@
                                                                         jq \
                                                                             --null-input \
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                            --argjson DESCRIPTION '${ builtins.toJSON ( description secondary ) }' \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
@@ -690,7 +688,6 @@
                                                                         jq \
                                                                             --null-input \
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                            --argjson DESCRIPTION '${ builtins.toJSON ( description secondary ) } \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg INIT_SCRIPT "$INIT_SCRIPT" \
