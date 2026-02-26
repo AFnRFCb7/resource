@@ -471,9 +471,10 @@
                                                                                 ''
                                                                                     DEPTH="$1"
                                                                                     PID="$2"
-                                                                                    mkdir --parents "${ resources-directory }/$INDEX/originator-pids"
-                                                                                    touch "${ resources-directory }/$INDEX/originator-pids/$PID"
+                                                                                    # mkdir --parents "${ resources-directory }/$INDEX/originator-pids"
+                                                                                    # touch "${ resources-directory }/$INDEX/originator-pids/$PID"
                                                                                     export DEPTH
+                                                                                    export PID
                                                                                     # if [[ "$PID" -lte 1 ]]
                                                                                     # then
                                                                                     #     failure 9003521f "PID=$PID"
