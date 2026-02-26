@@ -77,6 +77,11 @@
                                                             path : value :
                                                                 buildFHSUserEnv
                                                                     {
+                                                                        extraBwrapArgs =
+                                                                            [
+                                                                                "--bind $MOUNT /mount"
+                                                                                "--tmpfs /scratch"
+                                                                            ] ;
                                                                         name = if builtins.length path == 2 then builtins.elemAt path 0 else "resolve" ;
                                                                         runScript =
                                                                             ''
@@ -95,11 +100,6 @@
                                                                                     (
                                                                                         pkgs.writeShellApplication
                                                                                             {
-                                                                                                extraBwrapArgs =
-                                                                                                    [
-                                                                                                        "--bind $MOUNT /mount"
-                                                                                                        "--tmpfs /scratch"
-                                                                                                    ] ;
                                                                                                 name = "init" ;
                                                                                                 runtimeInputs = [ ] ;
                                                                                                 text =
