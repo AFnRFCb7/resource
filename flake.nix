@@ -469,6 +469,8 @@
                                                             ] ;
                                                         text =
                                                             ''
+                                                                export APPLICATIONS='${ builtins.toJSON applications }'
+                                                                export SCRIPTS='${ builtins.toJSON scripts }'
                                                                 echo 7e1212fd 6edde53f >> /build/DEBUG
                                                                 export SETUP_="$0"
                                                                 echo 7e1212fd e0218e47 >> /build/DEBUG
@@ -493,7 +495,7 @@
                                                                 echo 7e1212fd 19a7fadd >> /build/DEBUG
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
-                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$APPLICATIONS" "$SCRIPTS" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                 export HASH
                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                 export HAS_STANDARD_INPUT
