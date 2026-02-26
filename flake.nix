@@ -123,12 +123,12 @@
                                                         init =
                                                             {
                                                                 application = init ;
-                                                                resolutions-1 = init-resolutions ;
+                                                                resolutions = init-resolutions ;
                                                             } ;
                                                         release =
                                                             {
                                                                 application = release ;
-                                                                resolutions-2 = release-resolutions ;
+                                                                resolutions = release-resolutions ;
                                                             } ;
                                                     } ;
                                             scripts =
@@ -179,12 +179,12 @@
                                                         init =
                                                             {
                                                                 application = init ;
-                                                                resolutions-3 = init-resolutions ;
+                                                                resolutions = init-resolutions ;
                                                             } ;
                                                         release =
                                                             {
                                                                 application = release ;
-                                                                resolutions-4 = release-resolutions ;
+                                                                resolutions = release-resolutions ;
                                                             } ;
                                                     } ;
                                             tools =
@@ -725,10 +725,10 @@
                                             expected-resource ? "" ,
                                             expected-status ? 0 ,
                                             init ? null ,
-                                            init-resolutions ? null ,
+                                            init-resolutions ? [ ] ,
                                             jd-diff-patch ,
                                             release ? null ,
-                                            release-resolutions ? null ,
+                                            release-resolutions ? [ ] ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
                                             resources-directory-fixture ? null ,
