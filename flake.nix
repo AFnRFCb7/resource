@@ -600,7 +600,7 @@
                                                                     # shellcheck disable=SC2129
                                                                     echo 7e1212fd b2fcc59a "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGET_HASH_EXPECTED=$TARGET_HASH_EXPECTED" "TARGET_HASH_OBSERVED=$TARGET_HASH_OBSERVED" >> /build/DEBUG
                                                                     # shellcheck disable=SC2016,SC2129
-                                                                    echo '$( builtins.toJSON ( builtins.sort builtins.lessThan targets ) )' >> /build/DEBUG
+                                                                    echo '${ builtins.toJSON ( builtins.sort builtins.lessThan targets ) }' >> /build/DEBUG
                                                                     echo >> /build/DEBUG
                                                                     find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" >> /build/DEBUG
                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
