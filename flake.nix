@@ -464,6 +464,7 @@
                                                             ] ;
                                                         text =
                                                             ''
+                                                                echo 7e1212fd 14eeb31d >> /tmp/DEBUG
                                                                 export SETUP="$0"
                                                                 if [[ -t 0 ]]
                                                                 then
@@ -794,6 +795,7 @@
                                                                                         else
                                                                                             OBSERVED_STATUS="$?"
                                                                                         fi
+                                                                                        cat /build/DEBUG
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
