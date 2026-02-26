@@ -472,7 +472,8 @@
                                                                                     DEPTH="$1"
                                                                                     PID="$2"
                                                                                     mkdir --parents "${ resources-directory }/$INDEX/originator-pids"
-                                                                                    touch "${ resources-directory }/$INDEX/originator-pids/$PID"
+                                                                                    # touch "${ resources-directory }/$INDEX/originator-pids/$PID"
+                                                                                    export PID
                                                                                     export DEPTH
                                                                                     # if [[ "$DEPTH" -gt 0 ]] && [[ "$PID" -gt 1 ]]
                                                                                     # then
