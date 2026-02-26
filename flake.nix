@@ -473,20 +473,14 @@
                                                                                     DEPTH="$2"
                                                                                     PID="$3"
                                                                                     mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
-                                                                                    export INDEX
-                                                                                    export DEPTH
-                                                                                    export PID
                                                                                     touch "${ resources-directory }/originator-pids/$INDEX/$PID"
-                                                                                    echo "PID=$PID" > /build/DEBUG
-                                                                                    # if [[ "$PID" -lt 1 ]] || [[ "$PID" -eq 1 ]]
-                                                                                    # then
-                                                                                    #     failure 9003521f "PID=$PID"
-                                                                                    # elif [[ "$DEPTH" -gt 0 ]]
-                                                                                    # then
-                                                                                    #     NEXT_DEPTH=$(( DEPTH - 1 ))
-                                                                                    #     NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
-                                                                                    #     "$0" "$INDEX" "$NEXT_DEPTH" "$NEXT_PID"
-                                                                                    # fi
+                                                                                    chmod 0400 "${ resources-directory }/originator-pids/$INDEX/$PID"
+                                                                                    if [[ "$DEPTH" -gt 0 ]]
+                                                                                    then
+                                                                                        NEXT_DEPTH=$(( DEPTH - 1 ))
+                                                                                        NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
+                                                                                        "$0" "$INDEX" "$NEXT_DEPTH" "$NEXT_PID"
+                                                                                    fi
                                                                                 '' ;
                                                                         }
                                                                 )
