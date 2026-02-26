@@ -471,7 +471,7 @@
                                                                                 ''
                                                                                     DEPTH="$1"
                                                                                     PID="$2"
-                                                                                    echo mkdir --parents "${ resources-directory }/$INDEX/originator-pids" /build/DEBUG
+                                                                                    echo mkdir --parents "${ resources-directory }/$INDEX/originator-pids" > /build/DEBUG
                                                                                     # touch "${ resources-directory }/$INDEX/originator-pids/$PID"
                                                                                     export DEPTH
                                                                                     export PID
@@ -859,7 +859,6 @@
                                                                                             failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
                                                                                         fi
                                                                                         sleep 10s
-                                                                                        cat /build/DEBUG
                                                                                         cat /build/payload > "$OUT/payload.observed.json"
                                                                                         failure 9ef03235 "$OUT/payload.observed.json"
                                                                                         # if ! jd ${ expected } "$OUT/payload.observed.json"
