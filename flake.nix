@@ -614,7 +614,6 @@
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
                                                                             --arg STATUS "$STATUS" \
-                                                                            --argjson TARGETS "$TARGETS" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
@@ -634,6 +633,8 @@
                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
                                                                     else
+                                                                        TARGETS_EXPECTED='${ builtins.builtins.toJSON ( builtins.sort builtins.lessThan targets ) }'
+                                                                        TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure f9da34c2
                                                                         # shellcheck disable=SC2016
                                                                         jq \
                                                                             --null-input \
@@ -646,7 +647,8 @@
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
                                                                             --arg STATUS "$STATUS" \
-                                                                            --argjson TARGETS "$TARGETS" \
+                                                                            --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
+                                                                            --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
@@ -658,7 +660,11 @@
                                                                                 "standard-input" : $STANDARD_INPUT ,
                                                                                 "standard-output" : $STANDARD_OUTPUT ,
                                                                                 "status" : $STATUS ,
-                                                                                "targets" : $TARGETS ,
+                                                                                "targets" :
+                                                                                    {
+                                                                                        "expected" : $TARGETS_EXPECTED ,
+                                                                                        "observed" : $TARGETS_OBSERVED
+                                                                                    } ,
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "invalid-init"
                                                                             }' | publish
