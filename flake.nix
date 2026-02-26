@@ -883,11 +883,12 @@
                                                                                             redis-cli PUBLISH ${ channel } '{"test" : true}'
                                                                                         done
                                                                                         cat /build/payload > "$OUT/payload.observed.json"
-                                                                                        if ! jd ${ expected } "$OUT/payload.observed.json"
-                                                                                        then
-                                                                                            jq "." /build/payload > "$OUT/candidate.json"
-                                                                                            failure 2bc4ce7b "EXPECTED=$OUT/candidate.json"
-                                                                                        fi
+                                                                                        failure 9ef03235 "$OUT/payload.observed.json"
+                                                                                        # if ! jd ${ expected } "$OUT/payload.observed.json"
+                                                                                        # then
+                                                                                        #     jq "." /build/payload > "$OUT/candidate.json"
+                                                                                        #     failure 2bc4ce7b "EXPECTED=$OUT/candidate.json"
+                                                                                        # fi
                                                                                     '' ;
                                                                     }
                                                             )
