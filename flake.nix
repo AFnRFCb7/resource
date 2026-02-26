@@ -551,8 +551,7 @@
                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                     then
                                                                         # shellcheck disable=SC2068
-                                                                        # if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                        if true
+                                                                        if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
                                                                             echo 7e1212fd aa03ede2 >> /tmp/DEBUG
@@ -563,8 +562,7 @@
                                                                         echo 7e1212fd 082b7b62 >> /tmp/DEBUG
                                                                     else
                                                                         # shellcheck disable=SC2068
-                                                                        # if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                        if true
+                                                                        if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
                                                                         else
