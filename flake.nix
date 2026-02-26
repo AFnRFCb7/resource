@@ -466,6 +466,7 @@
                                                             ''
                                                                 echo 7e1212fd 14eeb31d >> /build/DEBUG
                                                                 export SETUP="$0"
+                                                                echo 7e1212fd e0218e47 >> /tmp/DEBUG
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
@@ -480,8 +481,11 @@
                                                                     PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
                                                                     ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                 fi
+                                                                echo 7e1212fd c8fb57b6 >> /tmp/DEBUG
                                                                 mkdir --parents ${ resources-directory }
+                                                                echo 7e1212fd 2c6cda59 >> /tmp/DEBUG
                                                                 ARGUMENTS=( "$@" )
+                                                                echo 7e1212fd 19a7fadd >> /tmp/DEBUG
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
