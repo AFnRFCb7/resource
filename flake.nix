@@ -464,6 +464,7 @@
                                                             ] ;
                                                         text =
                                                             ''
+                                                                echo 7e1212fd 6edde53f >> /build/DEBUG
                                                                 echo 7e1212fd 14eeb31d "SETUP=$SETUP" >> /build/DEBUG
                                                                 export SETUP="$0"
                                                                 echo 7e1212fd e0218e47 >> /build/DEBUG
