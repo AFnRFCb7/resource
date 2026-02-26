@@ -466,7 +466,7 @@
                                                             ''
                                                                 echo 7e1212fd 14eeb31d >> /build/DEBUG
                                                                 export SETUP="$0"
-                                                                echo 7e1212fd e0218e47 >> /tmp/DEBUG
+                                                                echo 7e1212fd e0218e47 >> /build/DEBUG
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
@@ -481,11 +481,11 @@
                                                                     PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
                                                                     ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                 fi
-                                                                echo 7e1212fd c8fb57b6 >> /tmp/DEBUG
+                                                                echo 7e1212fd c8fb57b6 >> /build/DEBUG
                                                                 mkdir --parents ${ resources-directory }
-                                                                echo 7e1212fd 2c6cda59 >> /tmp/DEBUG
+                                                                echo 7e1212fd 2c6cda59 >> /build/DEBUG
                                                                 ARGUMENTS=( "$@" )
-                                                                echo 7e1212fd 19a7fadd >> /tmp/DEBUG
+                                                                echo 7e1212fd 19a7fadd >> /build/DEBUG
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
@@ -497,6 +497,7 @@
                                                                 export TRANSIENT
                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                 flock -s 210
+                                                                echo 7e1212fd c7ecf0c0 >> /build/DEBUG
                                                                 if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                 then
                                                                     MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
@@ -534,8 +535,11 @@
                                                                         }' | publish
                                                                     echo -n "$MOUNT"
                                                                 else
+                                                                    echo 7e1212fd bdd9b4b5 >> /build/DEBUG
                                                                     INDEX="$( sequential )" || failure 65a31c86
+                                                                    echo 7e1212fd 3f5f6562 >> /build/DEBUG
                                                                     export INDEX
+                                                                    echo 7e1212fd 36acac2e >> /build/DEBUG
                                                                     originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                     export PROVENANCE=new
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
@@ -559,12 +563,12 @@
                                                                         if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd aa03ede2 >> /tmp/DEBUG
+                                                                            echo 7e1212fd aa03ede2 >> /build/DEBUG
                                                                         else
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd ffa8718d >> /tmp/DEBUG
+                                                                            echo 7e1212fd ffa8718d >> /build/DEBUG
                                                                         fi
-                                                                        echo 7e1212fd 082b7b62 >> /tmp/DEBUG
+                                                                        echo 7e1212fd 082b7b62 >> /build/DEBUG
                                                                     else
                                                                         # shellcheck disable=SC2068
                                                                         if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
