@@ -123,12 +123,12 @@
                                                         init =
                                                             {
                                                                 application = init ;
-                                                                resolutions = init-resolutions ;
+                                                                resolutions-1 = init-resolutions ;
                                                             } ;
                                                         release =
                                                             {
                                                                 application = release ;
-                                                                resolutions = release-resolutions ;
+                                                                resolutions-2 = release-resolutions ;
                                                             } ;
                                                     } ;
                                             scripts =
@@ -179,12 +179,12 @@
                                                         init =
                                                             {
                                                                 application = init ;
-                                                                resolutions = init-resolutions ;
+                                                                resolutions-3 = init-resolutions ;
                                                             } ;
                                                         release =
                                                             {
                                                                 application = release ;
-                                                                resolutions = release-resolutions ;
+                                                                resolutions-4 = release-resolutions ;
                                                             } ;
                                                     } ;
                                             tools =
