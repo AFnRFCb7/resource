@@ -604,7 +604,7 @@
                                                                     echo '${ builtins.toJSON ( builtins.sort builtins.lessThan targets ) }' >> /build/DEBUG
                                                                     echo >> /build/DEBUG
                                                                     find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" >> /build/DEBUG
-                                                                    if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGET_OBSERVED" ]]
+                                                                    if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                     then
                                                                         echo 7e1212fd c345acbc >> /build/DEBUG
                                                                         # shellcheck disable=SC2016
