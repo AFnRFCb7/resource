@@ -95,6 +95,11 @@
                                                                                     (
                                                                                         pkgs.writeShellApplication
                                                                                             {
+                                                                                                extraBwrapArgs =
+                                                                                                    [
+                                                                                                        "--bind $MOUNT /mount"
+                                                                                                        "--tmpfs /scratch"
+                                                                                                    ] ;
                                                                                                 name = "init" ;
                                                                                                 runtimeInputs = [ ] ;
                                                                                                 text =
