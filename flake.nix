@@ -508,7 +508,7 @@
                                                                                 ''
                                                                                     # shellcheck disable=SC2089,SC2016
                                                                                     DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
-                                                                                    JSON="$( cat | jq --compact-output '. + { "description" = $DESCRIPTION } ' )" || failure 64cec474
+                                                                                    JSON="$( cat | jq --compact-output ". + { \"description\" : $DESCRIPTION } " )" || failure 64cec474
                                                                                     redis-cli PUBLISH "${channel}" "$JSON" > /dev/null || true
                                                                                 '' ;
                                                                         }
