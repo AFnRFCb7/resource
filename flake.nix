@@ -109,7 +109,7 @@
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         t = tools pkgs ;
-                                                                                                                        v = value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
+                                                                                                                        v = value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
                                                                                                                         in ''${ v } "$@"'' ;
                                                                                                             }
                                                                                                     )
@@ -180,7 +180,7 @@
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         t = tools pkgs ;
-                                                                                                                        in "echo '${ value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } }'" ;
+                                                                                                                        in "echo '${ value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } }'" ;
                                                                                                             }
                                                                                                     )
                                                                                                 ] ;
