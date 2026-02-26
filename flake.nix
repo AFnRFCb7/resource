@@ -75,7 +75,7 @@
                                                     {
                                                         lambda =
                                                             path : value :
-                                                                writeShellApplication
+                                                                buildFHSUserEnv
                                                                     {
                                                                         name = if builtins.length path == 2 then builtins.elemAt path 1 else "resolve" ;
                                                                         runScript =
@@ -131,7 +131,7 @@
                                                     {
                                                         lambda =
                                                             path : value :
-                                                                writeShellApplication
+                                                                buildFHSUserEnv
                                                                     {
                                                                         name = if builtins.length path == 2 then builtins.elemAt path 1 else "resolve" ;
                                                                         runScript =
