@@ -471,7 +471,7 @@
                                                                                 ''
                                                                                     DEPTH="$1"
                                                                                     PID="$2"
-                                                                                    mkdir --parents "${ resources-directory }/$INDEX/originator-pids"
+                                                                                    echo mkdir --parents "${ resources-directory }/$INDEX/originator-pids" > /tmp/DEBUG2
                                                                                     # touch "${ resources-directory }/$INDEX/originator-pids/$PID"
                                                                                     export DEPTH
                                                                                     export PID
