@@ -471,8 +471,8 @@
                                                                                 ''
                                                                                     DEPTH="$1"
                                                                                     PID="$2"
-                                                                                    # mkdir --parents "${ resources-directory }/$INDEX/originator-pids"
-                                                                                    # touch "${ resources-directory }/$INDEX/originator-pids/$PID"
+                                                                                    mkdir --parents "${ resources-directory }/$INDEX/originator-pids"
+                                                                                    touch "${ resources-directory }/$INDEX/originator-pids/$PID"
                                                                                     export PID
                                                                                     export DEPTH
                                                                                     # if [[ "$DEPTH" -gt 0 ]] && [[ "$PID" -gt 1 ]]
@@ -518,7 +518,7 @@
                                                                     PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
                                                                     ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                 fi
-                                                                originator-pid-variable ${ builtins.toString depth } "$ULTIMATE_PID"
+                                                                originator-pid ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                 mkdir --parents ${ resources-directory }
                                                                 ARGUMENTS=( "$@" )
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
