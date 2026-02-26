@@ -469,21 +469,20 @@
                                                                             runtimeInputs = [ coreutils ps failure ] ;
                                                                             text =
                                                                                 ''
-                                                                                    DEPTH="$1"
-                                                                                    PID="$2"
-                                                                                    # echo mkdir --parents "${ resources-directory }/$INDEX/originator-pids"
-                                                                                    # touch "${ resources-directory }/$INDEX/originator-pids/$PID"
-                                                                                    export DEPTH
-                                                                                    export PID
-                                                                                    # if [[ "$PID" -lte 1 ]]
-                                                                                    # then
-                                                                                    #     failure 9003521f "PID=$PID"
-                                                                                    # elif [[ "$DEPTH" -gt 0 ]]
-                                                                                    # then
-                                                                                    #     NEXT_DEPTH=$(( DEPTH - 1 ))
-                                                                                    #     NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
-                                                                                    #     "$0" "$NEXT_DEPTH" "$NEXT_PID"
-                                                                                    # fi
+                                                                                    INDEX="$1"
+                                                                                    DEPTH="$2"
+                                                                                    PID="$3"
+                                                                                    echo mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
+                                                                                    touch "${ resources-directory }/originator-pids/$PID/$INDEX"
+                                                                                    if [[ "$PID" -lte 1 ]]
+                                                                                    then
+                                                                                        failure 9003521f "PID=$PID"
+                                                                                    elif [[ "$DEPTH" -gt 0 ]]
+                                                                                    then
+                                                                                        NEXT_DEPTH=$(( DEPTH - 1 ))
+                                                                                        NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
+                                                                                        "$0" "$INDEX" "$NEXT_DEPTH" "$NEXT_PID"
+                                                                                    fi
                                                                                 '' ;
                                                                         }
                                                                 )
