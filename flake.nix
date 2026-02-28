@@ -1,4 +1,4 @@
-# f9876ab7
+# 1ff73b56
 {
 	inputs = { } ;
 	outputs =
@@ -12,24 +12,28 @@
                         failure ,
                         findutils ,
                         flock ,
+                        gnutar ,
+                        inotify-tools ,
                         jq ,
                         makeWrapper ,
                         mkDerivation ,
                         nix ,
-                        originator-pid-variable ,
                         ps ,
                         redis ,
                         resources ,
                         resources-directory ,
                         root-directory ,
                         sequential-start ,
+                        util-linux ,
                         visitor ,
                         writeShellApplication ,
-                        yq-go
+                        yq-go ,
+                        zstd
                     } @primary :
                         let
                             description =
                                 {
+                                    depth ,
                                     init ,
                                     init-resolutions ,
                                     release ,
@@ -56,6 +60,7 @@
                                                 { primary = primary ; secondary = secondary ; } ;
                                 implementation =
                                     {
+                                        depth ,
                                         init ,
                                         init-resolutions ,
                                         release ,
@@ -66,165 +71,124 @@
                                     } @secondary :
                                         let
                                             applications =
-                                                {
-                                                    init =
-                                                        visitor
+                                                visitor
+                                                    {
+                                                        lambda =
+                                                            path : value :
+                                                                buildFHSUserEnv
+                                                                    {
+                                                                        extraBwrapArgs =
+                                                                            [
+                                                                                "--bind $MOUNT /mount"
+                                                                                "--tmpfs /scratch"
+                                                                            ] ;
+                                                                        name = if builtins.length path == 2 then builtins.elemAt path 0 else "resolve" ;
+                                                                        runScript =
+                                                                            ''
+                                                                                bash -c '
+                                                                                    if [[ -t 0 ]]
+                                                                                    then
+                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                    else
+                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                    fi
+                                                                                ' "$0" "$@"
+                                                                            '' ;
+                                                                        targetPkgs =
+                                                                            pkgs :
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "init" ;
+                                                                                                runtimeInputs = [ ] ;
+                                                                                                text =
+                                                                                                    let
+                                                                                                        t = tools pkgs ;
+                                                                                                        v =
+                                                                                                            let
+                                                                                                                arguments =
+                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
+                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                in value arguments ;
+                                                                                                        in ''${ v } "$@"'' ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
+                                                                    } ;
+                                                        list = path : list : list ;
+                                                        null = path : value : true ;
+                                                        set = path : set : set ;
+                                                    }
+                                                    {
+                                                        init =
                                                             {
-                                                                lambda =
-                                                                    path : value :
-                                                                        let
-                                                                            user-environment =
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        extraBwrapArgs =
-                                                                                            [
-                                                                                                "--bind $MOUNT /mount"
-                                                                                                "--tmpfs /scratch"
-                                                                                            ] ;
-                                                                                        name = "init-b81c50da" ;
-                                                                                        runScript =
-                                                                                            ''
-                                                                                                bash -c '
-                                                                                                    if [[ -t 0 ]]
-                                                                                                    then
-                                                                                                        init-3c104e17 "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                                    else
-                                                                                                        init-3c104e17 "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                                    fi
-                                                                                                ' "$0" "$@"
-                                                                                            '' ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                [
-                                                                                                    (
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "init-3c104e17" ;
-                                                                                                                runtimeInputs = [ ] ;
-                                                                                                                text =
-                                                                                                                    let
-                                                                                                                        t = tools pkgs ;
-                                                                                                                        v = value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
-                                                                                                                        in ''${ v } "$@"'' ;
-                                                                                                            }
-                                                                                                    )
-                                                                                                ] ;
-                                                                                    } ;
-                                                                            in "${ user-environment }/bin/init-b81c50da" ;
-                                                            }
-                                                            init ;
-                                                    init1 =
-                                                        visitor
+                                                                application = init ;
+                                                                resolutions = init-resolutions ;
+                                                            } ;
+                                                        release =
                                                             {
-                                                                lambda =
-                                                                    path : value :
-                                                                        let
-                                                                            user-environment =
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        extraBwrapArgs =
-                                                                                            [
-                                                                                                "--bind $MOUNT /mount"
-                                                                                                "--tmpfs /scratch"
-                                                                                            ] ;
-                                                                                        name = "init" ;
-                                                                                        runScript =
-                                                                                            let
-                                                                                                application =
-                                                                                                    writeShellApplication
-                                                                                                        {
-                                                                                                            name = "runScript" ;
-                                                                                                            text =
-                                                                                                                ''
-                                                                                                                    exec init "$@"
-                                                                                                                '' ;
-                                                                                                        } ;
-                                                                                                    in ''${ application }/bin/runScript "$@"'' ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                let
-                                                                                                    t = tools pkgs ;
-                                                                                                    in
-                                                                                                        [
-                                                                                                            (
-                                                                                                                writeShellApplication
-                                                                                                                    {
-                                                                                                                        name = "init" ;
-                                                                                                                        text = value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } ;
-                                                                                                                    }
-                                                                                                            )
-                                                                                                        ] ;
-                                                                                    } ;
-                                                                            in "${ user-environment }/bin/init" ;
-                                                                null = path : value : "true" ;
-                                                            }
-                                                            init ;
-                                                } ;
+                                                                application = release ;
+                                                                resolutions = release-resolutions ;
+                                                            } ;
+                                                    } ;
                                             scripts =
-                                                {
-                                                    init =
-                                                        visitor
+                                                visitor
+                                                    {
+                                                        lambda =
+                                                            path : value :
+                                                                buildFHSUserEnv
+                                                                    {
+                                                                        name = if builtins.length path == 2 then builtins.elemAt path 1 else "resolve" ;
+                                                                        runScript =
+                                                                            ''
+                                                                                bash -c '
+                                                                                    if [[ -t 0 ]]
+                                                                                    then
+                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                    else
+                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                    fi
+                                                                                ' "$0" "$@"
+                                                                            '' ;
+                                                                        targetPkgs =
+                                                                            pkgs :
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "init" ;
+                                                                                                runtimeInputs = [ ] ;
+                                                                                                text =
+                                                                                                    let
+                                                                                                        t = tools pkgs ;
+                                                                                                        v =
+                                                                                                            let
+                                                                                                                arguments =
+                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
+                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                in value arguments ;
+                                                                                                        in ''echo ${ v } "$@"'' ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
+                                                                    } ;
+                                                        list = path : list : list ;
+                                                        null = path : value : null ;
+                                                        set = path : set : set ;
+                                                    }
+                                                    {
+                                                        init =
                                                             {
-                                                                lambda =
-                                                                    path : value :
-                                                                        let
-                                                                            user-environment =
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        name = "init" ;
-                                                                                        runScript = "init" ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                [
-                                                                                                    (
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "init" ;
-                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                                text =
-                                                                                                                    let
-                                                                                                                        t = tools pkgs ;
-                                                                                                                        in "echo '${ value { failure = t.failure ; pid = t.pid ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; } }'" ;
-                                                                                                            }
-                                                                                                    )
-                                                                                                ] ;
-                                                                                    } ;
-                                                                                in ''"$( ${ user-environment }/bin/init )" || failure 5f7d7000'' ;
-                                                                null = path : value : null ;
-                                                            }
-                                                            init ;
-                                                    release =
-                                                        visitor
+                                                                application = init ;
+                                                                resolutions = init-resolutions ;
+                                                            } ;
+                                                        release =
                                                             {
-                                                                lambda =
-                                                                    path : value :
-                                                                        let
-                                                                            user-environment =
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        name = "release" ;
-                                                                                        runScript = "release" ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                [
-                                                                                                    (
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "release" ;
-                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                                text =
-                                                                                                                    let
-                                                                                                                        t = tools pkgs ;
-                                                                                                                        in "echo '${ value { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } }'" ;
-                                                                                                            }
-                                                                                                    )
-                                                                                                ] ;
-                                                                                    } ;
-                                                                                in ''"$( ${ user-environment }/bin/release )" || failure 5f7d7000'' ;
-                                                                null = path : value : null ;
-                                                            }
-                                                            release ;
-                                                } ;
+                                                                application = release ;
+                                                                resolutions = release-resolutions ;
+                                                            } ;
+                                                    } ;
                                             tools =
                                                 pkgs :
                                                     let
@@ -416,42 +380,6 @@
                                                         in
                                                             {
                                                                 failure = failure ;
-                                                                pid =
-                                                                    pkgs.writeShellApplication
-                                                                        {
-                                                                            name = "pid" ;
-                                                                            runtimeInputs = [ pkgs.procps wrap failure ] ;
-                                                                            text =
-                                                                                let
-                                                                                    stall =
-                                                                                        let
-                                                                                            application =
-                                                                                                pkgs.writeShellApplication
-                                                                                                    {
-                                                                                                        name = "stall" ;
-                                                                                                        runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                        text =
-                                                                                                            ''
-                                                                                                                echo "STALLING FOR PID=$PID"
-                                                                                                                tail --follow /dev/null --pid "$PID"
-                                                                                                            '' ;
-                                                                                                    } ;
-                                                                                            in "${ application }/bin/stall" ;
-                                                                                    in
-                                                                                        ''
-                                                                                            STALL_INDEX="$1"
-                                                                                            STALL_PATH="$2"
-                                                                                            INDEX=0
-                                                                                            PID="${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }"
-                                                                                            while [[ "$INDEX" -lt "$STALL_INDEX" ]] && [[ "$PID" -ne 1 ]]
-                                                                                            do
-                                                                                                PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]')" || failure caade9f0
-                                                                                                INDEX=$(( INDEX + 1 ))
-                                                                                                echo "INDEX=$INDEX PID=$PID STALL_INDEX=$STALL_INDEX STALL_PATH=$STALL_PATH"
-                                                                                            done
-                                                                                            wrap stall "$STALL_PATH" 0500 --inherit-plain PID --literal-plain PATH
-                                                                                        '' ;
-                                                                        } ;
                                                                 pkgs = pkgs ;
                                                                 resources = resources ;
                                                                 root =
@@ -491,68 +419,85 @@
                                                                         } ;
                                                                 wrap = wrap ;
                                                             } ;
-                                            log =
-                                                writeShellApplication
-                                                    {
-                                                        name = "log" ;
-                                                        runtimeInputs =
-                                                            [
-                                                                coreutils
-                                                                (
-                                                                    writeShellApplication
-                                                                        {
-                                                                            name = "log" ;
-                                                                            runtimeInputs = [ coreutils flock yq-go ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    exec 203> ${ resources-directory }/logs/log.lock
-                                                                                    flock 203
-                                                                                    yq eval --prettyPrint "[.]" <&0 >> ${ resources-directory }/logs/log.yaml
-                                                                                '' ;
-                                                                        }
-                                                                )
-                                                            ] ;
-                                                        text =
-                                                            ''
-                                                                nohup log <&0 > /dev/null 2>&1 &
-                                                            '' ;
-                                                    } ;
                                             setup_ =
                                                 writeShellApplication
                                                     {
                                                         name = "setup" ;
-                                                        runtimeInputs = [ coreutils findutils flock jq ps redis sequential yq-go failure log ] ;
+                                                        runtimeInputs =
+                                                            [
+                                                                coreutils
+                                                                findutils
+                                                                flock
+                                                                jq
+                                                                ps
+                                                                (
+                                                                    writeShellApplication
+                                                                        {
+                                                                            name = "originator-pid" ;
+                                                                            runtimeInputs = [ coreutils ps failure ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    INDEX="$1"
+                                                                                    DEPTH="$2"
+                                                                                    PID="$3"
+                                                                                    mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
+                                                                                    touch "${ resources-directory }/originator-pids/$INDEX/$PID"
+                                                                                    chmod 0400 "${ resources-directory }/originator-pids/$INDEX/$PID"
+                                                                                    if [[ "$DEPTH" -gt 0 ]]
+                                                                                    then
+                                                                                        NEXT_DEPTH=$(( DEPTH - 1 ))
+                                                                                        NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
+                                                                                        "$0" "$INDEX" "$NEXT_DEPTH" "$NEXT_PID"
+                                                                                    fi
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                                (
+                                                                    writeShellApplication
+                                                                        {
+                                                                            name = "publish" ;
+                                                                            runtimeInputs = [ coreutils jq redis failure ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    # shellcheck disable=SC2089,SC2016
+                                                                                    DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
+                                                                                    JSON="$( cat | jq --compact-output --argjson DESCRIPTION "$DESCRIPTION" '. + { "description" : $DESCRIPTION }' )" || failure 64cec474
+                                                                                    redis-cli PUBLISH "${channel}" "$JSON" > /dev/null || true
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                                sequential
+                                                                failure
+                                                            ] ;
                                                         text =
                                                             ''
-                                                                export SETUP="$0"
+                                                                export APPLICATIONS='${ builtins.toJSON applications }'
+                                                                export SCRIPTS='${ builtins.toJSON scripts }'
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
                                                                     STANDARD_INPUT=
-                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure 2bd52e9b
+                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 2bd52e9b
                                                                 else
                                                                     STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
                                                                     export STANDARD_INPUT_FILE
                                                                     HAS_STANDARD_INPUT=true
                                                                     cat <&0 > "$STANDARD_INPUT_FILE"
                                                                     STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
-                                                                    PENULTIMATE_PID=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PPID" | tr -d '[:space:]')'' "}" ] } || failure d79214f2
-                                                                    ${ originator-pid-variable }=${ builtins.concatStringsSep "" [ "$" "{" originator-pid-variable ":=" ''$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]')'' "}" ] } || failure e1556ee8
+                                                                    PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
+                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                 fi
                                                                 mkdir --parents ${ resources-directory }
                                                                 ARGUMENTS=( "$@" )
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
                                                                 TRANSIENT=${ transient_ }
-                                                                export ${ originator-pid-variable }
-                                                                INIT_SCRIPT=${ builtins.toString scripts.init }
-                                                                RELEASE_SCRIPT=${ builtins.toString scripts.release }
-                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$INIT_SCRIPT" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$APPLICATIONS" "$SCRIPTS" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
                                                                 export HASH
                                                                 mkdir --parents "${ resources-directory }/locks"
                                                                 export HAS_STANDARD_INPUT
                                                                 export HASH
                                                                 export STANDARD_INPUT
-                                                                export ${ originator-pid-variable }
+                                                                TARGETS_EXPECTED='${ builtins.builtins.toJSON ( builtins.sort builtins.lessThan targets ) }'
                                                                 export TRANSIENT
                                                                 exec 210> "${ resources-directory }/locks/$HASH"
                                                                 flock -s 210
@@ -562,46 +507,51 @@
                                                                     export MOUNT
                                                                     INDEX="$( basename "$MOUNT" )" || failure 50a633f1
                                                                     export INDEX
+                                                                    originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
+                                                                    mkdir --parents ${ resources-directory }/marks
+                                                                    touch "${ resources-directory }/marks/$INDEX"
                                                                     export PROVENANCE=cached
                                                                     mkdir --parents "${ root-directory }/$INDEX"
-                                                                    TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | jq -R . | jq -s . )" || failure 91fa3b37
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                     # shellcheck disable=SC2016
                                                                     jq \
                                                                         --null-input \
+                                                                        --argjson APPLICATIONS "$APPLICATIONS" \
                                                                         --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                         --arg HASH "$HASH" \
                                                                         --arg INDEX "$INDEX" \
-                                                                        --arg INIT_SCRIPT "$INIT_SCRIPT" \
-                                                                        --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                        --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                         --arg PROVENANCE "$PROVENANCE" \
+                                                                        --argjson SCRIPTS "$SCRIPTS" \
                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                        --argjson TARGETS "$TARGETS" \
+                                                                        --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                         --arg TRANSIENT "$TRANSIENT" \
                                                                         '{
+                                                                            "applications" : $APPLICATIONS ,
                                                                             "arguments" : $ARGUMENTS ,
                                                                             "hash" : $HASH ,
                                                                             "index" : $INDEX ,
-                                                                            "init-script" : $INIT_SCRIPT ,
-                                                                            "release-script" : $RELEASE_SCRIPT ,
                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                            "originator-pid" : $ORIGINATOR_PID ,
                                                                             "provenance" : $PROVENANCE ,
+                                                                            "scripts" : $SCRIPTS ,
                                                                             "standard-input" : $STANDARD_INPUT ,
                                                                             "targets" : $TARGETS ,
                                                                             "transient" : $TRANSIENT ,
                                                                             "type" : "stale"
-                                                                        }' | log > /dev/null 2>&1
+                                                                        }' | publish
                                                                     echo -n "$MOUNT"
                                                                 else
                                                                     INDEX="$( sequential )" || failure 65a31c86
                                                                     export INDEX
+                                                                    originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                     export PROVENANCE=new
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                     flock -s 211
+                                                                    mkdir --parents "${ resources-directory }/applications/$INDEX"
+                                                                    ###
+                                                                    mkdir --parents ${ resources-directory }/marks
+                                                                    touch "${ resources-directory }/marks/$INDEX"
                                                                     MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                     mkdir --parents "$MOUNT"
                                                                     export MOUNT
@@ -612,70 +562,57 @@
                                                                     cd /
                                                                     if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                     then
-                                                                        echo 7e1212fd 7555816d  >> /tmp/DEBUG
                                                                         # shellcheck disable=SC2068
-                                                                        if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd aa03ede2 >> /tmp/DEBUG
                                                                         else
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd ffa8718d >> /tmp/DEBUG
                                                                         fi
-                                                                        echo 7e1212fd 082b7b62 >> /tmp/DEBUG
                                                                     else
                                                                         # shellcheck disable=SC2068
-                                                                        echo 7e1212fd 1cd5adea ${ applications.init } "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" >> /tmp/DEBUG
-                                                                        # shellcheck disable=SC2068
-                                                                        if ${ applications.init } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd 1be6eab9 >> /tmp/DEBUG
                                                                         else
                                                                             STATUS="$?"
-                                                                            echo 7e1212fd 5beade7b >> /tmp/DEBUG
                                                                         fi
-                                                                        echo 7e1212fd 38eecd9d >> /tmp/DEBUG
                                                                     fi
                                                                     # shellcheck disable=SC2016
                                                                     export STATUS
-                                                                    TARGET_HASH_EXPECTED=${ builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.sort builtins.lessThan targets ) ) }
-                                                                    TARGET_HASH_OBSERVED="$( find "$MOUNT" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | tr --delete "\n" | sha512sum | cut --characters 1-128 )" || failure f6bff0bc
+                                                                    TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                     STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 395f8da8
                                                                     export STANDARD_ERROR
                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
                                                                     export STANDARD_OUTPUT
-                                                                    mkdir --parents "${ resources-directory }/links/$INDEX"
-                                                                    TARGETS="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq -R . | jq -s . )" || failure 9e22b9a8
-                                                                    if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGET_HASH_EXPECTED" == "$TARGET_HASH_OBSERVED" ]]
+                                                                    # shellcheck disable=SC2129
+                                                                    if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                     then
                                                                         # shellcheck disable=SC2016
                                                                         jq \
                                                                             --null-input \
+                                                                            --argjson APPLICATIONS "$APPLICATIONS" \
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
-                                                                            --arg INIT_SCRIPT "$INIT_SCRIPT" \
-                                                                            --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
+                                                                            --arg SCRIPTS "$SCRIPTS" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
                                                                             --arg STATUS "$STATUS" \
-                                                                            --argjson TARGETS "$TARGETS" \
+                                                                            --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
+                                                                                "applications" : $APPLICATIONS ,
                                                                                 "arguments" : $ARGUMENTS ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
-                                                                                "init-script" : $INIT_SCRIPT ,
-                                                                                "release-script" : $RELEASE_SCRIPT ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                "originator-pid" : $ORIGINATOR_PID ,
                                                                                 "provenance" : $PROVENANCE ,
+                                                                                "scripts" : $SCRIPTS ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
                                                                                 "standard-output" : $STANDARD_OUTPUT ,
@@ -683,9 +620,9 @@
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "valid"
-                                                                            }' | log > /dev/null 2>&1
+                                                                            }' | publish
                                                                         mkdir --parents ${ resources-directory }/canonical
-                                                                        ln --symbolic "$MOUNT" "${ resources-directory }/canonical/$HASH"
+                                                                        ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                         echo -n "$MOUNT"
                                                                     else
                                                                         # shellcheck disable=SC2016
@@ -694,34 +631,34 @@
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
-                                                                            --arg INIT_SCRIPT "$INIT_SCRIPT" \
-                                                                            --arg RELEASE_SCRIPT "$RELEASE_SCRIPT" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                            --arg ORIGINATOR_PID "${ builtins.concatStringsSep "" [ "$" originator-pid-variable ] }" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
                                                                             --arg STATUS "$STATUS" \
-                                                                            --argjson TARGETS "$TARGETS" \
+                                                                            --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
+                                                                            --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
-                                                                                "init-script" : $INIT_SCRIPT ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                "originator-pid" : $ORIGINATOR_PID ,
                                                                                 "provenance" : $PROVENANCE ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
                                                                                 "standard-output" : $STANDARD_OUTPUT ,
                                                                                 "status" : $STATUS ,
-                                                                                "targets" : $TARGETS ,
+                                                                                "targets" :
+                                                                                    {
+                                                                                        "expected" : $TARGETS_EXPECTED ,
+                                                                                        "observed" : $TARGETS_OBSERVED
+                                                                                    } ,
                                                                                 "transient" : $TRANSIENT ,
                                                                                 "type" : "invalid-init"
-                                                                            }' | log
-                                                                        failure a05ad0c3 "$STANDARD_ERROR" "$STATUS" "$ARGUMENTS_JSON" "$TARGETS"
+                                                                            }' | publish
+                                                                        failure a05ad0c3 "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                     fi
                                                                 fi
                                                             '' ;
@@ -757,22 +694,32 @@
                                                 { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
                             failure_ = failure ;
                             pre-hash =
-                                { init , init-resolutions , release , release-resolutions , seed , targets , transient } @secondary :
+                                {
+                                    depth ,
+                                    init ,
+                                    init-resolutions ,
+                                    release ,
+                                    release-resolutions ,
+                                    seed ,
+                                    targets ,
+                                    transient
+                                } @secondary :
                                     builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
                             in
                                 {
                                     check =
                                         {
                                             arguments ? [ ] ,
+                                            depth ? 0 ,
                                             diffutils ,
                                             expected ? { } ,
                                             expected-resource ? "" ,
                                             expected-status ? 0 ,
                                             init ? null ,
-                                            init-resolutions ? null ,
+                                            init-resolutions ? [ ] ,
                                             jd-diff-patch ,
                                             release ? null ,
-                                            release-resolutions ? null ,
+                                            release-resolutions ? [ ] ,
                                             resources ? null ,
                                             resources-directory ? "/build/resources" ,
                                             resources-directory-fixture ? null ,
@@ -842,8 +789,8 @@
                                                                                 resource =
                                                                                     visitor
                                                                                         {
-                                                                                            null = path : value : implementation { init = init ; init-resolutions = init-resolutions ; release = release ; release-resolutions = release-resolutions ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ; failure = 13024 ; } ;
-                                                                                            string = path : value : implementation { init = init ; init-resolutions = init-resolutions ; release = release ; release-resolutions = release-resolutions ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ; failure = 28617 ; } ;
+                                                                                            null = path : value : implementation { depth = depth ; init = init ; init-resolutions = init-resolutions ; release = release ; release-resolutions = release-resolutions ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ; failure = 13024 ; } ;
+                                                                                            string = path : value : implementation { depth = depth ; init = init ; init-resolutions = init-resolutions ; release = release ; release-resolutions = release-resolutions ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ; failure = 28617 ; } ;
                                                                                         }
                                                                                         standard-input ;
                                                                                 in
@@ -858,30 +805,24 @@
                                                                                         done
                                                                                         fixture
                                                                                         subscribe &
-                                                                                        if RESOURCE=${ resource }
+                                                                                        if OBSERVED_RESOURCE=${ resource }
                                                                                         then
-                                                                                            STATUS="$?"
+                                                                                            OBSERVED_STATUS="$?"
                                                                                         else
-                                                                                            STATUS="$?"
+                                                                                            OBSERVED_STATUS="$?"
                                                                                         fi
-                                                                                        if [[ ${ builtins.toString expected-status } != "$STATUS" ]]
+                                                                                        if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
-                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$STATUS"
+                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
-                                                                                        if [[ "${ expected-resource }" != "$RESOURCE" ]]
+                                                                                        if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
                                                                                         then
-                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$RESOURCE"
+                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
                                                                                         fi
-                                                                                        while [[ ! -f /build/payload ]]
-                                                                                        do
-                                                                                            redis-cli PUBLISH ${ channel } '{"test" : true}'
-                                                                                        done
-                                                                                        cat /build/payload > "$OUT/observed.json"
-
-                                                                                        if ! jd ${ expected } /build/payload
+                                                                                        if ! jd ${ expected } "/build/payload"
                                                                                         then
-                                                                                            jq "." /build/payload > "$OUT/candidate.json"
-                                                                                            failure 2bc4ce7b "EXPECTED=$OUT/candidate.json"
+                                                                                            jq "." "/build/payload" > "$OUT/candidate.json"
+                                                                                            failure 2bc4ce7b "CANDIDATE $OUT/candidate.json"
                                                                                         fi
                                                                                     '' ;
                                                                     }
