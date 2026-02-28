@@ -471,6 +471,7 @@
                                                             ] ;
                                                         text =
                                                             ''
+                                                                export SETUP="$0"
                                                                 export APPLICATIONS='${ builtins.toJSON applications }'
                                                                 export SCRIPTS='${ builtins.toJSON scripts }'
                                                                 if [[ -t 0 ]]
