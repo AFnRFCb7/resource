@@ -620,7 +620,7 @@
                                                                                 "status" : $STATUS ,
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
-                                                                                "type" : "valid"
+                                                                                "type" : "valid-init"
                                                                             }' | publish
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
