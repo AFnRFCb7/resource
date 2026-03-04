@@ -523,7 +523,7 @@
                                                                         --arg INDEX "$INDEX" \
                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                         --arg PROVENANCE "$PROVENANCE" \
-                                                                        --arg SCRIPTS "$SCRIPTS" \
+                                                                        --argjson SCRIPTS "$SCRIPTS" \
                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                         --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                         --arg TRANSIENT "$TRANSIENT" \
@@ -535,6 +535,7 @@
                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                             "provenance" : $PROVENANCE ,
                                                                             "scripts" : $SCRIPTS ,
+                                                                            "uuid" : " ddf3388a" ,
                                                                             "standard-input" : $STANDARD_INPUT ,
                                                                             "targets" : $TARGETS ,
                                                                             "transient" : $TRANSIENT ,
@@ -615,6 +616,7 @@
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "provenance" : $PROVENANCE ,
                                                                                 "scripts" : $SCRIPTS ,
+                                                                                "uuid" : "58bf5aae" ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
                                                                                 "standard-output" : $STANDARD_OUTPUT ,
@@ -630,11 +632,13 @@
                                                                         # shellcheck disable=SC2016
                                                                         jq \
                                                                             --null-input \
+                                                                            --argjson APPLICATIONS "$APPLICATIONS" \
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
+                                                                            --argjson SCRIPT "$SCRIPTS" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
@@ -643,11 +647,14 @@
                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
+                                                                                "applications" $APPLICATIONS ,
                                                                                 "arguments" : $ARGUMENTS ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "provenance" : $PROVENANCE ,
+                                                                                "scripts" : $SCRIPTS ,
+                                                                                "uuid" : "a4d5f535" ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
                                                                                 "standard-output" : $STANDARD_OUTPUT ,
