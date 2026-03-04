@@ -546,6 +546,7 @@
                                                                     export INDEX
                                                                     originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                     export PROVENANCE=new
+                                                                    mkdir --parents "${ roots-directory }/$INDEX"
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                     flock -s 211
