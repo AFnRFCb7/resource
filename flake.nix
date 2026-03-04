@@ -654,7 +654,7 @@
                                                                                 "scripts" : $SCRIPTS ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
-                                                                                "standard-output" : $STANDARD_OUTPUT ,
+                                                                                "standard-outp /nix/store/jfyy09bd2dvmm70vqybrbfmc5175m911-check/candidate.jsonut" : $STANDARD_OUTPUT ,
                                                                                 "status" : $STATUS ,
                                                                                 "targets" :
                                                                                     {
