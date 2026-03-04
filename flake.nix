@@ -473,7 +473,7 @@
                                                             ''
                                                                 export SETUP="$0"
                                                                 export APPLICATIONS='${ builtins.toJSON applications }'
-                                                                export SCRIPTS='${ builtins.toJSON scripts }'
+                                                                export SCRIPTS=${ builtins.toJSON scripts }
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
@@ -600,7 +600,7 @@
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
-                                                                            --arg SCRIPTS "$SCRIPTS" \
+                                                                            --argjson SCRIPTS "$SCRIPTS" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
