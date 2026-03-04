@@ -473,7 +473,7 @@
                                                             ''
                                                                 export SETUP="$0"
                                                                 export APPLICATIONS='${ builtins.toJSON applications }'
-                                                                export SCRIPTS='${ scripts }'
+                                                                export SCRIPTS='${ builtins.toJSON scripts }'
                                                                 if [[ -t 0 ]]
                                                                 then
                                                                     HAS_STANDARD_INPUT=false
@@ -523,7 +523,7 @@
                                                                         --arg INDEX "$INDEX" \
                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                         --arg PROVENANCE "$PROVENANCE" \
-                                                                        --argjson SCRIPTS "$SCRIPTS" \
+                                                                        --arg SCRIPTS "$SCRIPTS" \
                                                                         --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                         --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                         --arg TRANSIENT "$TRANSIENT" \
