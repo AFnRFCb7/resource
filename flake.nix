@@ -85,14 +85,7 @@
                                                                         name = if builtins.length path == 2 then builtins.elemAt path 0 else "resolve" ;
                                                                         runScript =
                                                                             ''
-                                                                                bash -c '
-                                                                                    if [[ -t 0 ]]
-                                                                                    then
-                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                    else
-                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                    fi
-                                                                                ' "$0" "$@"
+                                                                                init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                             '' ;
                                                                         targetPkgs =
                                                                             pkgs :
