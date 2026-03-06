@@ -617,6 +617,7 @@
                                                                             --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                            --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
                                                                             --arg STATUS "$STATUS" \
                                                                             --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
