@@ -546,6 +546,7 @@
                                                                     export INDEX
                                                                     originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                     export PROVENANCE=new
+                                                                    mkdir --parents "${ root-directory }/$INDEX"
                                                                     mkdir --parents "${ resources-directory }/locks/$INDEX"
                                                                     exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                     flock -s 211
@@ -599,7 +600,7 @@
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
-                                                                            --arg SCRIPTS "$SCRIPTS" \
+                                                                            --argjson SCRIPTS "$SCRIPTS" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
@@ -620,7 +621,7 @@
                                                                                 "status" : $STATUS ,
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
-                                                                                "type" : "valid"
+                                                                                "type" : "valid-init"
                                                                             }' | publish
                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
@@ -629,11 +630,13 @@
                                                                         # shellcheck disable=SC2016
                                                                         jq \
                                                                             --null-input \
+                                                                            --argjson APPLICATIONS "$APPLICATIONS" \
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                             --arg HASH "$HASH" \
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
+                                                                            --argjson SCRIPTS "$SCRIPTS" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
@@ -642,14 +645,16 @@
                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
+                                                                                "applications" : $APPLICATIONS ,
                                                                                 "arguments" : $ARGUMENTS ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "provenance" : $PROVENANCE ,
+                                                                                "scripts" : $SCRIPTS ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
-                                                                                "standard-output" : $STANDARD_OUTPUT ,
+                                                                                "standard-outp /nix/store/jfyy09bd2dvmm70vqybrbfmc5175m911-check/candidate.jsonut" : $STANDARD_OUTPUT ,
                                                                                 "status" : $STATUS ,
                                                                                 "targets" :
                                                                                     {
