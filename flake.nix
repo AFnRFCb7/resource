@@ -591,7 +591,7 @@
                                                                                 export STANDARD_ERROR=
                                                                                 export STANDARD_ERROR_VISIBILITY=true
                                                                             else
-                                                                                export STANDARD_ERROR="$STANDARD_ERROR_FILE"
+                                                                                export STANDARD_ERROR="" # "$STANDARD_ERROR_FILE"
                                                                                 export STANDARD_ERROR_VISIBILITY=false
                                                                             fi
                                                                             if read -r -d ${ double-quote } STANDARD_OUTPUT < "$STANDARD_OUTPUT_FILE" 2>/dev/null
@@ -599,7 +599,7 @@
                                                                                 export STANDARD_OUTPUT
                                                                                 export STANDARD_OUTPUT_VISIBILITY=true
                                                                             else
-                                                                                export STANDARD_OUTPUT="$STANDARD_OUTPUT_FILE"
+                                                                                export STANDARD_OUTPUT="" # "$STANDARD_OUTPUT_FILE"
                                                                                 export STANDARD_OUTPUT_VISIBILITY=false
                                                                             fi
                                                                             # shellcheck disable=SC2129
