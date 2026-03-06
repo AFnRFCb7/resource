@@ -588,10 +588,10 @@
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                             if read -r -d ${ double-quote } STANDARD_ERROR < "$STANDARD_ERROR_FILE" 2>/dev/null
                                                                             then
-                                                                                export STANDARD_ERROR
+                                                                                export STANDARD_ERROR=
                                                                                 export STANDARD_ERROR_VISIBILITY=true
                                                                             else
-                                                                                export STANDARD_ERROR=""
+                                                                                export STANDARD_ERROR="$STANDARD_ERROR_FILE"
                                                                                 export STANDARD_ERROR_VISIBILITY=false
                                                                             fi
                                                                             if read -r -d ${ double-quote } STANDARD_OUTPUT < "$STANDARD_OUTPUT_FILE" 2>/dev/null
@@ -599,7 +599,7 @@
                                                                                 export STANDARD_OUTPUT
                                                                                 export STANDARD_OUTPUT_VISIBILITY=true
                                                                             else
-                                                                                export STANDARD_OUTPUT=""
+                                                                                export STANDARD_OUTPUT="STANDARD_OUTPUT_FILE"
                                                                                 export STANDARD_OUTPUT_VISIBILITY=false
                                                                             fi
                                                                             # shellcheck disable=SC2129
@@ -687,7 +687,7 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "invalid-init"
                                                                                     }' | publish
-                                                                                failure 4f93f2ef "INDEX=$INDEX"
+                                                                                failure 4f93f2ef "HASH=$HASH" "INDEX=$INDEX"
                                                                             fi
                                                                         fi
                                                                     '' ;
