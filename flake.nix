@@ -654,8 +654,10 @@
                                                                             --arg PROVENANCE "$PROVENANCE" \
                                                                             --argjson SCRIPTS "$SCRIPTS" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                            --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                            --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITIY" \
                                                                             --arg STATUS "$STATUS" \
                                                                             --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
@@ -669,8 +671,10 @@
                                                                                 "provenance" : $PROVENANCE ,
                                                                                 "scripts" : $SCRIPTS ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
+                                                                                "standard-error-visibility" : $STANDARD_ERROR_VISIBILITY ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
-                                                                                "standard-outp /nix/store/jfyy09bd2dvmm70vqybrbfmc5175m911-check/candidate.jsonut" : $STANDARD_OUTPUT ,
+                                                                                "standard-output" : $STANDARD_OUTPUT ,
+                                                                                "standard-output-visibility" : $STANDARD_OUTPUT_VISIBILITY ,-=
                                                                                 "status" : $STATUS ,
                                                                                 "targets" :
                                                                                     {
