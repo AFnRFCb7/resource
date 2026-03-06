@@ -586,7 +586,7 @@
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                            if read -r -d ${ double-quote } STANDARD_ERRO < "$STANDARD_ERROR_FILE" 2>/dev/null
+                                                                            if read -r -d ${ double-quote } STANDARD_ERROR < "$STANDARD_ERROR_FILE" 2>/dev/null
                                                                             then
                                                                                 export STANDARD_ERROR
                                                                                 export STANDARD_ERROR_VISIBILITY=true
