@@ -583,12 +583,22 @@
                                                                     # shellcheck disable=SC2016
                                                                     export STATUS
                                                                     TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                    STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 395f8da8
-                                                                    export STANDARD_ERROR
-                                                                    echo 7e1212fd 152700c7 "STANDARD_OUTPUT_FILE=$STANDARD_OUTPUT_FILE" >> /tmp/DEBUG
-                                                                    echo 7e1212fd add58852 "\$( cat \"$STANDARD_OUTPUT_FILE\" )" >> /tmp/DEBUG
-                                                                    STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
-                                                                    export STANDARD_OUTPUT
+                                                                    if STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )"
+                                                                    then
+                                                                        export STANDARD_ERROR
+                                                                        export STANDARD_ERROR_VISIBILITY=true
+                                                                    else
+                                                                        export STANDARD_ERROR=""
+                                                                        export STANDARD_ERROR_VISIBILITY=false
+                                                                    fi
+                                                                    if STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )"
+                                                                    then
+                                                                        export STANDARD_OUTPUT
+                                                                        export STANDARD_OUTPUT_VISIBILITY=true
+                                                                    else
+                                                                        export STANDARD_OUTPUT=""
+                                                                        export STANDARD_OUTPUT_VISIBILITY=false
+                                                                    fi
                                                                     # shellcheck disable=SC2129
                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                     then
@@ -604,6 +614,7 @@
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             --argjson SCRIPTS "$SCRIPTS" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                            --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
                                                                             --arg STATUS "$STATUS" \
@@ -618,8 +629,10 @@
                                                                                 "provenance" : $PROVENANCE ,
                                                                                 "scripts" : $SCRIPTS ,
                                                                                 "standard-error" : $STANDARD_ERROR ,
+                                                                                "standard-error-visibility": $STANDARD_ERROR_VISIBILITY ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
                                                                                 "standard-output" : $STANDARD_OUTPUT ,
+                                                                                "standard-output-visibility": STANDARD_OUTPUT_VISIBILITY ,
                                                                                 "status" : $STATUS ,
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
