@@ -636,7 +636,7 @@
                                                                             --arg INDEX "$INDEX" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg PROVENANCE "$PROVENANCE" \
-                                                                            --argjson SCRIPT "$SCRIPTS" \
+                                                                            --argjson SCRIPTS "$SCRIPTS" \
                                                                             --arg STANDARD_ERROR "$STANDARD_ERROR" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                             --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
