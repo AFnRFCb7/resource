@@ -687,7 +687,7 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "invalid-init"
                                                                                     }' | publish
-                                                                                failure 6020b24a a05ad0c3 "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
+                                                                                failure 4f93f2ef "INDEX=$INDEX"
                                                                             fi
                                                                         fi
                                                                     '' ;
