@@ -586,7 +586,7 @@
                                                                     STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 395f8da8
                                                                     export STANDARD_ERROR
                                                                     echo 7e1212fd 152700c7 "STANDARD_OUTPUT_FILE=$STANDARD_OUTPUT_FILE" >> /tmp/DEBUG
-                                                                    echo 7e1212fd add58852 "\$( cat "$STANDARD_OUTPUT_FILE" )" >> /tmp/DEBUG
+                                                                    echo 7e1212fd add58852 "\$( cat \"$STANDARD_OUTPUT_FILE\" )" >> /tmp/DEBUG
                                                                     STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
                                                                     export STANDARD_OUTPUT
                                                                     # shellcheck disable=SC2129
