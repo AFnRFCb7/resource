@@ -645,7 +645,7 @@
                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                             --arg TRANSIENT "$TRANSIENT" \
                                                                             '{
-                                                                                "applications" $APPLICATIONS ,
+                                                                                "applications" : $APPLICATIONS ,
                                                                                 "arguments" : $ARGUMENTS ,
                                                                                 "hash" : $HASH ,
                                                                                 "index" : $INDEX ,
