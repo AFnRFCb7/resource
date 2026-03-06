@@ -633,7 +633,7 @@
                                                                                 "standard-error-visibility": $STANDARD_ERROR_VISIBILITY ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
                                                                                 "standard-output" : $STANDARD_OUTPUT ,
-                                                                                "standard-output-visibility": STANDARD_OUTPUT_VISIBILITY ,
+                                                                                "standard-output-visibility": $STANDARD_OUTPUT_VISIBILITY ,
                                                                                 "status" : $STATUS ,
                                                                                 "targets" : $TARGETS ,
                                                                                 "transient" : $TRANSIENT ,
