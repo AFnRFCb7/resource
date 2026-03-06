@@ -599,7 +599,7 @@
                                                                                 export STANDARD_OUTPUT
                                                                                 export STANDARD_OUTPUT_VISIBILITY=true
                                                                             else
-                                                                                export STANDARD_OUTPUT="STANDARD_OUTPUT_FILE"
+                                                                                export STANDARD_OUTPUT="$STANDARD_OUTPUT_FILE"
                                                                                 export STANDARD_OUTPUT_VISIBILITY=false
                                                                             fi
                                                                             # shellcheck disable=SC2129
