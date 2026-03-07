@@ -501,7 +501,7 @@
                                                                 double-quote = "''" ;
                                                                 in
                                                                     ''
-                                                                        echo 7e1212fd 4909ef2a >&2
+                                                                        echo 7e1212fd 4909ef2a >> /tmp/DEBUG
                                                                         export SETUP="$0"
                                                                         export APPLICATIONS='${ builtins.toJSON applications }'
                                                                         export SCRIPTS='${ builtins.toJSON scripts }'
@@ -618,7 +618,7 @@
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                            echo 7e1212fd f2f7c80a >&2
+                                                                            echo 7e1212fd f2f7c80a >> /tmp/DEBUG
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
@@ -894,6 +894,7 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
+                                                                                            cat /tmp/DEBUG
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
