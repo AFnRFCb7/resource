@@ -607,7 +607,7 @@
                                                                             export PROVENANCE=new
                                                                             mkdir --parents "${ root-directory }/$INDEX"
                                                                             mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                            exec 203> "${ resources-directory }/locks/collect.lock
+                                                                            exec 203> ${ resources-directory }/locks/collect.lock
                                                                             flock -s 203
                                                                             exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                             flock -s 211
