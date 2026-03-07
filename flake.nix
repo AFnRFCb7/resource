@@ -899,7 +899,7 @@
                                                                                             touch ${ resources-directory }/log/trace.asc
                                                                                             if [[ -f ${ resources-directory }/log/trace.asc ]]
                                                                                             then
-                                                                                                ${ findutil }/bin/find ${ resources-directory }/log
+                                                                                                ${ findutils }/bin/find ${ resources-directory }/log
                                                                                                 echo f347f9c8 >&2
                                                                                                 cat ${ resources-directory }/log/trace.asc
                                                                                             fi
