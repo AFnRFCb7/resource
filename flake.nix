@@ -905,7 +905,7 @@
                                                                                         then
                                                                                             echo 0790a94c >&2
                                                                                             echo c7d5c3c8
-                                                                                            while [[ ! -f ${ resource-directory }/log/trace.asc ]]
+                                                                                            while [[ ! -f ${ resources-directory }/log/trace.asc ]]
                                                                                             do
                                                                                                 sleep 1s
                                                                                             done
