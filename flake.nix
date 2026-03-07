@@ -533,10 +533,8 @@
                                                                         flock -x 203
                                                                         exec 210> "${ resources-directory }/locks/$HASH"
                                                                         flock -s 210
-                                                                        echo 7e1212fd 70d8840e >> "$STANDARD_OUTPUT_FILE"
                                                                         if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                         then
-                                                                            echo 7e1212fd 7fcce249 >> "$STANDARD_OUTPUT_FILE"
                                                                             MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
                                                                             export MOUNT
                                                                             INDEX="$( basename "$MOUNT" )" || failure 50a633f1
@@ -575,7 +573,6 @@
                                                                                 }' | publish
                                                                             echo -n "$MOUNT"
                                                                         else
-                                                                            echo 7e1212fd 3ec80a28 >> "$STANDARD_OUTPUT_FILE"
                                                                             INDEX="$( sequential )" || failure 65a31c86
                                                                             export INDEX
                                                                             originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
@@ -593,16 +590,13 @@
                                                                             MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                             mkdir --parents "$MOUNT"
                                                                             export MOUNT
-                                                                            echo 7e1212fd e6f3abbf >> /tmp/DEBUG
                                                                             mkdir --parents ${ resources-directory }/log
                                                                             SEQUENCE="$( sequential )" || failure 4337
                                                                             export STANDARD_ERROR_FILE="${ resources-directory }/log/$SEQUENCE.standard-error.asc"
                                                                             export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$SEQUENCE.standard-output.asc"
-                                                                            echo 7e1212fd c4477d4b >> /tmp/DEBUG
                                                                             cd /
                                                                             if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                             then
-                                                                                echo 7e1212fd 8d4dd082 >> "$STANDARD_OUTPUT_FILE"
                                                                                 # shellcheck disable=SC2068
                                                                                 if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
@@ -611,7 +605,6 @@
                                                                                     STATUS="$?"
                                                                                 fi
                                                                             else
-                                                                                echo 7e1212fd 93fbe626 >> "$STANDARD_OUTPUT_FILE"
                                                                                 # shellcheck disable=SC2068
                                                                                 if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
@@ -620,17 +613,13 @@
                                                                                     STATUS="$?"
                                                                                 fi
                                                                             fi
-                                                                            echo 7e1212fd 02eae51e >> /tmp/DEBUG
                                                                             chmod 0400 "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
-                                                                            echo 7e1212fd 1828c97d >> /tmp/DEBUG
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                            echo 7e1212fd 056cf9ee >> /tmp/DEBUG
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
-                                                                                echo 7e1212fd d66a5dcd >> "$STANDARD_OUTPUT_FILE"
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
@@ -667,9 +656,7 @@
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                 echo -n "$MOUNT"
                                                                             else
-                                                                                echo 7e1212fd d1f54855 >> "$STANDARD_OUTPUT_FILE"
                                                                                 # shellcheck disable=SC2016
-                                                                                echo 7e1212fd 309b0c6f >> /tmp/DEBUG
                                                                                 jq \
                                                                                     --null-input \
                                                                                     --argjson APPLICATIONS "$APPLICATIONS" \
@@ -706,7 +693,6 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "invalid-init"
                                                                                     }' | publish
-                                                                                echo 7e1212fd f2583609 >> /tmp/DEBUG
                                                                                 failure 4f93f2ef "HASH=$HASH" "INDEX=$INDEX"
                                                                             fi
                                                                         fi
