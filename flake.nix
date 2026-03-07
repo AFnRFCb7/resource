@@ -597,6 +597,7 @@
                                                                                     STATUS="$?"
                                                                                 fi
                                                                             fi
+                                                                            chmod 0400 "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
