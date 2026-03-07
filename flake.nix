@@ -132,19 +132,6 @@
                                                                 resolutions = release-resolutions ;
                                                             } ;
                                                     } ;
-                                            detrace =
-                                                writeShellApplication
-                                                    {
-                                                        name = detrace ;
-                                                        runtimeInputs = [ coreutils flock ] ;
-                                                        text =
-                                                            ''
-                                                                echo | trace 177596a1
-                                                                exec 203> ${ resources-directory }/locks/trace.lock
-                                                                flock -s 203
-                                                                cat ${ resources-directory }/log/trace.asc
-                                                            '' ;
-                                                    } ;
                                             scripts =
                                                 visitor
                                                     {
@@ -508,7 +495,6 @@
                                                                 )
                                                                 failure
                                                                 sequential
-                                                                trace
                                                             ] ;
                                                         text =
                                                             let
@@ -640,8 +626,6 @@
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
                                                                                 # shellcheck disable=SC2016
-                                                                                echo 7e1212fd 0868c8eb >> /tmp/DEBUG
-                                                                                trace 8c64e719
                                                                                 jq \
                                                                                     --null-input \
                                                                                     --argjson APPLICATIONS "$APPLICATIONS" \
@@ -674,8 +658,6 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish
-                                                                                trace b3c0f1d2
-                                                                                echo 7e1212fd b3eb6e90 >> /tmp/DEBUG
                                                                                 mkdir --parents ${ resources-directory }/canonical
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                 echo -n "$MOUNT"
@@ -918,21 +900,6 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
-                                                                                            echo 0790a94c >&2
-                                                                                            echo c7d5c3c8
-                                                                                            while [[ ! -f ${ resources-directory }/log/trace.asc ]]
-                                                                                            do
-                                                                                                sleep 1s
-                                                                                            done
-                                                                                            exec 203> ${ resources-directory }/locks/trace.lock
-                                                                                            flock -s 203
-                                                                                            echo 5ec12162 >&2
-                                                                                            if [[ -f ${ resources-directory }/log/trace.asc ]]
-                                                                                            then
-                                                                                                echo f347f9c8 >&2
-                                                                                                cat ${ resources-directory }/log/trace.asc >&2
-                                                                                            fi
-                                                                                            echo 9f5b0734 >&2
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
