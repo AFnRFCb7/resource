@@ -520,8 +520,9 @@
                                                                                 '' ;
                                                                         }
                                                                 )
-                                                                sequential
                                                                 failure
+                                                                sequential
+                                                                trace
                                                             ] ;
                                                         text =
                                                             let
@@ -654,6 +655,7 @@
                                                                             then
                                                                                 # shellcheck disable=SC2016
                                                                                 echo 7e1212fd 0868c8eb >> /tmp/DEBUG
+                                                                                trace 8c64e719
                                                                                 jq \
                                                                                     --null-input \
                                                                                     --argjson APPLICATIONS "$APPLICATIONS" \
@@ -686,6 +688,7 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish
+                                                                                trace b3c0f1d2
                                                                                 echo 7e1212fd b3eb6e90 >> /tmp/DEBUG
                                                                                 mkdir --parents ${ resources-directory }/canonical
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
@@ -886,7 +889,10 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
-                                                                                            cat /tmp/DEBUG
+                                                                                            if [[ -f ${ resources-directory }/log/trace.asc
+                                                                                            then
+                                                                                                cat ${ resources-directory }/log/trace.asc
+                                                                                            fi
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
