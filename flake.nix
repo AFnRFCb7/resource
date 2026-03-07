@@ -133,7 +133,7 @@
                                                             } ;
                                                     } ;
                                             detrace =
-                                                shellApplication
+                                                writeShellApplication
                                                     {
                                                         name = detrace ;
                                                         runtimeInputs = [ coreutils flock ] ;
