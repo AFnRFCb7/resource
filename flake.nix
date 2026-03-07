@@ -380,7 +380,7 @@
                                                         in
                                                             {
                                                                 collect =
-                                                                    buildFSHUserEnv
+                                                                    buildFHSUserEnv
                                                                         {
                                                                             extraBwrapArgs = "[ --bind ${ resources-directory }/locks /locks ]" ;
                                                                             name = "collect" ;
