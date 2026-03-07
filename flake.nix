@@ -889,7 +889,9 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
-                                                                                            if [[ -f ${ resources-directory }/log/trace.asc
+                                                                                            exec 203> ${ resources-directory }/locks/trace.lock
+                                                                                            flock -s 203
+                                                                                            if [[ -f ${ resources-directory }/log/trace.asc ]]
                                                                                             then
                                                                                                 cat ${ resources-directory }/log/trace.asc
                                                                                             fi
