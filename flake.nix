@@ -574,6 +574,7 @@
                                                                             MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                             mkdir --parents "$MOUNT"
                                                                             export MOUNT
+                                                                            echo 7e1212fd e6f3abbf >> /tmp/DEBUG
                                                                             mkdir --parents ${ resources-directory }/log
                                                                             SEQUENCE="$( sequential )" || failure 4337
                                                                             export STANDARD_ERROR_FILE="${ resources-directory }/log/$SEQUENCE.standard-error.asc"
@@ -834,6 +835,7 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
+                                                                                            cat /tmp/DEBUG
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
