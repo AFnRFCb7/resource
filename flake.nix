@@ -501,6 +501,7 @@
                                                                 double-quote = "''" ;
                                                                 in
                                                                     ''
+                                                                        echo 7e1212fd 4909ef2a >&2
                                                                         export SETUP="$0"
                                                                         export APPLICATIONS='${ builtins.toJSON applications }'
                                                                         export SCRIPTS='${ builtins.toJSON scripts }'
@@ -893,7 +894,6 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
-                                                                                            echo 7e1212fd 055dfe13 >&2
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
