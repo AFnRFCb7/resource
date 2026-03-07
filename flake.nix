@@ -379,6 +379,18 @@
                                                                     } ;
                                                         in
                                                             {
+                                                                collect =
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "collect" ;
+                                                                            runtimeInputs = [ pkgs.coreutils pkgs.flock pkgs.nix ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    exec 203> ${ resources-directory }/locks/collect.lock
+                                                                                    flock -x 203
+                                                                                    nix-collect-garbage
+                                                                                '' ;
+                                                                        } ;
                                                                 failure = failure ;
                                                                 pkgs = pkgs ;
                                                                 resources = resources ;
