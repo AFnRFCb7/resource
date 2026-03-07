@@ -896,8 +896,10 @@
                                                                                             flock -s 203
                                                                                             echo 5ec12162 >&2
                                                                                             sleep 10s
+                                                                                            touch ${ resources-directory }/log/trace.asc
                                                                                             if [[ -f ${ resources-directory }/log/trace.asc ]]
                                                                                             then
+                                                                                                ${ pkgs.findutil }/bin/find ${ resources-directory }/log
                                                                                                 echo f347f9c8 >&2
                                                                                                 cat ${ resources-directory }/log/trace.asc
                                                                                             fi
