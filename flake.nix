@@ -890,6 +890,8 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
+                                                                                            echo 0790a94c >&2
+                                                                                            echo c7d5c3c8
                                                                                             exec 203> ${ resources-directory }/locks/trace.lock
                                                                                             flock -s 203
                                                                                             echo 5ec12162 >&2
