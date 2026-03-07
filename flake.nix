@@ -575,7 +575,7 @@
                                                                             mkdir --parents "$MOUNT"
                                                                             export MOUNT
                                                                             mkdir --parents ${ resources-directory }/log
-                                                                            SEQUENCE="$( sequence )" || failure 4337
+                                                                            SEQUENCE="$( sequential )" || failure 4337
                                                                             export STANDARD_ERROR_FILE="${ resources-directory }/log/$SEQUENCE.standard-error.asc"
                                                                             export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$SEQUENCE.standard-output.asc"
                                                                             cd /
