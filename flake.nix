@@ -753,7 +753,7 @@
                                                                                                 ''
                                                                                                     exec 203 /locks/trace.lock
                                                                                                     flock -x 203
-                                                                                                    cat >> /logs/trace.asc
+                                                                                                    cat >> /log/trace.asc
                                                                                                     rm /locks/trace.lock
                                                                                                 '' ;
                                                                                         }
