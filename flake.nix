@@ -553,7 +553,6 @@
                                                                         export HASH
                                                                         mkdir --parents "${ resources-directory }/locks"
                                                                         export HAS_STANDARD_INPUT
-                                                                        export HASH
                                                                         export STANDARD_INPUT
                                                                         TARGETS_EXPECTED='${ builtins.builtins.toJSON ( builtins.sort builtins.lessThan targets ) }'
                                                                         export TRANSIENT
@@ -682,7 +681,6 @@
                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                         "standard-output-file" : $STANDARD_OUTPUT_FILE ,
-                                                                                        "standard-output-visibility": $STANDARD_OUTPUT_VISIBILITY ,
                                                                                         "status" : $STATUS ,
                                                                                         "targets" : $TARGETS ,
                                                                                         "transient" : $TRANSIENT ,
