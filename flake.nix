@@ -132,6 +132,19 @@
                                                                 resolutions = release-resolutions ;
                                                             } ;
                                                     } ;
+                                            detrace =
+                                                shellApplication
+                                                    {
+                                                        name = detrace ;
+                                                        runtimeInputs = [ coreutils flock ] ;
+                                                        text =
+                                                            ''
+                                                                echo | trace 177596a1
+                                                                exec 203> ${ resources-directory }/locks/trace.lock
+                                                                flock -s 203
+                                                                cat ${ resources-directory }/log/trace.asc
+                                                            '' ;
+                                                    } ;
                                             scripts =
                                                 visitor
                                                     {
@@ -740,7 +753,7 @@
                                                                             "--bind ${ resources-directory }/locks /locks"
                                                                             "--bind ${ resources-directory }/logs /logs"
                                                                         ] ;
-                                                                    name = "trace" ;
+                                                                    name = "nohup trace &" ;
                                                                     targetPkgs =
                                                                         pkgs :
                                                                             [
