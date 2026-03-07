@@ -657,6 +657,7 @@
                                                                                 echo -n "$MOUNT"
                                                                             else
                                                                                 # shellcheck disable=SC2016
+                                                                                echo 7e1212fd abc85ebb >&2
                                                                                 jq \
                                                                                     --null-input \
                                                                                     --argjson APPLICATIONS "$APPLICATIONS" \
