@@ -638,7 +638,6 @@
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                    --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
                                                                                     --arg STATUS "$STATUS" \
                                                                                     --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
