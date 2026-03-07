@@ -522,7 +522,6 @@
                                                                 )
                                                                 failure
                                                                 sequential
-                                                                trace
                                                             ] ;
                                                         text =
                                                             let
