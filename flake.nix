@@ -893,7 +893,7 @@
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
                                                                                             echo 7e1212fd 055dfe13 >&2
-                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS" "STANDARD_OUTPUT_FILE=$STANDARD_OUTPUT_FILE" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE"
+                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
                                                                                         then
