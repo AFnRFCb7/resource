@@ -108,8 +108,8 @@
                                                                                                         v =
                                                                                                             let
                                                                                                                 arguments =
-                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
-                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { collect = t.collect ; failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
+                                                                                                                    else { collect = t.collect ; failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
                                                                                                                 in value arguments ;
                                                                                                         in ''${ v } "$@"'' ;
                                                                                             }
@@ -165,8 +165,8 @@
                                                                                                         v =
                                                                                                             let
                                                                                                                 arguments =
-                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
-                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { collect = t.collect ; failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ;wrap = t.wrap ; }
+                                                                                                                    else { collect = t.collect ; failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
                                                                                                                 in value arguments ;
                                                                                                         in ''echo ${ v } "$@"'' ;
                                                                                             }
@@ -380,17 +380,30 @@
                                                         in
                                                             {
                                                                 collect =
-                                                                    pkgs.writeShellApplication
+                                                                    buildFSHUserEnv
                                                                         {
+                                                                            extraBwrapArgs = "[ --bind ${ resources-directory }/locks /locks ]" ;
+                                                                        }
                                                                             name = "collect" ;
-                                                                            runtimeInputs = [ pkgs.coreutils pkgs.flock pkgs.nix ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    exec 203> ${ resources-directory }/locks/collect.lock
-                                                                                    flock -x 203
-                                                                                    nix-collect-garbage
-                                                                                '' ;
-                                                                        } ;
+                                                                            runScript = ''collect'' ;
+                                                                            targetPkgs =
+                                                                                pkgs :
+                                                                                    [
+                                                                                        (
+                                                                                            pkgs.writeShellApplication
+                                                                                                {
+                                                                                                    name = "collect" ;
+                                                                                                    runtimeInputs = [ pkgs.coreutils pkgs.flock pkgs.nix ] ;
+                                                                                                    text =
+                                                                                                        ''
+                                                                                                            exec 203> /locks/collect.lock
+                                                                                                            flock -x 203
+                                                                                                            nix-collect-garbage
+                                                                                                            rm /locks/collect.lock
+                                                                                                        '' ;
+                                                                                                }
+                                                                                        )
+                                                                                    ] ;
                                                                 failure = failure ;
                                                                 pkgs = pkgs ;
                                                                 resources = resources ;
@@ -427,7 +440,36 @@
                                                                                     NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
                                                                                     echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
                                                                                     printf "%016d\n" "$CURRENT"
+                                                                                    rm ${ resources-directory }/sequential/sequential.lock
                                                                                 '' ;
+                                                                        } ;
+                                                                trace =
+                                                                    buildFHSUserEnv
+                                                                        {
+                                                                            extraBwrapArgs =
+                                                                                [
+                                                                                    "--bind ${ resources-directory }/locks /locks"
+                                                                                    "--bind ${ resources-directory }/logs /logs"
+                                                                                ] ;
+                                                                            name = "trace" ;
+                                                                            targetPkgs =
+                                                                                pkgs :
+                                                                                    [
+                                                                                        (
+                                                                                            pkgs.writeShellApplication
+                                                                                                {
+                                                                                                    name = "trace" ;
+                                                                                                    runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
+                                                                                                    text =
+                                                                                                        ''
+                                                                                                            exec 203 /locks/trace.lock
+                                                                                                            flock -x 203
+                                                                                                            cat >> /logs/trace.asc
+                                                                                                            rm /locks/trace.lock
+                                                                                                        '' ;
+                                                                                                }
+                                                                                        )
+                                                                                    ] ;
                                                                         } ;
                                                                 wrap = wrap ;
                                                             } ;
@@ -565,6 +607,8 @@
                                                                             export PROVENANCE=new
                                                                             mkdir --parents "${ root-directory }/$INDEX"
                                                                             mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                            exec 203> "${ resources-directory }/locks/collect.lock
+                                                                            flock -s 203
                                                                             exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                             flock -s 211
                                                                             mkdir --parents "${ resources-directory }/applications/$INDEX"
@@ -712,6 +756,7 @@
                                                                         NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
                                                                         echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
                                                                         printf "%016d\n" "$CURRENT"
+                                                                        rm ${ resources-directory }/sequential/sequential.lock
                                                                     '' ;
                                                             } ;
                                                         transient_ =
