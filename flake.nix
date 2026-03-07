@@ -444,7 +444,7 @@
                                                                                 '' ;
                                                                         } ;
                                                                 trace =
-                                                                    buildHSFUserEnv
+                                                                    buildFHSUserEnv
                                                                         {
                                                                             extraBwrapArgs =
                                                                                 [
