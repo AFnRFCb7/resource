@@ -822,7 +822,7 @@
                                                                         runtimeInputs =
                                                                             [
                                                                                 coreutils
-                                                                                failure
+                                                                                flock
                                                                                 jd-diff-patch
                                                                                 jq
                                                                                 redis
@@ -859,6 +859,7 @@
                                                                                                 '' ;
                                                                                         }
                                                                                 )
+                                                                                failure
                                                                             ] ;
                                                                         text =
                                                                             let
