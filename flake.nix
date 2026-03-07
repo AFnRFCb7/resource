@@ -630,7 +630,7 @@
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
-                                                                                echo 7e1212fd d66a5dcd >> "$STANDARD_OUTPUT_FILE
+                                                                                echo 7e1212fd d66a5dcd >> "$STANDARD_OUTPUT_FILE"
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
