@@ -904,7 +904,8 @@
                                                                                             do
                                                                                                 echo 7e1212fd 465f886d >&2
                                                                                                 echo "$FILE" >&2
-                                                                                                cat {} \; >&2
+                                                                                                echo 7e1212fd b76b2b0f >&2
+                                                                                                cat "$FILE" >&2
                                                                                                 echo 7e1212fd 5d7f7c36 >&2
                                                                                             done
                                                                                             echo 7e1212fd 343f07f1 >&2
