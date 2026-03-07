@@ -383,7 +383,6 @@
                                                                     buildFSHUserEnv
                                                                         {
                                                                             extraBwrapArgs = "[ --bind ${ resources-directory }/locks /locks ]" ;
-                                                                        }
                                                                             name = "collect" ;
                                                                             runScript = ''collect'' ;
                                                                             targetPkgs =
