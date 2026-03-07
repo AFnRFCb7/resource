@@ -892,10 +892,13 @@
                                                                                         then
                                                                                             exec 203> ${ resources-directory }/locks/trace.lock
                                                                                             flock -s 203
+                                                                                            echo 5ec12162 >&2
                                                                                             if [[ -f ${ resources-directory }/log/trace.asc ]]
                                                                                             then
+                                                                                                echo f347f9c8 >&2
                                                                                                 cat ${ resources-directory }/log/trace.asc
                                                                                             fi
+                                                                                            echo 9f5b0734 >&2
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
