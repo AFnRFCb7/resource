@@ -895,6 +895,7 @@
                                                                                             exec 203> ${ resources-directory }/locks/trace.lock
                                                                                             flock -s 203
                                                                                             echo 5ec12162 >&2
+                                                                                            sleep 10s
                                                                                             if [[ -f ${ resources-directory }/log/trace.asc ]]
                                                                                             then
                                                                                                 echo f347f9c8 >&2
