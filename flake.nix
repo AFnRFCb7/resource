@@ -765,7 +765,7 @@
                                                                                             runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
                                                                                             text =
                                                                                                 ''
-                                                                                                    exec 203 /locks/trace.lock
+                                                                                                    exec 203 > /locks/trace.lock
                                                                                                     flock -x 203
                                                                                                     cat >> /log/trace.asc
                                                                                                     rm /locks/trace.lock
