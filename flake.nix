@@ -754,7 +754,8 @@
                                                                             "--bind ${ resources-directory }/locks /locks"
                                                                             "--bind ${ resources-directory }/logs /logs"
                                                                         ] ;
-                                                                    name = "nohup trace &" ;
+                                                                    name = "trace" ;
+                                                                    runScript = ''${ trace } "$@"'' ;
                                                                     targetPkgs =
                                                                         pkgs :
                                                                             [
@@ -762,13 +763,26 @@
                                                                                     pkgs.writeShellApplication
                                                                                         {
                                                                                             name = "trace" ;
-                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
+                                                                                            runtimeInputs =
+                                                                                                [
+                                                                                                    (
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "trace" ;
+                                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
+                                                                                                                text =
+                                                                                                                    ''
+                                                                                                                        exec 203> /locks/trace.lock
+                                                                                                                        flock -x 203
+                                                                                                                        cat >> /log/trace.asc
+                                                                                                                        rm /locks/trace.lock
+                                                                                                                    '' ;
+                                                                                                            }
+                                                                                                    )
+                                                                                                ] ;
                                                                                             text =
                                                                                                 ''
-                                                                                                    exec 203> /locks/trace.lock
-                                                                                                    flock -x 203
-                                                                                                    cat >> /log/trace.asc
-                                                                                                    rm /locks/trace.lock
+                                                                                                    nohup trace "$@" > /dev/null 2>&1 &
                                                                                                 '' ;
                                                                                         }
                                                                                 )
