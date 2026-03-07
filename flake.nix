@@ -470,204 +470,227 @@
                                                                 failure
                                                             ] ;
                                                         text =
-                                                            ''
-                                                                export SETUP="$0"
-                                                                export APPLICATIONS='${ builtins.toJSON applications }'
-                                                                export SCRIPTS='${ builtins.toJSON scripts }'
-                                                                if [[ -t 0 ]]
-                                                                then
-                                                                    HAS_STANDARD_INPUT=false
-                                                                    STANDARD_INPUT=
-                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 2bd52e9b
-                                                                else
-                                                                    STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
-                                                                    export STANDARD_INPUT_FILE
-                                                                    HAS_STANDARD_INPUT=true
-                                                                    cat <&0 > "$STANDARD_INPUT_FILE"
-                                                                    STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
-                                                                    PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
-                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
-                                                                fi
-                                                                mkdir --parents ${ resources-directory }
-                                                                ARGUMENTS=( "$@" )
-                                                                ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
-                                                                TRANSIENT=${ transient_ }
-                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$APPLICATIONS" "$SCRIPTS" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
-                                                                export HASH
-                                                                mkdir --parents "${ resources-directory }/locks"
-                                                                export HAS_STANDARD_INPUT
-                                                                export HASH
-                                                                export STANDARD_INPUT
-                                                                TARGETS_EXPECTED='${ builtins.builtins.toJSON ( builtins.sort builtins.lessThan targets ) }'
-                                                                export TRANSIENT
-                                                                exec 210> "${ resources-directory }/locks/$HASH"
-                                                                flock -s 210
-                                                                if [[ -L "${ resources-directory }/canonical/$HASH" ]]
-                                                                then
-                                                                    MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
-                                                                    export MOUNT
-                                                                    INDEX="$( basename "$MOUNT" )" || failure 50a633f1
-                                                                    export INDEX
-                                                                    originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
-                                                                    mkdir --parents ${ resources-directory }/marks
-                                                                    touch "${ resources-directory }/marks/$INDEX"
-                                                                    export PROVENANCE=cached
-                                                                    mkdir --parents "${ root-directory }/$INDEX"
-                                                                    mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                    # shellcheck disable=SC2016
-                                                                    jq \
-                                                                        --null-input \
-                                                                        --argjson APPLICATIONS "$APPLICATIONS" \
-                                                                        --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                        --arg HASH "$HASH" \
-                                                                        --arg INDEX "$INDEX" \
-                                                                        --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                        --arg PROVENANCE "$PROVENANCE" \
-                                                                        --argjson SCRIPTS "$SCRIPTS" \
-                                                                        --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                        --argjson TARGETS "$TARGETS_EXPECTED" \
-                                                                        --arg TRANSIENT "$TRANSIENT" \
-                                                                        '{
-                                                                            "applications" : $APPLICATIONS ,
-                                                                            "arguments" : $ARGUMENTS ,
-                                                                            "hash" : $HASH ,
-                                                                            "index" : $INDEX ,
-                                                                            "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                            "provenance" : $PROVENANCE ,
-                                                                            "scripts" : $SCRIPTS ,
-                                                                            "standard-input" : $STANDARD_INPUT ,
-                                                                            "targets" : $TARGETS ,
-                                                                            "transient" : $TRANSIENT ,
-                                                                            "type" : "stale"
-                                                                        }' | publish
-                                                                    echo -n "$MOUNT"
-                                                                else
-                                                                    INDEX="$( sequential )" || failure 65a31c86
-                                                                    export INDEX
-                                                                    originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
-                                                                    export PROVENANCE=new
-                                                                    mkdir --parents "${ root-directory }/$INDEX"
-                                                                    mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                    exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
-                                                                    flock -s 211
-                                                                    mkdir --parents "${ resources-directory }/applications/$INDEX"
-                                                                    ###
-                                                                    mkdir --parents ${ resources-directory }/marks
-                                                                    touch "${ resources-directory }/marks/$INDEX"
-                                                                    MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                    mkdir --parents "$MOUNT"
-                                                                    export MOUNT
-                                                                    STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
-                                                                    export STANDARD_ERROR_FILE
-                                                                    STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
-                                                                    export STANDARD_OUTPUT_FILE
-                                                                    cd /
-                                                                    if [[ "$HAS_STANDARD_INPUT" == "true" ]]
-                                                                    then
-                                                                        # shellcheck disable=SC2068
-                                                                        if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                            let
+                                                                double-quote = "''" ;
+                                                                in
+                                                                    ''
+                                                                        export SETUP="$0"
+                                                                        export APPLICATIONS='${ builtins.toJSON applications }'
+                                                                        export SCRIPTS='${ builtins.toJSON scripts }'
+                                                                        if [[ -t 0 ]]
                                                                         then
-                                                                            STATUS="$?"
+                                                                            HAS_STANDARD_INPUT=false
+                                                                            STANDARD_INPUT=
+                                                                            ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 2bd52e9b
                                                                         else
-                                                                            STATUS="$?"
+                                                                            STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
+                                                                            export STANDARD_INPUT_FILE
+                                                                            HAS_STANDARD_INPUT=true
+                                                                            cat <&0 > "$STANDARD_INPUT_FILE"
+                                                                            STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
+                                                                            PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
+                                                                            ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                         fi
-                                                                    else
-                                                                        # shellcheck disable=SC2068
-                                                                        if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        mkdir --parents ${ resources-directory }
+                                                                        ARGUMENTS=( "$@" )
+                                                                        ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
+                                                                        TRANSIENT=${ transient_ }
+                                                                        HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$APPLICATIONS" "$SCRIPTS" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
+                                                                        export HASH
+                                                                        mkdir --parents "${ resources-directory }/locks"
+                                                                        export HAS_STANDARD_INPUT
+                                                                        export HASH
+                                                                        export STANDARD_INPUT
+                                                                        TARGETS_EXPECTED='${ builtins.builtins.toJSON ( builtins.sort builtins.lessThan targets ) }'
+                                                                        export TRANSIENT
+                                                                        exec 210> "${ resources-directory }/locks/$HASH"
+                                                                        flock -s 210
+                                                                        if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                         then
-                                                                            STATUS="$?"
+                                                                            MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
+                                                                            export MOUNT
+                                                                            INDEX="$( basename "$MOUNT" )" || failure 50a633f1
+                                                                            export INDEX
+                                                                            originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
+                                                                            mkdir --parents ${ resources-directory }/marks
+                                                                            touch "${ resources-directory }/marks/$INDEX"
+                                                                            export PROVENANCE=cached
+                                                                            mkdir --parents "${ root-directory }/$INDEX"
+                                                                            mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                            # shellcheck disable=SC2016
+                                                                            jq \
+                                                                                --null-input \
+                                                                                --argjson APPLICATIONS "$APPLICATIONS" \
+                                                                                --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                --arg HASH "$HASH" \
+                                                                                --arg INDEX "$INDEX" \
+                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                --arg PROVENANCE "$PROVENANCE" \
+                                                                                --argjson SCRIPTS "$SCRIPTS" \
+                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                --argjson TARGETS "$TARGETS_EXPECTED" \
+                                                                                --arg TRANSIENT "$TRANSIENT" \
+                                                                                '{
+                                                                                    "applications" : $APPLICATIONS ,
+                                                                                    "arguments" : $ARGUMENTS ,
+                                                                                    "hash" : $HASH ,
+                                                                                    "index" : $INDEX ,
+                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                    "provenance" : $PROVENANCE ,
+                                                                                    "scripts" : $SCRIPTS ,
+                                                                                    "standard-input" : $STANDARD_INPUT ,
+                                                                                    "targets" : $TARGETS ,
+                                                                                    "transient" : $TRANSIENT ,
+                                                                                    "type" : "stale"
+                                                                                }' | publish
+                                                                            echo -n "$MOUNT"
                                                                         else
-                                                                            STATUS="$?"
+                                                                            INDEX="$( sequential )" || failure 65a31c86
+                                                                            export INDEX
+                                                                            originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
+                                                                            export PROVENANCE=new
+                                                                            mkdir --parents "${ root-directory }/$INDEX"
+                                                                            mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                            exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
+                                                                            flock -s 211
+                                                                            mkdir --parents "${ resources-directory }/applications/$INDEX"
+                                                                            ###
+                                                                            mkdir --parents ${ resources-directory }/marks
+                                                                            touch "${ resources-directory }/marks/$INDEX"
+                                                                            MOUNT="${ resources-directory }/mounts/$INDEX"
+                                                                            mkdir --parents "$MOUNT"
+                                                                            export MOUNT
+                                                                            STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
+                                                                            export STANDARD_ERROR_FILE
+                                                                            STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
+                                                                            export STANDARD_OUTPUT_FILE
+                                                                            cd /
+                                                                            if [[ "$HAS_STANDARD_INPUT" == "true" ]]
+                                                                            then
+                                                                                # shellcheck disable=SC2068
+                                                                                if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                then
+                                                                                    STATUS="$?"
+                                                                                else
+                                                                                    STATUS="$?"
+                                                                                fi
+                                                                            else
+                                                                                # shellcheck disable=SC2068
+                                                                                if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                then
+                                                                                    STATUS="$?"
+                                                                                else
+                                                                                    STATUS="$?"
+                                                                                fi
+                                                                            fi
+                                                                            # shellcheck disable=SC2016
+                                                                            export STATUS
+                                                                            TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
+                                                                            if read -r -d ${ double-quote } STANDARD_ERROR < "$STANDARD_ERROR_FILE" 2>/dev/null
+                                                                            then
+                                                                                export STANDARD_ERROR=
+                                                                                export STANDARD_ERROR_VISIBILITY=true
+                                                                            else
+                                                                                export STANDARD_ERROR="" # "$STANDARD_ERROR_FILE"
+                                                                                export STANDARD_ERROR_VISIBILITY=false
+                                                                            fi
+                                                                            if read -r -d ${ double-quote } STANDARD_OUTPUT < "$STANDARD_OUTPUT_FILE" 2>/dev/null
+                                                                            then
+                                                                                export STANDARD_OUTPUT
+                                                                                export STANDARD_OUTPUT_VISIBILITY=true
+                                                                            else
+                                                                                export STANDARD_OUTPUT="" # "$STANDARD_OUTPUT_FILE"
+                                                                                export STANDARD_OUTPUT_VISIBILITY=false
+                                                                            fi
+                                                                            # shellcheck disable=SC2129
+                                                                            if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
+                                                                            then
+                                                                                # shellcheck disable=SC2016
+                                                                                jq \
+                                                                                    --null-input \
+                                                                                    --argjson APPLICATIONS "$APPLICATIONS" \
+                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                    --arg HASH "$HASH" \
+                                                                                    --arg INDEX "$INDEX" \
+                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                    --arg PROVENANCE "$PROVENANCE" \
+                                                                                    --arg TRANSIENT "$TRANSIENT" \
+                                                                                    --argjson SCRIPTS "$SCRIPTS" \
+                                                                                    --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                                    --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
+                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                    --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                                    --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
+                                                                                    --arg STATUS "$STATUS" \
+                                                                                    --argjson TARGETS "$TARGETS_EXPECTED" \
+                                                                                    --arg TRANSIENT "$TRANSIENT" \
+                                                                                    '{
+                                                                                        "applications" : $APPLICATIONS ,
+                                                                                        "arguments" : $ARGUMENTS ,
+                                                                                        "hash" : $HASH ,
+                                                                                        "index" : $INDEX ,
+                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                        "provenance" : $PROVENANCE ,
+                                                                                        "scripts" : $SCRIPTS ,
+                                                                                        "standard-error" : $STANDARD_ERROR ,
+                                                                                        "standard-error-visibility": $STANDARD_ERROR_VISIBILITY ,
+                                                                                        "standard-input" : $STANDARD_INPUT ,
+                                                                                        "standard-output" : $STANDARD_OUTPUT ,
+                                                                                        "standard-output-visibility": $STANDARD_OUTPUT_VISIBILITY ,
+                                                                                        "status" : $STATUS ,
+                                                                                        "targets" : $TARGETS ,
+                                                                                        "transient" : $TRANSIENT ,
+                                                                                        "type" : "valid-init"
+                                                                                    }' | publish
+                                                                                mkdir --parents ${ resources-directory }/canonical
+                                                                                ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
+                                                                                echo -n "$MOUNT"
+                                                                            else
+                                                                                # shellcheck disable=SC2016
+                                                                                jq \
+                                                                                    --null-input \
+                                                                                    --argjson APPLICATIONS "$APPLICATIONS" \
+                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                    --arg HASH "$HASH" \
+                                                                                    --arg INDEX "$INDEX" \
+                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                    --arg PROVENANCE "$PROVENANCE" \
+                                                                                    --argjson SCRIPTS "$SCRIPTS" \
+                                                                                    --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                                    --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
+                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                    --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                                    --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
+                                                                                    --arg STATUS "$STATUS" \
+                                                                                    --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
+                                                                                    --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
+                                                                                    --arg TRANSIENT "$TRANSIENT" \
+                                                                                    '{
+                                                                                        "applications" : $APPLICATIONS ,
+                                                                                        "arguments" : $ARGUMENTS ,
+                                                                                        "hash" : $HASH ,
+                                                                                        "index" : $INDEX ,
+                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                        "provenance" : $PROVENANCE ,
+                                                                                        "scripts" : $SCRIPTS ,
+                                                                                        "standard-error" : $STANDARD_ERROR ,
+                                                                                        "standard-error-visibility" : $STANDARD_ERROR_VISIBILITY ,
+                                                                                        "standard-input" : $STANDARD_INPUT ,
+                                                                                        "standard-output" : $STANDARD_OUTPUT ,
+                                                                                        "standard-output-visibility" : $STANDARD_OUTPUT_VISIBILITY ,
+                                                                                        "status" : $STATUS ,
+                                                                                        "targets" :
+                                                                                            {
+                                                                                                "expected" : $TARGETS_EXPECTED ,
+                                                                                                "observed" : $TARGETS_OBSERVED
+                                                                                            } ,
+                                                                                        "transient" : $TRANSIENT ,
+                                                                                        "type" : "invalid-init"
+                                                                                    }' | publish
+                                                                                failure 4f93f2ef "HASH=$HASH" "INDEX=$INDEX"
+                                                                            fi
                                                                         fi
-                                                                    fi
-                                                                    # shellcheck disable=SC2016
-                                                                    export STATUS
-                                                                    TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                    STANDARD_ERROR="$( cat "$STANDARD_ERROR_FILE" )" || failure 395f8da8
-                                                                    export STANDARD_ERROR
-                                                                    STANDARD_OUTPUT="$( cat "$STANDARD_OUTPUT_FILE" )" || failure 9ee187fa
-                                                                    export STANDARD_OUTPUT
-                                                                    # shellcheck disable=SC2129
-                                                                    if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
-                                                                    then
-                                                                        # shellcheck disable=SC2016
-                                                                        jq \
-                                                                            --null-input \
-                                                                            --argjson APPLICATIONS "$APPLICATIONS" \
-                                                                            --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                            --arg HASH "$HASH" \
-                                                                            --arg INDEX "$INDEX" \
-                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                            --arg PROVENANCE "$PROVENANCE" \
-                                                                            --arg TRANSIENT "$TRANSIENT" \
-                                                                            --argjson SCRIPTS "$SCRIPTS" \
-                                                                            --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                            --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                            --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
-                                                                            --arg STATUS "$STATUS" \
-                                                                            --argjson TARGETS "$TARGETS_EXPECTED" \
-                                                                            --arg TRANSIENT "$TRANSIENT" \
-                                                                            '{
-                                                                                "applications" : $APPLICATIONS ,
-                                                                                "arguments" : $ARGUMENTS ,
-                                                                                "hash" : $HASH ,
-                                                                                "index" : $INDEX ,
-                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                "provenance" : $PROVENANCE ,
-                                                                                "scripts" : $SCRIPTS ,
-                                                                                "standard-error" : $STANDARD_ERROR ,
-                                                                                "standard-input" : $STANDARD_INPUT ,
-                                                                                "standard-output" : $STANDARD_OUTPUT ,
-                                                                                "status" : $STATUS ,
-                                                                                "targets" : $TARGETS ,
-                                                                                "transient" : $TRANSIENT ,
-                                                                                "type" : "valid-init"
-                                                                            }' | publish
-                                                                        mkdir --parents ${ resources-directory }/canonical
-                                                                        ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
-                                                                        echo -n "$MOUNT"
-                                                                    else
-                                                                        # shellcheck disable=SC2016
-                                                                        jq \
-                                                                            --null-input \
-                                                                            --argjson APPLICATIONS "$APPLICATIONS" \
-                                                                            --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                            --arg HASH "$HASH" \
-                                                                            --arg INDEX "$INDEX" \
-                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                            --arg PROVENANCE "$PROVENANCE" \
-                                                                            --argjson SCRIPTS "$SCRIPTS" \
-                                                                            --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                            --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                            --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
-                                                                            --arg STATUS "$STATUS" \
-                                                                            --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
-                                                                            --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
-                                                                            --arg TRANSIENT "$TRANSIENT" \
-                                                                            '{
-                                                                                "applications" : $APPLICATIONS ,
-                                                                                "arguments" : $ARGUMENTS ,
-                                                                                "hash" : $HASH ,
-                                                                                "index" : $INDEX ,
-                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                "provenance" : $PROVENANCE ,
-                                                                                "scripts" : $SCRIPTS ,
-                                                                                "standard-error" : $STANDARD_ERROR ,
-                                                                                "standard-input" : $STANDARD_INPUT ,
-                                                                                "standard-outp /nix/store/jfyy09bd2dvmm70vqybrbfmc5175m911-check/candidate.jsonut" : $STANDARD_OUTPUT ,
-                                                                                "status" : $STATUS ,
-                                                                                "targets" :
-                                                                                    {
-                                                                                        "expected" : $TARGETS_EXPECTED ,
-                                                                                        "observed" : $TARGETS_OBSERVED
-                                                                                    } ,
-                                                                                "transient" : $TRANSIENT ,
-                                                                                "type" : "invalid-init"
-                                                                            }' | publish
-                                                                        failure 6020b24a a05ad0c3 "STATUS=$STATUS" "STANDARD_ERROR=$STANDARD_ERROR" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
-                                                                    fi
-                                                                fi
-                                                            '' ;
+                                                                    '' ;
                                                         } ;
                                                     sequential =
                                                         writeShellApplication
