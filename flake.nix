@@ -443,34 +443,7 @@
                                                                                     rm ${ resources-directory }/sequential/sequential.lock
                                                                                 '' ;
                                                                         } ;
-                                                                trace =
-                                                                    buildFHSUserEnv
-                                                                        {
-                                                                            extraBwrapArgs =
-                                                                                [
-                                                                                    "--bind ${ resources-directory }/locks /locks"
-                                                                                    "--bind ${ resources-directory }/logs /logs"
-                                                                                ] ;
-                                                                            name = "trace" ;
-                                                                            targetPkgs =
-                                                                                pkgs :
-                                                                                    [
-                                                                                        (
-                                                                                            pkgs.writeShellApplication
-                                                                                                {
-                                                                                                    name = "trace" ;
-                                                                                                    runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
-                                                                                                    text =
-                                                                                                        ''
-                                                                                                            exec 203 /locks/trace.lock
-                                                                                                            flock -x 203
-                                                                                                            cat >> /logs/trace.asc
-                                                                                                            rm /locks/trace.lock
-                                                                                                        '' ;
-                                                                                                }
-                                                                                        )
-                                                                                    ] ;
-                                                                        } ;
+                                                                trace = trace ;
                                                                 wrap = wrap ;
                                                             } ;
                                             setup_ =
@@ -759,6 +732,34 @@
                                                                         rm ${ resources-directory }/sequential/sequential.lock
                                                                     '' ;
                                                             } ;
+                                                        trace =
+                                                            buildFHSUserEnv
+                                                                {
+                                                                    extraBwrapArgs =
+                                                                        [
+                                                                            "--bind ${ resources-directory }/locks /locks"
+                                                                            "--bind ${ resources-directory }/logs /logs"
+                                                                        ] ;
+                                                                    name = "trace" ;
+                                                                    targetPkgs =
+                                                                        pkgs :
+                                                                            [
+                                                                                (
+                                                                                    pkgs.writeShellApplication
+                                                                                        {
+                                                                                            name = "trace" ;
+                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
+                                                                                            text =
+                                                                                                ''
+                                                                                                    exec 203 /locks/trace.lock
+                                                                                                    flock -x 203
+                                                                                                    cat >> /logs/trace.asc
+                                                                                                    rm /locks/trace.lock
+                                                                                                '' ;
+                                                                                        }
+                                                                                )
+                                                                            ] ;
+                                                                } ;
                                                         transient_ =
                                                             visitor
                                                                 {
