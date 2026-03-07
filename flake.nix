@@ -579,6 +579,7 @@
                                                                             SEQUENCE="$( sequential )" || failure 4337
                                                                             export STANDARD_ERROR_FILE="${ resources-directory }/log/$SEQUENCE.standard-error.asc"
                                                                             export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$SEQUENCE.standard-output.asc"
+                                                                            echo 7e1212fd c4477d4b >> /tmp/DEBUG
                                                                             cd /
                                                                             if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                             then
@@ -598,14 +599,18 @@
                                                                                     STATUS="$?"
                                                                                 fi
                                                                             fi
+                                                                            echo 7e1212fd 02eae51e >> /tmp/DEBUG
                                                                             chmod 0400 "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
+                                                                            echo 7e1212fd 1828c97d >> /tmp/DEBUG
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
+                                                                            echo 7e1212fd 056cf9ee >> /tmp/DEBUG
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
                                                                                 # shellcheck disable=SC2016
+                                                                                echo 7e1212fd 0868c8eb >> /tmp/DEBUG
                                                                                 jq \
                                                                                     --null-input \
                                                                                     --argjson APPLICATIONS "$APPLICATIONS" \
@@ -639,11 +644,13 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish
+                                                                                echo 7e1212fd b3eb6e90 >> /tmp/DEBUG
                                                                                 mkdir --parents ${ resources-directory }/canonical
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                 echo -n "$MOUNT"
                                                                             else
                                                                                 # shellcheck disable=SC2016
+                                                                                echo 7e1212fd 309b0c6f >> /tmp/DEBUG
                                                                                 jq \
                                                                                     --null-input \
                                                                                     --argjson APPLICATIONS "$APPLICATIONS" \
@@ -680,6 +687,7 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "invalid-init"
                                                                                     }' | publish
+                                                                                echo 7e1212fd f2583609 >> /tmp/DEBUG
                                                                                 failure 4f93f2ef "HASH=$HASH" "INDEX=$INDEX"
                                                                             fi
                                                                         fi
