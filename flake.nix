@@ -905,16 +905,17 @@
                                                                                         then
                                                                                             echo 0790a94c >&2
                                                                                             echo c7d5c3c8
+                                                                                            while [[ ! -f ${ resource-directory }/log/trace.asc ]]
+                                                                                            do
+                                                                                                sleep 1s
+                                                                                            done
                                                                                             exec 203> ${ resources-directory }/locks/trace.lock
                                                                                             flock -s 203
                                                                                             echo 5ec12162 >&2
-                                                                                            sleep 10s
-                                                                                            touch ${ resources-directory }/log/trace.asc
                                                                                             if [[ -f ${ resources-directory }/log/trace.asc ]]
                                                                                             then
-                                                                                                ${ findutils }/bin/find ${ resources-directory }/log
                                                                                                 echo f347f9c8 >&2
-                                                                                                cat ${ resources-directory }/log/trace.asc
+                                                                                                cat ${ resources-directory }/log/trace.asc >&2
                                                                                             fi
                                                                                             echo 9f5b0734 >&2
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
