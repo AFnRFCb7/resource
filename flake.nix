@@ -900,7 +900,13 @@
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
                                                                                             echo 7e1212fd 055dfe13 >&2
-                                                                                            ${ findutils }/bin/find ${ resources-directory }/log -type f -exec cat {} \; >&2
+                                                                                            ${ findutils }/bin/find ${ resources-directory }/log -type f | while read -r FILE
+                                                                                            do
+                                                                                                echo 7e1212fd 465f886d >&2
+                                                                                                echo "$FILE" >&2
+                                                                                                cat {} \; >&2
+                                                                                                echo 7e1212fd 5d7f7c36 >&2
+                                                                                            done
                                                                                             echo 7e1212fd 343f07f1 >&2
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
