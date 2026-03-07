@@ -403,6 +403,7 @@
                                                                                                 }
                                                                                         )
                                                                                     ] ;
+                                                                        } ;
                                                                 failure = failure ;
                                                                 pkgs = pkgs ;
                                                                 resources = resources ;
