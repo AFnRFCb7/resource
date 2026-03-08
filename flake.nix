@@ -655,9 +655,13 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish
+                                                                                echo 7e1212fd e09099a1 >> /tmp/DEBUG
                                                                                 mkdir --parents ${ resources-directory }/canonical
+                                                                                echo 7e1212fd 2bc212be >> /tmp/DEBUG
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
+                                                                                echo 7e1212fd 133d0b0c >> /tmp/DEBUG
                                                                                 echo -n "$MOUNT"
+                                                                                echo 7e1212fd 86edbeaf >> /tmp/DEBUG
                                                                             else
                                                                                 echo 7e1212fd c1086f92 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" >> /tmp/DEBUG
                                                                                 cat "$STANDARD_ERROR_FILE" >> /tmp/DEBUG
