@@ -652,6 +652,7 @@
                                                                                             "standard-input" : $STANDARD_INPUT ,
                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                             "status" : $STATUS ,
+                                                                                            "targets" : $TARGETS ,
                                                                                             "transient" : $TRANSIENT ,
                                                                                             "type" : "valid-init"
                                                                                         }' | publish
