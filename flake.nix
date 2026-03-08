@@ -466,14 +466,16 @@
                                                                                 '' ;
                                                                         }
                                                                 )
-                                                                sequential
                                                                 failure
+                                                                sequential
+                                                                trace
                                                             ] ;
                                                         text =
                                                             let
                                                                 double-quote = "''" ;
                                                                 in
                                                                     ''
+                                                                        trace 071b1520
                                                                         export SETUP="$0"
                                                                         export APPLICATIONS='${ builtins.toJSON applications }'
                                                                         export SCRIPTS='${ builtins.toJSON scripts }'
@@ -505,8 +507,10 @@
                                                                         export TRANSIENT
                                                                         exec 210> "${ resources-directory }/locks/$HASH"
                                                                         flock -s 210
+                                                                        trace df5e008d
                                                                         if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                         then
+                                                                            trace 23b1c136
                                                                             MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
                                                                             export MOUNT
                                                                             INDEX="$( basename "$MOUNT" )" || failure 50a633f1
@@ -517,6 +521,7 @@
                                                                             export PROVENANCE=cached
                                                                             mkdir --parents "${ root-directory }/$INDEX"
                                                                             mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                            trace d47f18d7
                                                                             # shellcheck disable=SC2016
                                                                             jq \
                                                                                 --null-input \
@@ -543,28 +548,33 @@
                                                                                     "transient" : $TRANSIENT ,
                                                                                     "type" : "stale"
                                                                                 }' | publish
+                                                                            trace 21a5334c
                                                                             echo -n "$MOUNT"
                                                                         else
+                                                                            trace 33b73c4b
                                                                             INDEX="$( sequential )" || failure 65a31c86
                                                                             export INDEX
+                                                                            trace e65a9aa4
                                                                             originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
+                                                                            trace f384f75c
                                                                             export PROVENANCE=new
                                                                             mkdir --parents "${ root-directory }/$INDEX"
                                                                             mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                            trace ac3d1856
                                                                             exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                             flock -s 211
+                                                                            trace ae28d443
                                                                             mkdir --parents "${ resources-directory }/applications/$INDEX"
-                                                                            ###
                                                                             mkdir --parents ${ resources-directory }/marks
                                                                             touch "${ resources-directory }/marks/$INDEX"
                                                                             MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                             mkdir --parents "$MOUNT"
                                                                             export MOUNT
-                                                                            STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
-                                                                            export STANDARD_ERROR_FILE
-                                                                            STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
-                                                                            export STANDARD_OUTPUT_FILE
+                                                                            mkdir --parents "${ resources-directory }/log/$INDEX"
+                                                                            export STANDARD_ERROR_FILE="${ resources-directory }/log/$INDEX/init.standard-error.log"
+                                                                            export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$INDEX/init.standard-output.log"
                                                                             cd /
+                                                                            trace 55abc5e4
                                                                             if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                             then
                                                                                 # shellcheck disable=SC2068
@@ -579,32 +589,34 @@
                                                                                 if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
                                                                                     STATUS="$?"
+                                                                                    trace e31074e4
                                                                                 else
                                                                                     STATUS="$?"
                                                                                 fi
                                                                             fi
+                                                                            chmod 0400 "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
+                                                                            trace f3ac5700
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                            if read -r -d ${ double-quote } STANDARD_ERROR < "$STANDARD_ERROR_FILE" 2>/dev/null
+                                                                            trace f82d9be9 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
+                                                                            if [[ -s "$STANDARD_ERROR_FILE" ]]
                                                                             then
-                                                                                export STANDARD_ERROR=
-                                                                                export STANDARD_ERROR_VISIBILITY=true
+                                                                                trace 19eeee7c
                                                                             else
-                                                                                export STANDARD_ERROR="" # "$STANDARD_ERROR_FILE"
-                                                                                export STANDARD_ERROR_VISIBILITY=false
-                                                                            fi
-                                                                            if read -r -d ${ double-quote } STANDARD_OUTPUT < "$STANDARD_OUTPUT_FILE" 2>/dev/null
-                                                                            then
-                                                                                export STANDARD_OUTPUT
-                                                                                export STANDARD_OUTPUT_VISIBILITY=true
-                                                                            else
-                                                                                export STANDARD_OUTPUT="" # "$STANDARD_OUTPUT_FILE"
-                                                                                export STANDARD_OUTPUT_VISIBILITY=false
+                                                                                trace 177a75cb
+                                                                                # shellcheck disable=SC2002
+                                                                                cat "$STANDARD_OUTPUT_FILE" | trace
+                                                                                trace 461a79d5
+                                                                                # shellcheck disable=SC2002
+                                                                                cat "$STANDARD_ERROR_FILE" | trace
+                                                                                trace d91cd8d6
                                                                             fi
                                                                             # shellcheck disable=SC2129
+                                                                            trace de9d4d9d
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
+                                                                                trace 5525b585
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
@@ -616,11 +628,9 @@
                                                                                     --arg PROVENANCE "$PROVENANCE" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
-                                                                                    --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                                    --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
+                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                    --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
-                                                                                    --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
+                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                     --arg STATUS "$STATUS" \
                                                                                     --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
@@ -632,20 +642,20 @@
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "provenance" : $PROVENANCE ,
                                                                                         "scripts" : $SCRIPTS ,
-                                                                                        "standard-error" : $STANDARD_ERROR ,
-                                                                                        "standard-error-visibility": $STANDARD_ERROR_VISIBILITY ,
+                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
-                                                                                        "standard-output" : $STANDARD_OUTPUT ,
-                                                                                        "standard-output-visibility": $STANDARD_OUTPUT_VISIBILITY ,
+                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                         "status" : $STATUS ,
                                                                                         "targets" : $TARGETS ,
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish
+                                                                                trace 6bca1caa
                                                                                 mkdir --parents ${ resources-directory }/canonical
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                 echo -n "$MOUNT"
                                                                             else
+                                                                                trace 1642cad5
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
@@ -656,11 +666,9 @@
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg PROVENANCE "$PROVENANCE" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
-                                                                                    --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                                    --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
+                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                    --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
-                                                                                    --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
+                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                     --arg STATUS "$STATUS" \
                                                                                     --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                     --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
@@ -673,11 +681,9 @@
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "provenance" : $PROVENANCE ,
                                                                                         "scripts" : $SCRIPTS ,
-                                                                                        "standard-error" : $STANDARD_ERROR ,
-                                                                                        "standard-error-visibility" : $STANDARD_ERROR_VISIBILITY ,
+                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
-                                                                                        "standard-output" : $STANDARD_OUTPUT ,
-                                                                                        "standard-output-visibility" : $STANDARD_OUTPUT_VISIBILITY ,
+                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                         "status" : $STATUS ,
                                                                                         "targets" :
                                                                                             {
@@ -713,6 +719,56 @@
                                                                         printf "%016d\n" "$CURRENT"
                                                                     '' ;
                                                             } ;
+                                                        trace =
+                                                            writeShellApplication
+                                                                {
+                                                                    name = "trace" ;
+                                                                    runtimeInputs =
+                                                                        [
+                                                                            coreutils
+                                                                            (
+                                                                                buildFHSUserEnv
+                                                                                    {
+                                                                                        extraBwrapArgs =
+                                                                                            [
+                                                                                                "--bind ${ resources-directory }/locks /locks"
+                                                                                                "--bind ${ resources-directory }/log /log"
+                                                                                            ] ;
+                                                                                        name = "trace" ;
+                                                                                        runScript = ''trace "$@"'' ;
+                                                                                        targetPkgs =
+                                                                                            pkgs :
+                                                                                                [
+                                                                                                    (
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "trace" ;
+                                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
+                                                                                                                text =
+                                                                                                                    ''
+                                                                                                                        exec 203> /locks/trace.lock
+                                                                                                                        flock -x 203
+                                                                                                                        echo "$@" >> /log/trace.log
+                                                                                                                    '' ;
+                                                                                                            }
+                                                                                                    )
+                                                                                                ] ;
+                                                                                    }
+                                                                            )
+                                                                        ] ;
+                                                                    text =
+                                                                        ''
+                                                                            mkdir --parents ${ resources-directory }/locks
+                                                                            mkdir --parents ${ resources-directory }/log
+                                                                            if [[ -t 0 ]]
+                                                                            then
+                                                                                nohup trace "$@" > /dev/null 2>&1 &
+                                                                            else
+                                                                                STANDARD_INPUT="$( cat )" || failure 23371
+                                                                                nohup trace "$STANDARD_INPUT" > /dev/null 2>&1 &
+                                                                            fi
+                                                                        '' ;
+                                                                } ;
                                                         transient_ =
                                                             visitor
                                                                 {
@@ -842,6 +898,10 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
+                                                                                            if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                            then
+                                                                                                cat ${ resources-directory }/log/trace.log
+                                                                                            fi
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
