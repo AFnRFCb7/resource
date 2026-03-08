@@ -599,15 +599,14 @@
                                                                             trace f3ac5700
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                             trace f82d9be9 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
-                                                                            ${ findutils }/bin/find ${ resources-directory } -name "init.standard-error.log" | while read -r FILE
-                                                                            do
-                                                                                # shellcheck disable=SC2002
-                                                                                trace 3ff5b2e9
-                                                                                # shellcheck disable=SC2002
-                                                                                trace 3634559d "$FILE"
-                                                                                # shellcheck disable=SC2002
-                                                                                cat "$FILE" | trace
-                                                                            done
+                                                                            if [[ -s "$STANDARD_ERROR_FILE" ]]
+                                                                            then
+                                                                                trace 19eeee7c
+                                                                            else
+                                                                                trace 461a79d5
+                                                                                trace < "$STANDARD_ERROR_FILE"
+                                                                                trace d91cd8d6
+                                                                            fi
                                                                             # shellcheck disable=SC2129
                                                                             trace de9d4d9d
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
