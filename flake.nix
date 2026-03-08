@@ -653,6 +653,9 @@
                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                             "status" : $STATUS ,
                                                                                             "targets" : $TARGETS ,
+                                                                                            "transient" : $TRANSIENT ,
+                                                                                            "type" : "valid-init"
+                                                                                        }' | publish
                                                                         EOF
                                                                                 echo 7e1212fd 5b0268ea >> /tmp/DEBUG
                                                                                 # shellcheck disable=SC2016
