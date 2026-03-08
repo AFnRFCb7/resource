@@ -570,8 +570,9 @@
                                                                             MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                             mkdir --parents "$MOUNT"
                                                                             export MOUNT
+                                                                            mkdir --parents "${ resources-directory }/log/$INDEX"
                                                                             export STANDARD_ERROR_FILE="${ resources-directory }/log/$INDEX/init.standard-error.log"
-                                                                            export STANDARD_OUTPUT_FILE=${ resources-directory }/log/$INDEX/init.standard-output.log
+                                                                            export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$INDEX/init.standard-output.log"
                                                                             cd /
                                                                             trace 55abc5e4
                                                                             if [[ "$HAS_STANDARD_INPUT" == "true" ]]
@@ -877,6 +878,10 @@
                                                                                         fi
                                                                                         if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                         then
+                                                                                            if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                            then
+                                                                                                cat ${ resources-directory }/log/trace.log
+                                                                                            fi
                                                                                             failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                         fi
                                                                                         if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
