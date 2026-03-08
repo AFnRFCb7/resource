@@ -658,6 +658,8 @@
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                 echo -n "$MOUNT"
                                                                             else
+                                                                                echo 7e1212fd c1086f92 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" >> /tmp/DEBUG
+                                                                                cat "$STANDARD_ERROR_FILE" >> /tmp/DEBUG
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
