@@ -731,7 +731,7 @@
                                                                                                 "--mount ${ resources-directory }/log /log"
                                                                                             ] ;
                                                                                         name = "trace" ;
-                                                                                        runScript = ''trace "$@"'' ;
+                                                                                        runScript = ''true trace "$@"'' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 [
@@ -756,7 +756,7 @@
                                                                         ''
                                                                             mkdir --parents ${ resources-directory }/locks
                                                                             mkdir --parents ${ resources-directory }/log
-                                                                            # nohup trace "$@" &
+                                                                            nohup trace "$@" &
                                                                         '' ;
                                                                 } ;
                                                         transient_ =
