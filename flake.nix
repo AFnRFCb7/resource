@@ -606,7 +606,7 @@
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
-                                                                                # trace 648a36d8b6cf80012617fd28d1e65f5a66d0c2f8056fd8f0811c249e61e5f00433724e1e80a0f28cb0913054acea5f00a86700b5f673c616d9a1f28c8554de9a
+                                                                                trace 648a36d8b6cf80012617fd28d1e65f5a66d0c2f8056fd8f0811c249e61e5f00433724e1e80a0f28cb0913054acea5f00a86700b5f673c616d9a1f28c8554de9a
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
