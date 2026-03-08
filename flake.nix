@@ -606,8 +606,6 @@
                                                                                 trace 461a79d5
                                                                                 # shellcheck disable=SC2002
                                                                                 cat "$STANDARD_ERROR_FILE" | trace
-                                                                                trace c38b4e13
-                                                                                hexdump -C "$STANDARD_ERROR_FILE" | trace
                                                                                 trace d91cd8d6
                                                                             fi
                                                                             # shellcheck disable=SC2129
