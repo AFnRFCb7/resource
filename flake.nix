@@ -594,6 +594,7 @@
                                                                                     STATUS="$?"
                                                                                 fi
                                                                             fi
+                                                                            chmod 0400 "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
                                                                             trace f3ac5700
@@ -603,6 +604,9 @@
                                                                             then
                                                                                 trace 19eeee7c
                                                                             else
+                                                                                trace 177a75cb
+                                                                                # shellcheck disable=SC2002
+                                                                                cat "$STANDARD_OUTPUT_FILE" | trace
                                                                                 trace 461a79d5
                                                                                 # shellcheck disable=SC2002
                                                                                 cat "$STANDARD_ERROR_FILE" | trace
