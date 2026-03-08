@@ -598,7 +598,7 @@
                                                                             export STATUS
                                                                             trace f3ac5700
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                            trace f82d9be9
+                                                                            trace f82d9be9 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
@@ -641,6 +641,7 @@
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                 echo -n "$MOUNT"
                                                                             else
+                                                                                trace 1642cad5
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
