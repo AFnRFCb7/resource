@@ -656,7 +656,6 @@
                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                     --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                    --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
                                                                                     --arg STATUS "$STATUS" \
                                                                                     --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                     --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
