@@ -641,6 +641,14 @@
                                                                                         --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                                         --arg TRANSIENT "$TRANSIENT" \
                                                                                         '{
+                                                                                            "applications" : $APPLICATIONS ,
+                                                                                            "arguments" : $ARGUMENTS ,
+                                                                                            "hash" : $HASH ,
+                                                                                            "index" : $INDEX ,
+                                                                                            "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                            "provenance" : $PROVENANCE ,
+                                                                                            "scripts" : $SCRIPTS ,
+                                                                                            "standard-error-file" : $STANDARD_ERROR_FILE ,
 
                                                                         EOF
                                                                                 echo 7e1212fd 5b0268ea >> /tmp/DEBUG
