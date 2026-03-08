@@ -722,10 +722,12 @@
                                                                     name = "trace" ;
                                                                     runScript =
                                                                         ''
+                                                                            nohup trace "$@" &
                                                                         '' ;
                                                                     targetPkgs =
                                                                         pkgs :
                                                                             [
+                                                                                pkgs.coreutils
                                                                                 (
                                                                                     pkgs.writeShellApplication
                                                                                         {
