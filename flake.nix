@@ -554,14 +554,17 @@
                                                                             trace 33b73c4b
                                                                             INDEX="$( sequential )" || failure 65a31c86
                                                                             export INDEX
+                                                                            trace e65a9aa4
                                                                             originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
+                                                                            trace f384f75c
                                                                             export PROVENANCE=new
                                                                             mkdir --parents "${ root-directory }/$INDEX"
                                                                             mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                            trace ac3d1856
                                                                             exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                             flock -s 211
+                                                                            trace ae28d443
                                                                             mkdir --parents "${ resources-directory }/applications/$INDEX"
-                                                                            ###
                                                                             mkdir --parents ${ resources-directory }/marks
                                                                             touch "${ resources-directory }/marks/$INDEX"
                                                                             MOUNT="${ resources-directory }/mounts/$INDEX"
@@ -572,6 +575,7 @@
                                                                             STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
                                                                             export STANDARD_OUTPUT_FILE
                                                                             cd /
+                                                                            trace 55abc5e4
                                                                             if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                             then
                                                                                 # shellcheck disable=SC2068
@@ -586,13 +590,16 @@
                                                                                 if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
                                                                                     STATUS="$?"
+                                                                                    trace e31074e4
                                                                                 else
                                                                                     STATUS="$?"
                                                                                 fi
                                                                             fi
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
+                                                                            trace f3ac5700
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
+                                                                            trace c9ff9ac4
                                                                             if read -r -d ${ double-quote } STANDARD_ERROR < "$STANDARD_ERROR_FILE" 2>/dev/null
                                                                             then
                                                                                 export STANDARD_ERROR=
@@ -609,6 +616,7 @@
                                                                                 export STANDARD_OUTPUT="" # "$STANDARD_OUTPUT_FILE"
                                                                                 export STANDARD_OUTPUT_VISIBILITY=false
                                                                             fi
+                                                                            trace f82d9be9
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
