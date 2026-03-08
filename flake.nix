@@ -752,7 +752,8 @@
                                                                             then
                                                                                 nohup trace "$@" > /dev/null 2>&1 &
                                                                             else
-                                                                                nohup trace > /dev/null 2>&1 <&0 &
+                                                                                STANDARD_INPUT="$( cat )" || failure 23371
+                                                                                nohup trace "$STANDARD_INPUT" > /dev/null 2>&1 &
                                                                             fi
                                                                         '' ;
                                                                 } ;
