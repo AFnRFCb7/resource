@@ -671,7 +671,7 @@
                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                     --arg STATUS "$STATUS" \
-                                                                                    --argjson TARGETS "$TARGETS_EXPECTED" \
+                                                                                    --argjson TARGETS "$TARGETS" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                     '{
                                                                                         "applications" : $APPLICATIONS ,
