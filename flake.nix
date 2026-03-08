@@ -466,8 +466,9 @@
                                                                                 '' ;
                                                                         }
                                                                 )
-                                                                sequential
                                                                 failure
+                                                                sequential
+                                                                trace
                                                             ] ;
                                                         text =
                                                             let
