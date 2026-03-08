@@ -713,6 +713,50 @@
                                                                         printf "%016d\n" "$CURRENT"
                                                                     '' ;
                                                             } ;
+                                                        trace =
+                                                            writeShellApplication
+                                                                {
+                                                                    name = "trace" ;
+                                                                    runtimeInputs =
+                                                                        [
+                                                                            coreutils
+                                                                            (
+                                                                                buildFHSUserEnv
+                                                                                    {
+                                                                                        extraBwrapArgs =
+                                                                                            [
+                                                                                                "--mount ${ resources-directory }/locks /locks"
+                                                                                                "--mount ${ resources-directory }/log /log"
+                                                                                            ] ;
+                                                                                        name = "trace" ;
+                                                                                        runScript = ''trace "$@"'' ;
+                                                                                        targetPkgs =
+                                                                                            pkgs :
+                                                                                                [
+                                                                                                    (
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "trace" ;
+                                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
+                                                                                                                text =
+                                                                                                                    ''
+                                                                                                                        exec 203> /locks/trace.lock
+                                                                                                                        flock -x 203
+                                                                                                                        echo "$@" >> /log/trace.log
+                                                                                                                    '' ;
+                                                                                                            }
+                                                                                                    )
+                                                                                                ] ;
+                                                                                    }
+                                                                            )
+                                                                        ] ;
+                                                                    text =
+                                                                        ''
+                                                                            mkdir --parents ${ resources-directory }/locks
+                                                                            mkdir --parents ${ resources-directory }/log
+                                                                            nohup trace "$@" &
+                                                                        '' ;
+                                                                } ;
                                                         transient_ =
                                                             visitor
                                                                 {
