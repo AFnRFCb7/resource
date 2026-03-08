@@ -606,7 +606,7 @@
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
-                                                                                trace 230da3c271b9b27c47c593d62055dc7c711e0ceae5774824c0b62a10f7dd765dc1163c397969fa24c65620537595078c1221b485864473f6be0623a14129fde1
+                                                                                # trace 230da3c271b9b27c47c593d62055dc7c711e0ceae5774824c0b62a10f7dd765dc1163c397969fa24c65620537595078c1221b485864473f6be0623a14129fde1
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
@@ -644,7 +644,7 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish
-                                                                                trace b5451f494f13d037cf5e23717abfed1ff0a319bc8836b33d56371069e8a51a881d038de21a010cc94d860cd25391df2ed54b33041f1ff772d186345cc11ed470
+                                                                                # trace b5451f494f13d037cf5e23717abfed1ff0a319bc8836b33d56371069e8a51a881d038de21a010cc94d860cd25391df2ed54b33041f1ff772d186345cc11ed470
                                                                                 mkdir --parents ${ resources-directory }/canonical
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                 echo -n "$MOUNT"
@@ -719,6 +719,11 @@
                                                         trace =
                                                             buildFHSUserEnv
                                                                 {
+                                                                    extraBwrapArgs =
+                                                                        [
+                                                                            "--bind ${ resources-directory }/locks /locks"
+                                                                            "--bind ${ resources-directory }/log /log"
+                                                                        ] ;
                                                                     name = "trace" ;
                                                                     runScript =
                                                                         ''
