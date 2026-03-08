@@ -727,11 +727,11 @@
                                                                                     {
                                                                                         extraBwrapArgs =
                                                                                             [
-                                                                                                "--mount ${ resources-directory }/locks /locks"
-                                                                                                "--mount ${ resources-directory }/log /log"
+                                                                                                "--bind ${ resources-directory }/locks /locks"
+                                                                                                "--bind ${ resources-directory }/log /log"
                                                                                             ] ;
                                                                                         name = "trace" ;
-                                                                                        runScript = ''true trace "$@"'' ;
+                                                                                        runScript = ''trace "$@"'' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 [
@@ -756,7 +756,7 @@
                                                                         ''
                                                                             mkdir --parents ${ resources-directory }/locks
                                                                             mkdir --parents ${ resources-directory }/log
-                                                                            nohup trace "$@" || true &
+                                                                            # nohup trace "$@" &
                                                                         '' ;
                                                                 } ;
                                                         transient_ =
