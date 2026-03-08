@@ -475,7 +475,7 @@
                                                                 double-quote = "''" ;
                                                                 in
                                                                     ''
-                                                                        trace 1d765d78d7902c130f2b8388b2c3e44e27561e4e3d6451d728ea6891f1a030b08a3223a26dbb9def11a14e0cb39048bf1e192644d09b1ead37cca88c6c66ee1
+                                                                        trace 071b1520
                                                                         export SETUP="$0"
                                                                         export APPLICATIONS='${ builtins.toJSON applications }'
                                                                         export SCRIPTS='${ builtins.toJSON scripts }'
@@ -519,6 +519,7 @@
                                                                             export PROVENANCE=cached
                                                                             mkdir --parents "${ root-directory }/$INDEX"
                                                                             mkdir --parents "${ resources-directory }/locks/$INDEX"
+                                                                            trace d47f18d7
                                                                             # shellcheck disable=SC2016
                                                                             jq \
                                                                                 --null-input \
@@ -545,6 +546,7 @@
                                                                                     "transient" : $TRANSIENT ,
                                                                                     "type" : "stale"
                                                                                 }' | publish
+                                                                            trace 21a5334c
                                                                             echo -n "$MOUNT"
                                                                         else
                                                                             INDEX="$( sequential )" || failure 65a31c86
