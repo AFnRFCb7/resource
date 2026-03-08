@@ -599,7 +599,7 @@
                                                                             trace f3ac5700
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                             trace f82d9be9 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
-                                                                            ${ pkgs.findutils }/bin/find ${ resources-directory } -name ".init.standard-error.log" | while read -r FILE
+                                                                            ${ findutils }/bin/find ${ resources-directory } -name ".init.standard-error.log" | while read -r FILE
                                                                             do
                                                                                 trace 3ff5b2e9
                                                                                 trace 3634559d "$FILE
