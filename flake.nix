@@ -619,6 +619,7 @@
                                                                             export STATUS
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                             echo 7e1212fd f2f7c80a "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" >> /tmp/DEBUG
+                                                                            echo "$TARGETS" | jq .
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
@@ -685,6 +686,7 @@
                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                         "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                         "status" : $STATUS ,
+                                                                                        "targets" : $TARGETS ,
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish
