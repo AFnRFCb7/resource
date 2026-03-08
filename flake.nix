@@ -604,7 +604,7 @@
                                                                                 trace 19eeee7c
                                                                             else
                                                                                 trace 461a79d5
-                                                                                trace < "$STANDARD_ERROR_FILE"
+                                                                                cat "$STANDARD_ERROR_FILE" | trace
                                                                                 trace d91cd8d6
                                                                             fi
                                                                             # shellcheck disable=SC2129
