@@ -757,7 +757,7 @@
                                                                         ''
                                                                             mkdir --parents ${ resources-directory }/locks
                                                                             mkdir --parents ${ resources-directory }/log
-                                                                            nohup trace "$@" &
+                                                                            nohup trace "$@" > /dev/null 2>&1 &
                                                                         '' ;
                                                                 } ;
                                                         transient_ =
