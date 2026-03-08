@@ -752,7 +752,7 @@
                                                                             then
                                                                                 nohup trace "$@" > /dev/null 2>&1 &
                                                                             else
-                                                                                nohup trace > /dev/null 2>&1 <0 &
+                                                                                nohup trace > /dev/null 2>&1 <&0 &
                                                                             fi
                                                                         '' ;
                                                                 } ;
