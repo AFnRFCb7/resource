@@ -656,7 +656,7 @@
                                                                                             "transient" : $TRANSIENT ,
                                                                                             "type" : "valid-init"
                                                                                         }' | publish
-                                                                            EOF
+                                                                        EOF
                                                                                 echo 7e1212fd 5b0268ea >> /tmp/DEBUG
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
