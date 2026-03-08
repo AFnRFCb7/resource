@@ -723,7 +723,7 @@
                                                                     runtimeInputs =
                                                                         [
                                                                             (
-                                                                                pkgs.coreutils
+                                                                                coreutils
                                                                                 buildFHSUserEnv
                                                                                     {
                                                                                         extraBwrapArgs =
