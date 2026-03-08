@@ -649,6 +649,10 @@
                                                                                             "provenance" : $PROVENANCE ,
                                                                                             "scripts" : $SCRIPTS ,
                                                                                             "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                            "standard-input" : $STANDARD_INPUT ,
+                                                                                            "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                            "status" : $STATUS ,
+                                                                                            "targets" : $TARGETS ,
 
                                                                         EOF
                                                                                 echo 7e1212fd 5b0268ea >> /tmp/DEBUG
