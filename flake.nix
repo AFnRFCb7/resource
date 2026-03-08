@@ -668,6 +668,7 @@
                                                                                     --arg PROVENANCE "$PROVENANCE" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                     --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                     --arg STATUS "$STATUS" \
                                                                                     --argjson TARGETS "$TARGETS" \
@@ -684,7 +685,6 @@
                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                         "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                         "status" : $STATUS ,
-                                                                                        "targets" : $TARGETS ,
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish
