@@ -459,10 +459,16 @@
                                                                             runtimeInputs = [ coreutils jq redis failure ] ;
                                                                             text =
                                                                                 ''
+                                                                                    STATUS="$1"
                                                                                     # shellcheck disable=SC2089,SC2016
                                                                                     DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
                                                                                     JSON="$( cat | jq --compact-output --argjson DESCRIPTION "$DESCRIPTION" '. + { "description" : $DESCRIPTION }' )" || failure 64cec474
                                                                                     redis-cli PUBLISH "${channel}" "$JSON" > /dev/null || true
+                                                                                    if ! "$STATUS"
+                                                                                    then
+                                                                                        INDEX="$2"
+                                                                                        mkdir --parents "${ resources-directory }/quarantine/$INDEX/init"
+                                                                                    fi
                                                                                 '' ;
                                                                         }
                                                                 )
@@ -547,7 +553,7 @@
                                                                                     "targets" : $TARGETS ,
                                                                                     "transient" : $TRANSIENT ,
                                                                                     "type" : "stale"
-                                                                                }' | publish
+                                                                                }' | publish true
                                                                             trace 21a5334c
                                                                             echo -n "$MOUNT"
                                                                         else
@@ -649,7 +655,7 @@
                                                                                         "targets" : $TARGETS ,
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
-                                                                                    }' | publish
+                                                                                    }' | publish true
                                                                                 trace 6bca1caa
                                                                                 mkdir --parents ${ resources-directory }/canonical
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
@@ -692,7 +698,7 @@
                                                                                             } ,
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "invalid-init"
-                                                                                    }' | publish
+                                                                                    }' | publish false "$INDEX"
                                                                                 failure 4f93f2ef "HASH=$HASH" "INDEX=$INDEX"
                                                                             fi
                                                                         fi
