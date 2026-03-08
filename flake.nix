@@ -722,8 +722,8 @@
                                                                     name = "trace" ;
                                                                     runtimeInputs =
                                                                         [
+                                                                            coreutils
                                                                             (
-                                                                                coreutils
                                                                                 buildFHSUserEnv
                                                                                     {
                                                                                         extraBwrapArgs =
