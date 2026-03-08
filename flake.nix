@@ -603,7 +603,7 @@
                                                                             do
                                                                                 trace 3ff5b2e9
                                                                                 trace 3634559d "$FILE"
-                                                                                trace < "$FILE"
+                                                                                cat "$FILE" | trace
                                                                             done
                                                                             # shellcheck disable=SC2129
                                                                             trace de9d4d9d
