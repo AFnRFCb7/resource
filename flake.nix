@@ -570,10 +570,8 @@
                                                                             MOUNT="${ resources-directory }/mounts/$INDEX"
                                                                             mkdir --parents "$MOUNT"
                                                                             export MOUNT
-                                                                            STANDARD_ERROR_FILE="$( mktemp )" || failure 56a44e28
-                                                                            export STANDARD_ERROR_FILE
-                                                                            STANDARD_OUTPUT_FILE="$( mktemp )" || failure a330cb07
-                                                                            export STANDARD_OUTPUT_FILE
+                                                                            export STANDARD_ERROR_FILE="${ resources-directory }/log/$INDEX/init.standard-error.log"
+                                                                            export STANDARD_OUTPUT_FILE=${ resources-directory }/log/$INDEX/init.standard-output.log
                                                                             cd /
                                                                             trace 55abc5e4
                                                                             if [[ "$HAS_STANDARD_INPUT" == "true" ]]
@@ -599,23 +597,6 @@
                                                                             export STATUS
                                                                             trace f3ac5700
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                            trace c9ff9ac4
-                                                                            if read -r -d ${ double-quote } STANDARD_ERROR < "$STANDARD_ERROR_FILE" 2>/dev/null
-                                                                            then
-                                                                                export STANDARD_ERROR=
-                                                                                export STANDARD_ERROR_VISIBILITY=true
-                                                                            else
-                                                                                export STANDARD_ERROR="" # "$STANDARD_ERROR_FILE"
-                                                                                export STANDARD_ERROR_VISIBILITY=false
-                                                                            fi
-                                                                            if read -r -d ${ double-quote } STANDARD_OUTPUT < "$STANDARD_OUTPUT_FILE" 2>/dev/null
-                                                                            then
-                                                                                export STANDARD_OUTPUT
-                                                                                export STANDARD_OUTPUT_VISIBILITY=true
-                                                                            else
-                                                                                export STANDARD_OUTPUT="" # "$STANDARD_OUTPUT_FILE"
-                                                                                export STANDARD_OUTPUT_VISIBILITY=false
-                                                                            fi
                                                                             trace f82d9be9
                                                                             # shellcheck disable=SC2129
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
@@ -632,11 +613,9 @@
                                                                                     --arg PROVENANCE "$PROVENANCE" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
-                                                                                    --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                                    --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
+                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                    --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
-                                                                                    --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
+                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                     --arg STATUS "$STATUS" \
                                                                                     --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
@@ -648,11 +627,9 @@
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "provenance" : $PROVENANCE ,
                                                                                         "scripts" : $SCRIPTS ,
-                                                                                        "standard-error" : $STANDARD_ERROR ,
-                                                                                        "standard-error-visibility": $STANDARD_ERROR_VISIBILITY ,
+                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
-                                                                                        "standard-output" : $STANDARD_OUTPUT ,
-                                                                                        "standard-output-visibility": $STANDARD_OUTPUT_VISIBILITY ,
+                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                         "status" : $STATUS ,
                                                                                         "targets" : $TARGETS ,
                                                                                         "transient" : $TRANSIENT ,
@@ -673,10 +650,9 @@
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg PROVENANCE "$PROVENANCE" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
-                                                                                    --arg STANDARD_ERROR "$STANDARD_ERROR" \
-                                                                                    --arg STANDARD_ERROR_VISIBILITY "$STANDARD_ERROR_VISIBILITY" \
+                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                    --arg STANDARD_OUTPUT "$STANDARD_OUTPUT" \
+                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                     --arg STANDARD_OUTPUT_VISIBILITY "$STANDARD_OUTPUT_VISIBILITY" \
                                                                                     --arg STATUS "$STATUS" \
                                                                                     --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
@@ -690,11 +666,9 @@
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "provenance" : $PROVENANCE ,
                                                                                         "scripts" : $SCRIPTS ,
-                                                                                        "standard-error" : $STANDARD_ERROR ,
-                                                                                        "standard-error-visibility" : $STANDARD_ERROR_VISIBILITY ,
+                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
-                                                                                        "standard-output" : $STANDARD_OUTPUT ,
-                                                                                        "standard-output-visibility" : $STANDARD_OUTPUT_VISIBILITY ,
+                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                         "status" : $STATUS ,
                                                                                         "targets" :
                                                                                             {
