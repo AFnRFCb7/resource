@@ -599,8 +599,14 @@
                                                                             trace f3ac5700
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                             trace f82d9be9 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
-                                                                            trace < "$STANDARD_ERROR_FILE"
+                                                                            ${ pkgs.findutils }/bin/find ${ resources-directory } -name ".init.standard-error.log" | while read -r FILE
+                                                                            do
+                                                                                trace 3ff5b2e9
+                                                                                trace 3634559d "$FILE
+                                                                                trace < "$FILE"
+                                                                            done
                                                                             # shellcheck disable=SC2129
+                                                                            trace de9d4d9d
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
                                                                                 trace 5525b585
