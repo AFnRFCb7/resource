@@ -623,7 +623,7 @@
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
                                                                                 echo 7e1212fd 52478b71 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" >> /tmp/DEBUG
-                                                                                # shellcheck disable=SC2016
+                                                                                # shellcheck disable=SC2016,SC2128
                                                                                 cat >> /tmp/DEBUG <<EOF
                                                                                     jq \
                                                                                         --null-input \
