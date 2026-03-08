@@ -602,7 +602,7 @@
                                                                             ${ findutils }/bin/find ${ resources-directory } -name ".init.standard-error.log" | while read -r FILE
                                                                             do
                                                                                 trace 3ff5b2e9
-                                                                                trace 3634559d "$FILE
+                                                                                trace 3634559d "$FILE"
                                                                                 trace < "$FILE"
                                                                             done
                                                                             # shellcheck disable=SC2129
