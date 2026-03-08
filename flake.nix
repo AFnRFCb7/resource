@@ -627,6 +627,20 @@
                                                                                 cat >> /tmp/DEBUG <<EOF
                                                                                     jq \
                                                                                         --null-input \
+                                                                                        --argjson APPLICATIONS "$APPLICATIONS" \
+                                                                                        --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                        --arg HASH "$HASH" \
+                                                                                        --arg INDEX "$INDEX" \
+                                                                                        --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                        --arg PROVENANCE "$PROVENANCE" \
+                                                                                        --arg TRANSIENT "$TRANSIENT" \
+                                                                                        --argjson SCRIPTS "$SCRIPTS" \
+                                                                                        --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                        --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                        --arg STATUS "$STATUS" \
+                                                                                        --argjson TARGETS "$TARGETS_EXPECTED" \
+                                                                                        --arg TRANSIENT "$TRANSIENT" \
+                                                                                        '{
 
                                                                         EOF
                                                                                 echo 7e1212fd 5b0268ea >> /tmp/DEBUG
