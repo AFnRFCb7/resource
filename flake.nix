@@ -601,8 +601,11 @@
                                                                             trace f82d9be9 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                             ${ findutils }/bin/find ${ resources-directory } -name ".init.standard-error.log" | while read -r FILE
                                                                             do
+                                                                                # shellcheck disable=SC2002
                                                                                 trace 3ff5b2e9
+                                                                                # shellcheck disable=SC2002
                                                                                 trace 3634559d "$FILE"
+                                                                                # shellcheck disable=SC2002
                                                                                 cat "$FILE" | trace
                                                                             done
                                                                             # shellcheck disable=SC2129
