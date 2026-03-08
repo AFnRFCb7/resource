@@ -507,8 +507,10 @@
                                                                         export TRANSIENT
                                                                         exec 210> "${ resources-directory }/locks/$HASH"
                                                                         flock -s 210
+                                                                        trace df5e008d
                                                                         if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                         then
+                                                                            trace 23b1c136
                                                                             MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
                                                                             export MOUNT
                                                                             INDEX="$( basename "$MOUNT" )" || failure 50a633f1
@@ -549,6 +551,7 @@
                                                                             trace 21a5334c
                                                                             echo -n "$MOUNT"
                                                                         else
+                                                                            trace 33b73c4b
                                                                             INDEX="$( sequential )" || failure 65a31c86
                                                                             export INDEX
                                                                             originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
