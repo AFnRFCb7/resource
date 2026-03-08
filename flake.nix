@@ -475,6 +475,7 @@
                                                                 double-quote = "''" ;
                                                                 in
                                                                     ''
+                                                                        trace 1d765d78d7902c130f2b8388b2c3e44e27561e4e3d6451d728ea6891f1a030b08a3223a26dbb9def11a14e0cb39048bf1e192644d09b1ead37cca88c6c66ee1
                                                                         export SETUP="$0"
                                                                         export APPLICATIONS='${ builtins.toJSON applications }'
                                                                         export SCRIPTS='${ builtins.toJSON scripts }'
