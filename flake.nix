@@ -516,7 +516,7 @@
                                                                                             if ! "$STATUS"
                                                                                             then
                                                                                                 INDEX="$2"
-                                                                                                mkdir --parents "${ resources-directory }/quarantine.init/$INDEX/init/resolvers"
+                                                                                                mkdir --parents "${ resources-directory }/quarantine.init/$INDEX/resolvers"
                                                                                                 yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
                                                                                                 chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
                                                                                                 ${ builtins.concatStringsSep "\n" resolutions }
