@@ -474,20 +474,32 @@
                                                                                                                             runtimeInputs = [ coreutils jq ] ;
                                                                                                                             text =
                                                                                                                                 ''
+                                                                                                                                    if [[ -t 0 ]]
+                                                                                                                                    then
+                                                                                                                                        HAS_STANDARD_INPUT=false
+                                                                                                                                        STANDARD_INPUT=
+                                                                                                                                    else
+                                                                                                                                        HAS_STANDARD_INPUT=true
+                                                                                                                                        STANDARD_INPUT="$( cat )" || failure 17820
+                                                                                                                                    fi
                                                                                                                                     ARCHIVE="$( mktemp --suffix ".tar.zstd" )" || failure 14594
                                                                                                                                     tar --zstd --create --file "$ARCHIVE" --remove-files "${ resources-directory }/quarantine.init/$INDEX"
                                                                                                                                     jq \
                                                                                                                                         --null-input \
+                                                                                                                                        --arg _HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                                         --arg _HASH "$HASH" \
                                                                                                                                         --arg _INDEX "$INDEX" \
                                                                                                                                         --argjson _PATH '${ builtins.toJSON path }' \
                                                                                                                                         --arg _RELEASE "$RELEASE" \
+                                                                                                                                        --arg _STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                                         --arg _TYPE "resolved-init" \
                                                                                                                                         '{
                                                                                                                                             "hash" : $_HASH ,
+                                                                                                                                            "has-standard-input" : $_HAS_STANDARD_INPUT ,
                                                                                                                                             "index" : $_INDEX ,
                                                                                                                                             "path" : $_PATH ,
                                                                                                                                             "release" : $_RELEASE ,
+                                                                                                                                            "standard-input" : $_STANDARD_INPUT ,
                                                                                                                                             "type" : $_TYPE
                                                                                                                                         }' | "$PUBLISH" true
                                                                                                                                 '' ;
