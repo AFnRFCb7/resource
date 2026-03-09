@@ -477,11 +477,8 @@
                                                                                                                                 runtimeInputs = [ coreutils jq ] ;
                                                                                                                                 text =
                                                                                                                                     ''
-                                                                                                                                        : ${ builtins.concatStringsSep "" [ "$" "{" "HASH:?HASH must be exported" "}" ]  }
-                                                                                                                                        : ${ builtins.concatStringsSep "" [ "$" "{" "INDEX:?INDEX must be exported" "}" ]  }
-                                                                                                                                        : ${ builtins.concatStringsSep "" [ "$" "{" "RELEASE:?RELEASE must be exported" "}" ]  }
-                                                                                                                                        TYPE=valid-init
-                                                                                                                                        rm -rf "${ resources-directory }/quarantine.init/$INDEX"
+                                                                                                                                        ARCHIVE="$( mktemp --suffix ".tar.zstd" )" || failure 14594
+                                                                                                                                        tar --zstd --create --file "$ARCHIVE" --remove-files "${ resources-directory }/quarantine.init/$INDEX"
                                                                                                                                         jq \
                                                                                                                                             --null-input \
                                                                                                                                             --arg _HASH "$HASH" \
@@ -517,9 +514,9 @@
                                                                                             if ! "$STATUS"
                                                                                             then
                                                                                                 INDEX="$2"
-                                                                                                mkdir --parents "${ resources-directory }/quarantine/$INDEX/init/resolvers"
-                                                                                                yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine/$INDEX/init/log.yaml"
-                                                                                                chmod 0400 "${ resources-directory }/quarantine/$INDEX/init/log.yaml"
+                                                                                                mkdir --parents "${ resources-directory }/quarantine/init/$INDEX/init/resolvers"
+                                                                                                yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine.init/$INDEX/init/log.yaml"
+                                                                                                chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/init/log.yaml"
                                                                                                 ${ builtins.concatStringsSep "\n" resolutions }
                                                                                             fi
                                                                                         '' ;
