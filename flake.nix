@@ -12,6 +12,7 @@
                         failure ,
                         findutils ,
                         flock ,
+                        gnused ,
                         gnutar ,
                         inotify-tools ,
                         jq ,
