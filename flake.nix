@@ -496,7 +496,10 @@
                                                                                                         qualified-name = builtins.concatStringsSep "/" ( builtins.map builtins.toJSON path ) ;
                                                                                                         in
                                                                                                             [
-                                                                                                                ''sed -e "s#\$PUBLISH#$0#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE#${ builtins.toString applications.release.application }#" -e "w${ resources-directory }/quarantine.init/$INDEX/resolvers/${ qualified-name }.sh ${ resolve }"''
+                                                                                                                ''FILE="${ resources-directory }/quarantine.init/$INDEX/resolvers/${ qualified-name }.sh"''
+                                                                                                                ''DIRECTORY="$( dirname "$FILE" )" || failure 25958''
+                                                                                                                ''mkdir --parents "$DIRECTORY"''
+                                                                                                                ''sed -e "s#\$PUBLISH#$0#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE#${ builtins.toString applications.release.application }#" -e "w$FILE" ${ resolve }''
                                                                                                                 ''chmod 0500 "${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }.sh"''
                                                                                                             ] ;
                                                                                             in
