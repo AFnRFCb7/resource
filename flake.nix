@@ -460,50 +460,53 @@
                                                                             text =
                                                                                 let
                                                                                     resolutions =
-                                                                                        visitor
-                                                                                            {
-                                                                                                list = path : list : builtins.concatLists list ;
-                                                                                                null = path : value : [ ] ;
-                                                                                                set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
-                                                                                                string =
-                                                                                                    path : value :
-                                                                                                        let
-                                                                                                            resolve =
-                                                                                                                let
-                                                                                                                    application =
-                                                                                                                        writeShellApplication
-                                                                                                                            {
-                                                                                                                                name = "resolve" ;
-                                                                                                                                runtimeInputs = [ coreutils jq ] ;
-                                                                                                                                text =
-                                                                                                                                    ''
-                                                                                                                                        ARCHIVE="$( mktemp --suffix ".tar.zstd" )" || failure 14594
-                                                                                                                                        tar --zstd --create --file "$ARCHIVE" --remove-files "${ resources-directory }/quarantine.init/$INDEX"
-                                                                                                                                        jq \
-                                                                                                                                            --null-input \
-                                                                                                                                            --arg _HASH "$HASH" \
-                                                                                                                                            --arg _INDEX "$INDEX" \
-                                                                                                                                            --argjson _PATH '${ builtins.toJSON path }' \
-                                                                                                                                            --arg _RELEASE "$RELEASE" \
-                                                                                                                                            --arg _TYPE "resolved-init" \
-                                                                                                                                            '{
-                                                                                                                                                "hash" : $_HASH ,
-                                                                                                                                                "index" : $_INDEX ,
-                                                                                                                                                "path" : $_PATH ,
-                                                                                                                                                "release" : $_RELEASE ,
-                                                                                                                                                "type" : $_TYPE
-                                                                                                                                            }' | "$PUBLISH" true
-                                                                                                                                    '' ;
-                                                                                                                            } ;
-                                                                                                                    in "${ application }/bin/resolve" ;
-                                                                                                            qualified-name = builtins.concatStringsSep "/" ( builtins.map builtins.toJSON path ) ;
-                                                                                                            in
-                                                                                                                [
-                                                                                                                    ''sed -e "s#\$PUBLISH#$0#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE#$RELEASE#" -e "w${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }.sh"''
-                                                                                                                    ''chmod 0500 ${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }.sh"''
-                                                                                                                ] ;
-                                                                                            }
-                                                                                            applications.init.resolutions ;
+                                                                                        let
+                                                                                            string =
+                                                                                                path : value :
+                                                                                                    let
+                                                                                                        resolve =
+                                                                                                            let
+                                                                                                                application =
+                                                                                                                    writeShellApplication
+                                                                                                                        {
+                                                                                                                            name = "resolve" ;
+                                                                                                                            runtimeInputs = [ coreutils jq ] ;
+                                                                                                                            text =
+                                                                                                                                ''
+                                                                                                                                    ARCHIVE="$( mktemp --suffix ".tar.zstd" )" || failure 14594
+                                                                                                                                    tar --zstd --create --file "$ARCHIVE" --remove-files "${ resources-directory }/quarantine.init/$INDEX"
+                                                                                                                                    jq \
+                                                                                                                                        --null-input \
+                                                                                                                                        --arg _HASH "$HASH" \
+                                                                                                                                        --arg _INDEX "$INDEX" \
+                                                                                                                                        --argjson _PATH '${ builtins.toJSON path }' \
+                                                                                                                                        --arg _RELEASE "$RELEASE" \
+                                                                                                                                        --arg _TYPE "resolved-init" \
+                                                                                                                                        '{
+                                                                                                                                            "hash" : $_HASH ,
+                                                                                                                                            "index" : $_INDEX ,
+                                                                                                                                            "path" : $_PATH ,
+                                                                                                                                            "release" : $_RELEASE ,
+                                                                                                                                            "type" : $_TYPE
+                                                                                                                                        }' | "$PUBLISH" true
+                                                                                                                                '' ;
+                                                                                                                        } ;
+                                                                                                                in "${ application }/bin/resolve" ;
+                                                                                                        qualified-name = builtins.concatStringsSep "/" ( builtins.map builtins.toJSON path ) ;
+                                                                                                        in
+                                                                                                            [
+                                                                                                                ''sed -e "s#\$PUBLISH#$0#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE#$RELEASE#" -e "w${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }.sh"''
+                                                                                                                ''chmod 0500 ${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }.sh"''
+                                                                                                            ] ;
+                                                                                            in
+                                                                                                visitor
+                                                                                                    {
+                                                                                                        list = path : list : builtins.concatLists list ;
+                                                                                                        null = path : value : string path "" ;
+                                                                                                        set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
+                                                                                                        string = string ;
+                                                                                                    }
+                                                                                                    applications.init.resolutions ;
                                                                                     in
                                                                                         ''
                                                                                             STATUS="$1"
