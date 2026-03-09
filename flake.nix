@@ -468,6 +468,8 @@
                                                                                     then
                                                                                         INDEX="$2"
                                                                                         mkdir --parents "${ resources-directory }/quarantine/$INDEX/init"
+                                                                                        export APPLICATIONS='${ builtins.toJSON applications }'
+                                                                                                                                                                                
                                                                                     fi
                                                                                 '' ;
                                                                         }
