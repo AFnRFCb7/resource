@@ -495,9 +495,8 @@
                                                                                                         qualified-name = builtins.concatStringsSep "/" ( builtins.map builtins.toJSON path ) ;
                                                                                                         in
                                                                                                             [
-                                                                                                                ''echo "$0" >> ${ resources-directory }/quarantine.init/$INDEX/resolvers/${ qualified-name }.asc''
                                                                                                                 ''sed -e "s#\$PUBLISH#$0#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE#$RELEASE#" -e "w${ resources-directory }/quarantine.init/$INDEX/resolvers/${ qualified-name }.sh ${ resolve }"''
-                                                                                                                ''chmod 0500 ${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }.sh"''
+                                                                                                                ''chmod 0500 "${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }.sh"''
                                                                                                             ] ;
                                                                                             in
                                                                                                 visitor
