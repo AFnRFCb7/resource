@@ -456,7 +456,7 @@
                                                                     writeShellApplication
                                                                         {
                                                                             name = "publish" ;
-                                                                            runtimeInputs = [ coreutils jq redis yq-go failure ] ;
+                                                                            runtimeInputs = [ coreutils gnused jq redis yq-go failure ] ;
                                                                             text =
                                                                                 let
                                                                                     resolutions =
