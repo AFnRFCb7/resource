@@ -456,21 +456,73 @@
                                                                     writeShellApplication
                                                                         {
                                                                             name = "publish" ;
-                                                                            runtimeInputs = [ coreutils jq redis failure ] ;
+                                                                            runtimeInputs = [ coreutils jq redis yq-go failure ] ;
                                                                             text =
-                                                                                ''
-                                                                                    STATUS="$1"
-                                                                                    # shellcheck disable=SC2089,SC2016
-                                                                                    DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
-                                                                                    JSON="$( cat | jq --compact-output --argjson DESCRIPTION "$DESCRIPTION" '. + { "description" : $DESCRIPTION }' )" || failure 64cec474
-                                                                                    redis-cli PUBLISH "${channel}" "$JSON" > /dev/null || true
-                                                                                    if ! "$STATUS"
-                                                                                    then
-                                                                                        INDEX="$2"
-                                                                                        mkdir --parents "${ resources-directory }/quarantine/$INDEX/init"
-                                                                                        yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine/$INDEX/init/log.yaml"
-                                                                                    fi
-                                                                                '' ;
+                                                                                let
+                                                                                    resolutions =
+                                                                                        visitor
+                                                                                            {
+                                                                                                list = path : list : builtins.concatLists list ;
+                                                                                                null = path : value : [ ] ;
+                                                                                                set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
+                                                                                                string =
+                                                                                                    path : value :
+                                                                                                        let
+                                                                                                            resolve =
+                                                                                                                let
+                                                                                                                    application =
+                                                                                                                        writeShellApplication
+                                                                                                                            {
+                                                                                                                                name = "resolve" ;
+                                                                                                                                runtimeInputs = [ coreutils jq publish ] ;
+                                                                                                                                text =
+                                                                                                                                    ''
+                                                                                                                                        : ${ builtins.concatStringsSep "" [ "$" "{" "HASH:?HASH must be exported" "}" ]  }
+                                                                                                                                        : ${ builtins.concatStringsSep "" [ "$" "{" "INDEX:?INDEX must be exported" "}" ]  }
+                                                                                                                                        : ${ builtins.concatStringsSep "" [ "$" "{" "RELEASE:?RELEASE must be exported" "}" ]  }
+                                                                                                                                        TYPE=valid-init
+                                                                                                                                        rm -rf "${ resources-directory }/quarantine.init/$INDEX"
+                                                                                                                                        jq \
+                                                                                                                                            --null-input \
+                                                                                                                                            --arg _HASH "$HASH" \
+                                                                                                                                            --arg _INDEX "$INDEX" \
+                                                                                                                                            --argjson _PATH '${ builtins.toJSON path }' \
+                                                                                                                                            --arg _RELEASE "$RELEASE" \
+                                                                                                                                            --arg _TYPE "valid-init" \
+                                                                                                                                            '{
+                                                                                                                                                "hash" : $_HASH ,
+                                                                                                                                                "index" : $_INDEX ,
+                                                                                                                                                "path" : $_PATH ,
+                                                                                                                                                "release" : $_RELEASE ,
+                                                                                                                                                "type" : $_TYPE
+                                                                                                                                            }' | publish true
+                                                                                                                                    '' ;
+                                                                                                                            } ;
+                                                                                                                    in "${ application }/bin/resolve" ;
+                                                                                                            qualified-name = builtins.concatStringsSep "/" ( builtins.map builtins.toJSON path ) ;
+                                                                                                            in
+                                                                                                                [
+                                                                                                                    ''sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE#$RELEASE#" -e "w${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }"''
+                                                                                                                    ''chmod 0500 ${ resources-directory }/quarantine.init/$INDEX/resolvers/${ resolve }/${ qualified-name }"''
+                                                                                                                ] ;
+                                                                                            }
+                                                                                            applications.init.resolutions ;
+                                                                                    in
+                                                                                        ''
+                                                                                            STATUS="$1"
+                                                                                            # shellcheck disable=SC2089,SC2016
+                                                                                            DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
+                                                                                            JSON="$( cat | jq --compact-output --argjson DESCRIPTION "$DESCRIPTION" '. + { "description" : $DESCRIPTION }' )" || failure 64cec474
+                                                                                            redis-cli PUBLISH "${channel}" "$JSON" > /dev/null || true
+                                                                                            if ! "$STATUS"
+                                                                                            then
+                                                                                                INDEX="$2"
+                                                                                                mkdir --parents "${ resources-directory }/quarantine/$INDEX/init/resolvers"
+                                                                                                yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine/$INDEX/init/log.yaml"
+                                                                                                chmod 0400 "${ resources-directory }/quarantine/$INDEX/init/log.yaml"
+                                                                                                ${ builtins.concatStringsSep "\n" resolutions }
+                                                                                            fi
+                                                                                        '' ;
                                                                         }
                                                                 )
                                                                 failure
