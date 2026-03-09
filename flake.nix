@@ -507,7 +507,7 @@
                                                                                                         set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
                                                                                                         string = string ;
                                                                                                     }
-                                                                                                    applications.init.resolutions ;
+                                                                                                    init-resolutions ;
                                                                                     in
                                                                                         ''
                                                                                             STATUS="$1"
