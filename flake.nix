@@ -485,7 +485,7 @@
                                                                                                                                             --arg _INDEX "$INDEX" \
                                                                                                                                             --argjson _PATH '${ builtins.toJSON path }' \
                                                                                                                                             --arg _RELEASE "$RELEASE" \
-                                                                                                                                            --arg _TYPE "valid-init" \
+                                                                                                                                            --arg _TYPE "resolved-init" \
                                                                                                                                             '{
                                                                                                                                                 "hash" : $_HASH ,
                                                                                                                                                 "index" : $_INDEX ,
@@ -510,15 +510,15 @@
                                                                                             # shellcheck disable=SC2089,SC2016
                                                                                             DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
                                                                                             JSON="$( cat | jq --compact-output --argjson DESCRIPTION "$DESCRIPTION" '. + { "description" : $DESCRIPTION }' )" || failure 64cec474
-                                                                                            redis-cli PUBLISH "${channel}" "$JSON" > /dev/null || true
                                                                                             if ! "$STATUS"
                                                                                             then
                                                                                                 INDEX="$2"
                                                                                                 mkdir --parents "${ resources-directory }/quarantine.init/$INDEX/init/resolvers"
                                                                                                 yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
-                                                                                                chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/init/log.yaml"
+                                                                                                chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
                                                                                                 ${ builtins.concatStringsSep "\n" resolutions }
                                                                                             fi
+                                                                                            redis-cli PUBLISH "${channel}" "$JSON" > /dev/null 2>&1 || true
                                                                                         '' ;
                                                                         }
                                                                 )
