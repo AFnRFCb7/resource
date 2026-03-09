@@ -474,7 +474,7 @@
                                                                                                                         writeShellApplication
                                                                                                                             {
                                                                                                                                 name = "resolve" ;
-                                                                                                                                runtimeInputs = [ coreutils jq publish ] ;
+                                                                                                                                runtimeInputs = [ coreutils jq ] ;
                                                                                                                                 text =
                                                                                                                                     ''
                                                                                                                                         : ${ builtins.concatStringsSep "" [ "$" "{" "HASH:?HASH must be exported" "}" ]  }
