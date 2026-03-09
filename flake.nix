@@ -518,6 +518,7 @@
                                                                                             then
                                                                                                 INDEX="$2"
                                                                                                 mkdir --parents "${ resources-directory }/quarantine.init/$INDEX/resolvers"
+                                                                                                echo "$0" > "${ resources-directory }/quarantine.init/$INDEX/log.asc"
                                                                                                 yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
                                                                                                 chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
                                                                                                 ${ builtins.concatStringsSep "\n" resolutions }
