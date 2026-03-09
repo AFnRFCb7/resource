@@ -471,7 +471,7 @@
                                                                                                                     writeShellApplication
                                                                                                                         {
                                                                                                                             name = "resolve" ;
-                                                                                                                            runtimeInputs = [ coreutils jq ] ;
+                                                                                                                            runtimeInputs = [ coreutils gnutar jq xstd ] ;
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     if [[ -t 0 ]]
