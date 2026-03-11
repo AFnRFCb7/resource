@@ -553,7 +553,6 @@
                                                                 double-quote = "''" ;
                                                                 in
                                                                     ''
-                                                                        trace 071b1520
                                                                         export SETUP="$0"
                                                                         export APPLICATIONS='${ builtins.toJSON applications }'
                                                                         export SCRIPTS='${ builtins.toJSON scripts }'
@@ -585,10 +584,8 @@
                                                                         export TRANSIENT
                                                                         exec 210> "${ resources-directory }/locks/$HASH"
                                                                         flock -s 210
-                                                                        trace df5e008d
                                                                         if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                         then
-                                                                            trace 23b1c136
                                                                             MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
                                                                             export MOUNT
                                                                             INDEX="$( basename "$MOUNT" )" || failure 50a633f1
@@ -599,7 +596,6 @@
                                                                             export PROVENANCE=cached
                                                                             mkdir --parents "${ root-directory }/$INDEX"
                                                                             mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                            trace d47f18d7
                                                                             # shellcheck disable=SC2016
                                                                             jq \
                                                                                 --null-input \
@@ -626,22 +622,16 @@
                                                                                     "transient" : $TRANSIENT ,
                                                                                     "type" : "stale"
                                                                                 }' | publish true
-                                                                            trace 21a5334c
                                                                             echo -n "$MOUNT"
                                                                         else
-                                                                            trace 33b73c4b
                                                                             INDEX="$( sequential )" || failure 65a31c86
                                                                             export INDEX
-                                                                            trace e65a9aa4
                                                                             originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
-                                                                            trace f384f75c
                                                                             export PROVENANCE=new
                                                                             mkdir --parents "${ root-directory }/$INDEX"
                                                                             mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                            trace ac3d1856
                                                                             exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
                                                                             flock -s 211
-                                                                            trace ae28d443
                                                                             mkdir --parents "${ resources-directory }/applications/$INDEX"
                                                                             mkdir --parents ${ resources-directory }/marks
                                                                             touch "${ resources-directory }/marks/$INDEX"
@@ -652,7 +642,6 @@
                                                                             export STANDARD_ERROR_FILE="${ resources-directory }/log/$INDEX/init.standard-error.log"
                                                                             export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$INDEX/init.standard-output.log"
                                                                             cd /
-                                                                            trace 55abc5e4
                                                                             if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                             then
                                                                                 # shellcheck disable=SC2068
@@ -667,7 +656,6 @@
                                                                                 if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
                                                                                     STATUS="$?"
-                                                                                    trace e31074e4
                                                                                 else
                                                                                     STATUS="$?"
                                                                                 fi
@@ -675,26 +663,18 @@
                                                                             chmod 0400 "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                             # shellcheck disable=SC2016
                                                                             export STATUS
-                                                                            trace f3ac5700
                                                                             TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
                                                                             trace f82d9be9 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
-                                                                            if [[ -s "$STANDARD_ERROR_FILE" ]]
+                                                                            if [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                             then
-                                                                                trace 19eeee7c
-                                                                            else
-                                                                                trace 177a75cb
                                                                                 # shellcheck disable=SC2002
                                                                                 cat "$STANDARD_OUTPUT_FILE" | trace
-                                                                                trace 461a79d5
                                                                                 # shellcheck disable=SC2002
                                                                                 cat "$STANDARD_ERROR_FILE" | trace
-                                                                                trace d91cd8d6
                                                                             fi
                                                                             # shellcheck disable=SC2129
-                                                                            trace de9d4d9d
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
-                                                                                trace 5525b585
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
@@ -728,12 +708,10 @@
                                                                                         "transient" : $TRANSIENT ,
                                                                                         "type" : "valid-init"
                                                                                     }' | publish true
-                                                                                trace 6bca1caa
                                                                                 mkdir --parents ${ resources-directory }/canonical
                                                                                 ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                 echo -n "$MOUNT"
                                                                             else
-                                                                                trace 1642cad5
                                                                                 # shellcheck disable=SC2016
                                                                                 jq \
                                                                                     --null-input \
