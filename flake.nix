@@ -92,7 +92,6 @@
                                                                                         bash -c '
                                                                                             if [[ -t 0 ]]
                                                                                             then
-                                                                                                echo "$0" > /mount/FLAG
                                                                                                 ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                                             else
                                                                                                 ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
