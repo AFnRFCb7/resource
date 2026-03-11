@@ -96,7 +96,6 @@
                                                                                             else
                                                                                                 ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                                                             fi
-                                                                                        ' "$0" "$@"
                                                                                     '' ;
                                                                                 targetPkgs =
                                                                                     pkgs :
@@ -104,7 +103,7 @@
                                                                                             (
                                                                                                 pkgs.writeShellApplication
                                                                                                     {
-                                                                                                        name = "init" ;
+                                                                                                        name = name ;
                                                                                                         runtimeInputs = [ ] ;
                                                                                                         text =
                                                                                                             let
