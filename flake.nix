@@ -112,8 +112,8 @@
                                                                                                                 v =
                                                                                                                     let
                                                                                                                         arguments =
-                                                                                                                            if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
-                                                                                                                            else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                            if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
+                                                                                                                            else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
                                                                                                                         in value arguments ;
                                                                                                                 in ''${ v } "$@"'' ;
                                                                                                     }
@@ -167,8 +167,8 @@
                                                                                                         v =
                                                                                                             let
                                                                                                                 arguments =
-                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
-                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
+                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
                                                                                                                 in value arguments ;
                                                                                                         in ''echo ${ v } "$@"'' ;
                                                                                             }
@@ -419,6 +419,7 @@
                                                                                     printf "%016d\n" "$CURRENT"
                                                                                 '' ;
                                                                         } ;
+                                                                trace = trace ;
                                                                 wrap = wrap ;
                                                             } ;
                                             setup_ =
