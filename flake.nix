@@ -76,47 +76,50 @@
                                                     {
                                                         lambda =
                                                             path : value :
-                                                                buildFHSUserEnv
-                                                                    {
-                                                                        extraBwrapArgs =
-                                                                            [
-                                                                                "--bind $MOUNT /mount"
-                                                                                "--tmpfs /scratch"
-                                                                            ] ;
-                                                                        name = if builtins.length path == 2 then builtins.elemAt path 0 else "resolve" ;
-                                                                        runScript =
-                                                                            ''
-                                                                                bash -c '
-                                                                                    if [[ -t 0 ]]
-                                                                                    then
-                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                    else
-                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                    fi
-                                                                                ' "$0" "$@"
-                                                                            '' ;
-                                                                        targetPkgs =
-                                                                            pkgs :
-                                                                                [
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "init" ;
-                                                                                                runtimeInputs = [ ] ;
-                                                                                                text =
-                                                                                                    let
-                                                                                                        t = tools pkgs ;
-                                                                                                        v =
+                                                                let
+                                                                    name = if builtins.length path == 2 then builtins.elemAt path 0 else "resolve" ;
+                                                                    in
+                                                                        buildFHSUserEnv
+                                                                            {
+                                                                                extraBwrapArgs =
+                                                                                    [
+                                                                                        "--bind $MOUNT /mount"
+                                                                                        "--tmpfs /scratch"
+                                                                                    ] ;
+                                                                                name = name ;
+                                                                                runScript =
+                                                                                    ''
+                                                                                        bash -c '
+                                                                                            if [[ -t 0 ]]
+                                                                                            then
+                                                                                                ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                            else
+                                                                                                ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                            fi
+                                                                                        ' "$0" "$@"
+                                                                                    '' ;
+                                                                                targetPkgs =
+                                                                                    pkgs :
+                                                                                        [
+                                                                                            (
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "init" ;
+                                                                                                        runtimeInputs = [ ] ;
+                                                                                                        text =
                                                                                                             let
-                                                                                                                arguments =
-                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
-                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
-                                                                                                                in value arguments ;
-                                                                                                        in ''${ v } "$@"'' ;
-                                                                                            }
-                                                                                    )
-                                                                                ] ;
-                                                                    } ;
+                                                                                                                t = tools pkgs ;
+                                                                                                                v =
+                                                                                                                    let
+                                                                                                                        arguments =
+                                                                                                                            if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; wrap = t.wrap ; }
+                                                                                                                            else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; } ;
+                                                                                                                        in value arguments ;
+                                                                                                                in ''${ v } "$@"'' ;
+                                                                                                    }
+                                                                                            )
+                                                                                        ] ;
+                                                                            } ;
                                                         list = path : list : list ;
                                                         null = path : value : true ;
                                                         set = path : set : set ;
