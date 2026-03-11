@@ -96,7 +96,7 @@
                                                                                             else
                                                                                                 ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                                                             fi
-                                                                                        '
+                                                                                        ' "$0" "$@"
                                                                                     '' ;
                                                                                 targetPkgs =
                                                                                     pkgs :
