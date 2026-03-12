@@ -474,88 +474,22 @@
                                                                             name = "publish" ;
                                                                             runtimeInputs = [ coreutils gnused jq redis yq-go failure ] ;
                                                                             text =
-                                                                                let
-                                                                                    resolutions =
-                                                                                        let
-                                                                                            string =
-                                                                                                path : value :
-                                                                                                    let
-                                                                                                        resolve =
-                                                                                                            let
-                                                                                                                application =
-                                                                                                                    writeShellApplication
-                                                                                                                        {
-                                                                                                                            name = "resolve" ;
-                                                                                                                            runtimeInputs = [ coreutils gnutar jq zstd ] ;
-                                                                                                                            text =
-                                                                                                                                ''
-                                                                                                                                    if [[ -t 0 ]]
-                                                                                                                                    then
-                                                                                                                                        HAS_STANDARD_INPUT=false
-                                                                                                                                        STANDARD_INPUT=
-                                                                                                                                    else
-                                                                                                                                        HAS_STANDARD_INPUT=true
-                                                                                                                                        STANDARD_INPUT="$( cat )" || failure 17820
-                                                                                                                                    fi
-                                                                                                                                    ARCHIVE="$( mktemp --suffix ".tar.zstd" )" || failure 14594
-                                                                                                                                    tar --zstd --create --file "$ARCHIVE" --remove-files "${ resources-directory }/quarantine.init/$INDEX"
-                                                                                                                                    jq \
-                                                                                                                                        --null-input \
-                                                                                                                                        --arg _HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                                        --arg _HASH "$HASH" \
-                                                                                                                                        --arg _INDEX "$INDEX" \
-                                                                                                                                        --argjson _PATH '${ builtins.toJSON path }' \
-                                                                                                                                        --arg _RELEASE "$RELEASE" \
-                                                                                                                                        --arg _STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                                                                        --arg _TYPE "resolved-init" \
-                                                                                                                                        '{
-                                                                                                                                            "hash" : $_HASH ,
-                                                                                                                                            "has-standard-input" : $_HAS_STANDARD_INPUT ,
-                                                                                                                                            "index" : $_INDEX ,
-                                                                                                                                            "path" : $_PATH ,
-                                                                                                                                            "release" : $_RELEASE ,
-                                                                                                                                            "standard-input" : $_STANDARD_INPUT ,
-                                                                                                                                            "type" : $_TYPE
-                                                                                                                                        }' | "$PUBLISH" true
-                                                                                                                                '' ;
-                                                                                                                        } ;
-                                                                                                                in "${ application }/bin/resolve" ;
-                                                                                                        qualified-name = builtins.concatStringsSep "/" ( builtins.map builtins.toJSON path ) ;
-                                                                                                        in
-                                                                                                            [
-                                                                                                                ''FILE="${ resources-directory }/quarantine.init/$INDEX/resolvers/${ qualified-name }.sh"''
-                                                                                                                ''DIRECTORY="$( dirname "$FILE" )" || failure 25958''
-                                                                                                                ''mkdir --parents "$DIRECTORY"''
-                                                                                                                ''sed -e "s#\$PUBLISH#$0#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE#${ builtins.toString applications.release.application }#" -e "w$FILE" ${ resolve }''
-                                                                                                                ''chmod 0500 "$FILE"''
-                                                                                                            ] ;
-                                                                                            in
-                                                                                                visitor
-                                                                                                    {
-                                                                                                        lambda = path : value : builtins.throw "WTF" ;
-                                                                                                        list = path : list : builtins.concatLists list ;
-                                                                                                        null = path : value : string path "" ;
-                                                                                                        set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
-                                                                                                        string = string ;
-                                                                                                    }
-                                                                                                    init-resolutions ;
-                                                                                    in
-                                                                                        ''
-                                                                                            STATUS="$1"
-                                                                                            # shellcheck disable=SC2089,SC2016
-                                                                                            DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
-                                                                                            JSON="$( cat | jq --compact-output --argjson DESCRIPTION "$DESCRIPTION" '. + { "description" : $DESCRIPTION }' )" || failure 64cec474
-                                                                                            if ! "$STATUS"
-                                                                                            then
-                                                                                                INDEX="$2"
-                                                                                                mkdir --parents "${ resources-directory }/quarantine.init/$INDEX/resolvers"
-                                                                                                echo "$0" > "${ resources-directory }/quarantine.init/$INDEX/log.asc"
-                                                                                                yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
-                                                                                                chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
-                                                                                                ${ builtins.concatStringsSep "\n" resolutions }
-                                                                                            fi
-                                                                                            redis-cli PUBLISH "${channel}" "$JSON" > /dev/null 2>&1 || true
-                                                                                        '' ;
+                                                                                ''
+                                                                                    STATUS="$1"
+                                                                                    # shellcheck disable=SC2089,SC2016
+                                                                                    DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
+                                                                                    JSON="$( cat | jq --compact-output --argjson DESCRIPTION "$DESCRIPTION" '. + { "description" : $DESCRIPTION }' )" || failure 64cec474
+                                                                                    if ! "$STATUS"
+                                                                                    then
+                                                                                        INDEX="$2"
+                                                                                        mkdir --parents "${ resources-directory }/quarantine.init/$INDEX/resolvers"
+                                                                                        echo "$0" > "${ resources-directory }/quarantine.init/$INDEX/log.asc"
+                                                                                        yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
+                                                                                        chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
+                                                                                        ${ builtins.concatStringsSep "\n" resolutions }
+                                                                                    fi
+                                                                                    redis-cli PUBLISH "${channel}" "$JSON" > /dev/null 2>&1 || true
+                                                                                '' ;
                                                                         }
                                                                 )
                                                                 failure
