@@ -532,6 +532,7 @@
                                                                                             in
                                                                                                 visitor
                                                                                                     {
+                                                                                                        lambda = path : value : builtins.throw "WTF" ;
                                                                                                         list = path : list : builtins.concatLists list ;
                                                                                                         null = path : value : string path "" ;
                                                                                                         set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
