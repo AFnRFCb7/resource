@@ -128,10 +128,12 @@
                                                         init =
                                                             {
                                                                 application = init ;
+                                                                resolutions = init-resolutions ;
                                                             } ;
                                                         release =
                                                             {
                                                                 application = release ;
+                                                                resolutions = release-resolutions ;
                                                             } ;
                                                     } ;
                                             resolution-count =
