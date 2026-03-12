@@ -76,50 +76,47 @@
                                                     {
                                                         lambda =
                                                             path : value :
-                                                                let
-                                                                    name = if builtins.length path == 2 then builtins.elemAt path 0 else "resolve" ;
-                                                                    in
-                                                                        buildFHSUserEnv
-                                                                            {
-                                                                                extraBwrapArgs =
-                                                                                    [
-                                                                                        "--bind $MOUNT /mount"
-                                                                                        "--tmpfs /scratch"
-                                                                                    ] ;
-                                                                                name = name ;
-                                                                                runScript =
-                                                                                    ''
-                                                                                        bash -c '
-                                                                                            if [[ -t 0 ]]
-                                                                                            then
-                                                                                                ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                            else
-                                                                                                ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                            fi
-                                                                                        ' "$0" "$@"
-                                                                                    '' ;
-                                                                                targetPkgs =
-                                                                                    pkgs :
-                                                                                        [
-                                                                                            (
-                                                                                                pkgs.writeShellApplication
-                                                                                                    {
-                                                                                                        name = name ;
-                                                                                                        runtimeInputs = [ ] ;
-                                                                                                        text =
+                                                                buildFHSUserEnv
+                                                                    {
+                                                                        extraBwrapArgs =
+                                                                            [
+                                                                                "--bind $MOUNT /mount"
+                                                                                "--tmpfs /scratch"
+                                                                            ] ;
+                                                                        name = "application" ;
+                                                                        runScript =
+                                                                            ''
+                                                                                bash -c '
+                                                                                    if [[ -t 0 ]]
+                                                                                    then
+                                                                                        application "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                    else
+                                                                                        application "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                    fi
+                                                                                ' "$0" "$@"
+                                                                            '' ;
+                                                                        targetPkgs =
+                                                                            pkgs :
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "application" ;
+                                                                                                runtimeInputs = [ ] ;
+                                                                                                text =
+                                                                                                    let
+                                                                                                        t = tools pkgs ;
+                                                                                                        v =
                                                                                                             let
-                                                                                                                t = tools pkgs ;
-                                                                                                                v =
-                                                                                                                    let
-                                                                                                                        arguments =
-                                                                                                                            if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
-                                                                                                                            else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
-                                                                                                                        in value arguments ;
-                                                                                                                in ''${ v } "$@"'' ;
-                                                                                                    }
-                                                                                            )
-                                                                                        ] ;
-                                                                            } ;
+                                                                                                                arguments =
+                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
+                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
+                                                                                                                in value arguments ;
+                                                                                                        in ''${ v } "$@"'' ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
+                                                                    } ;
                                                         list = path : list : list ;
                                                         null = path : value : true ;
                                                         set = path : set : set ;
@@ -147,9 +144,9 @@
                                                                                 bash -c '
                                                                                     if [[ -t 0 ]]
                                                                                     then
-                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                        script "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                                     else
-                                                                                        init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                        script "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                                                     fi
                                                                                 ' "$0" "$@"
                                                                             '' ;
@@ -159,7 +156,7 @@
                                                                                     (
                                                                                         pkgs.writeShellApplication
                                                                                             {
-                                                                                                name = "init" ;
+                                                                                                name = "script" ;
                                                                                                 runtimeInputs = [ ] ;
                                                                                                 text =
                                                                                                     let
