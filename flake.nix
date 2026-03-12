@@ -76,47 +76,50 @@
                                                     {
                                                         lambda =
                                                             path : value :
-                                                                buildFHSUserEnv
-                                                                    {
-                                                                        extraBwrapArgs =
-                                                                            [
-                                                                                "--bind $MOUNT /mount"
-                                                                                "--tmpfs /scratch"
-                                                                            ] ;
-                                                                        name = "application" ;
-                                                                        runScript =
-                                                                            ''
-                                                                                bash -c '
-                                                                                    if [[ -t 0 ]]
-                                                                                    then
-                                                                                        application "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                    else
-                                                                                        application "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                    fi
-                                                                                ' "$0" "$@"
-                                                                            '' ;
-                                                                        targetPkgs =
-                                                                            pkgs :
-                                                                                [
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "application" ;
-                                                                                                runtimeInputs = [ ] ;
-                                                                                                text =
-                                                                                                    let
-                                                                                                        t = tools pkgs ;
-                                                                                                        v =
+                                                                let
+                                                                     application =
+                                                                        buildFHSUserEnv
+                                                                            {
+                                                                                extraBwrapArgs =
+                                                                                    [
+                                                                                        "--bind $MOUNT /mount"
+                                                                                        "--tmpfs /scratch"
+                                                                                    ] ;
+                                                                                name = "application" ;
+                                                                                runScript =
+                                                                                    ''
+                                                                                        bash -c '
+                                                                                            if [[ -t 0 ]]
+                                                                                            then
+                                                                                                application "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                            else
+                                                                                                application "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                            fi
+                                                                                        ' "$0" "$@"
+                                                                                    '' ;
+                                                                                targetPkgs =
+                                                                                    pkgs :
+                                                                                        [
+                                                                                            (
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "application" ;
+                                                                                                        runtimeInputs = [ ] ;
+                                                                                                        text =
                                                                                                             let
-                                                                                                                arguments =
-                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
-                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
-                                                                                                                in value arguments ;
-                                                                                                        in ''${ v } "$@"'' ;
-                                                                                            }
-                                                                                    )
-                                                                                ] ;
-                                                                    } ;
+                                                                                                                t = tools pkgs ;
+                                                                                                                v =
+                                                                                                                    let
+                                                                                                                        arguments =
+                                                                                                                            if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
+                                                                                                                            else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
+                                                                                                                        in value arguments ;
+                                                                                                                in ''${ v } "$@"'' ;
+                                                                                                    }
+                                                                                            )
+                                                                                        ] ;
+                                                                            } ;
+                                                                    in "${ application }/bin/environment" ;
                                                         list = path : list : list ;
                                                         null = path : value : true ;
                                                         set = path : set : set ;
@@ -642,7 +645,7 @@
                                                                             if [[ "$HAS_STANDARD_INPUT" == "true" ]]
                                                                             then
                                                                                 # shellcheck disable=SC2068
-                                                                                if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                if ${ applications.init.application } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
                                                                                     STATUS="$?"
                                                                                 else
@@ -650,7 +653,7 @@
                                                                                 fi
                                                                             else
                                                                                 # shellcheck disable=SC2068
-                                                                                if ${ applications.init.application }/bin/init ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                if ${ applications.init.application } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
                                                                                     STATUS="$?"
                                                                                 else
