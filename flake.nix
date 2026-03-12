@@ -144,7 +144,8 @@
                                                                     lambda = path : value : [ true ] ;
                                                                     list = path : list : builtins.concatLists list ;
                                                                     set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
-                                                                } ;
+                                                                }
+                                                                source ;
                                                         in if builtins.length listing == 0 then builtins.throw "We need to define at least one resolution for ${ name }." else "${ builtins.toString ( builtins.length listing ) }" ;
                                             scripts =
                                                 visitor
