@@ -119,7 +119,7 @@
                                                                                             )
                                                                                         ] ;
                                                                             } ;
-                                                                    in "${ application }/bin/environment" ;
+                                                                    in "${ application }/bin/application" ;
                                                         list = path : list : list ;
                                                         null = path : value : true ;
                                                         set = path : set : set ;
@@ -134,6 +134,18 @@
                                                                 application = release ;
                                                             } ;
                                                     } ;
+                                            resolution-count =
+                                                name : source :
+                                                    let
+                                                        listing =
+                                                            visitor
+                                                                {
+                                                                    null = path : value : [ ] ;
+                                                                    lambda = path : value : [ true ] ;
+                                                                    list = path : list : builtins.concatLists list ;
+                                                                    set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
+                                                                } ;
+                                                        in if builtins.length listing == 0 then builtins.throw "We need to define at least one resolution for ${ name }." else "${ builtins.toString ( builtins.length listing ) }" ;
                                             scripts =
                                                 visitor
                                                     {
@@ -626,6 +638,7 @@
                                                                         else
                                                                             INDEX="$( sequential )" || failure 65a31c86
                                                                             export INDEX
+                                                                            INIT_RESOLUTION_COUNT="${ resolutions-count "init" init-resolutions }"
                                                                             originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                             export PROVENANCE=new
                                                                             mkdir --parents "${ root-directory }/$INDEX"
@@ -639,6 +652,7 @@
                                                                             mkdir --parents "$MOUNT"
                                                                             export MOUNT
                                                                             mkdir --parents "${ resources-directory }/log/$INDEX"
+                                                                            RELEASE_RESOLUTIONS_COUNT="${ resolutions-count "release" release-resolutions }
                                                                             export STANDARD_ERROR_FILE="${ resources-directory }/log/$INDEX/init.standard-error.log"
                                                                             export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$INDEX/init.standard-output.log"
                                                                             cd /
@@ -682,8 +696,10 @@
                                                                                     --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                     --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
+                                                                                    --arg INIT_RESOLUTIONS_COUNT "$INIT_RESOLUTIONS_COUNT" \
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg PROVENANCE "$PROVENANCE" \
+                                                                                    --arg RELEASE_RESOLUTIONS_COUNT "$RELEASE_RESOLUTIONS_COUNT" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
@@ -697,8 +713,10 @@
                                                                                         "arguments" : $ARGUMENTS ,
                                                                                         "hash" : $HASH ,
                                                                                         "index" : $INDEX ,
+                                                                                        "init-resolutions-count" : $INIT_RESOLUTIONS_COUNT ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "provenance" : $PROVENANCE ,
+                                                                                        "release-resolutions-count" : $RELEASE_RESOLUTIONS_COUNT ,
                                                                                         "scripts" : $SCRIPTS ,
                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
@@ -719,8 +737,10 @@
                                                                                     --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                     --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
+                                                                                    --arg INIT_RESOLUTIONS_COUNT "$INIT_RESOLUTIONS_COUNT" \
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg PROVENANCE "$PROVENANCE" \
+                                                                                    --arg RELEASE_RESOLUTIONS_COUNT "$RELEASE_RESOLUTIONS_COUNT" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
@@ -734,8 +754,10 @@
                                                                                         "arguments" : $ARGUMENTS ,
                                                                                         "hash" : $HASH ,
                                                                                         "index" : $INDEX ,
+                                                                                        "init-resolutions-count" : $INIT_RESOLUTIONS_COUNT ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "provenance" : $PROVENANCE ,
+                                                                                        "release-resolutions-count" : $RELEASE_RESOLUTIONS_COUNT ,
                                                                                         "scripts" : $SCRIPTS ,
                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
