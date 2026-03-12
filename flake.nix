@@ -486,7 +486,7 @@
                                                                                         echo "$0" > "${ resources-directory }/quarantine.init/$INDEX/log.asc"
                                                                                         yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
                                                                                         chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
-                                                                                    fi
+
                                                                                     redis-cli PUBLISH "${channel}" "$JSON" > /dev/null 2>&1 || true
                                                                                 '' ;
                                                                         }
