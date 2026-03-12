@@ -582,6 +582,8 @@
                                                                             PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
                                                                             ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                         fi
+                                                                        INIT_RESOLUTION_COUNT="${ resolution-count "init" init-resolutions }"
+                                                                        RELEASE_RESOLUTION_COUNT="${ resolution-count "release" release-resolutions }
                                                                         mkdir --parents ${ resources-directory }
                                                                         ARGUMENTS=( "$@" )
                                                                         ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
@@ -616,8 +618,10 @@
                                                                                 --arg HASH "$HASH" \
                                                                                 --arg INDEX "$INDEX" \
                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                --arg INIT_RESOLUTION_COUNT "$INIT_RESOLUTION_COUNT" \
                                                                                 --arg PROVENANCE "$PROVENANCE" \
                                                                                 --argjson SCRIPTS "$SCRIPTS" \
+                                                                                --arg RELEASE_RESOLUTION_COUNT "$RELEASE_RESOLUTION_COUNT" \
                                                                                 --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                 --argjson TARGETS "$TARGETS_EXPECTED" \
                                                                                 --arg TRANSIENT "$TRANSIENT" \
@@ -626,8 +630,10 @@
                                                                                     "arguments" : $ARGUMENTS ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
+                                                                                    "init-resolution-count" : $INIT_RESOLUTION_COUNT ,
                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                     "provenance" : $PROVENANCE ,
+                                                                                    "release-resolution-count" : $RELEASE_RESOLUTION_COUNT ,
                                                                                     "scripts" : $SCRIPTS ,
                                                                                     "standard-input" : $STANDARD_INPUT ,
                                                                                     "targets" : $TARGETS ,
@@ -638,7 +644,6 @@
                                                                         else
                                                                             INDEX="$( sequential )" || failure 65a31c86
                                                                             export INDEX
-                                                                            INIT_RESOLUTION_COUNT="${ resolutions-count "init" init-resolutions }"
                                                                             originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
                                                                             export PROVENANCE=new
                                                                             mkdir --parents "${ root-directory }/$INDEX"
@@ -652,7 +657,6 @@
                                                                             mkdir --parents "$MOUNT"
                                                                             export MOUNT
                                                                             mkdir --parents "${ resources-directory }/log/$INDEX"
-                                                                            RELEASE_RESOLUTIONS_COUNT="${ resolutions-count "release" release-resolutions }
                                                                             export STANDARD_ERROR_FILE="${ resources-directory }/log/$INDEX/init.standard-error.log"
                                                                             export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$INDEX/init.standard-output.log"
                                                                             cd /
@@ -696,10 +700,10 @@
                                                                                     --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                     --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
-                                                                                    --arg INIT_RESOLUTIONS_COUNT "$INIT_RESOLUTIONS_COUNT" \
+                                                                                    --arg INIT_RESOLUTION_COUNT "$INIT_RESOLUTION_COUNT" \
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg PROVENANCE "$PROVENANCE" \
-                                                                                    --arg RELEASE_RESOLUTIONS_COUNT "$RELEASE_RESOLUTIONS_COUNT" \
+                                                                                    --arg RELEASE_RESOLUTION_COUNT "$RELEASE_RESOLUTION_COUNT" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
@@ -713,10 +717,10 @@
                                                                                         "arguments" : $ARGUMENTS ,
                                                                                         "hash" : $HASH ,
                                                                                         "index" : $INDEX ,
-                                                                                        "init-resolutions-count" : $INIT_RESOLUTIONS_COUNT ,
+                                                                                        "init-resolution-count" : $INIT_RESOLUTION_COUNT ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "provenance" : $PROVENANCE ,
-                                                                                        "release-resolutions-count" : $RELEASE_RESOLUTIONS_COUNT ,
+                                                                                        "release-resolution-count" : $RELEASE_RESOLUTION_COUNT ,
                                                                                         "scripts" : $SCRIPTS ,
                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
@@ -737,10 +741,10 @@
                                                                                     --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                     --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
-                                                                                    --arg INIT_RESOLUTIONS_COUNT "$INIT_RESOLUTIONS_COUNT" \
+                                                                                    --arg INIT_RESOLUTION_COUNT "$INIT_RESOLUTION_COUNT" \
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg PROVENANCE "$PROVENANCE" \
-                                                                                    --arg RELEASE_RESOLUTIONS_COUNT "$RELEASE_RESOLUTIONS_COUNT" \
+                                                                                    --arg RELEASE_RESOLUTION_COUNT "$RELEASE_RESOLUTION_COUNT" \
                                                                                     --argjson SCRIPTS "$SCRIPTS" \
                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
@@ -754,10 +758,10 @@
                                                                                         "arguments" : $ARGUMENTS ,
                                                                                         "hash" : $HASH ,
                                                                                         "index" : $INDEX ,
-                                                                                        "init-resolutions-count" : $INIT_RESOLUTIONS_COUNT ,
+                                                                                        "init-resolution-count" : $INIT_RESOLUTION_COUNT ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "provenance" : $PROVENANCE ,
-                                                                                        "release-resolutions-count" : $RELEASE_RESOLUTIONS_COUNT ,
+                                                                                        "release-resolution-count" : $RELEASE_RESOLUTION_COUNT ,
                                                                                         "scripts" : $SCRIPTS ,
                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                         "standard-input" : $STANDARD_INPUT ,
