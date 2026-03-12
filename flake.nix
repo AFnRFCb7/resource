@@ -518,7 +518,7 @@
                                                                             ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
                                                                         fi
                                                                         INIT_RESOLUTION_COUNT="${ resolution-count "init" init-resolutions }"
-                                                                        RELEASE_RESOLUTION_COUNT="${ resolution-count "release" release-resolutions }
+                                                                        RELEASE_RESOLUTION_COUNT="${ resolution-count "release" release-resolutions }"
                                                                         mkdir --parents ${ resources-directory }
                                                                         ARGUMENTS=( "$@" )
                                                                         ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
