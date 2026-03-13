@@ -14,7 +14,8 @@
                         root-directory ,
                         sequential-start ,
                         stale-init-channel ,
-                        valid-init-channel
+                        valid-init-channel ,
+                        writeShellApplication
                     } @primary :
                         let
                                 implementation =
@@ -590,7 +591,8 @@
                                             root-directory ,
                                             sequential-start ,
                                             stale-init-channel ,
-                                            valid-init-channel
+                                            valid-init-channel ,
+                                            writeShellApplication
                                         } :
                                             mkDerivation
                                                 {
