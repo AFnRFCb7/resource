@@ -575,6 +575,10 @@
                                                                 } ;
                                                         } ;
                                                     in builtins.mapAttrs mapper set ;
+                                            in
+                                                {
+
+                                                } ;
                             in
                                 {
                                     check =
