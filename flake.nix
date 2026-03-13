@@ -88,7 +88,7 @@
                                                                                 '' ;
                                                                         } ;
                                                                 in "${ application }/bin/${ name }" ;
-                                                    sets =
+                                                    set =
                                                         {
                                                             create =
                                                                 {
