@@ -261,9 +261,10 @@
                                                                                                                         resolutions = release-resolutioins ;
                                                                                                                     } ;
                                                                                                             } ;
-                                                                                                ''
-                                                                                                    jq --null-input --arg-json SCRIPTS '$SCRIPTS'
-                                                                                                '' ;
+                                                                                                    in
+                                                                                                        ''
+                                                                                                            jq --null-input --arg-json SCRIPTS '${ builtins.toJSON scripts }' '$SCRIPTS'
+                                                                                                        '' ;
                                                                                         }
                                                                                 )
                                                                             ] ;
