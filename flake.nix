@@ -7,58 +7,16 @@
 		        lib =
                     {
                         buildFHSUserEnv ,
-                        channel ,
-                        coreutils ,
-                        failure ,
-                        findutils ,
-                        flock ,
-                        gnused ,
-                        gnutar ,
-                        inotify-tools ,
-                        jq ,
-                        makeWrapper ,
-                        mkDerivation ,
-                        nix ,
-                        ps ,
-                        redis ,
+                        gc-root ,
+                        invalid-init-channel ,
                         resources ,
                         resources-directory ,
                         root-directory ,
                         sequential-start ,
-                        util-linux ,
-                        visitor ,
-                        writeShellApplication ,
-                        yq-go ,
-                        zstd
+                        stale-init-channel ,
+                        valid-init-channel
                     } @primary :
                         let
-                            description =
-                                {
-                                    depth ,
-                                    init ,
-                                    init-resolutions ,
-                                    release ,
-                                    release-resolutions ,
-                                    seed ,
-                                    targets ,
-                                    transient
-                                } @secondary :
-                                    let
-                                        seed = path : value : if builtins.typeOf value == "lambda" then null else value ;
-                                        in
-                                            visitor
-                                                {
-                                                    bool = seed ;
-                                                    float = seed ;
-                                                    int = seed ;
-                                                    lambda = seed ;
-                                                    list = seed ;
-                                                    null = seed ;
-                                                    path = seed ;
-                                                    set = seed ;
-                                                    string = seed ;
-                                                }
-                                                { primary = primary ; secondary = secondary ; } ;
                                 implementation =
                                     {
                                         depth ,
@@ -71,704 +29,70 @@
                                         transient
                                     } @secondary :
                                         let
-                                            applications =
-                                                visitor
-                                                    {
-                                                        lambda =
-                                                            path : value :
-                                                                let
-                                                                     application =
-                                                                        buildFHSUserEnv
-                                                                            {
-                                                                                extraBwrapArgs =
-                                                                                    [
-                                                                                        "--bind $MOUNT /mount"
-                                                                                        "--tmpfs /scratch"
-                                                                                    ] ;
-                                                                                name = "application" ;
-                                                                                runScript =
-                                                                                    ''
-                                                                                        bash -c '
-                                                                                            if [[ -t 0 ]]
-                                                                                            then
-                                                                                                application "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                            else
-                                                                                                application "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                            fi
-                                                                                        ' "$0" "$@"
-                                                                                    '' ;
-                                                                                targetPkgs =
-                                                                                    pkgs :
-                                                                                        [
-                                                                                            (
-                                                                                                pkgs.writeShellApplication
-                                                                                                    {
-                                                                                                        name = "application" ;
-                                                                                                        runtimeInputs = [ ] ;
-                                                                                                        text =
-                                                                                                            let
-                                                                                                                t = tools pkgs ;
-                                                                                                                v =
-                                                                                                                    let
-                                                                                                                        arguments =
-                                                                                                                            if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
-                                                                                                                            else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
-                                                                                                                        in value arguments ;
-                                                                                                                in ''${ v } "$@"'' ;
-                                                                                                    }
-                                                                                            )
-                                                                                        ] ;
-                                                                            } ;
-                                                                    in "${ application }/bin/application" ;
-                                                        list = path : list : list ;
-                                                        null = path : value : true ;
-                                                        set = path : set : set ;
-                                                    }
-                                                    {
-                                                        init =
-                                                            {
-                                                                application = init ;
-                                                                resolutions = init-resolutions ;
-                                                            } ;
-                                                        release =
-                                                            {
-                                                                application = release ;
-                                                                resolutions = release-resolutions ;
-                                                            } ;
-                                                    } ;
-                                            resolution-count =
-                                                name : source :
-                                                    let
-                                                        listing =
-                                                            visitor
-                                                                {
-                                                                    null = path : value : [ ] ;
-                                                                    lambda = path : value : [ true ] ;
-                                                                    list = path : list : builtins.concatLists list ;
-                                                                    set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
-                                                                }
-                                                                source ;
-                                                        in if builtins.length listing == 0 then builtins.throw "We need to define at least one resolution for ${ name }." else "${ builtins.toString ( builtins.length listing ) }" ;
-                                            scripts =
-                                                visitor
-                                                    {
-                                                        lambda =
-                                                            path : value :
-                                                                buildFHSUserEnv
-                                                                    {
-                                                                        name = if builtins.length path == 2 then builtins.elemAt path 1 else "resolve" ;
-                                                                        runScript =
-                                                                            ''
-                                                                                bash -c '
-                                                                                    if [[ -t 0 ]]
-                                                                                    then
-                                                                                        script "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                    else
-                                                                                        script "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                    fi
-                                                                                ' "$0" "$@"
-                                                                            '' ;
-                                                                        targetPkgs =
-                                                                            pkgs :
-                                                                                [
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "script" ;
-                                                                                                runtimeInputs = [ ] ;
-                                                                                                text =
-                                                                                                    let
-                                                                                                        t = tools pkgs ;
-                                                                                                        v =
-                                                                                                            let
-                                                                                                                arguments =
-                                                                                                                    if builtins.length path == 2 && builtins.elemAt path 0 == "init" then { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; root = t.root ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; wrap = t.wrap ; }
-                                                                                                                    else { failure = t.failure ; pkgs = t.pkgs ; resources = t.resources ; seed = t.seed ; sequential = t.sequential ; trace = t.trace ; } ;
-                                                                                                                in value arguments ;
-                                                                                                        in ''echo ${ v } "$@"'' ;
-                                                                                            }
-                                                                                    )
-                                                                                ] ;
-                                                                    } ;
-                                                        list = path : list : list ;
-                                                        null = path : value : null ;
-                                                        set = path : set : set ;
-                                                    }
-                                                    {
-                                                        init =
-                                                            {
-                                                                application = init ;
-                                                                resolutions = init-resolutions ;
-                                                            } ;
-                                                        release =
-                                                            {
-                                                                application = release ;
-                                                                resolutions = release-resolutions ;
-                                                            } ;
-                                                    } ;
-                                            tools =
-                                                pkgs :
-                                                    let
-                                                        wrap =
-                                                            pkgs.buildFHSUserEnv
-                                                                {
-                                                                    extraBwrapArgs = [ "--bind $MOUNT /mount" ] ;
-                                                                    name = "wrap" ;
-                                                                    runScript =
-                                                                        let
-                                                                            application =
-                                                                                pkgs.writeShellApplication
-                                                                                    {
-                                                                                        name = "runScript" ;
-                                                                                        runtimeInputs = [ pkgs.coreutils pkgs.gnugrep pkgs.gnused failure ] ;
-                                                                                        text =
-                                                                                            ''
-                                                                                                if [[ 3 -gt "$#" ]]
-                                                                                                then
-                                                                                                    failure 4b5fcf01 "We were expecting input output permissions but we observed $# arguments:  $*"
-                                                                                                fi
-                                                                                                INPUT="$1"
-                                                                                                if [[ ! -f "$INPUT" ]]
-                                                                                                then
-                                                                                                    failure 2c068d47 "We were expecting the first argument $INPUT to be a file but we observed $*"
-                                                                                                fi
-                                                                                                UUID=""
-                                                                                                shift
-                                                                                                OUTPUT="$1"
-                                                                                                if [[ -e "/mount/$OUTPUT" ]]
-                                                                                                then
-                                                                                                    failure 9887df89 "We were expecting the second argument $OUTPUT to not (yet) exist but we observed $*"
-                                                                                                fi
-                                                                                                OUTPUT_DIRECTORY="$( dirname "/mount/$OUTPUT" )" || failure a3308d94
-                                                                                                mkdir --parents "$OUTPUT_DIRECTORY"
-                                                                                                shift
-                                                                                                PERMISSIONS="$1"
-                                                                                                if [[ ! $PERMISSIONS =~ ^-?[0-9]+$ ]]
-                                                                                                then
-                                                                                                    failure 029e9461 "We were expecting the third argument to be an integer but we observed $*"
-                                                                                                fi
-                                                                                                ALLOWED_PLACEHOLDERS=()
-                                                                                                COMMANDS=()
-                                                                                                shift
-                                                                                                while [[ "$#" -gt 0 ]]
-                                                                                                do
-                                                                                                    case "$1" in
-                                                                                                        --inherit-brace)
-                                                                                                            if [[ "$#" -lt 2 ]]
-                                                                                                            then
-                                                                                                                failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
-                                                                                                            fi
-                                                                                                            VARIABLE="$2"
-                                                                                                            VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
-                                                                                                            BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
-                                                                                                            if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
-                                                                                                            then
-                                                                                                                failure 159a6642 "We were expecting $VARIABLE to be in the environment but it is not"
-                                                                                                            fi
-                                                                                                            if ! grep -F --quiet "$BRACED" "$INPUT"
-                                                                                                            then
-                                                                                                                failure 545c8e1f "We were expecting inherit $BRACED to be in the input file but it was not" "$*"
-                                                                                                            fi
-                                                                                                            ALLOWED_PLACEHOLDERS+=( "$BRACED" )
-                                                                                                            COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
-                                                                                                            shift 2
-                                                                                                            ;;
-                                                                                                        --inherit-plain)
-                                                                                                            if [[ "$#" -lt 2 ]]
-                                                                                                            then
-                                                                                                                failure 20b59d3f "We were expecting --inherit VARIABLE but we observed $*"
-                                                                                                            fi
-                                                                                                            VARIABLE="$2"
-                                                                                                            : "${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE:?Environment variable $VARIABLE must be exported" "}" ] }"
-                                                                                                            VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
-                                                                                                            BRACED="\$$VARIABLE"
-                                                                                                            if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
-                                                                                                            then
-                                                                                                                failure 8dd04f7e "We were expecting $VARIABLE to be in the environment but it is not"
-                                                                                                            fi
-                                                                                                            if ! grep -F --quiet "$VARIABLE" "$INPUT"
-                                                                                                            then
-                                                                                                                failure 50950711 "We were expecting inherit $VARIABLE to be in the input file but it was not" "$*"
-                                                                                                            fi
-                                                                                                            ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
-                                                                                                            COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
-                                                                                                            shift 2
-                                                                                                            ;;
-                                                                                                        --literal-brace)
-                                                                                                            if [[ "$#" -lt 2 ]]
-                                                                                                            then
-                                                                                                                failure ad1f2615 "We were expecting --literal-brace VARIABLE but we observed $*"
-                                                                                                            fi
-                                                                                                            VARIABLE="$2"
-                                                                                                            BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
-                                                                                                            if ! grep -F --quiet "$BRACED" "$INPUT"
-                                                                                                            then
-                                                                                                                failure 4074aec1 "We were expecting literal $BRACED to be in the input file but it was not" "$*"
-                                                                                                            fi
-                                                                                                            ALLOWED_PLACEHOLDERS+=( "$BRACED" )
-                                                                                                            # With sed we do not need to do anything for literal-brace
-                                                                                                            shift 2
-                                                                                                            ;;
-                                                                                                        --literal-plain)
-                                                                                                            if [[ "$#" -lt 2 ]]
-                                                                                                            then
-                                                                                                                failure 55186955 "We were expecting --literal-plain VARIABLE but we observed $*"
-                                                                                                            fi
-                                                                                                            VARIABLE="$2"
-                                                                                                            if ! grep -F --quiet "\$$VARIABLE" "$INPUT"
-                                                                                                            then
-                                                                                                                failure 2a3b187d "We were expecting literal $VARIABLE to be in the input file but it was not" "$*"
-                                                                                                            fi
-                                                                                                            ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
-                                                                                                            # With sed we do not need to do anything for literal-plain
-                                                                                                            shift 2
-                                                                                                            ;;
-                                                                                                        --set-brace)
-                                                                                                            if [[ "$#" -lt 3 ]]
-                                                                                                            then
-                                                                                                                failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
-                                                                                                            fi
-                                                                                                            VARIABLE="$2"
-                                                                                                            VALUE="$3"
-                                                                                                            BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
-                                                                                                            if ! grep -F --quiet "$BRACED" "$INPUT"
-                                                                                                            then
-                                                                                                                failure 7e62972e "We were expecting set $BRACED to be in the input file but it was not" "$*"
-                                                                                                            fi
-                                                                                                            ALLOWED_PLACEHOLDERS+=( "$BRACED" )
-                                                                                                            COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
-                                                                                                            shift 3
-                                                                                                            ;;
-                                                                                                        --set-plain)
-                                                                                                            if [[ "$#" -lt 3 ]]
-                                                                                                            then
-                                                                                                                failure ddcc84cc "We were expecting --set VARIABLE VALUE but we observed $*"
-                                                                                                            fi
-                                                                                                            VARIABLE="$2"
-                                                                                                            VALUE="$3"
-                                                                                                            BRACED="\$$VARIABLE"
-                                                                                                            if ! grep -F --quiet "$VARIABLE" "$INPUT"
-                                                                                                            then
-                                                                                                                failure 5f62a6be "We were expecting set $VARIABLE to be in the input file but it was not" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "$*"
-                                                                                                            fi
-                                                                                                            ALLOWED_PLACEHOLDERS+=( "\$$VARIABLE" )
-                                                                                                            COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
-                                                                                                            shift 3
-                                                                                                            ;;
-                                                                                                        --uuid)
-                                                                                                            UUID="$2"
-                                                                                                            shift 2
-                                                                                                            ;;
-                                                                                                        *)
-                                                                                                            failure d40b5fe2 "We were expecting --inherit-brace, --inherit-plain, --literal-brace, --literal-plain, --set-brace, or --set-plain but we observed $*"
-                                                                                                    esac
-                                                                                                done
-                                                                                                mapfile -t FOUND_PLACEHOLDERS < <(
-                                                                                                    grep -oE '\$\{[A-Za-z_][A-Za-z0-9_]*\}|\$[A-Za-z_][A-Za-z0-9_]*' "$INPUT" \
-                                                                                                    | sort -u
-                                                                                                )
-                                                                                                UNRESOLVED=()
-                                                                                                for PH in "${ builtins.concatStringsSep "" [ "$" "{" "FOUND_PLACEHOLDERS[@]" "}" ] }"
-                                                                                                do
-                                                                                                    FOUND=false
-                                                                                                    for ALLOWED in "${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[@]" "}" ] }"
-                                                                                                    do
-                                                                                                        if [[ "$PH" == "$ALLOWED" ]]
-                                                                                                        then
-                                                                                                            FOUND=true
-                                                                                                            break
-                                                                                                        fi
-                                                                                                    done
-                                                                                                    if ! $FOUND
-                                                                                                    then
-                                                                                                        UNRESOLVED+=( "$PH" )
-                                                                                                    fi
-                                                                                                done
-                                                                                                if [[ "${ builtins.concatStringsSep "" [ "$" "{" "#UNRESOLVED[@]" "}" ] }" -ne 0 ]]
-                                                                                                then
-                                                                                                    failure d6899da6 "Unresolved placeholders in input file: ${ builtins.concatStringsSep "" [ "$" "{" "UNRESOLVED[*]" "}" ] }" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "ALLOWED_PLACEHOLDERS=${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[*]" "}" ] }" "UUID=$UUID"
-                                                                                                fi
-                                                                                                sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
-                                                                                                chmod "$PERMISSIONS" "/mount/$OUTPUT"
-                                                                                            '' ;
-                                                                                    } ;
-                                                                                in "${ application }/bin/runScript" ;
-                                                                    } ;
-                                                        in
-                                                            {
-                                                                failure = failure ;
-                                                                pkgs = pkgs ;
-                                                                resources = resources ;
-                                                                root =
-                                                                    pkgs.writeShellApplication
-                                                                        {
-                                                                            name = "root" ;
-                                                                            runtimeInputs = [ pkgs.coreutils failure ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    TARGET="$1"
-                                                                                    DIRECTORY="$( dirname "$TARGET" )" || failure ec2ee582
-                                                                                    mkdir --parents "${ root-directory }/$INDEX/$DIRECTORY"
-                                                                                    ln --symbolic --force "$TARGET" "${ root-directory }/$INDEX$DIRECTORY"
-                                                                                '' ;
-                                                                        } ;
-                                                                seed = seed ;
-                                                                sequential =
-                                                                    writeShellApplication
-                                                                        {
-                                                                            name = "sequential" ;
-                                                                            runtimeInputs = [ coreutils failure flock ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    mkdir --parents ${ resources-directory }/sequential
-                                                                                    exec 220> ${ resources-directory }/sequential/sequential.lock
-                                                                                    flock -x 220
-                                                                                    if [[ -s ${ resources-directory }/sequential/sequential.counter ]]
-                                                                                    then
-                                                                                        CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure d3cb7aeb
-                                                                                    else
-                                                                                        CURRENT=${ sequential-start }
-                                                                                    fi
-                                                                                    NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
-                                                                                    echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
-                                                                                    printf "%016d\n" "$CURRENT"
-                                                                                '' ;
-                                                                        } ;
-                                                                trace = trace ;
-                                                                wrap = wrap ;
-                                                            } ;
-                                            setup_ =
-                                                writeShellApplication
-                                                    {
-                                                        name = "setup" ;
-                                                        runtimeInputs =
-                                                            [
-                                                                coreutils
-                                                                findutils
-                                                                flock
-                                                                jq
-                                                                ps
-                                                                (
-                                                                    writeShellApplication
-                                                                        {
-                                                                            name = "originator-pid" ;
-                                                                            runtimeInputs = [ coreutils ps failure ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    INDEX="$1"
-                                                                                    DEPTH="$2"
-                                                                                    PID="$3"
-                                                                                    mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
-                                                                                    touch "${ resources-directory }/originator-pids/$INDEX/$PID"
-                                                                                    chmod 0400 "${ resources-directory }/originator-pids/$INDEX/$PID"
-                                                                                    if [[ "$DEPTH" -gt 0 ]]
-                                                                                    then
-                                                                                        NEXT_DEPTH=$(( DEPTH - 1 ))
-                                                                                        NEXT_PID="$( ps -o ppid= -p "$PID" | tr -d '[:space:]' )" || failure 0c0e976e
-                                                                                        "$0" "$INDEX" "$NEXT_DEPTH" "$NEXT_PID"
-                                                                                    fi
-                                                                                '' ;
-                                                                        }
-                                                                )
-                                                                (
-                                                                    writeShellApplication
-                                                                        {
-                                                                            name = "publish" ;
-                                                                            runtimeInputs = [ coreutils gnused jq redis yq-go failure ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    STATUS="$1"
-                                                                                    # shellcheck disable=SC2089,SC2016
-                                                                                    DESCRIPTION='${ builtins.toJSON ( description secondary ) }'
-                                                                                    JSON="$( cat | jq --compact-output --argjson DESCRIPTION "$DESCRIPTION" '. + { "description" : $DESCRIPTION }' )" || failure 64cec474
-                                                                                    if ! "$STATUS"
-                                                                                    then
-                                                                                        INDEX="$2"
-                                                                                        mkdir --parents "${ resources-directory }/quarantine.init/$INDEX/resolvers"
-                                                                                        echo "$0" > "${ resources-directory }/quarantine.init/$INDEX/log.asc"
-                                                                                        yq eval --prettyPrint "." <<< "$JSON" > "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
-                                                                                        chmod 0400 "${ resources-directory }/quarantine.init/$INDEX/log.yaml"
-                                                                                    fi
-                                                                                    redis-cli PUBLISH "${channel}" "$JSON" > /dev/null 2>&1 || true
-                                                                                '' ;
-                                                                        }
-                                                                )
-                                                                failure
-                                                                sequential
-                                                                trace
-                                                            ] ;
-                                                        text =
-                                                            let
-                                                                double-quote = "''" ;
-                                                                in
-                                                                    ''
-                                                                        export SETUP="$0"
-                                                                        export APPLICATIONS='${ builtins.toJSON applications }'
-                                                                        export SCRIPTS='${ builtins.toJSON scripts }'
-                                                                        if [[ -t 0 ]]
-                                                                        then
-                                                                            HAS_STANDARD_INPUT=false
-                                                                            STANDARD_INPUT=
-                                                                            ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 2bd52e9b
-                                                                        else
-                                                                            STANDARD_INPUT_FILE="$( mktemp )" || failure 92bc2ab1
-                                                                            export STANDARD_INPUT_FILE
-                                                                            HAS_STANDARD_INPUT=true
-                                                                            cat <&0 > "$STANDARD_INPUT_FILE"
-                                                                            STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 101ddecf
-                                                                            PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure d79214f2
-                                                                            ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure e1556ee8
-                                                                        fi
-                                                                        INIT_RESOLUTION_COUNT="${ resolution-count "init" init-resolutions }"
-                                                                        RELEASE_RESOLUTION_COUNT="${ resolution-count "release" release-resolutions }"
-                                                                        mkdir --parents ${ resources-directory }
-                                                                        ARGUMENTS=( "$@" )
-                                                                        ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )"
-                                                                        TRANSIENT=${ transient_ }
-                                                                        HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" "$APPLICATIONS" "$SCRIPTS" | sha512sum | cut --characters 1-128 )" || failure 2ea66adc
-                                                                        export HASH
-                                                                        mkdir --parents "${ resources-directory }/locks"
-                                                                        export HAS_STANDARD_INPUT
-                                                                        export HASH
-                                                                        export STANDARD_INPUT
-                                                                        TARGETS_EXPECTED='${ builtins.builtins.toJSON ( builtins.sort builtins.lessThan targets ) }'
-                                                                        export TRANSIENT
-                                                                        exec 210> "${ resources-directory }/locks/$HASH"
-                                                                        flock -s 210
-                                                                        if [[ -L "${ resources-directory }/canonical/$HASH" ]]
-                                                                        then
-                                                                            MOUNT="$( readlink "${ resources-directory }/canonical/$HASH" )" || failure 52f2f8a5
-                                                                            export MOUNT
-                                                                            INDEX="$( basename "$MOUNT" )" || failure 50a633f1
-                                                                            export INDEX
-                                                                            originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
-                                                                            mkdir --parents ${ resources-directory }/marks
-                                                                            touch "${ resources-directory }/marks/$INDEX"
-                                                                            export PROVENANCE=cached
-                                                                            mkdir --parents "${ root-directory }/$INDEX"
-                                                                            mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                            # shellcheck disable=SC2016
-                                                                            jq \
-                                                                                --null-input \
-                                                                                --argjson APPLICATIONS "$APPLICATIONS" \
-                                                                                --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                --arg HASH "$HASH" \
-                                                                                --arg INDEX "$INDEX" \
-                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                --arg INIT_RESOLUTION_COUNT "$INIT_RESOLUTION_COUNT" \
-                                                                                --arg PROVENANCE "$PROVENANCE" \
-                                                                                --argjson SCRIPTS "$SCRIPTS" \
-                                                                                --arg RELEASE_RESOLUTION_COUNT "$RELEASE_RESOLUTION_COUNT" \
-                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                --argjson TARGETS "$TARGETS_EXPECTED" \
-                                                                                --arg TRANSIENT "$TRANSIENT" \
-                                                                                '{
-                                                                                    "applications" : $APPLICATIONS ,
-                                                                                    "arguments" : $ARGUMENTS ,
-                                                                                    "hash" : $HASH ,
-                                                                                    "index" : $INDEX ,
-                                                                                    "init-resolution-count" : $INIT_RESOLUTION_COUNT ,
-                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                    "provenance" : $PROVENANCE ,
-                                                                                    "release-resolution-count" : $RELEASE_RESOLUTION_COUNT ,
-                                                                                    "scripts" : $SCRIPTS ,
-                                                                                    "standard-input" : $STANDARD_INPUT ,
-                                                                                    "targets" : $TARGETS ,
-                                                                                    "transient" : $TRANSIENT ,
-                                                                                    "type" : "stale"
-                                                                                }' | publish true
-                                                                            echo -n "$MOUNT"
-                                                                        else
-                                                                            INDEX="$( sequential )" || failure 65a31c86
-                                                                            export INDEX
-                                                                            originator-pid "$INDEX" ${ builtins.toString depth } "$ULTIMATE_PID"
-                                                                            export PROVENANCE=new
-                                                                            mkdir --parents "${ root-directory }/$INDEX"
-                                                                            mkdir --parents "${ resources-directory }/locks/$INDEX"
-                                                                            exec 211> "${ resources-directory }/locks/$INDEX/setup.lock"
-                                                                            flock -s 211
-                                                                            mkdir --parents "${ resources-directory }/applications/$INDEX"
-                                                                            mkdir --parents ${ resources-directory }/marks
-                                                                            touch "${ resources-directory }/marks/$INDEX"
-                                                                            MOUNT="${ resources-directory }/mounts/$INDEX"
-                                                                            mkdir --parents "$MOUNT"
-                                                                            export MOUNT
-                                                                            mkdir --parents "${ resources-directory }/log/$INDEX"
-                                                                            export STANDARD_ERROR_FILE="${ resources-directory }/log/$INDEX/init.standard-error.log"
-                                                                            export STANDARD_OUTPUT_FILE="${ resources-directory }/log/$INDEX/init.standard-output.log"
-                                                                            cd /
-                                                                            if [[ "$HAS_STANDARD_INPUT" == "true" ]]
-                                                                            then
-                                                                                # shellcheck disable=SC2068
-                                                                                if ${ applications.init.application } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } < "$STANDARD_INPUT_FILE" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                then
-                                                                                    STATUS="$?"
-                                                                                else
-                                                                                    STATUS="$?"
-                                                                                fi
-                                                                            else
-                                                                                # shellcheck disable=SC2068
-                                                                                if ${ applications.init.application } ${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] } > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                then
-                                                                                    STATUS="$?"
-                                                                                else
-                                                                                    STATUS="$?"
-                                                                                fi
-                                                                            fi
-                                                                            chmod 0400 "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
-                                                                            # shellcheck disable=SC2016
-                                                                            export STATUS
-                                                                            TARGETS_OBSERVED="$( find "${ resources-directory }/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --compact-output --raw-input --slurp 'split("\n")[:-1]' )" || failure f9da34c2
-                                                                            trace f82d9be9 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED" "ARGUMENTS=${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }"
-                                                                            if [[ ! -s "$STANDARD_ERROR_FILE" ]]
-                                                                            then
-                                                                                # shellcheck disable=SC2002
-                                                                                cat "$STANDARD_OUTPUT_FILE" | trace
-                                                                                # shellcheck disable=SC2002
-                                                                                cat "$STANDARD_ERROR_FILE" | trace
-                                                                            fi
-                                                                            # shellcheck disable=SC2129
-                                                                            if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
-                                                                            then
-                                                                                # shellcheck disable=SC2016
-                                                                                jq \
-                                                                                    --null-input \
-                                                                                    --argjson APPLICATIONS "$APPLICATIONS" \
-                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                    --arg HASH "$HASH" \
-                                                                                    --arg INDEX "$INDEX" \
-                                                                                    --arg INIT_RESOLUTION_COUNT "$INIT_RESOLUTION_COUNT" \
-                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                    --arg PROVENANCE "$PROVENANCE" \
-                                                                                    --arg RELEASE_RESOLUTION_COUNT "$RELEASE_RESOLUTION_COUNT" \
-                                                                                    --arg TRANSIENT "$TRANSIENT" \
-                                                                                    --argjson SCRIPTS "$SCRIPTS" \
-                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                    --arg STATUS "$STATUS" \
-                                                                                    --argjson TARGETS "$TARGETS_EXPECTED" \
-                                                                                    --arg TRANSIENT "$TRANSIENT" \
-                                                                                    '{
-                                                                                        "applications" : $APPLICATIONS ,
-                                                                                        "arguments" : $ARGUMENTS ,
-                                                                                        "hash" : $HASH ,
-                                                                                        "index" : $INDEX ,
-                                                                                        "init-resolution-count" : $INIT_RESOLUTION_COUNT ,
-                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                        "provenance" : $PROVENANCE ,
-                                                                                        "release-resolution-count" : $RELEASE_RESOLUTION_COUNT ,
-                                                                                        "scripts" : $SCRIPTS ,
-                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                        "standard-input" : $STANDARD_INPUT ,
-                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
-                                                                                        "status" : $STATUS ,
-                                                                                        "targets" : $TARGETS ,
-                                                                                        "transient" : $TRANSIENT ,
-                                                                                        "type" : "valid-init"
-                                                                                    }' | publish true
-                                                                                mkdir --parents ${ resources-directory }/canonical
-                                                                                ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
-                                                                                echo -n "$MOUNT"
-                                                                            else
-                                                                                # shellcheck disable=SC2016
-                                                                                jq \
-                                                                                    --null-input \
-                                                                                    --argjson APPLICATIONS "$APPLICATIONS" \
-                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                    --arg HASH "$HASH" \
-                                                                                    --arg INDEX "$INDEX" \
-                                                                                    --arg INIT_RESOLUTION_COUNT "$INIT_RESOLUTION_COUNT" \
-                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                    --arg PROVENANCE "$PROVENANCE" \
-                                                                                    --arg RELEASE_RESOLUTION_COUNT "$RELEASE_RESOLUTION_COUNT" \
-                                                                                    --argjson SCRIPTS "$SCRIPTS" \
-                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                    --arg STATUS "$STATUS" \
-                                                                                    --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
-                                                                                    --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
-                                                                                    --arg TRANSIENT "$TRANSIENT" \
-                                                                                    '{
-                                                                                        "applications" : $APPLICATIONS ,
-                                                                                        "arguments" : $ARGUMENTS ,
-                                                                                        "hash" : $HASH ,
-                                                                                        "index" : $INDEX ,
-                                                                                        "init-resolution-count" : $INIT_RESOLUTION_COUNT ,
-                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                        "provenance" : $PROVENANCE ,
-                                                                                        "release-resolution-count" : $RELEASE_RESOLUTION_COUNT ,
-                                                                                        "scripts" : $SCRIPTS ,
-                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                        "standard-input" : $STANDARD_INPUT ,
-                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
-                                                                                        "status" : $STATUS ,
-                                                                                        "targets" :
-                                                                                            {
-                                                                                                "expected" : $TARGETS_EXPECTED ,
-                                                                                                "observed" : $TARGETS_OBSERVED
-                                                                                            } ,
-                                                                                        "transient" : $TRANSIENT ,
-                                                                                        "type" : "invalid-init"
-                                                                                    }' | publish false "$INDEX"
-                                                                                failure 4f93f2ef "HASH=$HASH" "INDEX=$INDEX"
-                                                                            fi
-                                                                        fi
-                                                                    '' ;
-                                                        } ;
-                                                    sequential =
-                                                        writeShellApplication
-                                                            {
-                                                                name = "sequential" ;
-                                                                runtimeInputs = [ coreutils failure flock ] ;
-                                                                text =
-                                                                    ''
-                                                                        mkdir --parents ${ resources-directory }/sequential
-                                                                        exec 220> ${ resources-directory }/sequential/sequential.lock
-                                                                        flock -x 220
-                                                                        if [[ -s ${ resources-directory }/sequential/sequential.counter ]]
-                                                                        then
-                                                                            CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure d3cb7aeb
-                                                                        else
-                                                                            CURRENT=${ sequential-start }
-                                                                        fi
-                                                                        NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
-                                                                        echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
-                                                                        printf "%016d\n" "$CURRENT"
-                                                                    '' ;
-                                                            } ;
-                                                        trace =
+                                            environments =
+                                                let
+                                                    mapper  =
+                                                        name : { chroot , gc-root , lock , log , mount , mounts , root , targetPkgs , sequential , text } :
                                                             writeShellApplication
                                                                 {
-                                                                    name = "trace" ;
+                                                                    name = name ;
                                                                     runtimeInputs =
                                                                         [
-                                                                            coreutils
                                                                             (
                                                                                 buildFHSUserEnv
                                                                                     {
                                                                                         extraBwrapArgs =
-                                                                                            [
-                                                                                                "--bind ${ resources-directory }/locks /locks"
-                                                                                                "--bind ${ resources-directory }/log /log"
-                                                                                            ] ;
-                                                                                        name = "trace" ;
-                                                                                        runScript = ''trace "$@"'' ;
+                                                                                            builtins.concatLists
+                                                                                                [
+                                                                                                    (
+                                                                                                        if builtins.typeOf gc-root == "bool" && gc-root then [ ''--bindfs /mount/gc-root /gc-root'' ]
+                                                                                                        else [ ]
+                                                                                                    )
+                                                                                                    (
+                                                                                                        if builtins.typeOf lock == "bool" && lock then [ ''--bindfs /mount/resources/lock /lock'' ]
+                                                                                                        else [ ]
+                                                                                                    )
+                                                                                                    (
+                                                                                                        if builtins.typeOf log == "bool" && log then [ ''--bindfs "/mount/resources/log /log'' ]
+                                                                                                        else [ ]
+                                                                                                    )
+                                                                                                    (
+                                                                                                        if builtins.typeOf mounts == "bool" && mounts then [ ''--bindfs ${ gc-root-directory } /mount/gc-root'' ''--bindfs "${ resources-directory } /mount/resources'' ]
+                                                                                                        else [ ]
+                                                                                                    )
+                                                                                                    (
+                                                                                                        if builtins.typeOf mount == "bool" then [ ''--bindfs${ if mount then "" else "-ro" } "/mount/resources/mounts/$INDEX" /mount'' ]
+                                                                                                        else [ ]
+                                                                                                    )
+                                                                                                    (
+                                                                                                        if builtins.typeOf sequential == "bool" && sequential then [ ''--bindfs "/mount/resources/sequential /sequential'' ]
+                                                                                                        else [ ]
+                                                                                                    )
+                                                                                                    [
+                                                                                                        "--tmpfs /scratch"
+                                                                                                    ]
+                                                                                                ] ;
+                                                                                        name = name ;
+                                                                                        runScript =
+                                                                                            ''
+                                                                                                bash -c '
+                                                                                                    if [[ -t 0 ]]
+                                                                                                    then
+                                                                                                        ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                    else
+                                                                                                        ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                                    fi
+                                                                                                ' "$0" "$@"
+                                                                                            '' ;
                                                                                         targetPkgs =
                                                                                             pkgs :
                                                                                                 [
                                                                                                     (
-                                                                                                        pkgs.writeShellApplication
+                                                                                                        writeShellApplication
                                                                                                             {
-                                                                                                                name = "trace" ;
-                                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
-                                                                                                                text =
-                                                                                                                    ''
-                                                                                                                        exec 203> /locks/trace.lock
-                                                                                                                        flock -x 203
-                                                                                                                        echo "$@" >> /log/trace.log
-                                                                                                                    '' ;
+                                                                                                                name = name ;
+                                                                                                                runtimeInputs = ( targetPkgs pkgs ) ;
+                                                                                                                text = text ;
                                                                                                             }
                                                                                                     )
                                                                                                 ] ;
@@ -776,163 +100,611 @@
                                                                             )
                                                                         ] ;
                                                                     text =
+                                                                        let
+                                                                            lock-it =
+                                                                                ''
+                                                                                    mkdir --parents /mount/resources/lock
+                                                                                    exec 203> /mount/resources/lock/${ name }
+                                                                                    flock -x 203
+                                                                                '' ;
+                                                                            in
+                                                                                ''
+                                                                                    ${ if builtins.typeOf lock == "bool" && lock then lock-it else "#" }
+                                                                                    ${ if builtins.typeOf log == "bool" && log then ''mkdir --parents "/mount/resources/log'' else "#" }
+                                                                                    ${ if builtins.typeOf mount == "bool" then ''mkdir --parents "/mount/resources/mounts/$INDEX"'' else "#" }
+                                                                                    ${ if builtins.typeOf sequential == "bool" && sequential then ''mkdir --parents "/mount/resources/sequential'' else "#" }
+                                                                                    if [[ -t 0 ]]
+                                                                                    then
+                                                                                        ${ name } "$@"
+                                                                                    else
+                                                                                        ${ name } "@" <&0
+                                                                                    fi
+                                                                                    ${ if builtins.typeOf lock == "bool" && lock then "rm ${ resources-directory }/lock/${ name }" else "#" }
+                                                                                '' ;
+                                                                } ;
+                                                            in "${ environment }/bin/${ name }" ;
+                                                    sets =
+                                                        {
+                                                            chroot =
+                                                                {
+                                                                    gc-root = null ;
+                                                                    lock = null ;
+                                                                    log = null ;
+                                                                    mount = true ;
+                                                                    mounts = null ;
+                                                                    sequential = null ;
+                                                                    targetPkgs = pkgs : [ ] ;
+                                                                    text =
+                                                                        init
+                                                                            {
+                                                                                failure = environments.failure ;
+                                                                                pkgs = pkgs ;
+                                                                                resources = resources ;
+                                                                                root = environments.root ;
+                                                                                seed = seed ;
+                                                                                trace = environments.trace ;
+                                                                                sequential = environments.sequential ;
+                                                                                wrap = environments.wrap ;
+                                                                            } ;
+                                                                } ;
+                                                            create =
+                                                                {
+                                                                    gc-root = null ;
+                                                                    lock = null ;
+                                                                    log = null ;
+                                                                    mount = true ;
+                                                                    sequential = null ;
+                                                                    targetPkgs = pkgs : [ pkgs.coreutils environments.failure environments.chroot environments.sequential ] ;
+                                                                    text =
                                                                         ''
-                                                                            mkdir --parents ${ resources-directory }/locks
-                                                                            mkdir --parents ${ resources-directory }/log
-                                                                            if [[ -t 0 ]]
+                                                                            INDEX="$( sequential )" || failure 5607
+                                                                            ARGUMENTS=( "$@" )
+                                                                            ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
+                                                                            STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
+                                                                            STANDARD_ERROR_FILE="/log/$STANDARD_ERROR_SEQUENCE.txt"
+                                                                            STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 7574
+                                                                            STANDARD_OUTPUT_FILE="/log/$STANDARD_ERROR_SEQUENCE.txt"
+                                                                            if "$HAS_STANDARD_INPUT"
                                                                             then
-                                                                                nohup trace "$@" > /dev/null 2>&1 &
+                                                                                if chroot "@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                then
+                                                                                    STATUS="$?"
+                                                                                else
+                                                                                    STATUS="$?"
+                                                                                fi
                                                                             else
-                                                                                STANDARD_INPUT="$( cat )" || failure 23371
-                                                                                nohup trace "$STANDARD_INPUT" > /dev/null 2>&1 &
+                                                                                if chroot "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                then
+                                                                                    STATUS="$?"
+                                                                                else
+                                                                                    STATUS="$?"
+                                                                                fi
+                                                                            fi
+                                                                            chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
+                                                                            JSON="$(
+                                                                                jq \
+                                                                                    --null-input \
+                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                    --arg HASH "$HASH" \
+                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                    '{
+                                                                                        "arguments" : $ARGUMENTS ,
+                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT" ,
+                                                                                        "hash" : $HASH ,
+                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                        "standard-input" : $STANDARD_INPUT ,
+                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE
+                                                                                    }'
+                                                                            )" || failure 2299
+                                                                            if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
+                                                                            then
+                                                                                redis-cli PUBLISH ${ valid-init-channel } "$JSON" > /dev/null 2>&1 || true
+                                                                                echo "${ resources-directory }/mounts/$HASH"
+                                                                            else
+                                                                                redis-cli PUBLISH ${ invalid-init-channel } "$JSON" > /dev/null 2>&1 || true
+                                                                                echo "${ resources-directory }/mounts/$HASH"
+                                                                                failure 21103
                                                                             fi
                                                                         '' ;
                                                                 } ;
-                                                        transient_ =
-                                                            visitor
+                                                            failure =
                                                                 {
-                                                                    bool = path : value : if value then "$( sequential ) || failure 0da02db4" else "-1" ;
-                                                                }
-                                                                transient ;
-                                            in
-                                                { setup ? setup : setup , failure ? "${ failure_ }/bin/failure f50c916d" } : ''"$( ${ setup "${ setup_ }/bin/setup" } )" || ${ if builtins.typeOf failure == "string" then failure else if builtins.typeOf failure == "int" then "${ failure_ }/bin/failure ${ builtins.toString failure }" else builtins.throw "d9274609" }'' ;
-                            failure_ = failure ;
-                            pre-hash =
-                                {
-                                    depth ,
-                                    init ,
-                                    init-resolutions ,
-                                    release ,
-                                    release-resolutions ,
-                                    seed ,
-                                    targets ,
-                                    transient
-                                } @secondary :
-                                    builtins.hashString "sha512" ( builtins.toJSON ( description secondary ) ) ;
+                                                                    gc-root = null ;
+                                                                    lock = null ;
+                                                                    log = true ;
+                                                                    mount = null ;
+                                                                    sequential = null ;
+                                                                    targetPkgs = pkgs : [ pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
+                                                                    text =
+                                                                        ''
+                                                                            ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || exit 64
+                                                                            if [[ -t 0 ]]
+                                                                            then
+                                                                                yq \
+                                                                                    eval \
+                                                                                    --null-input \
+                                                                                    --prettyPrint \
+                                                                                    --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                    '{ arguments : $ARGUMENTS }'
+                                                                            else
+                                                                                STANDARD_INPUT="$( cat )" || failure 65
+                                                                                yq \
+                                                                                    eval \
+                                                                                    --null-input \
+                                                                                    --prettyPrint \
+                                                                                    --argjson arguments ARGUMENTS "$ARGUMENTS" \
+                                                                                    '{ arguments: $arguments , standard-input : $STANDARD_INPUT }'
+                                                                            fi
+                                                                            exit 66
+                                                                        '' ;
+                                                                } ;
+                                                            get-or-create =
+                                                                {
+                                                                    gc-root = null ;
+                                                                    lock = null ;
+                                                                    log = null ;
+                                                                    mount = null ;
+                                                                    mounts = true ;
+                                                                    sequential = null ;
+                                                                    targetPkgs = pkgs : [ pkgs.coreutils pkgs.js pkgs.procps pkgs.redis-cli environments.create environments.failure] ;
+                                                                    text =
+                                                                        ''
+                                                                            if [[ -t 0 ]]
+                                                                            then
+                                                                                HAS_STANDARD_INPUT=false
+                                                                                STANDARD_INPUT=
+                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
+                                                                            else
+                                                                                STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
+                                                                                export STANDARD_INPUT_FILE
+                                                                                HAS_STANDARD_INPUT=true
+                                                                                cat <&0 > "$STANDARD_INPUT_FILE"
+                                                                                STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 12348
+                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
+                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
+                                                                            fi
+                                                                            ARGUMENTS=( "$@" )
+                                                                            ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
+                                                                            TRANSIENT=${ transient_ }
+                                                                            HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            SCRIPTS='${ builtins.toJSON scripts }'
+                                                                            if [[ -L "/mount/resources/mounts/$HASH" ]]
+                                                                            then
+                                                                                echo "${ resources-directory }/mounts/$HASH"
+                                                                                JSON="$( jq \
+                                                                                    --null-output \
+                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                    --arg HASH "$HASH" \
+                                                                                    --arg INDEX "INDEX" \
+                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                    --arg TRANSIENT "$TRANSIENT" \
+                                                                                    '{
+                                                                                    }' )" || failure 6962
+                                                                                redis-cli PUBLISH "${ stale-channel }" "$JSON"
+                                                                            else
+                                                                                export HAS_STANDARD_INPUT
+                                                                                export HASH
+                                                                                export STANDARD_INPUT
+                                                                                export TRANSIENT
+                                                                                create "$@"
+                                                                            fi
+                                                                        '' ;
+                                                                }  ;
+                                                            gc-root =
+                                                                {
+                                                                    gc-root = true ;
+                                                                    lock = true ;
+                                                                    log = null ;
+                                                                    mount = null ;
+                                                                    sequential = null ;
+                                                                    targetPkgs = pkgs : [ pkgs.coreutils environments.failure ] ;
+                                                                    text =
+                                                                        ''
+                                                                            TARGET="$1"
+                                                                            DIRECTORY="$( dirname "$TARGET" )" || failure 30095
+                                                                            mkdir --parents "/root/$INDEX/$DIRECTORY"
+                                                                            ln --symbolic --force "$TARGET" "/gc-root/$INDEX$DIRECTORY"
+                                                                        '' ;
+                                                                } ;
+                                                            scripts =
+                                                                {
+                                                                    gc-root = null ;
+                                                                    lock = false ;
+                                                                    log = false ;
+                                                                    mounts = null ;
+                                                                    mount = null ;
+                                                                    sequential = null ;
+                                                                    targetPkgs = pkgs : [ pkgs.which ] ;
+                                                                    text =
+                                                                        visitor
+                                                                            {
+                                                                                lambda =
+                                                                                    path : value :
+                                                                                        let
+                                                                                            arguments =
+                                                                                                if builtins.length path == "2" && builtins.elemAt path 0 == "init" && builtins.elemAt path 1 == "task" then
+                                                                                                    {
+                                                                                                        failure = environments.failure ;
+                                                                                                        pkgs = pkgs ;
+                                                                                                        resources = resources ;
+                                                                                                        root = environments.root ;
+                                                                                                        seed = seed ;
+                                                                                                        trace = environments.trace ;
+                                                                                                        sequential = environments.sequential ;
+                                                                                                        wrap = environments.wrap ;
+                                                                                                    }
+                                                                                                else
+                                                                                                    {
+                                                                                                        failure = environments.failure ;
+                                                                                                        pkgs = pkgs ;
+                                                                                                        resources = resources ;
+                                                                                                        seed = seed ;
+                                                                                                        trace = environments.trace ;
+                                                                                                        sequential = environments.sequential ;
+                                                                                                    } ;
+                                                                                            in value arguments ;
+                                                                                list = path : list : builtins.concatLists list ;
+                                                                                null = path : value : [ ] ;
+                                                                                set = path : set : builtins.concatLists ( builtins.attrValues ( set ) ) ;
+                                                                            }
+                                                                            {
+                                                                                init =
+                                                                                    {
+                                                                                        task = init ;
+                                                                                        resolutions = init-resolutions ;
+                                                                                    } ;
+                                                                                release =
+                                                                                    {
+                                                                                        task = release ;
+                                                                                        resolutions = release-resolutions ;
+                                                                                    } ;
+                                                                            } ;
+                                                                } ;
+                                                            sequential =
+                                                                {
+                                                                    gc-root = null ;
+                                                                    lock = true ;
+                                                                    log = null ;
+                                                                    mount = null ;
+                                                                    sequential = true ;
+                                                                    targetPkgs = pkgs : [ pkgs.coreutils pkgs.flock environments.failure ] ;
+                                                                    text =
+                                                                        ''
+                                                                            if [[ -s /sequential/sequential.counter ]]
+                                                                            then
+                                                                                CURRENT="$( cat /sequential/sequential.counter )" || failure 5766
+                                                                            else
+                                                                                CURRENT=${ sequential-start }
+                                                                            fi
+                                                                            NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
+                                                                            echo "$NEXT" > /sequential/sequential.counter
+                                                                            printf "%016d\n" "$CURRENT"
+                                                                        '' ;
+                                                                } ;
+                                                            trace =
+                                                                {
+                                                                    gc-root = null ;
+                                                                    lock = true ;
+                                                                    log = true ;
+                                                                    mount = null ;
+                                                                    sequential = null ;
+                                                                    targetPkgs = pkgs : [ pkgs.coreutils pkgs.flock pkgs.yq-go environments.failure ] ;
+                                                                    text =
+                                                                        ''
+                                                                            ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || failure 22397
+                                                                            if [[ -t 0 ]]
+                                                                            then
+                                                                                yq \
+                                                                                    eval \
+                                                                                    --null-input \
+                                                                                    --prettyPrint \
+                                                                                    --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                    '{ arguments : $ARGUMENTS }' \
+                                                                                    >> /log/trace.log.yaml
+                                                                            else
+                                                                                STANDARD_INPUT="$( cat )" || failure 32061
+                                                                                yq \
+                                                                                    eval \
+                                                                                    --null-input \
+                                                                                    --prettyPrint \
+                                                                                    --argjson arguments ARGUMENTS "$ARGUMENTS" \
+                                                                                    '{ arguments: $arguments , standard-input : $STANDARD_INPUT }' \
+                                                                                    > /log/trace.log.yaml
+                                                                            fi
+                                                                        '' ;
+                                                                } ;
+                                                            wrap =
+                                                                {
+                                                                    gc-root = null ;
+                                                                    lock = null ;
+                                                                    log = null ;
+                                                                    mount = true ;
+                                                                    sequential = null ;
+
+                                                                    targetPkgs = pkgs : [ pkgs.coreutils pkgs.gnugrep pkgs.gnused environments.failure ] ;
+                                                                    text =
+                                                                        ''
+                                                                            if [[ 3 -gt "$#" ]]
+                                                                            then
+                                                                                failure 4721 "We were expecting input output permissions but we observed $# arguments:  $*"
+                                                                            fi
+                                                                            INPUT="$1"
+                                                                            if [[ ! -f "$INPUT" ]]
+                                                                            then
+                                                                                failure 14159 "We were expecting the first argument $INPUT to be a file but we observed $*"
+                                                                            fi
+                                                                            UUID=""
+                                                                            shift
+                                                                            OUTPUT="$1"
+                                                                            if [[ -e "/mount/$OUTPUT" ]]
+                                                                            then
+                                                                                failure 3790 "We were expecting the second argument $OUTPUT to not (yet) exist but we observed $*"
+                                                                            fi
+                                                                            OUTPUT_DIRECTORY="$( dirname "/mount/$OUTPUT" )" || failure 20962
+                                                                            mkdir --parents "$OUTPUT_DIRECTORY"
+                                                                            shift
+                                                                            PERMISSIONS="$1"
+                                                                            if [[ ! $PERMISSIONS =~ ^-?[0-9]+$ ]]
+                                                                            then
+                                                                                failure 18129 "We were expecting the third argument to be an integer but we observed $*"
+                                                                            fi
+                                                                            ALLOWED_PLACEHOLDERS=()
+                                                                            COMMANDS=()
+                                                                            shift
+                                                                            while [[ "$#" -gt 0 ]]
+                                                                            do
+                                                                                case "$1" in
+                                                                                    --inherit)
+                                                                                        if [[ "$#" -lt 3 ]]
+                                                                                        then
+                                                                                            failure 22854 "We were expecting --inherit STYLE VARIABLE but we observed $*"
+                                                                                        fi
+                                                                                        STYLE="$2"
+                                                                                        VARIABLE="$3"
+                                                                                        VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
+                                                                                        if [[ "$STYLE" == "brace" ]]
+                                                                                        then
+                                                                                            BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
+                                                                                        elif [[ "$STYLE" == "plain" ]]
+                                                                                        then
+                                                                                            BRACED="\$$VARIABLE"
+                                                                                        else
+                                                                                            failure 32719 "We were expecting brace or plain but we got $STYLE" "$*"
+                                                                                        fi
+                                                                                        if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "VARIABLE+x" "}" ] }" ]]
+                                                                                        then
+                                                                                            failure 11096 "We were expecting $VARIABLE to be in the environment but it is not" "$*"
+                                                                                        fi
+                                                                                        if ! grep --fixed-string "$BRACED" "$INPUT"
+                                                                                        then
+                                                                                            failure 28342 "We were expecting inherit $BRACED to be in the input file but it was not" "$*"
+                                                                                        fi
+                                                                                        ALLOWED_PLACEHOLDERS+=( "$BRACED" )
+                                                                                        COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
+                                                                                        shift 3
+                                                                                        ;;
+                                                                                    --literal)
+                                                                                        if [[ "$#" -lt 3 ]]
+                                                                                        then
+                                                                                            failure 11868 "We were expecting --literal STYLE VARIABLE but we observed $*"
+                                                                                        fi
+                                                                                        STYLE="$2"
+                                                                                        VARIABLE="$3"
+                                                                                        if [[ "$STYLE" == "brace" ]]
+                                                                                        then
+                                                                                            BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
+                                                                                        elif [[ "$STYLE" == "plain" ]]
+                                                                                        then
+                                                                                            BRACED="\$$VARIABLE"
+                                                                                        fi
+                                                                                        if ! grep --fixed-string "$BRACED" "$INPUT"
+                                                                                        then
+                                                                                            failure 9160 "We were expecting literal $BRACED to be in the input file but it was not" "$*"
+                                                                                        fi
+                                                                                        ALLOWED_PLACEHOLDERS+=( "$BRACED" )
+                                                                                        # With sed we do not need to do anything for literal-brace
+                                                                                        shift 3
+                                                                                        ;;
+                                                                                    --set)
+                                                                                        if [[ "$#" -lt 4 ]]
+                                                                                        then
+                                                                                            failure 25685 "We were expecting --set STYLE VARIABLE VALUE but we observed $*"
+                                                                                        fi
+                                                                                        STYLE="$2"
+                                                                                        VARIABLE="$3"
+                                                                                        VALUE="$4"
+                                                                                        if [[ "$STYLE" == "brace" ]]
+                                                                                        then
+                                                                                            BRACED="${ builtins.concatStringsSep "" [ "\\" "$" "{" "$VARIABLE" "}" ] }"
+                                                                                        elif [[ "$STYLE" == "plain" ]]
+                                                                                        then
+                                                                                            BRACED="\$$VARIABLE"
+                                                                                        else
+                                                                                            failure 5029 "We were expecting brace or plain but we got $STYLE" "$*"
+                                                                                        fi
+                                                                                        if ! grep -F --quiet "$BRACED" "$INPUT"
+                                                                                        then
+                                                                                            failure 19050 "We were expecting set $BRACED to be in the input file but it was not" "$*"
+                                                                                        fi
+                                                                                        ALLOWED_PLACEHOLDERS+=( "$BRACED" )
+                                                                                        COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
+                                                                                        shift 4
+                                                                                        ;;
+                                                                                    --uuid)
+                                                                                        UUID="$2"
+                                                                                        shift 2
+                                                                                        ;;
+                                                                                    *)
+                                                                                        failure 15883 "We were expecting --inherit, --literal, --set, or --uuid but we observed $*"
+                                                                                esac
+                                                                            done
+                                                                            mapfile --trim-newline FOUND_PLACEHOLDERS < <(
+                                                                                grep --only-matching --extended-regexp '\$\{[A-Za-z_][A-Za-z0-9_]*\}|\$[A-Za-z_][A-Za-z0-9_]*' "$INPUT" | sort --unique
+                                                                            )
+                                                                            UNRESOLVED=()
+                                                                            for PLACE_HOLDER in "${ builtins.concatStringsSep "" [ "$" "{" "FOUND_PLACEHOLDERS[@]" "}" ] }"
+                                                                            do
+                                                                                FOUND=false
+                                                                                for ALLOWED in "${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[@]" "}" ] }"
+                                                                                do
+                                                                                    if [[ "$PLACE_HOLDER" == "$ALLOWED" ]]
+                                                                                    then
+                                                                                        FOUND=true
+                                                                                        break
+                                                                                    fi
+                                                                                done
+                                                                                if ! $FOUND
+                                                                                then
+                                                                                    UNRESOLVED+=( "$PLACE_HOLDER" )
+                                                                                fi
+                                                                            done
+                                                                            if [[ "${ builtins.concatStringsSep "" [ "$" "{" "#UNRESOLVED[@]" "}" ] }" -ne 0 ]]
+                                                                            then
+                                                                                failure 31558 "Unresolved placeholders in input file: ${ builtins.concatStringsSep "" [ "$" "{" "UNRESOLVED[*]" "}" ] }" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "ALLOWED_PLACEHOLDERS=${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[*]" "}" ] }" "UUID=$UUID"
+                                                                            fi
+                                                                            sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
+                                                                            chmod "$PERMISSIONS" "/mount/$OUTPUT"
+                                                                        '' ;
+                                                                } ;
+                                                        } ;
+                                                    in builtins.mapAttrs mapper set ;
                             in
                                 {
                                     check =
                                         {
-                                            arguments ? [ ] ,
-                                            depth ? 0 ,
-                                            diffutils ,
-                                            expected ? { } ,
-                                            expected-resource ? "" ,
-                                            expected-status ? 0 ,
-                                            init ? null ,
-                                            init-resolutions ? [ ] ,
-                                            jd-diff-patch ,
-                                            release ? null ,
-                                            release-resolutions ? [ ] ,
-                                            resources ? null ,
-                                            resources-directory ? "/build/resources" ,
-                                            resources-directory-fixture ? null ,
-                                            seed ? null ,
-                                            self ? null ,
-                                            sequential-start ? 1021 ,
-                                            standard-input ? null ,
-                                            standard-error ? "" ,
-                                            standard-output ? "" ,
-                                            status ? 0 ,
-                                            targets ,
-                                            transient
+                                            buildFHSUserEnv ,
+                                            expected-invalid-init ,
+                                            expected-stale-init ,
+                                            expected-status ,
+                                            expected-valid-init ,
+                                            fixture ,
+                                            gc-root ,
+                                            invalid-init-channel ,
+                                            mkDerivation ,
+                                            resources ,
+                                            resources-directory ,
+                                            root-directory ,
+                                            sequential-start ,
+                                            stale-init-channel ,
+                                            valid-init-channel
                                         } :
                                             mkDerivation
                                                 {
-                                                    installPhase = ''execute-test "$out"'' ;
+                                                    install = ''check "$out"'' ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
                                                             (
-                                                                writeShellApplication
+                                                                buildHFSUserEnv
                                                                     {
-                                                                        name = "execute-test" ;
-                                                                        runtimeInputs =
-                                                                            [
-                                                                                coreutils
-                                                                                failure
-                                                                                jd-diff-patch
-                                                                                jq
-                                                                                redis
-                                                                                (
-                                                                                    writeShellApplication
-                                                                                        {
-                                                                                            name = "fixture" ;
-                                                                                            runtimeInputs = [ ] ;
-                                                                                            text =
-                                                                                                visitor
-                                                                                                    {
-                                                                                                        lambda = path : value : value resources-directory ;
-                                                                                                        null = path : value : "" ;
-                                                                                                    }
-                                                                                                    resources-directory-fixture ;
-                                                                                        }
-                                                                                )
-                                                                                (
-                                                                                    writeShellApplication
-                                                                                        {
-                                                                                             name = "subscribe" ;
-                                                                                             runtimeInputs = [ coreutils redis ] ;
-                                                                                             text =
-                                                                                                ''
-                                                                                                    redis-cli --raw SUBSCRIBE "${ channel }" | {
-                                                                                                        read -r _     # skip "subscribe"
-                                                                                                        read -r _     # skip channel name
-                                                                                                        read -r _     # skip
-                                                                                                        read -r _     # skip
-                                                                                                        read -r _
-                                                                                                        read -r PAYLOAD
-                                                                                                        echo "$PAYLOAD" > /build/payload
-                                                                                                    }
-                                                                                                '' ;
-                                                                                        }
-                                                                                )
-                                                                            ] ;
-                                                                        text =
-                                                                            let
-                                                                                resource =
-                                                                                    visitor
-                                                                                        {
-                                                                                            null = path : value : implementation { depth = depth ; init = init ; init-resolutions = init-resolutions ; release = release ; release-resolutions = release-resolutions ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } 2> /build/standard-error" ; failure = 13024 ; } ;
-                                                                                            string = path : value : implementation { depth = depth ; init = init ; init-resolutions = init-resolutions ; release = release ; release-resolutions = release-resolutions ; seed = seed ; targets = targets ; transient = transient ; } { setup = setup : "${ setup } ${ builtins.concatStringsSep " " arguments } < ${ builtins.toFile "standard-input" standard-input } 2> /build/standard-error" ; failure = 28617 ; } ;
-                                                                                        }
-                                                                                        standard-input ;
-                                                                                in
-                                                                                    ''
-                                                                                        OUT="$1"
-                                                                                        mkdir --parents "$OUT"
-                                                                                        mkdir --parents /build/redis
-                                                                                        redis-server --dir /build/redis --daemonize yes
-                                                                                        while ! redis-cli ping
-                                                                                        do
-                                                                                            sleep 0
-                                                                                        done
-                                                                                        fixture
-                                                                                        subscribe &
-                                                                                        if OBSERVED_RESOURCE=${ resource }
-                                                                                        then
-                                                                                            OBSERVED_STATUS="$?"
-                                                                                        else
-                                                                                            OBSERVED_STATUS="$?"
-                                                                                        fi
-                                                                                        if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
-                                                                                        then
-                                                                                            if [[ -f ${ resources-directory }/log/trace.log ]]
-                                                                                            then
-                                                                                                cat ${ resources-directory }/log/trace.log
-                                                                                            fi
-                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
-                                                                                        fi
-                                                                                        if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
-                                                                                        then
-                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
-                                                                                        fi
-                                                                                        if ! jd ${ expected } "/build/payload"
-                                                                                        then
-                                                                                            jq "." "/build/payload" > "$OUT/candidate.json"
-                                                                                            failure 2bc4ce7b "CANDIDATE $OUT/candidate.json"
-                                                                                        fi
-                                                                                    '' ;
+                                                                        name = "check" ;
+                                                                        runScript = ''check "$@"'' ;
+                                                                        targetPkgs =
+                                                                            pkgs :
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "check" ;
+                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.redis ] ;
+                                                                                                text =
+                                                                                                    ''
+                                                                                                        OUT="$1"
+                                                                                                        mkdir --parents "$OUT"
+                                                                                                        mkdir --parents /build/redis
+                                                                                                        redis-server --dir /build/redis --daemonize yes
+                                                                                                        while ! redis-cli ping
+                                                                                                        do
+                                                                                                            sleep 0
+                                                                                                        done
+                                                                                                        fixture
+                                                                                                        nohup subscribe "$OUT" stale-init-channel > /dev/null 2>&1 &
+                                                                                                        nohup subscribe "$OUT" valid-init-channel > /dev/null 2>&1  &
+                                                                                                        nohup subscribe "$OUT" invalid-init-channel > /dev/null 2>&1  &
+                                                                                                        if OBSERVED_RESOURCE="$( resource )"
+                                                                                                        then
+                                                                                                            OBSERVED_STATUS="$?"
+                                                                                                        else
+                                                                                                            OBSERVED_STATUS="$?"
+                                                                                                        fi
+                                                                                                        if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                                        then
+                                                                                                            cat ${ resources-directory }/log/trace.log
+                                                                                                        fi
+                                                                                                        if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
+                                                                                                        then
+                                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
+                                                                                                        fi
+                                                                                                        if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
+                                                                                                        then
+                                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
+                                                                                                        fi
+                                                                                                        mkdir --parents "$OUT/expected"
+                                                                                                        cat > "$OUT/expected/stale-init.json" <<EOF
+                                                                                                        ${ builtins.toJSON expected-stale-init }
+                                                                                                        EOF
+                                                                                                        cat > "$OUT/expected/stale-init.json" <<EOF
+                                                                                                        ${ builtins.toJSON expected-stale-init }
+                                                                                                        EOF
+                                                                                                        cat > "$OUT/expected/stale-init.json" <<EOF
+                                                                                                        ${ builtins.toJSON expected-stale-init }
+                                                                                                        EOF
+                                                                                                        chmod 0400 "$OUT/expected/stale-init.json" "$OUT/expected/valid-init.json" "$OUT/expected/invalid-init.json"
+                                                                                                        if ! jd "$OUT/expected/stale-init.json" "$OUT/observed/stale-init.json"
+                                                                                                        then
+                                                                                                            failure 979
+                                                                                                        elif ! jd "$OUT/expected/valid-init.json" "$OUT/observed/valid-init.json"
+                                                                                                        then
+                                                                                                            failure 24531
+                                                                                                        elif ! jd "$OUT/expected/invalid-init.json" "$OUT/observed/invalid-init.json"
+                                                                                                        then
+                                                                                                            failure 13198
+                                                                                                        fi
+                                                                                                    '' ;
+                                                                                            }
+                                                                                    )
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "fixture" ;
+                                                                                                runtimeInputs = [ ] ;
+                                                                                                text =
+                                                                                                    visitor
+                                                                                                        {
+                                                                                                            lambda = path : value : value resources-directory ;
+                                                                                                            null = path : value : "" ;
+                                                                                                        }
+                                                                                                        fixture ;
+                                                                                            }
+                                                                                    )
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                 name = "subscribe" ;
+                                                                                                 runtimeInputs = [ coreutils redis ] ;
+                                                                                                 text =
+                                                                                                    ''
+                                                                                                        OUT="$1"
+                                                                                                        CHANNEL="$2"
+                                                                                                        redis-cli --raw SUBSCRIBE "$CHANNEL" | {
+                                                                                                            read -r _     # skip "subscribe"
+                                                                                                            read -r _     # skip channel name
+                                                                                                            read -r _     # skip
+                                                                                                            read -r _     # skip
+                                                                                                            read -r _
+                                                                                                            read -r PAYLOAD
+                                                                                                            mkdir --parents "$OUT/observed"
+                                                                                                            echo "$PAYLOAD" > "$OUT/observed/$CHANNEL.json"
+                                                                                                            chmod 0400 "$OUT/observed/$CHANNEL.json"
+                                                                                                        }
+                                                                                                    '' ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
                                                                     }
                                                             )
                                                         ] ;
