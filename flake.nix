@@ -206,57 +206,69 @@
                                                                 } ;
                                                             scripts =
                                                                 {
-                                                                    gc-root = null ;
-                                                                    lock = false ;
-                                                                    log = false ;
-                                                                    mounts = null ;
-                                                                    mount = null ;
-                                                                    sequential = null ;
-                                                                    targetPkgs = pkgs : [ pkgs.which ] ;
+                                                                    extraBwrapArgs = [ ] ;
+                                                                    pre = "" ;
+                                                                    post = "" ;
+                                                                    targetPkgs =
+                                                                        pkgs :
+                                                                            [
+                                                                                (
+                                                                                    pkgs.writeShellApplication
+                                                                                        {
+                                                                                            name = "scripts" ;
+                                                                                            runtimeInputs = [ ] ;
+                                                                                            text =
+                                                                                                let
+                                                                                                    scripts =
+                                                                                                        visitor
+                                                                                                            {
+                                                                                                                lambda =
+                                                                                                                    path : value :
+                                                                                                                        let
+                                                                                                                            arguments =
+                                                                                                                                if builtins.typeOf path == "list" && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" && builtins.typeOf ( builtins.elemAt path 1 ) == "string" && builtins.elemAt 1 == "task" then
+                                                                                                                                    {
+                                                                                                                                        failure = environments.failure ;
+                                                                                                                                        gc-root = environments.gc-root ;
+                                                                                                                                        pkgs = pkgs ;
+                                                                                                                                        resources = resources ;
+                                                                                                                                        seed = seed ;
+                                                                                                                                        trace = environments.trace ;
+                                                                                                                                        sequential = environments.sequential ;
+                                                                                                                                        wrap = environments.wrap ;
+                                                                                                                                    }
+                                                                                                                                else
+                                                                                                                                    {
+                                                                                                                                        failure = environments.failure ;
+                                                                                                                                        pkgs = pkgs ;
+                                                                                                                                        resources = resources ;
+                                                                                                                                        seed = seed ;
+                                                                                                                                        trace = environments.trace ;
+                                                                                                                                        sequential = environments.sequential ;
+                                                                                                                                    } ;
+                                                                                                                                in value arguments ;
+                                                                                                                null = path : value : null ;
+                                                                                                            }
+                                                                                                            {
+                                                                                                                init =
+                                                                                                                    {
+                                                                                                                        task = init ;
+                                                                                                                        resolutions = init-resolutions ;
+                                                                                                                    } ;
+                                                                                                                release =
+                                                                                                                    {
+                                                                                                                        task = release ;
+                                                                                                                        resolutions = release-resolutioins ;
+                                                                                                                    } ;
+                                                                                                            } ;
+                                                                                                ''
+                                                                                                    jq --null-input --arg-json SCRIPTS '$SCRIPTS'
+                                                                                                '' ;
+                                                                                        }
+                                                                                )
+                                                                            ] ;
                                                                     text =
-                                                                        visitor
-                                                                            {
-                                                                                lambda =
-                                                                                    path : value :
-                                                                                        let
-                                                                                            arguments =
-                                                                                                if builtins.length path == "2" && builtins.elemAt path 0 == "init" && builtins.elemAt path 1 == "task" then
-                                                                                                    {
-                                                                                                        failure = environments.failure ;
-                                                                                                        pkgs = pkgs ;
-                                                                                                        resources = resources ;
-                                                                                                        root = environments.root ;
-                                                                                                        seed = seed ;
-                                                                                                        trace = environments.trace ;
-                                                                                                        sequential = environments.sequential ;
-                                                                                                        wrap = environments.wrap ;
-                                                                                                    }
-                                                                                                else
-                                                                                                    {
-                                                                                                        failure = environments.failure ;
-                                                                                                        pkgs = pkgs ;
-                                                                                                        resources = resources ;
-                                                                                                        seed = seed ;
-                                                                                                        trace = environments.trace ;
-                                                                                                        sequential = environments.sequential ;
-                                                                                                    } ;
-                                                                                            in value arguments ;
-                                                                                list = path : list : builtins.concatLists list ;
-                                                                                null = path : value : [ ] ;
-                                                                                set = path : set : builtins.concatLists ( builtins.attrValues ( set ) ) ;
-                                                                            }
-                                                                            {
-                                                                                init =
-                                                                                    {
-                                                                                        task = init ;
-                                                                                        resolutions = init-resolutions ;
-                                                                                    } ;
-                                                                                release =
-                                                                                    {
-                                                                                        task = release ;
-                                                                                        resolutions = release-resolutions ;
-                                                                                    } ;
-                                                                            } ;
+                                                                        ''scripts'' ;
                                                                 } ;
                                                             sequential =
                                                                 {
