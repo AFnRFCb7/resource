@@ -16,6 +16,7 @@
                         sequential-start ,
                         stale-init-channel ,
                         valid-init-channel ,
+                        visitor ,
                         writeShellApplication
                     } @primary :
                         let
