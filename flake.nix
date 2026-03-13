@@ -41,7 +41,7 @@
                                                                             name = name ;
                                                                             runtimeInputs =
                                                                                 [
-                                                                                    pkgs.coreutils
+                                                                                    coreutils
                                                                                     (
                                                                                         buildFHSUserEnv
                                                                                             {
