@@ -33,7 +33,7 @@
                                             environments =
                                                 let
                                                     mapper  =
-                                                        name : { chroot , gc-root , lock , log , mount , mounts , root , targetPkgs , sequential , text } :
+                                                        name : { extraBwrapArgs , pre , post , targetPkgs , text } :
                                                             let
                                                                 application =
                                                                     writeShellApplication
@@ -41,40 +41,11 @@
                                                                             name = name ;
                                                                             runtimeInputs =
                                                                                 [
+                                                                                    pkgs.coreutils
                                                                                     (
                                                                                         buildFHSUserEnv
                                                                                             {
-                                                                                                extraBwrapArgs =
-                                                                                                    builtins.concatLists
-                                                                                                        [
-                                                                                                            (
-                                                                                                                if builtins.typeOf gc-root == "bool" && gc-root then [ ''--bindfs /mount/gc-root /gc-root'' ]
-                                                                                                                else [ ]
-                                                                                                            )
-                                                                                                            (
-                                                                                                                if builtins.typeOf lock == "bool" && lock then [ ''--bindfs /mount/resources/lock /lock'' ]
-                                                                                                                else [ ]
-                                                                                                            )
-                                                                                                            (
-                                                                                                                if builtins.typeOf log == "bool" && log then [ ''--bindfs "/mount/resources/log /log'' ]
-                                                                                                                else [ ]
-                                                                                                            )
-                                                                                                            (
-                                                                                                                if builtins.typeOf mounts == "bool" && mounts then [ ''--bindfs ${ gc-root-directory } /mount/gc-root'' ''--bindfs "${ resources-directory } /mount/resources'' ]
-                                                                                                                else [ ]
-                                                                                                            )
-                                                                                                            (
-                                                                                                                if builtins.typeOf mount == "bool" then [ ''--bindfs${ if mount then "" else "-ro" } "/mount/resources/mounts/$INDEX" /mount'' ]
-                                                                                                                else [ ]
-                                                                                                            )
-                                                                                                            (
-                                                                                                                if builtins.typeOf sequential == "bool" && sequential then [ ''--bindfs "/mount/resources/sequential /sequential'' ]
-                                                                                                                else [ ]
-                                                                                                            )
-                                                                                                            [
-                                                                                                                "--tmpfs /scratch"
-                                                                                                            ]
-                                                                                                        ] ;
+                                                                                                extraBwrapArgs = extraBwrapArgs ;
                                                                                                 name = name ;
                                                                                                 runScript =
                                                                                                     ''
@@ -103,61 +74,29 @@
                                                                                     )
                                                                                 ] ;
                                                                             text =
-                                                                                let
-                                                                                    lock-it =
-                                                                                        ''
-                                                                                            mkdir --parents /mount/resources/lock
-                                                                                            exec 203> /mount/resources/lock/${ name }
-                                                                                            flock -x 203
-                                                                                        '' ;
-                                                                                    in
-                                                                                        ''
-                                                                                            ${ if builtins.typeOf lock == "bool" && lock then lock-it else "#" }
-                                                                                            ${ if builtins.typeOf log == "bool" && log then ''mkdir --parents "/mount/resources/log'' else "#" }
-                                                                                            ${ if builtins.typeOf mount == "bool" then ''mkdir --parents "/mount/resources/mounts/$INDEX"'' else "#" }
-                                                                                            ${ if builtins.typeOf sequential == "bool" && sequential then ''mkdir --parents "/mount/resources/sequential'' else "#" }
-                                                                                            if [[ -t 0 ]]
-                                                                                            then
-                                                                                                ${ name } "$@"
-                                                                                            else
-                                                                                                ${ name } "@" <&0
-                                                                                            fi
-                                                                                            ${ if builtins.typeOf lock == "bool" && lock then "rm ${ resources-directory }/lock/${ name }" else "#" }
-                                                                                        '' ;
+                                                                                ''
+                                                                                    ${ pre }
+                                                                                    if [[ -t 0 ]]
+                                                                                    then
+                                                                                        ${ name } "$@"
+                                                                                    else
+                                                                                        ${ name } "@" <&0
+                                                                                    fi
+                                                                                    ${ post }
+                                                                                '' ;
                                                                         } ;
                                                                 in "${ application }/bin/${ name }" ;
                                                     sets =
                                                         {
-                                                            chroot =
-                                                                {
-                                                                    gc-root = null ;
-                                                                    lock = null ;
-                                                                    log = null ;
-                                                                    mount = true ;
-                                                                    mounts = null ;
-                                                                    sequential = null ;
-                                                                    targetPkgs = pkgs : [ ] ;
-                                                                    text =
-                                                                        init
-                                                                            {
-                                                                                failure = environments.failure ;
-                                                                                pkgs = pkgs ;
-                                                                                resources = resources ;
-                                                                                root = environments.root ;
-                                                                                seed = seed ;
-                                                                                trace = environments.trace ;
-                                                                                sequential = environments.sequential ;
-                                                                                wrap = environments.wrap ;
-                                                                            } ;
-                                                                } ;
                                                             create =
                                                                 {
-                                                                    gc-root = null ;
-                                                                    lock = null ;
-                                                                    log = null ;
-                                                                    mount = true ;
-                                                                    sequential = null ;
-                                                                    targetPkgs = pkgs : [ pkgs.coreutils environments.failure environments.chroot environments.sequential ] ;
+                                                                    extraBwrapArgs = [ ''--bind ${ resources-directory }/log /log'' ] ;
+                                                                    post = "" ;
+                                                                    pre =
+                                                                        ''
+                                                                            mkdir --parents "${ resources-directory }/log
+                                                                        '' ;
+                                                                    targetPkgs = pkgs : [ environments.failure environments.sequential environments.init environments.sequential pkgs.coreutils ] ;
                                                                     text =
                                                                         ''
                                                                             INDEX="$( sequential )" || failure 5607
@@ -169,14 +108,14 @@
                                                                             STANDARD_OUTPUT_FILE="/log/$STANDARD_ERROR_SEQUENCE.txt"
                                                                             if "$HAS_STANDARD_INPUT"
                                                                             then
-                                                                                if chroot "@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                if init "@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
                                                                                     STATUS="$?"
                                                                                 else
                                                                                     STATUS="$?"
                                                                                 fi
                                                                             else
-                                                                                if chroot "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                 then
                                                                                     STATUS="$?"
                                                                                 else
@@ -184,30 +123,30 @@
                                                                                 fi
                                                                             fi
                                                                             chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
-                                                                            JSON="$(
-                                                                                jq \
-                                                                                    --null-input \
-                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                    --arg HASH "$HASH" \
-                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                    '{
-                                                                                        "arguments" : $ARGUMENTS ,
-                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT" ,
-                                                                                        "hash" : $HASH ,
-                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                        "standard-input" : $STANDARD_INPUT ,
-                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE
-                                                                                    }'
-                                                                            )" || failure 2299
+                                                                            JSON_SEQUENCE="$( sequential )" || failure 32761
+                                                                            JSON_FILE="/log/$JSON_SEQUENCE"
+                                                                            jq \
+                                                                                --null-input \
+                                                                                --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                --arg HASH "$HASH" \
+                                                                                --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                '{
+                                                                                    "arguments" : $ARGUMENTS ,
+                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT" ,
+                                                                                    "hash" : $HASH ,
+                                                                                    "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                    "standard-input" : $STANDARD_INPUT ,
+                                                                                    "standard-output-file" : $STANDARD_OUTPUT_FILE
+                                                                                }' > "$JSON_FILE"
                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                             then
-                                                                                redis-cli PUBLISH ${ valid-init-channel } "$JSON" > /dev/null 2>&1 || true
+                                                                                redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                 echo "${ resources-directory }/mounts/$HASH"
                                                                             else
-                                                                                redis-cli PUBLISH ${ invalid-init-channel } "$JSON" > /dev/null 2>&1 || true
+                                                                                redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                 echo "${ resources-directory }/mounts/$HASH"
                                                                                 failure 21103
                                                                             fi
@@ -215,15 +154,17 @@
                                                                 } ;
                                                             failure =
                                                                 {
-                                                                    gc-root = null ;
-                                                                    lock = null ;
-                                                                    log = true ;
-                                                                    mount = null ;
-                                                                    sequential = null ;
-                                                                    targetPkgs = pkgs : [ pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
+                                                                    extraBwrapArgs = [ ] ;
+                                                                    post =
+                                                                        ''
+                                                                        '' ;
+                                                                    pre =
+                                                                        ''
+                                                                        '' ;
+                                                                    targetPkgs = pkgs : [ pkgs.coreutils pkgs.yq-go ] ;
                                                                     text =
                                                                         ''
-                                                                            ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || exit 64
+                                                                            ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || exit 68
                                                                             if [[ -t 0 ]]
                                                                             then
                                                                                 yq \
@@ -244,66 +185,14 @@
                                                                             exit 66
                                                                         '' ;
                                                                 } ;
-                                                            get-or-create =
-                                                                {
-                                                                    gc-root = null ;
-                                                                    lock = null ;
-                                                                    log = null ;
-                                                                    mount = null ;
-                                                                    mounts = true ;
-                                                                    sequential = null ;
-                                                                    targetPkgs = pkgs : [ pkgs.coreutils pkgs.js pkgs.procps pkgs.redis-cli environments.create environments.failure] ;
-                                                                    text =
-                                                                        ''
-                                                                            if [[ -t 0 ]]
-                                                                            then
-                                                                                HAS_STANDARD_INPUT=false
-                                                                                STANDARD_INPUT=
-                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
-                                                                            else
-                                                                                STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
-                                                                                export STANDARD_INPUT_FILE
-                                                                                HAS_STANDARD_INPUT=true
-                                                                                cat <&0 > "$STANDARD_INPUT_FILE"
-                                                                                STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 12348
-                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
-                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
-                                                                            fi
-                                                                            ARGUMENTS=( "$@" )
-                                                                            ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
-                                                                            TRANSIENT=${ transient_ }
-                                                                            HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 21086
-                                                                            SCRIPTS='${ builtins.toJSON scripts }'
-                                                                            if [[ -L "/mount/resources/mounts/$HASH" ]]
-                                                                            then
-                                                                                echo "${ resources-directory }/mounts/$HASH"
-                                                                                JSON="$( jq \
-                                                                                    --null-output \
-                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                    --arg HASH "$HASH" \
-                                                                                    --arg INDEX "INDEX" \
-                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                    --arg TRANSIENT "$TRANSIENT" \
-                                                                                    '{
-                                                                                    }' )" || failure 6962
-                                                                                redis-cli PUBLISH "${ stale-channel }" "$JSON"
-                                                                            else
-                                                                                export HAS_STANDARD_INPUT
-                                                                                export HASH
-                                                                                export STANDARD_INPUT
-                                                                                export TRANSIENT
-                                                                                create "$@"
-                                                                            fi
-                                                                        '' ;
-                                                                }  ;
                                                             gc-root =
                                                                 {
-                                                                    gc-root = true ;
-                                                                    lock = true ;
-                                                                    log = null ;
-                                                                    mount = null ;
-                                                                    sequential = null ;
+                                                                    extraBwrapArgs = [ "--bind ${ gc-root-directory } /gc-root" ] ;
+                                                                    post = "" ;
+                                                                    pre =
+                                                                        ''
+                                                                            mkdir --parents ${ gc-root-directory }
+                                                                        '' ;
                                                                     targetPkgs = pkgs : [ pkgs.coreutils environments.failure ] ;
                                                                     text =
                                                                         ''
@@ -575,10 +464,69 @@
                                                                 } ;
                                                         } ;
                                                     in builtins.mapAttrs mapper set ;
+                                            get-or-create =
+                                                writeShellApplication
+                                                    {
+                                                        name = "get-or-create" ;
+                                                        runtimeInputs = [ environments.create environments.failure coreutils js procps redis-cli ] ;
+                                                        text =
+                                                            ''
+                                                                if [[ -t 0 ]]
+                                                                then
+                                                                    HAS_STANDARD_INPUT=false
+                                                                    STANDARD_INPUT=
+                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
+                                                                else
+                                                                    STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
+                                                                    export STANDARD_INPUT_FILE
+                                                                    HAS_STANDARD_INPUT=true
+                                                                    cat <&0 > "$STANDARD_INPUT_FILE"
+                                                                    STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 12348
+                                                                    PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
+                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
+                                                                fi
+                                                                ARGUMENTS=( "$@" )
+                                                                ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
+                                                                TRANSIENT=${ transient_ }
+                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                SCRIPTS='${ builtins.toJSON scripts }'
+                                                                if [[ -L "${ resources-directory }/mounts/$HASH" ]]
+                                                                then
+                                                                    echo "${ resources-directory }/mounts/$HASH"
+                                                                    JSON_SEQUENCE="$( sequential )" || failure 30634
+                                                                    JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
+                                                                    jq \
+                                                                        --null-output \
+                                                                        --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                        --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                        --arg HASH "$HASH" \
+                                                                        --arg INDEX "INDEX" \
+                                                                        --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                        --arg TRANSIENT "$TRANSIENT" \
+                                                                        '{
+                                                                            "arguments" : $ARGUMENTS ,
+                                                                            "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                            "hash" : $HASH ,
+                                                                            "index" : $INDEX ,
+                                                                            "standard-input" : $STANDARD_INPUT ,
+                                                                            "transient" : $TRANSIENT
+                                                                        }' > "$JSON_FILE"
+                                                                    redis-cli PUBLISH "${ stale-channel }" "$JSON_FILE"
+                                                                else
+                                                                    export HAS_STANDARD_INPUT
+                                                                    export HASH
+                                                                    export STANDARD_INPUT
+                                                                    export TRANSIENT
+                                                                    create "$@"
+                                                                fi
+                                                            '' ;
+                                                    } ;
                                             in
                                                 {
-
-                                                } ;
+                                                    failure ? 10996 ,
+                                                    setup ? setup : "${ setup }"
+                                                } :
+                                                    ''"$( ${ setup "${ get-or-create }/bin/get-or-create" }" || ${ environments.failure ( builtins.toString failure ) }'' ;
                             in
                                 {
                                     check =
