@@ -15,6 +15,7 @@
                         root-directory ,
                         sequential-start ,
                         stale-init-channel ,
+                        transient ,
                         valid-init-channel ,
                         visitor ,
                         writeShellApplication
@@ -502,7 +503,7 @@
                                                                 fi
                                                                 ARGUMENTS=( "$@" )
                                                                 ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
-                                                                TRANSIENT=${ transient_ }
+                                                                TRANSIENT=${ visitor { bool = path : value : if value then "$( sequential ) || failure 5672" else "-1" ; } transient }
                                                                 HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                 SCRIPTS='${ builtins.toJSON scripts }'
                                                                 if [[ -L "${ resources-directory }/mounts/$HASH" ]]
