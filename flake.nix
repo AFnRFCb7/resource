@@ -258,7 +258,7 @@
                                                                                                                 release =
                                                                                                                     {
                                                                                                                         task = release ;
-                                                                                                                        resolutions = release-resolutioins ;
+                                                                                                                        resolutions = release-resolutions ;
                                                                                                                     } ;
                                                                                                             } ;
                                                                                                     in
