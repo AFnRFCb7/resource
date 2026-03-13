@@ -34,96 +34,98 @@
                                                 let
                                                     mapper  =
                                                         name : { chroot , gc-root , lock , log , mount , mounts , root , targetPkgs , sequential , text } :
-                                                            writeShellApplication
-                                                                {
-                                                                    name = name ;
-                                                                    runtimeInputs =
-                                                                        [
-                                                                            (
-                                                                                buildFHSUserEnv
-                                                                                    {
-                                                                                        extraBwrapArgs =
-                                                                                            builtins.concatLists
-                                                                                                [
-                                                                                                    (
-                                                                                                        if builtins.typeOf gc-root == "bool" && gc-root then [ ''--bindfs /mount/gc-root /gc-root'' ]
-                                                                                                        else [ ]
-                                                                                                    )
-                                                                                                    (
-                                                                                                        if builtins.typeOf lock == "bool" && lock then [ ''--bindfs /mount/resources/lock /lock'' ]
-                                                                                                        else [ ]
-                                                                                                    )
-                                                                                                    (
-                                                                                                        if builtins.typeOf log == "bool" && log then [ ''--bindfs "/mount/resources/log /log'' ]
-                                                                                                        else [ ]
-                                                                                                    )
-                                                                                                    (
-                                                                                                        if builtins.typeOf mounts == "bool" && mounts then [ ''--bindfs ${ gc-root-directory } /mount/gc-root'' ''--bindfs "${ resources-directory } /mount/resources'' ]
-                                                                                                        else [ ]
-                                                                                                    )
-                                                                                                    (
-                                                                                                        if builtins.typeOf mount == "bool" then [ ''--bindfs${ if mount then "" else "-ro" } "/mount/resources/mounts/$INDEX" /mount'' ]
-                                                                                                        else [ ]
-                                                                                                    )
-                                                                                                    (
-                                                                                                        if builtins.typeOf sequential == "bool" && sequential then [ ''--bindfs "/mount/resources/sequential /sequential'' ]
-                                                                                                        else [ ]
-                                                                                                    )
-                                                                                                    [
-                                                                                                        "--tmpfs /scratch"
-                                                                                                    ]
-                                                                                                ] ;
-                                                                                        name = name ;
-                                                                                        runScript =
-                                                                                            ''
-                                                                                                bash -c '
-                                                                                                    if [[ -t 0 ]]
-                                                                                                    then
-                                                                                                        ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                                    else
-                                                                                                        ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                                    fi
-                                                                                                ' "$0" "$@"
-                                                                                            '' ;
-                                                                                        targetPkgs =
-                                                                                            pkgs :
-                                                                                                [
-                                                                                                    (
-                                                                                                        writeShellApplication
-                                                                                                            {
-                                                                                                                name = name ;
-                                                                                                                runtimeInputs = ( targetPkgs pkgs ) ;
-                                                                                                                text = text ;
-                                                                                                            }
-                                                                                                    )
-                                                                                                ] ;
-                                                                                    }
-                                                                            )
-                                                                        ] ;
-                                                                    text =
-                                                                        let
-                                                                            lock-it =
-                                                                                ''
-                                                                                    mkdir --parents /mount/resources/lock
-                                                                                    exec 203> /mount/resources/lock/${ name }
-                                                                                    flock -x 203
-                                                                                '' ;
-                                                                            in
-                                                                                ''
-                                                                                    ${ if builtins.typeOf lock == "bool" && lock then lock-it else "#" }
-                                                                                    ${ if builtins.typeOf log == "bool" && log then ''mkdir --parents "/mount/resources/log'' else "#" }
-                                                                                    ${ if builtins.typeOf mount == "bool" then ''mkdir --parents "/mount/resources/mounts/$INDEX"'' else "#" }
-                                                                                    ${ if builtins.typeOf sequential == "bool" && sequential then ''mkdir --parents "/mount/resources/sequential'' else "#" }
-                                                                                    if [[ -t 0 ]]
-                                                                                    then
-                                                                                        ${ name } "$@"
-                                                                                    else
-                                                                                        ${ name } "@" <&0
-                                                                                    fi
-                                                                                    ${ if builtins.typeOf lock == "bool" && lock then "rm ${ resources-directory }/lock/${ name }" else "#" }
-                                                                                '' ;
-                                                                } ;
-                                                            in "${ environment }/bin/${ name }" ;
+                                                            let
+                                                                application =
+                                                                    writeShellApplication
+                                                                        {
+                                                                            name = name ;
+                                                                            runtimeInputs =
+                                                                                [
+                                                                                    (
+                                                                                        buildFHSUserEnv
+                                                                                            {
+                                                                                                extraBwrapArgs =
+                                                                                                    builtins.concatLists
+                                                                                                        [
+                                                                                                            (
+                                                                                                                if builtins.typeOf gc-root == "bool" && gc-root then [ ''--bindfs /mount/gc-root /gc-root'' ]
+                                                                                                                else [ ]
+                                                                                                            )
+                                                                                                            (
+                                                                                                                if builtins.typeOf lock == "bool" && lock then [ ''--bindfs /mount/resources/lock /lock'' ]
+                                                                                                                else [ ]
+                                                                                                            )
+                                                                                                            (
+                                                                                                                if builtins.typeOf log == "bool" && log then [ ''--bindfs "/mount/resources/log /log'' ]
+                                                                                                                else [ ]
+                                                                                                            )
+                                                                                                            (
+                                                                                                                if builtins.typeOf mounts == "bool" && mounts then [ ''--bindfs ${ gc-root-directory } /mount/gc-root'' ''--bindfs "${ resources-directory } /mount/resources'' ]
+                                                                                                                else [ ]
+                                                                                                            )
+                                                                                                            (
+                                                                                                                if builtins.typeOf mount == "bool" then [ ''--bindfs${ if mount then "" else "-ro" } "/mount/resources/mounts/$INDEX" /mount'' ]
+                                                                                                                else [ ]
+                                                                                                            )
+                                                                                                            (
+                                                                                                                if builtins.typeOf sequential == "bool" && sequential then [ ''--bindfs "/mount/resources/sequential /sequential'' ]
+                                                                                                                else [ ]
+                                                                                                            )
+                                                                                                            [
+                                                                                                                "--tmpfs /scratch"
+                                                                                                            ]
+                                                                                                        ] ;
+                                                                                                name = name ;
+                                                                                                runScript =
+                                                                                                    ''
+                                                                                                        bash -c '
+                                                                                                            if [[ -t 0 ]]
+                                                                                                            then
+                                                                                                                ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                            else
+                                                                                                                ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                                            fi
+                                                                                                        ' "$0" "$@"
+                                                                                                    '' ;
+                                                                                                targetPkgs =
+                                                                                                    pkgs :
+                                                                                                        [
+                                                                                                            (
+                                                                                                                writeShellApplication
+                                                                                                                    {
+                                                                                                                        name = name ;
+                                                                                                                        runtimeInputs = ( targetPkgs pkgs ) ;
+                                                                                                                        text = text ;
+                                                                                                                    }
+                                                                                                            )
+                                                                                                        ] ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
+                                                                            text =
+                                                                                let
+                                                                                    lock-it =
+                                                                                        ''
+                                                                                            mkdir --parents /mount/resources/lock
+                                                                                            exec 203> /mount/resources/lock/${ name }
+                                                                                            flock -x 203
+                                                                                        '' ;
+                                                                                    in
+                                                                                        ''
+                                                                                            ${ if builtins.typeOf lock == "bool" && lock then lock-it else "#" }
+                                                                                            ${ if builtins.typeOf log == "bool" && log then ''mkdir --parents "/mount/resources/log'' else "#" }
+                                                                                            ${ if builtins.typeOf mount == "bool" then ''mkdir --parents "/mount/resources/mounts/$INDEX"'' else "#" }
+                                                                                            ${ if builtins.typeOf sequential == "bool" && sequential then ''mkdir --parents "/mount/resources/sequential'' else "#" }
+                                                                                            if [[ -t 0 ]]
+                                                                                            then
+                                                                                                ${ name } "$@"
+                                                                                            else
+                                                                                                ${ name } "@" <&0
+                                                                                            fi
+                                                                                            ${ if builtins.typeOf lock == "bool" && lock then "rm ${ resources-directory }/lock/${ name }" else "#" }
+                                                                                        '' ;
+                                                                        } ;
+                                                                in "${ application }/bin/${ name }" ;
                                                     sets =
                                                         {
                                                             chroot =
