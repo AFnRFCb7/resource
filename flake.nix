@@ -7,7 +7,7 @@
 		        lib =
                     {
                         buildFHSUserEnv ,
-                        gc-root ,
+                        gc-root-directory ,
                         invalid-init-channel ,
                         resources ,
                         resources-directory ,
