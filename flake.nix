@@ -12,7 +12,6 @@
                         gc-root-directory ,
                         invalid-init-channel ,
                         jq ,
-                        null-init-channel ,
                         procps ,
                         redis ,
                         resources ,
