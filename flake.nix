@@ -644,7 +644,7 @@
                                                         writeShellApplication
                                                             {
                                                                 name = "fixture" ;
-                                                                runtimeInputs = [ pkgs.coreutils ] ;
+                                                                runtimeInputs = [ coreutils ] ;
                                                                 text =
                                                                     ''
                                                                         mkdir --parents ${ resources-directory }/sequential
