@@ -684,7 +684,7 @@
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                 mkdir --parents "$out"
-#                                                                                test
+                                                                                test
 #                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
 #                                                                                then
 #                                                                                    cat ${ resources-directory }/log/trace.log
