@@ -690,12 +690,7 @@
                                                                                     writeShellApplication
                                                                                         {
                                                                                             name = "check" ;
-                                                                                            text =
-                                                                                                ''
-                                                                                                    : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
-                                                                                                    mkdir --parents "$out"
-                                                                                                    check
-                                                                                                '' ;
+                                                                                            text = "check" ;
                                                                                         } ;
                                                                                     in "${ application }/bin/check" ;
                                                                         targetPkgs =
