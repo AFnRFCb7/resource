@@ -612,8 +612,13 @@
                                                 failure ? 10996 ,
                                                 setup ? setup : "${ setup }"
                                             } :
-                                                if lazy then ''"$( ${ setup "${ get-or-create }/bin/get-or-create" } )" || ${ environments.failure }/bin/failure ${ builtins.toString failure }''
-                                                else ''"$( ${ setup "${ get-or-create }/bin/get-or-create" } )" || ${ environments.failure }/bin/failure ${ builtins.toString failure }'' ;
+                                                builtins.concatStringsSep
+                                                    ""
+                                                    [
+                                                        ( visitor { bool = path : value : if value then setup "${ get-or-create }/bin/get-or-create" else setup "${ get-or-create }/bin/get-or-create" ; } lazy )
+                                                        " || "
+                                                        "${ environments.failure }/bin/failure ${ builtins.toString failure }"
+                                                    ] ;
                             in
                                 {
                                     check =
@@ -668,7 +673,7 @@
                                                                                                         nohup subscribe "$OUT" stale-init-channel > /dev/null 2>&1 &
                                                                                                         nohup subscribe "$OUT" valid-init-channel > /dev/null 2>&1  &
                                                                                                         nohup subscribe "$OUT" invalid-init-channel > /dev/null 2>&1  &
-                                                                                                        if OBSERVED_RESOURCE="$( resource )"
+                                                                                                        if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } }
                                                                                                         then
                                                                                                             OBSERVED_STATUS="$?"
                                                                                                         else
