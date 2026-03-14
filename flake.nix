@@ -283,6 +283,7 @@
                                                                                                                             else
                                                                                                                                 {
                                                                                                                                     failure = environments.failure ;
+                                                                                                                                    gc-root = environments.gc-root ;
                                                                                                                                     pkgs = pkgs ;
                                                                                                                                     resources = resources ;
                                                                                                                                     seed = seed ;
