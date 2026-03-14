@@ -639,6 +639,7 @@
                                             expected-valid-init ,
                                             failure ? 12489 ,
                                             fixture ? { gc-root-directory , resources-directory } : "echo 9068 > ${ resources-directory }/sequential/sequential.counter" ,
+                                            gc-root-directory ? "/build/gc-root" ,
                                             init ? null ,
                                             init-resolutions ? null ,
                                             invalid-init-channel ? "23567" ,
@@ -647,6 +648,7 @@
                                             release ? null ,
                                             release-resolutions ? null ,
                                             resources ? null ,
+                                            resources-directory ? "/build/resources" ,
                                             seed ? 17507 ,
                                             sequential-start ? "16669" ,
                                             setup ? setup : setup ,
@@ -658,15 +660,16 @@
                                         } :
                                             mkDerivation
                                                 {
-                                                    installPhase = ''check "$out"'' ;
+                                                    installPhase = ''check'' ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
                                                             (
                                                                 buildFHSUserEnv
                                                                     {
+                                                                        extraBwrapArgs = [ "--bind $out /out" ] ;
                                                                         name = "check" ;
-                                                                        runScript = ''check "$@"'' ;
+                                                                        runScript = ''check'' ;
                                                                         targetPkgs =
                                                                             pkgs :
                                                                                 [
@@ -691,8 +694,6 @@
                                                                                                                 } ;
                                                                                                         in
                                                                                                             ''
-                                                                                                                OUT="$1"
-                                                                                                                mkdir --parents "$OUT"
                                                                                                                 mkdir --parents /build/redis
                                                                                                                 redis-server --dir /build/redis --daemonize yes
                                                                                                                 while ! redis-cli ping
@@ -700,9 +701,9 @@
                                                                                                                     sleep 0
                                                                                                                 done
                                                                                                                 fixture
-                                                                                                                nohup subscribe "$OUT" stale-init-channel > /dev/null 2>&1 &
-                                                                                                                nohup subscribe "$OUT" valid-init-channel > /dev/null 2>&1  &
-                                                                                                                nohup subscribe "$OUT" invalid-init-channel > /dev/null 2>&1  &
+                                                                                                                nohup subscribe stale-init-channel > /dev/null 2>&1 &
+                                                                                                                nohup subscribe valid-init-channel > /dev/null 2>&1  &
+                                                                                                                nohup subscribe invalid-init-channel > /dev/null 2>&1  &
                                                                                                                 if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } }
                                                                                                                 then
                                                                                                                     OBSERVED_STATUS="$?"
@@ -722,23 +723,23 @@
                                                                                                                     failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
                                                                                                                 fi
                                                                                                                 mkdir --parents "$OUT/expected"
-                                                                                                                cat > "$OUT/expected/stale-init.json" <<EOF
+                                                                                                                cat > "/out/expected/stale-init.json" <<EOF
                                                                                                                 ${ builtins.toJSON expected-stale-init }
                                                                                                                 EOF
-                                                                                                                cat > "$OUT/expected/valid-init.json" <<EOF
+                                                                                                                cat > "/out/expected/valid-init.json" <<EOF
                                                                                                                 ${ builtins.toJSON expected-valid-init }
                                                                                                                 EOF
-                                                                                                                cat > "$OUT/expected/invalid-init.json" <<EOF
+                                                                                                                cat > "/out/expected/invalid-init.json" <<EOF
                                                                                                                 ${ builtins.toJSON expected-invalid-init }
                                                                                                                 EOF
-                                                                                                                chmod 0400 "$OUT/expected/stale-init.json" "$OUT/expected/valid-init.json" "$OUT/expected/invalid-init.json"
-                                                                                                                if ! jd "$OUT/expected/stale-init.json" "$OUT/observed/stale-init.json"
+                                                                                                                chmod 0400 "/out/expected/stale-init.json" "/out/expected/valid-init.json" "/out/expected/invalid-init.json"
+                                                                                                                if ! jd "/out/expected/stale-init.json" "/out/observed/stale-init.json"
                                                                                                                 then
                                                                                                                     failure 979
-                                                                                                                elif ! jd "$OUT/expected/valid-init.json" "$OUT/observed/valid-init.json"
+                                                                                                                elif ! jd "/out/expected/valid-init.json" "/out/observed/valid-init.json"
                                                                                                                 then
                                                                                                                     failure 24531
-                                                                                                                elif ! jd "$OUT/expected/invalid-init.json" "$OUT/observed/invalid-init.json"
+                                                                                                                elif ! jd "/out/expected/invalid-init.json" "/out/observed/invalid-init.json"
                                                                                                                 then
                                                                                                                     failure 13198
                                                                                                                 fi
@@ -753,7 +754,7 @@
                                                                                                 text =
                                                                                                     visitor
                                                                                                         {
-                                                                                                            lambda = path : value : value { gc-root-directory = "/build/gc-root" ; resources-directory = "/build/resources" ; } ;
+                                                                                                            lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
                                                                                                             null = path : value : "" ;
                                                                                                         }
                                                                                                         fixture ;
@@ -766,8 +767,7 @@
                                                                                                  runtimeInputs = [ coreutils redis ] ;
                                                                                                  text =
                                                                                                     ''
-                                                                                                        OUT="$1"
-                                                                                                        CHANNEL="$2"
+                                                                                                        CHANNEL="$1"
                                                                                                         redis-cli --raw SUBSCRIBE "$CHANNEL" | {
                                                                                                             read -r _     # skip "subscribe"
                                                                                                             read -r _     # skip channel name
@@ -775,9 +775,9 @@
                                                                                                             read -r _     # skip
                                                                                                             read -r _
                                                                                                             read -r PAYLOAD
-                                                                                                            mkdir --parents "$OUT/observed"
-                                                                                                            echo "$PAYLOAD" > "$OUT/observed/$CHANNEL.json"
-                                                                                                            chmod 0400 "$OUT/observed/$CHANNEL.json"
+                                                                                                            mkdir --parents "/out/observed"
+                                                                                                            echo "$PAYLOAD" > "/out/observed/$CHANNEL.json"
+                                                                                                            chmod 0400 "/out/observed/$CHANNEL.json"
                                                                                                         }
                                                                                                     '' ;
                                                                                             }
