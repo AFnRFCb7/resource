@@ -796,7 +796,7 @@
                                                                                                                 echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
                                                                                                                 EXPECTED_STATUS='${ expected-status_ }'
                                                                                                                 echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
-                                                                                                                echo "$EXPECTED_STATUS" > "/out/diff/expected/status"
+                                                                                                                echo "$EXPECTED_STATUS" > "/out//expected/diff/status"
                                                                                                                 mkdir --parents "/out/expected/jd"
                                                                                                                 cat > "/out/expected/jd/stale-init.json" <<EOF
                                                                                                                 ${ builtins.toJSON expected-stale-init }
