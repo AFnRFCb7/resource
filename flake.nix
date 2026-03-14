@@ -684,11 +684,11 @@
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                 mkdir --parents "$out"
-                                                                                test
-                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
-                                                                                then
-                                                                                    cat ${ resources-directory }/log/trace.log
-                                                                                fi
+#                                                                                test
+#                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
+#                                                                                then
+#                                                                                    cat ${ resources-directory }/log/trace.log
+#                                                                                fi
                                                                             '' ;
                                                                     } ;
                                                                 in "${ application }/bin/check" ;
