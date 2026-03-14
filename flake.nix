@@ -689,92 +689,12 @@
                                                                                 then
                                                                                     cat ${ resources-directory }/log/trace.log
                                                                                 fi
-                                                                                expectation
-                                                                                # assertion
                                                                             '' ;
                                                                     } ;
                                                                 in "${ application }/bin/check" ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
-#                                                            (
-#                                                                buildFHSUserEnv
-#                                                                    {
-#                                                                        extraBwrapArgs =
-#                                                                            [
-#                                                                                "--bind $out /out"
-#                                                                            ] ;
-#                                                                        name = "assertion" ;
-#                                                                        runScript = "assertion" ;
-#                                                                        targetPkgs =
-#                                                                            pkgs :
-#                                                                                [
-#                                                                                    (
-#                                                                                        pkgs.writeShellApplication
-#                                                                                            {
-#                                                                                                name = "assertion" ;
-#                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.diffutils failure ] ;
-#                                                                                                text =
-#                                                                                                    ''
-#                                                                                                        diff --same /out/expected /out/observed
-#                                                                                                    '' ;
-#
-#                                                                                            }
-#                                                                                    )
-#                                                                                ] ;
-#                                                                    }
-##                                                            )
-#                                                            (
-#                                                                writeShellApplication
-#                                                                    {
-#                                                                        name = "expectation" ;
-#                                                                        runtimeInputs = [ coreutils failure ] ;
-#                                                                        text =
-#                                                                            let
-#                                                                                expected-standard-error_ =
-#                                                                                    visitor
-#                                                                                        {
-#                                                                                            null = path : value : "" ;
-#                                                                                            string = path : value : value ;
-#                                                                                        }
-#                                                                                        expected-standard-error ;
-#                                                                                expected-standard-output_ =
-#                                                                                    visitor
-#                                                                                        {
-#                                                                                            null = path : value : "" ;
-#                                                                                            string = path : value : value ;
-#                                                                                        }
-#                                                                                        expected-standard-output ;
-#                                                                                expected-status_ =
-#                                                                                    visitor
-#                                                                                        {
-#                                                                                            int = path : value : builtins.toString value ;
-#                                                                                            null = path : value : "0" ;
-#                                                                                        }
-#                                                                                        expected-status ;
-#                                                                                in
-#                                                                                    ''
-#                                                                                        : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
-#                                                                                        mkdir --parents "$out/expected/diff"
-#                                                                                        EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
-#                                                                                        echo "$EXPECTED_STANDARD_ERROR" > "$out/expected/diff/standard-error"
-#                                                                                        EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
-#                                                                                        echo "$EXPECTED_STANDARD_OUTPUT" > "$out/expected/diff/standard-output"
-#                                                                                        EXPECTED_STATUS='${ expected-status_ }'
-#                                                                                        echo "$EXPECTED_STATUS" > "$out/diff/expected/status"
-#                                                                                        mkdir --parents "$out/expected/jd"
-#                                                                                        cat > "/out/expected/jd/stale-init.json" <<EOF
-#                                                                                        ${ builtins.toJSON expected-stale-init }
-#                                                                                        EOF
-#                                                                                        cat > "/out/expected/jd/valid-init.json" <<EOF
-#                                                                                        ${ builtins.toJSON expected-valid-init }
-#                                                                                        EOF
-#                                                                                        cat > "/out/expected/jd/invalid-init.json" <<EOF
-#                                                                                        ${ builtins.toJSON expected-invalid-init }
-#                                                                                        EOF
-#                                                                                    '' ;
-#                                                                    }
-#                                                            )
                                                             (
                                                                 buildFHSUserEnv
                                                                     {
@@ -869,13 +789,24 @@
                                                                                                                 } ;
                                                                                                         in
                                                                                                             ''
-#                                                                                                                mkdir --parents "/out/expected/diff"
-#                                                                                                                EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
-#                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
-#                                                                                                                EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
-#                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
-#                                                                                                                EXPECTED_STATUS='${ expected-status_ }'
-#                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
+                                                                                                                mkdir --parents "/out/expected/diff"
+                                                                                                                EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
+                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
+                                                                                                                EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
+                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
+                                                                                                                EXPECTED_STATUS='${ expected-status_ }'
+                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
+                                                                                                                echo "$EXPECTED_STATUS" > "$out/diff/expected/status"
+                                                                                                                mkdir --parents "/out/expected/jd"
+                                                                                                                cat > "/out/expected/jd/stale-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-stale-init }
+                                                                                                                EOF
+                                                                                                                cat > "/out/expected/jd/valid-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-valid-init }
+                                                                                                                EOF
+                                                                                                                cat > "/out/expected/jd/invalid-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-invalid-init }
+                                                                                                                EOF
 
 #                                                                                                                redis-server --dir /redis --daemonize yes
 #                                                                                                                while ! redis-cli ping
