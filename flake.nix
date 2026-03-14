@@ -875,7 +875,7 @@
                                                                                                                 EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
                                                                                                                 echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
                                                                                                                 EXPECTED_STATUS='${ expected-status_ }'
-                                                                                                                echo "$EXPECTED_STATUS" > "/out/diff/expected/status"
+                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
 
                                                                                                                 redis-server --dir /redis --daemonize yes
                                                                                                                 while ! redis-cli ping
