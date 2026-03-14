@@ -684,7 +684,7 @@
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                 mkdir --parents "$out"
-                                                                                observation
+                                                                                pre-test
                                                                                 if [[ -f ${ resources-directory }/log/trace.log ]]
                                                                                 then
                                                                                     cat ${ resources-directory }/log/trace.log
@@ -723,58 +723,58 @@
 #                                                                                    )
 #                                                                                ] ;
 #                                                                    }
+##                                                            )
+#                                                            (
+#                                                                writeShellApplication
+#                                                                    {
+#                                                                        name = "expectation" ;
+#                                                                        runtimeInputs = [ coreutils failure ] ;
+#                                                                        text =
+#                                                                            let
+#                                                                                expected-standard-error_ =
+#                                                                                    visitor
+#                                                                                        {
+#                                                                                            null = path : value : "" ;
+#                                                                                            string = path : value : value ;
+#                                                                                        }
+#                                                                                        expected-standard-error ;
+#                                                                                expected-standard-output_ =
+#                                                                                    visitor
+#                                                                                        {
+#                                                                                            null = path : value : "" ;
+#                                                                                            string = path : value : value ;
+#                                                                                        }
+#                                                                                        expected-standard-output ;
+#                                                                                expected-status_ =
+#                                                                                    visitor
+#                                                                                        {
+#                                                                                            int = path : value : builtins.toString value ;
+#                                                                                            null = path : value : "0" ;
+#                                                                                        }
+#                                                                                        expected-status ;
+#                                                                                in
+#                                                                                    ''
+#                                                                                        : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
+#                                                                                        mkdir --parents "$out/expected/diff"
+#                                                                                        EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
+#                                                                                        echo "$EXPECTED_STANDARD_ERROR" > "$out/expected/diff/standard-error"
+#                                                                                        EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
+#                                                                                        echo "$EXPECTED_STANDARD_OUTPUT" > "$out/expected/diff/standard-output"
+#                                                                                        EXPECTED_STATUS='${ expected-status_ }'
+#                                                                                        echo "$EXPECTED_STATUS" > "$out/diff/expected/status"
+#                                                                                        mkdir --parents "$out/expected/jd"
+#                                                                                        cat > "/out/expected/jd/stale-init.json" <<EOF
+#                                                                                        ${ builtins.toJSON expected-stale-init }
+#                                                                                        EOF
+#                                                                                        cat > "/out/expected/jd/valid-init.json" <<EOF
+#                                                                                        ${ builtins.toJSON expected-valid-init }
+#                                                                                        EOF
+#                                                                                        cat > "/out/expected/jd/invalid-init.json" <<EOF
+#                                                                                        ${ builtins.toJSON expected-invalid-init }
+#                                                                                        EOF
+#                                                                                    '' ;
+#                                                                    }
 #                                                            )
-                                                            (
-                                                                writeShellApplication
-                                                                    {
-                                                                        name = "expectation" ;
-                                                                        runtimeInputs = [ coreutils failure ] ;
-                                                                        text =
-                                                                            let
-                                                                                expected-standard-error_ =
-                                                                                    visitor
-                                                                                        {
-                                                                                            null = path : value : "" ;
-                                                                                            string = path : value : value ;
-                                                                                        }
-                                                                                        expected-standard-error ;
-                                                                                expected-standard-output_ =
-                                                                                    visitor
-                                                                                        {
-                                                                                            null = path : value : "" ;
-                                                                                            string = path : value : value ;
-                                                                                        }
-                                                                                        expected-standard-output ;
-                                                                                expected-status_ =
-                                                                                    visitor
-                                                                                        {
-                                                                                            int = path : value : builtins.toString value ;
-                                                                                            null = path : value : "0" ;
-                                                                                        }
-                                                                                        expected-status ;
-                                                                                in
-                                                                                    ''
-                                                                                        : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
-                                                                                        mkdir --parents "$out/expected/diff"
-                                                                                        EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
-                                                                                        echo "$EXPECTED_STANDARD_ERROR" > "$out/expected/diff/standard-error"
-                                                                                        EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
-                                                                                        echo "$EXPECTED_STANDARD_OUTPUT" > "$out/expected/diff/standard-output"
-                                                                                        EXPECTED_STATUS='${ expected-status_ }'
-                                                                                        echo "$EXPECTED_STATUS" > "$out/diff/expected/status"
-                                                                                        mkdir --parents "$out/expected/jd"
-                                                                                        cat > "/out/expected/jd/stale-init.json" <<EOF
-                                                                                        ${ builtins.toJSON expected-stale-init }
-                                                                                        EOF
-                                                                                        cat > "/out/expected/jd/valid-init.json" <<EOF
-                                                                                        ${ builtins.toJSON expected-valid-init }
-                                                                                        EOF
-                                                                                        cat > "/out/expected/jd/invalid-init.json" <<EOF
-                                                                                        ${ builtins.toJSON expected-invalid-init }
-                                                                                        EOF
-                                                                                    '' ;
-                                                                    }
-                                                            )
                                                             (
                                                                 buildFHSUserEnv
                                                                     {
@@ -783,15 +783,15 @@
                                                                                 "--bind $out /out"
                                                                                 "--tmpfs /redis"
                                                                             ] ;
-                                                                        name = "observation" ;
-                                                                        runScript = "observation ";
+                                                                        name = "test" ;
+                                                                        runScript = "test";
                                                                         targetPkgs =
                                                                             pkgs :
                                                                                 [
                                                                                     (
                                                                                         pkgs.writeShellApplication
                                                                                             {
-                                                                                                name = "observation" ;
+                                                                                                name = "test" ;
                                                                                                 runtimeInputs =
                                                                                                     [
                                                                                                         pkgs.coreutils
