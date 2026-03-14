@@ -717,7 +717,11 @@
                                                                                                 name = "test-check" ;
                                                                                                 runtimeInputs =
                                                                                                     [
+                                                                                                        pkgs.coreutils
+                                                                                                        pkgs.findutils
+                                                                                                        pkgs.redis
 
+                                                                                                        failure
                                                                                                     ] ;
                                                                                                 text =
                                                                                                     let
