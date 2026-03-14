@@ -841,7 +841,7 @@
                                                                                             failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
                                                                                         elif [[ "$EXPECTED_STANDARD_OUTPUT" != "$OBSERVED_STANDARD_OUTPUT" ]]
                                                                                         then
-                                                                                            failure f780406e "EXPECTED_STANDARD_OUTPUT=${ expected-standard-output }" "OBSERVED_STANDARD_OUTPUT=$OBSERVED_STANDARD_OUTPUT"
+                                                                                            failure f780406e "EXPECTED_STANDARD_OUTPUT=$EXPECTED_STANDARD_OUTPUT" "OBSERVED_STANDARD_OUTPUT=$OBSERVED_STANDARD_OUTPUT"
                                                                                         fi
                                                                                         elif [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
                                                                                         then
