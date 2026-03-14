@@ -100,7 +100,7 @@
                                                                 post = "" ;
                                                                 pre =
                                                                     ''
-                                                                        mkdir --parents "${ resources-directory }/log
+                                                                        mkdir --parents "${ resources-directory }/log"
                                                                     '' ;
                                                                 targetPkgs = pkgs : [ environments.failure environments.sequential environments.init environments.sequential pkgs.coreutils ] ;
                                                                 text =
