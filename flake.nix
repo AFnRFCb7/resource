@@ -684,6 +684,7 @@
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                 cleanup ( ) {
+                                                                                    echo "DERIVATION=$out"
                                                                                     if [[ -f ${ resources-directory }/log/trace.log ]]
                                                                                     then
                                                                                         cat ${ resources-directory }/log/trace.log
@@ -827,6 +828,9 @@
                                                                                                                 then
                                                                                                                     exit 68
                                                                                                                 fi
+                                                                                                                # find /out/expected/jd | while read -r FULLY_QUALIFIED_NAME
+                                                                                                                # do
+                                                                                                                # done
                                                                                                             '' ;
                                                                                             }
                                                                                     )
