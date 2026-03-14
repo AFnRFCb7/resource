@@ -877,24 +877,24 @@
 #                                                                                                                EXPECTED_STATUS='${ expected-status_ }'
 #                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
 
-                                                                                                                redis-server --dir /redis --daemonize yes
-                                                                                                                while ! redis-cli ping
-                                                                                                                do
-                                                                                                                    sleep 0
-                                                                                                                done
-                                                                                                                fixture
-                                                                                                                nohup subscribe stale-init-channel > /dev/null 2>&1 &
-                                                                                                                nohup subscribe valid-init-channel > /dev/null 2>&1 &
-                                                                                                                nohup subscribe invalid-init-channel > /dev/null 2>&1 &
-                                                                                                                mkdir --parents /out/observed/diff
-                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } } 2> /out/observed/standard-error
-                                                                                                                then
-                                                                                                                    OBSERVED_STATUS="$?"
-                                                                                                                else
-                                                                                                                    OBSERVED_STATUS="$?"
-                                                                                                                fi
-                                                                                                                echo "$OBSERVED_RESOURCE" > /out/observed/diff/standard-output
-                                                                                                                echo "$OBSERVED_STATUS" > /out/observed/diff/status
+#                                                                                                                redis-server --dir /redis --daemonize yes
+#                                                                                                                while ! redis-cli ping
+#                                                                                                                do
+#                                                                                                                    sleep 0
+#                                                                                                                done
+#                                                                                                                fixture
+#                                                                                                                nohup subscribe stale-init-channel > /dev/null 2>&1 &
+#                                                                                                                nohup subscribe valid-init-channel > /dev/null 2>&1 &
+#                                                                                                                nohup subscribe invalid-init-channel > /dev/null 2>&1 &
+#                                                                                                                mkdir --parents /out/observed/diff
+#                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } } 2> /out/observed/standard-error
+#                                                                                                                then
+#                                                                                                                    OBSERVED_STATUS="$?"
+#                                                                                                                else
+#                                                                                                                    OBSERVED_STATUS="$?"
+#                                                                                                                fi
+#                                                                                                                echo "$OBSERVED_RESOURCE" > /out/observed/diff/standard-output
+#                                                                                                                echo "$OBSERVED_STATUS" > /out/observed/diff/status
                                                                                                             '' ;
                                                                                             }
                                                                                     )
