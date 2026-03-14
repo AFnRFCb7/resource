@@ -204,11 +204,57 @@
                                                                         ln --symbolic --force "$TARGET" "/gc-root/$INDEX$DIRECTORY"
                                                                     '' ;
                                                             } ;
+                                                        init =
+                                                            {
+                                                                extraBwrapArgs =
+                                                                    [
+                                                                        ''"${ resources-directory }/mounts/$INDEX" /mount''
+                                                                        "--tmpfs /scratch"
+                                                                    ] ;
+                                                                post = "" ;
+                                                                pre =
+                                                                    ''
+                                                                        mkdir --parents "${ resources-directory }/mounts/$INDEX"
+                                                                    '';
+                                                                targetPkgs =
+                                                                    pkgs :
+                                                                        [
+                                                                            (
+                                                                                pkgs.writeShellApplication
+                                                                                    {
+                                                                                        name = "init" ;
+                                                                                        text =
+                                                                                            let
+                                                                                                arguments =
+                                                                                                    {
+                                                                                                        failure = environments.failure ;
+                                                                                                        gc-root = environments.gc-root ;
+                                                                                                        pkgs = pkgs ;
+                                                                                                        resources = resources ;
+                                                                                                        seed = seed ;
+                                                                                                        trace = environments.trace ;
+                                                                                                        sequential = environments.sequential ;
+                                                                                                        wrap = environments.wrap ;
+                                                                                                    } ;
+                                                                                                in init arguments ;
+                                                                                    }
+                                                                            )
+                                                                        ] ;
+                                                                text =
+                                                                    ''
+                                                                        if $HAS_STANDARD_INPUT
+                                                                        then
+                                                                            init "$@" <<< "$STANDARD_INPUT"
+                                                                        else
+                                                                            init "$@"
+                                                                        fi
+                                                                    '' ;
+                                                            } ;
                                                         scripts =
                                                             {
                                                                 extraBwrapArgs = [ ] ;
-                                                                pre = "" ;
                                                                 post = "" ;
+                                                                pre = "" ;
                                                                 targetPkgs =
                                                                     pkgs :
                                                                         [
