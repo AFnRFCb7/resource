@@ -11,6 +11,7 @@
                         gc-root-directory ,
                         invalid-init-channel ,
                         js ,
+                        procps ,
                         resources ,
                         resources-directory ,
                         root-directory ,
