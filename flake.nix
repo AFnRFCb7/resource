@@ -820,6 +820,11 @@
                                                                                                                 fi
                                                                                                                 echo "$OBSERVED_RESOURCE" > /out/observed/diff/standard-output
                                                                                                                 echo "$OBSERVED_STATUS" > /out/observed/diff/status
+
+                                                                                                                if ! diff --recursive /out/expected/diff /out/observed/diff
+                                                                                                                then
+                                                                                                                    failure 15846
+                                                                                                                fi
                                                                                                             '' ;
                                                                                             }
                                                                                     )
