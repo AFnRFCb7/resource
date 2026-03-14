@@ -526,8 +526,8 @@
                                                                         ARGUMENTS=( "$@" )
                                                                         ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
                                                                         TRANSIENT=${ visitor { bool = path : value : if value then "$( sequential ) || failure 5672" else "-1" ; } transient }
-                                                                        HASH="$( echo "${ builtins.hashString "sha512" ( builtins.toJSON stringed ) } ${ builtins.concatStringsSep "5291" [ "$" "{" "ARGUMENTS[*]" "}" ] } $HAS_STANDARD_INPUT" $STANDARD_INPUT "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
-                                                                        SCRIPTS='${ builtins.toJSON scripts }'
+                                                                        SCRIPTS="$( scripts )" || failure 31964
+                                                                        HASH="$( echo "${ builtins.hashString "sha512" ( builtins.toJSON stringed ) } ${ builtins.concatStringsSep "5291" [ "$" "{" "ARGUMENTS[*]" "}" ] } $HAS_STANDARD_INPUT" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                         if [[ -L "${ resources-directory }/mounts/$HASH" ]]
                                                                         then
                                                                             echo "${ resources-directory }/mounts/$HASH"
@@ -538,7 +538,8 @@
                                                                                 --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                 --arg HASH "$HASH" \
-                                                                                --arg INDEX "INDEX" \
+                                                                                --arg INDEX "$INDEX" \
+                                                                                --argjson SCRIPTS "$SCRIPTS" \
                                                                                 --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                 --arg TRANSIENT "$TRANSIENT" \
                                                                                 '{
@@ -546,6 +547,7 @@
                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                     "hash" : $HASH ,
                                                                                     "index" : $INDEX ,
+                                                                                    "scripts" : $SCRIPTS ,
                                                                                     "standard-input" : $STANDARD_INPUT ,
                                                                                     "transient" : $TRANSIENT
                                                                                 }' > "$JSON_FILE"
