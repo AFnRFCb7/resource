@@ -832,21 +832,6 @@
                                                                                         OBSERVED_STANDARD_OUTPUT="$( cat "$out/observed/standard-output" )" || failure 4651
                                                                                         EXPECTED_STATUS='${ expected-status_ }'
                                                                                         OBSERVED_STATUS="$( cat "$out/observed/status" )" || failure 7786
-                                                                                        if [[ -f ${ resources-directory }/log/trace.log ]]
-                                                                                        then
-                                                                                            cat ${ resources-directory }/log/trace.log
-                                                                                        fi
-                                                                                        if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
-                                                                                        then
-                                                                                            failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
-                                                                                        elif [[ "$EXPECTED_STANDARD_OUTPUT" != "$OBSERVED_STANDARD_OUTPUT" ]]
-                                                                                        then
-                                                                                            failure f780406e "EXPECTED_STANDARD_OUTPUT=$EXPECTED_STANDARD_OUTPUT" "OBSERVED_STANDARD_OUTPUT=$OBSERVED_STANDARD_OUTPUT"
-                                                                                        fi
-                                                                                        elif [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
-                                                                                        then
-                                                                                            failure 94defd57 "EXPECTED_STATUS=$EXPECTED_STATUS" "OBSERVED_STATUS=$OBSERVED_STATUS"
-                                                                                        fi
                                                                                         mkdir --parents "$OUT/expected"
                                                                                         cat > "/out/expected/stale-init.json" <<EOF
                                                                                         ${ builtins.toJSON expected-stale-init }
@@ -858,7 +843,19 @@
                                                                                         ${ builtins.toJSON expected-invalid-init }
                                                                                         EOF
                                                                                         chmod 0400 "/out/expected/stale-init.json" "/out/expected/valid-init.json" "/out/expected/invalid-init.json"
-                                                                                        if ! jd "/out/expected/stale-init.json" "/out/observed/stale-init.json"
+                                                                                        if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                        then
+                                                                                            cat ${ resources-directory }/log/trace.log
+                                                                                        elif [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
+                                                                                        then
+                                                                                            failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
+                                                                                        elif [[ "$EXPECTED_STANDARD_OUTPUT" != "$OBSERVED_STANDARD_OUTPUT" ]]
+                                                                                        then
+                                                                                            failure f780406e "EXPECTED_STANDARD_OUTPUT=$EXPECTED_STANDARD_OUTPUT" "OBSERVED_STANDARD_OUTPUT=$OBSERVED_STANDARD_OUTPUT"
+                                                                                        elif [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
+                                                                                        then
+                                                                                            failure 94defd57 "EXPECTED_STATUS=$EXPECTED_STATUS" "OBSERVED_STATUS=$OBSERVED_STATUS"
+                                                                                        elif ! jd "/out/expected/stale-init.json" "/out/observed/stale-init.json"
                                                                                         then
                                                                                             failure 979
                                                                                         elif ! jd "/out/expected/valid-init.json" "/out/observed/valid-init.json"
