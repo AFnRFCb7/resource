@@ -755,21 +755,21 @@
                                                                                 in
                                                                                     ''
                                                                                         : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
-                                                                                        mkdir --parents "$out/expected"
+                                                                                        mkdir --parents "$out/expected/diff"
                                                                                         EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
-                                                                                        echo "$EXPECTED_STANDARD_ERROR" > "$out/expected/standard-error"
+                                                                                        echo "$EXPECTED_STANDARD_ERROR" > "$out/expected/diff/standard-error"
                                                                                         EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
-                                                                                        echo "$EXPECTED_STANDARD_OUTPUT" > "$out/expected/standard-output"
+                                                                                        echo "$EXPECTED_STANDARD_OUTPUT" > "$out/expected/diff/standard-output"
                                                                                         EXPECTED_STATUS='${ expected-status_ }'
-                                                                                        echo "$EXPECTED_STATUS" > "$out/expected/status"
-                                                                                        mkdir --parents "$OUT/expected/payload"
-                                                                                        cat > "/out/expected/payload/stale-init.json" <<EOF
+                                                                                        echo "$EXPECTED_STATUS" > "$out/diff/expected/status"
+                                                                                        mkdir --parents "$out/expected/jd"
+                                                                                        cat > "/out/expected/jd/stale-init.json" <<EOF
                                                                                         ${ builtins.toJSON expected-stale-init }
                                                                                         EOF
-                                                                                        cat > "/out/expected/payload/valid-init.json" <<EOF
+                                                                                        cat > "/out/expected/jd/valid-init.json" <<EOF
                                                                                         ${ builtins.toJSON expected-valid-init }
                                                                                         EOF
-                                                                                        cat > "/out/expected/payload/invalid-init.json" <<EOF
+                                                                                        cat > "/out/expected/jd/invalid-init.json" <<EOF
                                                                                         ${ builtins.toJSON expected-invalid-init }
                                                                                         EOF
                                                                                     '' ;
@@ -825,8 +825,8 @@
                                                                                                                                 read -r _     # skip
                                                                                                                                 read -r _
                                                                                                                                 read -r PAYLOAD
-                                                                                                                                mkdir --parents "/out/observed/payload"
-                                                                                                                                echo "$PAYLOAD" > "/out/observed/payload/$CHANNEL.json"
+                                                                                                                                mkdir --parents "/out/observed/jd"
+                                                                                                                                echo "$PAYLOAD" > "/out/observed/jd/$CHANNEL.json"
                                                                                                                             }
                                                                                                                         '' ;
                                                                                                                 }
@@ -857,15 +857,15 @@
                                                                                                                 nohup subscribe stale-init-channel > /dev/null 2>&1 &
                                                                                                                 nohup subscribe valid-init-channel > /dev/null 2>&1 &
                                                                                                                 nohup subscribe invalid-init-channel > /dev/null 2>&1 &
-                                                                                                                mkdir --parents /out/observed
+                                                                                                                mkdir --parents /out/observed/diff
                                                                                                                 if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } } 2> /out/observed/standard-error
                                                                                                                 then
                                                                                                                     OBSERVED_STATUS="$?"
                                                                                                                 else
                                                                                                                     OBSERVED_STATUS="$?"
                                                                                                                 fi
-                                                                                                                echo "$OBSERVED_RESOURCE" > /out/observed/standard-output
-                                                                                                                echo "$OBSERVED_STATUS" > /out/observed/status
+                                                                                                                echo "$OBSERVED_RESOURCE" > /out/observed/diff/standard-output
+                                                                                                                echo "$OBSERVED_STATUS" > /out/observed/diff/status
                                                                                                             '' ;
                                                                                             }
                                                                                     )
