@@ -684,7 +684,7 @@
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                 mkdir --parents "$out"
-                                                                                test
+                                                                                test-check
 #                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
 #                                                                                then
 #                                                                                    cat ${ resources-directory }/log/trace.log
@@ -703,15 +703,15 @@
                                                                                 "--bind $out /out"
                                                                                 "--tmpfs /redis"
                                                                             ] ;
-                                                                        name = "test" ;
-                                                                        runScript = "test";
+                                                                        name = "test-check" ;
+                                                                        runScript = "test-check";
                                                                         targetPkgs =
                                                                             pkgs :
                                                                                 [
                                                                                     (
                                                                                         pkgs.writeShellApplication
                                                                                             {
-                                                                                                name = "test" ;
+                                                                                                name = "test-check" ;
                                                                                                 runtimeInputs =
                                                                                                     [
                                                                                                         pkgs.coreutils
