@@ -356,21 +356,24 @@
                                                                         ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || failure 22397
                                                                         if [[ -t 0 ]]
                                                                         then
+                                                                            # shellcheck disable=SC2016
                                                                             yq \
                                                                                 eval \
                                                                                 --null-input \
                                                                                 --prettyPrint \
                                                                                 --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                '{ arguments : $ARGUMENTS }' \
+                                                                                '{ "arguments" : $ARGUMENTS }' \
                                                                                 >> /log/trace.log.yaml
                                                                         else
                                                                             STANDARD_INPUT="$( cat )" || failure 32061
+                                                                            # shellcheck disable=SC2016
                                                                             yq \
                                                                                 eval \
                                                                                 --null-input \
                                                                                 --prettyPrint \
-                                                                                --argjson arguments ARGUMENTS "$ARGUMENTS" \
-                                                                                '{ arguments: $arguments , standard-input : $STANDARD_INPUT }' \
+                                                                                --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }' \
                                                                                 > /log/trace.log.yaml
                                                                         fi
                                                                     '' ;
