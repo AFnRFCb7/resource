@@ -789,43 +789,43 @@
                                                                                                                 } ;
                                                                                                         in
                                                                                                             ''
-#                                                                                                                mkdir --parents "/out/expected/diff"
-#                                                                                                                EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
-#                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
-#                                                                                                                EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
-#                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
-#                                                                                                                EXPECTED_STATUS='${ expected-status_ }'
-#                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
-#                                                                                                                echo "$EXPECTED_STATUS" > "/out/diff/expected/status"
-#                                                                                                                mkdir --parents "/out/expected/jd"
-#                                                                                                                cat > "/out/expected/jd/stale-init.json" <<EOF
-#                                                                                                                ${ builtins.toJSON expected-stale-init }
-#                                                                                                                EOF
-#                                                                                                                cat > "/out/expected/jd/valid-init.json" <<EOF
-#                                                                                                                ${ builtins.toJSON expected-valid-init }
-#                                                                                                                EOF
-#                                                                                                                cat > "/out/expected/jd/invalid-init.json" <<EOF
-#                                                                                                                ${ builtins.toJSON expected-invalid-init }
-#                                                                                                                EOF
-#
-#                                                                                                                redis-server --dir /redis --daemonize yes
-#                                                                                                                while ! redis-cli ping
-#                                                                                                                do
-#                                                                                                                    sleep 0
-#                                                                                                                done
-#                                                                                                                fixture
-#                                                                                                                nohup subscribe stale-init-channel > /dev/null 2>&1 &
-#                                                                                                                nohup subscribe valid-init-channel > /dev/null 2>&1 &
-#                                                                                                                nohup subscribe invalid-init-channel > /dev/null 2>&1 &
-#                                                                                                                mkdir --parents /out/observed/diff
-#                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } } 2> /out/observed/standard-error
-#                                                                                                                then
-#                                                                                                                    OBSERVED_STATUS="$?"
-#                                                                                                                else
-#                                                                                                                    OBSERVED_STATUS="$?"
-#                                                                                                                fi
-#                                                                                                                echo "$OBSERVED_RESOURCE" > /out/observed/diff/standard-output
-#                                                                                                                echo "$OBSERVED_STATUS" > /out/observed/diff/status
+                                                                                                                mkdir --parents "/out/expected/diff"
+                                                                                                                EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
+                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
+                                                                                                                EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
+                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
+                                                                                                                EXPECTED_STATUS='${ expected-status_ }'
+                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
+                                                                                                                echo "$EXPECTED_STATUS" > "/out/diff/expected/status"
+                                                                                                                mkdir --parents "/out/expected/jd"
+                                                                                                                cat > "/out/expected/jd/stale-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-stale-init }
+                                                                                                                EOF
+                                                                                                                cat > "/out/expected/jd/valid-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-valid-init }
+                                                                                                                EOF
+                                                                                                                cat > "/out/expected/jd/invalid-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-invalid-init }
+                                                                                                                EOF
+
+                                                                                                                redis-server --dir /redis --daemonize yes
+                                                                                                                while ! redis-cli ping
+                                                                                                                do
+                                                                                                                    sleep 0
+                                                                                                                done
+                                                                                                                fixture
+                                                                                                                nohup subscribe stale-init-channel > /dev/null 2>&1 &
+                                                                                                                nohup subscribe valid-init-channel > /dev/null 2>&1 &
+                                                                                                                nohup subscribe invalid-init-channel > /dev/null 2>&1 &
+                                                                                                                mkdir --parents /out/observed/diff
+                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } } 2> /out/observed/standard-error
+                                                                                                                then
+                                                                                                                    OBSERVED_STATUS="$?"
+                                                                                                                else
+                                                                                                                    OBSERVED_STATUS="$?"
+                                                                                                                fi
+                                                                                                                echo "$OBSERVED_RESOURCE" > /out/observed/diff/standard-output
+                                                                                                                echo "$OBSERVED_STATUS" > /out/observed/diff/status
                                                                                                             '' ;
                                                                                             }
                                                                                     )
