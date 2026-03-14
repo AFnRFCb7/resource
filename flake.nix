@@ -641,7 +641,7 @@
                                             fixture ? { gc-root-directory , resources-directory } :
                                                 let
                                                     application =
-                                                        pkgs.writeShellApplication
+                                                        writeShellApplication
                                                             {
                                                                 name = "fixture" ;
                                                                 runtimeInputs = [ pkgs.coreutils ] ;
