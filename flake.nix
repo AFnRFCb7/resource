@@ -675,7 +675,20 @@
                                         } :
                                             mkDerivation
                                                 {
-                                                    installPhase = "check" ;
+                                                    installPhase =
+                                                        let
+                                                            application =
+                                                                writeShellApplication
+                                                                    {
+                                                                        name = "check" ;
+                                                                        runtimeInputs = [ coreutils ] ;
+                                                                        text =
+                                                                            ''
+                                                                                mkdir --parents $out
+                                                                                check
+                                                                            '' ;
+                                                                    } ;
+                                                                in "${ application }/bin/check" ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
