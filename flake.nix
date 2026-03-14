@@ -614,7 +614,7 @@
                                                 failure ? 10996 ,
                                                 setup ? setup : "${ setup }"
                                             } :
-                                                ''"$( ${ setup "${ get-or-create }/bin/get-or-create" }" || ${ environments.failure ( builtins.toString failure ) }'' ;
+                                                ''"$( ${ setup "${ get-or-create }/bin/get-or-create" }" || ${ environments.failure }/bin/failure ${ builtins.toString failure } }'' ;
                             in
                                 {
                                     check =
