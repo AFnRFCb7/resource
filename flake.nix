@@ -12,6 +12,7 @@
                         gc-root-directory ,
                         invalid-init-channel ,
                         jq ,
+                        null-init-channel ,
                         procps ,
                         redis ,
                         resources ,
@@ -667,7 +668,7 @@
                                                     else
                                                         mkDerivation
                                                             {
-                                                                install = ''check "$out"'' ;
+                                                                install = ''mkdir --parents "$out" && check "$out"'' ;
                                                                 name = "check" ;
                                                                 nativeBuildInputs =
                                                                     [
