@@ -719,7 +719,7 @@
                                                                                                         fixture ;
                                                                                             }
                                                                                     )
-                                                  (
+                                                                                    (
                                                                                         pkgs.writeShellApplication
                                                                                             {
                                                                                                 name = "pre-test" ;
@@ -796,7 +796,7 @@
                                                                     }
                                                             )
                                                             (
-                                                                pkgs.writeShellApplication
+                                                                writeShellApplication
                                                                     {
                                                                         name = "test" ;
                                                                         runtimeInputs = [ ] ;
