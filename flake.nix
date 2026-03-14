@@ -115,7 +115,7 @@
                                                                         STANDARD_OUTPUT_FILE="/log/$STANDARD_OUTPUT_SEQUENCE.txt"
                                                                         if "$HAS_STANDARD_INPUT"
                                                                         then
-                                                                            if init "@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                            if init "@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE" <<< "$STANDARD_INPUT"
                                                                             then
                                                                                 STATUS="$?"
                                                                             else
@@ -142,7 +142,7 @@
                                                                             --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
-                                                                                "has-standard-input" : $HAS_STANDARD_INPUT" ,
+                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "hash" : $HASH ,
                                                                                 "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
