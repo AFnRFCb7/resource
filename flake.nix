@@ -708,42 +708,44 @@
                                                                         runScript = "assertion" ;
                                                                         targetPkgs =
                                                                             pkgs :
-                                                                                (
-                                                                                    pkgs.writeShellApplication
-                                                                                        {
-                                                                                            name = "assertion" ;
-                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.jd failure ] ;
-                                                                                            text =
-                                                                                                ''
-                                                                                                    EXPECTED_STANDARD_ERROR="$( cat "/out/expected/standard-error" )" || failure 26286
-                                                                                                    EXPECTED_STANDARD_OUTPUT="$( cat "/out/expected/standard-output" )" || failure 9354
-                                                                                                    EXPECTED_STATUS="$( cat "/out/expected/status" )" || failure 6489
-                                                                                                    OBSERVED_STANDARD_ERROR="$( cat "/out/observed/standard-error" )" || failure 3231
-                                                                                                    OBSERVED_STANDARD_OUTPUT="$( cat "/out/observed/standard-output" )" || failure 4651
-                                                                                                    OBSERVED_STATUS="$( cat "/out/observed/status" )" || failure 7786
-                                                                                                    if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
-                                                                                                    then
-                                                                                                        failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
-                                                                                                    elif [[ "$EXPECTED_STANDARD_OUTPUT" != "$OBSERVED_STANDARD_OUTPUT" ]]
-                                                                                                    then
-                                                                                                        failure f780406e "EXPECTED_STANDARD_OUTPUT=$EXPECTED_STANDARD_OUTPUT" "OBSERVED_STANDARD_OUTPUT=$OBSERVED_STANDARD_OUTPUT"
-                                                                                                    elif [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
-                                                                                                    then
-                                                                                                        failure 94defd57 "EXPECTED_STATUS=$EXPECTED_STATUS" "OBSERVED_STATUS=$OBSERVED_STATUS"
-                                                                                                    elif ! jd "/out/expected/payload/stale-init.json" "/out/observed/payload/stale-init.json"
-                                                                                                    then
-                                                                                                        failure 979
-                                                                                                    elif ! jd "/out/expected/payload/valid-init.json" "/out/observed/payload/valid-init.json"
-                                                                                                    then
-                                                                                                        failure 24531
-                                                                                                    elif ! jd "/out/expected/payload/invalid-init.json" "/out/observed/payload/invalid-init.json"
-                                                                                                    then
-                                                                                                        failure 13198
-                                                                                                    fi
-                                                                                                '' ;
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "assertion" ;
+                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.jd failure ] ;
+                                                                                                text =
+                                                                                                    ''
+                                                                                                        EXPECTED_STANDARD_ERROR="$( cat "/out/expected/standard-error" )" || failure 26286
+                                                                                                        EXPECTED_STANDARD_OUTPUT="$( cat "/out/expected/standard-output" )" || failure 9354
+                                                                                                        EXPECTED_STATUS="$( cat "/out/expected/status" )" || failure 6489
+                                                                                                        OBSERVED_STANDARD_ERROR="$( cat "/out/observed/standard-error" )" || failure 3231
+                                                                                                        OBSERVED_STANDARD_OUTPUT="$( cat "/out/observed/standard-output" )" || failure 4651
+                                                                                                        OBSERVED_STATUS="$( cat "/out/observed/status" )" || failure 7786
+                                                                                                        if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
+                                                                                                        then
+                                                                                                            failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
+                                                                                                        elif [[ "$EXPECTED_STANDARD_OUTPUT" != "$OBSERVED_STANDARD_OUTPUT" ]]
+                                                                                                        then
+                                                                                                            failure f780406e "EXPECTED_STANDARD_OUTPUT=$EXPECTED_STANDARD_OUTPUT" "OBSERVED_STANDARD_OUTPUT=$OBSERVED_STANDARD_OUTPUT"
+                                                                                                        elif [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
+                                                                                                        then
+                                                                                                            failure 94defd57 "EXPECTED_STATUS=$EXPECTED_STATUS" "OBSERVED_STATUS=$OBSERVED_STATUS"
+                                                                                                        elif ! jd "/out/expected/payload/stale-init.json" "/out/observed/payload/stale-init.json"
+                                                                                                        then
+                                                                                                            failure 979
+                                                                                                        elif ! jd "/out/expected/payload/valid-init.json" "/out/observed/payload/valid-init.json"
+                                                                                                        then
+                                                                                                            failure 24531
+                                                                                                        elif ! jd "/out/expected/payload/invalid-init.json" "/out/observed/payload/invalid-init.json"
+                                                                                                        then
+                                                                                                            failure 13198
+                                                                                                        fi
+                                                                                                    '' ;
 
-                                                                                        }
-                                                                                )
+                                                                                            }
+                                                                                    )
+                                                                                ]
                                                                     }
                                                             )
                                                             (
