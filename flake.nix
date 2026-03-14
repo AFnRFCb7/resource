@@ -684,8 +684,9 @@
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                 mkdir --parents "$out"
-                                                                                pre-test
-                                                                                test
+                                                                                observation
+                                                                                expectation
+                                                                                assertion
                                                                             '' ;
                                                                     } ;
                                                                 in "${ application }/bin/check" ;
@@ -700,30 +701,55 @@
                                                                                 "--bind $out /out"
                                                                                 "--tmpfs /redis"
                                                                             ] ;
-                                                                        name = "pre-test" ;
-                                                                        runScript = "pre-test" ;
+                                                                        name = "observation" ;
+                                                                        runScript = "observation ";
                                                                         targetPkgs =
                                                                             pkgs :
                                                                                 [
                                                                                     (
                                                                                         pkgs.writeShellApplication
                                                                                             {
-                                                                                                name = "fixture" ;
-                                                                                                runtimeInputs = [ ] ;
-                                                                                                text =
-                                                                                                    visitor
-                                                                                                        {
-                                                                                                            lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
-                                                                                                            null = path : value : "" ;
-                                                                                                        }
-                                                                                                        fixture ;
-                                                                                            }
-                                                                                    )
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "pre-test" ;
-                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.redis ] ;
+                                                                                                name = "observation" ;
+                                                                                                runtimeInputs =
+                                                                                                    [
+                                                                                                        pkgs.coreutils
+                                                                                                        pkgs.redis
+                                                                                                        (
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                    name = "fixture" ;
+                                                                                                                    runtimeInputs = [ ] ;
+                                                                                                                    text =
+                                                                                                                        visitor
+                                                                                                                            {
+                                                                                                                                lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
+                                                                                                                                null = path : value : "" ;
+                                                                                                                            }
+                                                                                                                            fixture ;
+                                                                                                                }
+                                                                                                        )
+                                                                                                        (
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                     name = "subscribe" ;
+                                                                                                                     runtimeInputs = [ coreutils redis ] ;
+                                                                                                                     text =
+                                                                                                                        ''
+                                                                                                                            CHANNEL="$1"
+                                                                                                                            redis-cli --raw SUBSCRIBE "$CHANNEL" | {
+                                                                                                                                read -r _     # skip "subscribe"
+                                                                                                                                read -r _     # skip channel name
+                                                                                                                                read -r _     # skip
+                                                                                                                                read -r _     # skip
+                                                                                                                                read -r _
+                                                                                                                                read -r PAYLOAD
+                                                                                                                                mkdir --parents "/out/observed/payload"
+                                                                                                                                echo "$PAYLOAD" > "/out/observed/payload/$CHANNEL.json"
+                                                                                                                            }
+                                                                                                                        '' ;
+                                                                                                                }
+                                                                                                        )
+                                                                                                    ] ;
                                                                                                 text =
                                                                                                     let
                                                                                                         resource =
@@ -761,44 +787,14 @@
                                                                                                             '' ;
                                                                                             }
                                                                                     )
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "resource" ;
-                                                                                                text =
-                                                                                                    ''
-                                                                                                    '' ;
-                                                                                            }
-                                                                                    )
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                 name = "subscribe" ;
-                                                                                                 runtimeInputs = [ coreutils redis ] ;
-                                                                                                 text =
-                                                                                                    ''
-                                                                                                        CHANNEL="$1"
-                                                                                                        redis-cli --raw SUBSCRIBE "$CHANNEL" | {
-                                                                                                            read -r _     # skip "subscribe"
-                                                                                                            read -r _     # skip channel name
-                                                                                                            read -r _     # skip
-                                                                                                            read -r _     # skip
-                                                                                                            read -r _
-                                                                                                            read -r PAYLOAD
-                                                                                                            mkdir --parents "/out/observed/payload"
-                                                                                                            echo "$PAYLOAD" > "/out/observed/payload/$CHANNEL.json"
-                                                                                                        }
-                                                                                                    '' ;
-                                                                                            }
-                                                                                    )
                                                                                 ] ;
                                                                     }
                                                             )
                                                             (
                                                                 writeShellApplication
                                                                     {
-                                                                        name = "test" ;
-                                                                        runtimeInputs = [ ] ;
+                                                                        name = "expectation" ;
+                                                                        runtimeInputs = [ coreutils ] ;
                                                                         text =
                                                                             let
                                                                                 expected-standard-error_ =
