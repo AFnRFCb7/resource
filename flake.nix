@@ -671,59 +671,73 @@
                                                                                                 name = "check" ;
                                                                                                 runtimeInputs = [ pkgs.coreutils pkgs.redis ] ;
                                                                                                 text =
-                                                                                                    ''
-                                                                                                        OUT="$1"
-                                                                                                        mkdir --parents "$OUT"
-                                                                                                        mkdir --parents /build/redis
-                                                                                                        redis-server --dir /build/redis --daemonize yes
-                                                                                                        while ! redis-cli ping
-                                                                                                        do
-                                                                                                            sleep 0
-                                                                                                        done
-                                                                                                        fixture
-                                                                                                        nohup subscribe "$OUT" stale-init-channel > /dev/null 2>&1 &
-                                                                                                        nohup subscribe "$OUT" valid-init-channel > /dev/null 2>&1  &
-                                                                                                        nohup subscribe "$OUT" invalid-init-channel > /dev/null 2>&1  &
-                                                                                                        if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } }
-                                                                                                        then
-                                                                                                            OBSERVED_STATUS="$?"
-                                                                                                        else
-                                                                                                            OBSERVED_STATUS="$?"
-                                                                                                        fi
-                                                                                                        if [[ -f ${ resources-directory }/log/trace.log ]]
-                                                                                                        then
-                                                                                                            cat ${ resources-directory }/log/trace.log
-                                                                                                        fi
-                                                                                                        if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
-                                                                                                        then
-                                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
-                                                                                                        fi
-                                                                                                        if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
-                                                                                                        then
-                                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
-                                                                                                        fi
-                                                                                                        mkdir --parents "$OUT/expected"
-                                                                                                        cat > "$OUT/expected/stale-init.json" <<EOF
-                                                                                                        ${ builtins.toJSON expected-stale-init }
-                                                                                                        EOF
-                                                                                                        cat > "$OUT/expected/stale-init.json" <<EOF
-                                                                                                        ${ builtins.toJSON expected-stale-init }
-                                                                                                        EOF
-                                                                                                        cat > "$OUT/expected/stale-init.json" <<EOF
-                                                                                                        ${ builtins.toJSON expected-stale-init }
-                                                                                                        EOF
-                                                                                                        chmod 0400 "$OUT/expected/stale-init.json" "$OUT/expected/valid-init.json" "$OUT/expected/invalid-init.json"
-                                                                                                        if ! jd "$OUT/expected/stale-init.json" "$OUT/observed/stale-init.json"
-                                                                                                        then
-                                                                                                            failure 979
-                                                                                                        elif ! jd "$OUT/expected/valid-init.json" "$OUT/observed/valid-init.json"
-                                                                                                        then
-                                                                                                            failure 24531
-                                                                                                        elif ! jd "$OUT/expected/invalid-init.json" "$OUT/observed/invalid-init.json"
-                                                                                                        then
-                                                                                                            failure 13198
-                                                                                                        fi
-                                                                                                    '' ;
+                                                                                                    let
+                                                                                                        resource =
+                                                                                                            implementation
+                                                                                                                {
+                                                                                                                    depth = depth ;
+                                                                                                                    init = init ;
+                                                                                                                    init-resolutions = init-resolutions ;
+                                                                                                                    release = release ;
+                                                                                                                    release-resolutions = release-resolutions ;
+                                                                                                                    seed = seed ;
+                                                                                                                    targets = targets ;
+                                                                                                                    transient = transient ;
+                                                                                                                } ;
+                                                                                                        in
+                                                                                                            ''
+                                                                                                                OUT="$1"
+                                                                                                                mkdir --parents "$OUT"
+                                                                                                                mkdir --parents /build/redis
+                                                                                                                redis-server --dir /build/redis --daemonize yes
+                                                                                                                while ! redis-cli ping
+                                                                                                                do
+                                                                                                                    sleep 0
+                                                                                                                done
+                                                                                                                fixture
+                                                                                                                nohup subscribe "$OUT" stale-init-channel > /dev/null 2>&1 &
+                                                                                                                nohup subscribe "$OUT" valid-init-channel > /dev/null 2>&1  &
+                                                                                                                nohup subscribe "$OUT" invalid-init-channel > /dev/null 2>&1  &
+                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } }
+                                                                                                                then
+                                                                                                                    OBSERVED_STATUS="$?"
+                                                                                                                else
+                                                                                                                    OBSERVED_STATUS="$?"
+                                                                                                                fi
+                                                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                                                then
+                                                                                                                    cat ${ resources-directory }/log/trace.log
+                                                                                                                fi
+                                                                                                                if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
+                                                                                                                then
+                                                                                                                    failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
+                                                                                                                fi
+                                                                                                                if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
+                                                                                                                then
+                                                                                                                    failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
+                                                                                                                fi
+                                                                                                                mkdir --parents "$OUT/expected"
+                                                                                                                cat > "$OUT/expected/stale-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-stale-init }
+                                                                                                                EOF
+                                                                                                                cat > "$OUT/expected/stale-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-stale-init }
+                                                                                                                EOF
+                                                                                                                cat > "$OUT/expected/stale-init.json" <<EOF
+                                                                                                                ${ builtins.toJSON expected-stale-init }
+                                                                                                                EOF
+                                                                                                                chmod 0400 "$OUT/expected/stale-init.json" "$OUT/expected/valid-init.json" "$OUT/expected/invalid-init.json"
+                                                                                                                if ! jd "$OUT/expected/stale-init.json" "$OUT/observed/stale-init.json"
+                                                                                                                then
+                                                                                                                    failure 979
+                                                                                                                elif ! jd "$OUT/expected/valid-init.json" "$OUT/observed/valid-init.json"
+                                                                                                                then
+                                                                                                                    failure 24531
+                                                                                                                elif ! jd "$OUT/expected/invalid-init.json" "$OUT/observed/invalid-init.json"
+                                                                                                                then
+                                                                                                                    failure 13198
+                                                                                                                fi
+                                                                                                            '' ;
                                                                                             }
                                                                                     )
                                                                                     (
