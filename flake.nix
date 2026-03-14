@@ -684,6 +684,7 @@
                                                                         runtimeInputs = [ coreutils ] ;
                                                                         text =
                                                                             ''
+                                                                                : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }
                                                                                 mkdir --parents "$out"
                                                                                 check
                                                                             '' ;
@@ -695,7 +696,11 @@
                                                             (
                                                                 buildFHSUserEnv
                                                                     {
-                                                                        extraBwrapArgs = [ "--bind $out /out" ] ;
+                                                                        extraBwrapArgs =
+                                                                            [
+                                                                                "--bind /build/redis" "/redis"
+                                                                                "--bind $out /out"
+                                                                            ] ;
                                                                         name = "check" ;
                                                                         runScript =
                                                                             let
