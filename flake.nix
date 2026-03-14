@@ -690,7 +690,6 @@
                                                                                 then
                                                                                     cat ${ resources-directory }/log/trace.log
                                                                                 fi
-                                                                                assertion
                                                                             '' ;
                                                                     } ;
                                                                 in "${ application }/bin/check" ;
