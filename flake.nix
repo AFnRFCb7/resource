@@ -793,6 +793,7 @@
                                                                                                                     transient = transient ;
                                                                                                                 } ;
                                                                                                         in
+                                                                                                            builtins.trace "if OBSERVED_RESOURCE=${ resource { failure = failure ; setup = setup ; } } 2> /out/observed/diff/standard-error"
                                                                                                             ''
                                                                                                                 mkdir --parents "/out/expected/diff"
                                                                                                                 EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
