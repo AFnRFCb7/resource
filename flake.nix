@@ -713,7 +713,7 @@
                                                                                         pkgs.writeShellApplication
                                                                                             {
                                                                                                 name = "assertion" ;
-                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.jd failure ] ;
+                                                                                                runtimeInputs = [ pkgs.coreutils failure ] ;
                                                                                                 text =
                                                                                                     ''
                                                                                                         EXPECTED_STANDARD_ERROR="$( cat "/out/expected/standard-error" )" || failure 26286
