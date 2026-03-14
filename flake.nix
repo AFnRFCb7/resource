@@ -632,6 +632,7 @@
                                         {
                                             buildFHSUserEnv ,
                                             depth ? 0 ,
+                                            expected-failure ? null ,
                                             expected-invalid-init ? null ,
                                             expected-resource ? "18955" ,
                                             expected-stale-init ? null ,
@@ -690,7 +691,7 @@
                                                                                             name = "check" ;
                                                                                             text =
                                                                                                 ''
-                                                                                                    : ${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }
+                                                                                                    : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                                     mkdir --parents "$out"
                                                                                                     check
                                                                                                 '' ;
