@@ -169,6 +169,7 @@
                                                                         ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || exit 68
                                                                         if [[ -t 0 ]]
                                                                         then
+                                                                            # shellcheck disable=2016
                                                                             yq \
                                                                                 eval \
                                                                                 --null-input \
@@ -177,6 +178,7 @@
                                                                                 '{ "arguments" : $ARGUMENTS }'
                                                                         else
                                                                             STANDARD_INPUT="$( cat )" || failure 65
+                                                                            # shellcheck disable=2016
                                                                             yq \
                                                                                 eval \
                                                                                 --null-input \
