@@ -112,7 +112,7 @@
                                                                         STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
                                                                         STANDARD_ERROR_FILE="/log/$STANDARD_ERROR_SEQUENCE.txt"
                                                                         STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 7574
-                                                                        STANDARD_OUTPUT_FILE="/log/$STANDARD_$OUTPUT_SEQUENCE.txt"
+                                                                        STANDARD_OUTPUT_FILE="/log/$STANDARD_OUTPUT_SEQUENCE.txt"
                                                                         if "$HAS_STANDARD_INPUT"
                                                                         then
                                                                             if init "@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
