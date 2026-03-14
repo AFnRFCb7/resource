@@ -658,7 +658,7 @@
                                         } :
                                             mkDerivation
                                                 {
-                                                    install = ''check "$out"'' ;
+                                                    installPhase = ''check "$out"'' ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
