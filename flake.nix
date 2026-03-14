@@ -632,9 +632,9 @@
                                         {
                                             buildFHSUserEnv ,
                                             depth ? 0 ,
-                                            expected-standard-error ? null ,
                                             expected-invalid-init ? null ,
-                                            expected-resource ? "18955" ,
+                                            expected-standard-error ? null ,
+                                            expected-standard-output ? null ,
                                             expected-stale-init ? null ,
                                             expected-status ? 0 ,
                                             expected-valid-init ,
@@ -654,7 +654,6 @@
                                                                         '' ;
                                                                 } ;
                                                         in "${ application }/bin/fixture" ,
-                                            gc-root-directory ? "/build/gc-root" ,
                                             init ? null ,
                                             init-resolutions ? null ,
                                             invalid-init-channel ? "23567" ,
@@ -663,7 +662,6 @@
                                             release ? null ,
                                             release-resolutions ? null ,
                                             resources ? null ,
-                                            resources-directory ? "/build/resources" ,
                                             seed ? 17507 ,
                                             sequential-start ? "16669" ,
                                             setup ? setup : setup ,
@@ -686,7 +684,8 @@
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                 mkdir --parents "$out"
-                                                                                check
+                                                                                pre-test
+                                                                                test
                                                                             '' ;
                                                                     } ;
                                                                 in "${ application }/bin/check" ;
@@ -698,27 +697,32 @@
                                                                     {
                                                                         extraBwrapArgs =
                                                                             [
-                                                                                "--bind-ro ${ resources-directory }/log /log"
-                                                                                "--bind /build/redis" "/redis"
                                                                                 "--bind $out /out"
+                                                                                "--tmpfs /redis"
                                                                             ] ;
-                                                                        name = "check" ;
-                                                                        runScript =
-                                                                            let
-                                                                                application =
-                                                                                    writeShellApplication
-                                                                                        {
-                                                                                            name = "check" ;
-                                                                                            text = "check" ;
-                                                                                        } ;
-                                                                                    in "${ application }/bin/check" ;
+                                                                        name = "pre-test" ;
+                                                                        runScript = "pre-test" ;
                                                                         targetPkgs =
                                                                             pkgs :
                                                                                 [
                                                                                     (
                                                                                         pkgs.writeShellApplication
                                                                                             {
-                                                                                                name = "check" ;
+                                                                                                name = "fixture" ;
+                                                                                                runtimeInputs = [ ] ;
+                                                                                                text =
+                                                                                                    visitor
+                                                                                                        {
+                                                                                                            lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
+                                                                                                            null = path : value : "" ;
+                                                                                                        }
+                                                                                                        fixture ;
+                                                                                            }
+                                                                                    )
+                                                  (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "pre-test" ;
                                                                                                 runtimeInputs = [ pkgs.coreutils pkgs.redis ] ;
                                                                                                 text =
                                                                                                     let
@@ -736,7 +740,6 @@
                                                                                                                 } ;
                                                                                                         in
                                                                                                             ''
-                                                                                                                mkdir --parents /redis
                                                                                                                 redis-server --dir /redis --daemonize yes
                                                                                                                 while ! redis-cli ping
                                                                                                                 do
@@ -746,65 +749,16 @@
                                                                                                                 nohup subscribe stale-init-channel > /dev/null 2>&1 &
                                                                                                                 nohup subscribe valid-init-channel > /dev/null 2>&1 &
                                                                                                                 nohup subscribe invalid-init-channel > /dev/null 2>&1 &
-                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } } 2> /build/standard-error
+                                                                                                                mkdir --parents /out/observed
+                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } } 2> /out/observed/standard-error
                                                                                                                 then
                                                                                                                     OBSERVED_STATUS="$?"
                                                                                                                 else
                                                                                                                     OBSERVED_STATUS="$?"
                                                                                                                 fi
-                                                                                                                EXPECTED_STANDARD_ERROR='${ visitor { null = path : value : "" ; string = path : value : value ; } expected-standard-error }'
-                                                                                                                OBSERVED_STANDARD_ERROR="$( cat /build/standard-error )" || failure 3231
-                                                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
-                                                                                                                then
-                                                                                                                    cat ${ resources-directory }/log/trace.log
-                                                                                                                fi
-                                                                                                                if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
-                                                                                                                then
-                                                                                                                    failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
-                                                                                                                elif [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
-                                                                                                                then
-                                                                                                                    failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
-                                                                                                                fi
-                                                                                                                if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
-                                                                                                                then
-                                                                                                                    failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
-                                                                                                                fi
-                                                                                                                mkdir --parents "$OUT/expected"
-                                                                                                                cat > "/out/expected/stale-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-stale-init }
-                                                                                                                EOF
-                                                                                                                cat > "/out/expected/valid-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-valid-init }
-                                                                                                                EOF
-                                                                                                                cat > "/out/expected/invalid-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-invalid-init }
-                                                                                                                EOF
-                                                                                                                chmod 0400 "/out/expected/stale-init.json" "/out/expected/valid-init.json" "/out/expected/invalid-init.json"
-                                                                                                                if ! jd "/out/expected/stale-init.json" "/out/observed/stale-init.json"
-                                                                                                                then
-                                                                                                                    failure 979
-                                                                                                                elif ! jd "/out/expected/valid-init.json" "/out/observed/valid-init.json"
-                                                                                                                then
-                                                                                                                    failure 24531
-                                                                                                                elif ! jd "/out/expected/invalid-init.json" "/out/observed/invalid-init.json"
-                                                                                                                then
-                                                                                                                    failure 13198
-                                                                                                                fi
+                                                                                                                echo "$OBSERVED_RESOURCE" > /out/observed/standard-output
+                                                                                                                echo "$OBSERVED_STATUS" > /out/observed/status
                                                                                                             '' ;
-                                                                                            }
-                                                                                    )
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "fixture" ;
-                                                                                                runtimeInputs = [ ] ;
-                                                                                                text =
-                                                                                                    visitor
-                                                                                                        {
-                                                                                                            lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
-                                                                                                            null = path : value : "" ;
-                                                                                                        }
-                                                                                                        fixture ;
                                                                                             }
                                                                                     )
                                                                                     (
@@ -839,6 +793,75 @@
                                                                                             }
                                                                                     )
                                                                                 ] ;
+                                                                    }
+                                                            )
+                                                            (
+                                                                pkgs.writeShellApplication
+                                                                    {
+                                                                        name = "test" ;
+                                                                        runtimeInputs = [ ] ;
+                                                                        text =
+                                                                            let
+                                                                                expected-standard-error_ =
+                                                                                    visitor
+                                                                                        {
+                                                                                            null = path : value : "" ;
+                                                                                            string = path : value : value ;
+                                                                                        }
+                                                                                        expected-standard-error ;
+                                                                                expected-status_ =
+                                                                                    visitor
+                                                                                        {
+                                                                                            int = path : value : builtins.toString value ;
+                                                                                            null = path : value : "0" ;
+                                                                                        }
+                                                                                        expected-status ;
+                                                                                in
+                                                                                    ''
+                                                                                        : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
+                                                                                        EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
+                                                                                        OBSERVED_STANDARD_ERROR="$( cat "$out/observed/standard-error" )" || failure 3231
+                                                                                        EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
+                                                                                        OBSERVED_STANDARD_OUTPUT="$( cat "$out/observed/standard-output" )" || failure 4651
+                                                                                        EXPECTED_STATUS='${ expected-status_ }'
+                                                                                        OBSERVED_STATUS="$( cat "$out/observed/status" )" || failure 7786
+                                                                                        if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                        then
+                                                                                            cat ${ resources-directory }/log/trace.log
+                                                                                        fi
+                                                                                        if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
+                                                                                        then
+                                                                                            failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
+                                                                                        elif [[ "$EXPECTED_STANDARD_OUTPUT" != "$OBSERVED_STANDARD_OUTPUT" ]]
+                                                                                        then
+                                                                                            failure f780406e "EXPECTED_STANDARD_OUTPUT=${ expected-standard-output }" "OBSERVED_STANDARD_OUTPUT=$OBSERVED_STANDARD_OUTPUT"
+                                                                                        fi
+                                                                                        elif [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
+                                                                                        then
+                                                                                            failure 94defd57 "EXPECTED_STATUS=$EXPECTED_STATUS" "OBSERVED_STATUS=$OBSERVED_STATUS"
+                                                                                        fi
+                                                                                        mkdir --parents "$OUT/expected"
+                                                                                        cat > "/out/expected/stale-init.json" <<EOF
+                                                                                        ${ builtins.toJSON expected-stale-init }
+                                                                                        EOF
+                                                                                        cat > "/out/expected/valid-init.json" <<EOF
+                                                                                        ${ builtins.toJSON expected-valid-init }
+                                                                                        EOF
+                                                                                        cat > "/out/expected/invalid-init.json" <<EOF
+                                                                                        ${ builtins.toJSON expected-invalid-init }
+                                                                                        EOF
+                                                                                        chmod 0400 "/out/expected/stale-init.json" "/out/expected/valid-init.json" "/out/expected/invalid-init.json"
+                                                                                        if ! jd "/out/expected/stale-init.json" "/out/observed/stale-init.json"
+                                                                                        then
+                                                                                            failure 979
+                                                                                        elif ! jd "/out/expected/valid-init.json" "/out/observed/valid-init.json"
+                                                                                        then
+                                                                                            failure 24531
+                                                                                        elif ! jd "/out/expected/invalid-init.json" "/out/observed/invalid-init.json"
+                                                                                        then
+                                                                                            failure 13198
+                                                                                        fi
+                                                                                    '' ;
                                                                     }
                                                             )
                                                         ] ;
