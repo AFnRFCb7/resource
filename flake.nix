@@ -660,7 +660,11 @@
                                         } :
                                             mkDerivation
                                                 {
-                                                    installPhase = ''check'' ;
+                                                    installPhase =
+                                                        ''
+                                                            mkdir --parents "$out"
+                                                            check
+                                                        '' ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
