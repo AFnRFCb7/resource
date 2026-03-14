@@ -486,56 +486,78 @@
                                                         name = "get-or-create" ;
                                                         runtimeInputs = [ environments.create environments.failure coreutils js procps redis-cli ] ;
                                                         text =
-                                                            ''
-                                                                if [[ -t 0 ]]
-                                                                then
-                                                                    HAS_STANDARD_INPUT=false
-                                                                    STANDARD_INPUT=
-                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
-                                                                else
-                                                                    STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
-                                                                    export STANDARD_INPUT_FILE
-                                                                    HAS_STANDARD_INPUT=true
-                                                                    cat <&0 > "$STANDARD_INPUT_FILE"
-                                                                    STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 12348
-                                                                    PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
-                                                                    ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
-                                                                fi
-                                                                ARGUMENTS=( "$@" )
-                                                                ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
-                                                                TRANSIENT=${ visitor { bool = path : value : if value then "$( sequential ) || failure 5672" else "-1" ; } transient }
-                                                                HASH="$( echo "${ pre-hash secondary } ${ builtins.concatStringsSep "" [ "$TRANSIENT" "$" "{" "ARGUMENTS[*]" "}" ] } $STANDARD_INPUT $HAS_STANDARD_INPUT" | sha512sum | cut --characters 1-128 )" || failure 21086
-                                                                SCRIPTS='${ builtins.toJSON scripts }'
-                                                                if [[ -L "${ resources-directory }/mounts/$HASH" ]]
-                                                                then
-                                                                    echo "${ resources-directory }/mounts/$HASH"
-                                                                    JSON_SEQUENCE="$( sequential )" || failure 30634
-                                                                    JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
-                                                                    jq \
-                                                                        --null-output \
-                                                                        --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                        --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                        --arg HASH "$HASH" \
-                                                                        --arg INDEX "INDEX" \
-                                                                        --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                        --arg TRANSIENT "$TRANSIENT" \
-                                                                        '{
-                                                                            "arguments" : $ARGUMENTS ,
-                                                                            "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                            "hash" : $HASH ,
-                                                                            "index" : $INDEX ,
-                                                                            "standard-input" : $STANDARD_INPUT ,
-                                                                            "transient" : $TRANSIENT
-                                                                        }' > "$JSON_FILE"
-                                                                    redis-cli PUBLISH "${ stale-channel }" "$JSON_FILE"
-                                                                else
-                                                                    export HAS_STANDARD_INPUT
-                                                                    export HASH
-                                                                    export STANDARD_INPUT
-                                                                    export TRANSIENT
-                                                                    create "$@"
-                                                                fi
-                                                            '' ;
+                                                            let
+                                                                stringed =
+                                                                    let
+                                                                        stringable =
+                                                                            path : value :
+                                                                                {
+                                                                                    path = path ;
+                                                                                    type = builtins.typeOf value ;
+                                                                                    value = value ;
+                                                                                } ;
+                                                                    in
+                                                                        visitor
+                                                                        {
+                                                                            bool = stringable ;
+                                                                            int = stringable ;
+                                                                            float = stringable ;
+                                                                            lambda = path : value : { path = path ; type = "lambda" ; value = null ; } ;
+                                                                            path = stringable ;
+                                                                            string = stringable ;
+                                                                        }
+                                                                        [ primary secondary ] ;
+                                                                in
+                                                                    ''
+                                                                        if [[ -t 0 ]]
+                                                                        then
+                                                                            HAS_STANDARD_INPUT=false
+                                                                            STANDARD_INPUT=
+                                                                            ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
+                                                                        else
+                                                                            STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
+                                                                            export STANDARD_INPUT_FILE
+                                                                            HAS_STANDARD_INPUT=true
+                                                                            cat <&0 > "$STANDARD_INPUT_FILE"
+                                                                            STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 12348
+                                                                            PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
+                                                                            ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
+                                                                        fi
+                                                                        ARGUMENTS=( "$@" )
+                                                                        ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
+                                                                        TRANSIENT=${ visitor { bool = path : value : if value then "$( sequential ) || failure 5672" else "-1" ; } transient }
+                                                                        HASH="$( echo "${ builtins.hashString "sha512" ( builtins.toJSON stringed ) } ${ builtins.concatStringsSep "5291" [ "$" "{" "ARGUMENTS[*]" "}" ] } $HAS_STANDARD_INPUT" $STANDARD_INPUT "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                        SCRIPTS='${ builtins.toJSON scripts }'
+                                                                        if [[ -L "${ resources-directory }/mounts/$HASH" ]]
+                                                                        then
+                                                                            echo "${ resources-directory }/mounts/$HASH"
+                                                                            JSON_SEQUENCE="$( sequential )" || failure 30634
+                                                                            JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
+                                                                            jq \
+                                                                                --null-output \
+                                                                                --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                --arg HASH "$HASH" \
+                                                                                --arg INDEX "INDEX" \
+                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                --arg TRANSIENT "$TRANSIENT" \
+                                                                                '{
+                                                                                    "arguments" : $ARGUMENTS ,
+                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                    "hash" : $HASH ,
+                                                                                    "index" : $INDEX ,
+                                                                                    "standard-input" : $STANDARD_INPUT ,
+                                                                                    "transient" : $TRANSIENT
+                                                                                }' > "$JSON_FILE"
+                                                                            redis-cli PUBLISH "${ stale-channel }" "$JSON_FILE"
+                                                                        else
+                                                                            export HAS_STANDARD_INPUT
+                                                                            export HASH
+                                                                            export STANDARD_INPUT
+                                                                            export TRANSIENT
+                                                                            create "$@"
+                                                                        fi
+                                                                    '' ;
                                                     } ;
                                             in
                                                 {
