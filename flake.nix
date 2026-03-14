@@ -551,7 +551,7 @@
                                                                                     "standard-input" : $STANDARD_INPUT ,
                                                                                     "transient" : $TRANSIENT
                                                                                 }' > "$JSON_FILE"
-                                                                            redis-cli PUBLISH "${ stale-channel }" "$JSON_FILE"
+                                                                            redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE"
                                                                         else
                                                                             export HAS_STANDARD_INPUT
                                                                             export HASH
