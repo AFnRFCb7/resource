@@ -374,11 +374,12 @@
                                                             } ;
                                                         wrap =
                                                             {
-                                                                gc-root = null ;
-                                                                lock = null ;
-                                                                log = null ;
-                                                                mount = true ;
-                                                                sequential = null ;
+                                                                extraBwrapArgs = [ ''--bindfs "${ resources-directory }/mounts/$INDEX" /mount'' ] ;
+                                                                post = "" ;
+                                                                pre =
+                                                                    ''
+                                                                        mkdir --parents "${ resources-directory }/mounts/$INDEX"
+                                                                    '' ;
                                                                 targetPkgs = pkgs : [ pkgs.coreutils pkgs.gnugrep pkgs.gnused environments.failure ] ;
                                                                 text =
                                                                     ''
