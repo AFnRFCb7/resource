@@ -39,59 +39,56 @@
                                             let
                                                 mapper  =
                                                     name : { extraBwrapArgs , pre , post , targetPkgs , text } :
-                                                        let
-                                                            application =
-                                                                writeShellApplication
-                                                                    {
-                                                                        name = name ;
-                                                                        runtimeInputs =
-                                                                            [
-                                                                                coreutils
-                                                                                flock
-                                                                                (
-                                                                                    buildFHSUserEnv
-                                                                                        {
-                                                                                            extraBwrapArgs = extraBwrapArgs ;
-                                                                                            name = name ;
-                                                                                            runScript =
-                                                                                                ''
-                                                                                                    bash -c '
-                                                                                                        if [[ -t 0 ]]
-                                                                                                        then
-                                                                                                            ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                                        else
-                                                                                                            ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                                                        fi
-                                                                                                    ' "$0" "$@"
-                                                                                                '' ;
-                                                                                            targetPkgs =
-                                                                                                pkgs :
-                                                                                                    [
-                                                                                                        (
-                                                                                                            writeShellApplication
-                                                                                                                {
-                                                                                                                    name = name ;
-                                                                                                                    runtimeInputs = ( targetPkgs pkgs ) ;
-                                                                                                                    text = text ;
-                                                                                                                }
-                                                                                                        )
-                                                                                                    ] ;
-                                                                                        }
-                                                                                )
-                                                                            ] ;
-                                                                        text =
-                                                                            ''
-                                                                                ${ pre }
-                                                                                if [[ -t 0 ]]
-                                                                                then
-                                                                                    ${ name } "$@"
-                                                                                else
-                                                                                    ${ name } "@" <&0
-                                                                                fi
-                                                                                ${ post }
-                                                                            '' ;
-                                                                    } ;
-                                                            in "${ application }/bin/${ name }" ;
+                                                        writeShellApplication
+                                                            {
+                                                                name = name ;
+                                                                runtimeInputs =
+                                                                    [
+                                                                        coreutils
+                                                                        flock
+                                                                        (
+                                                                            buildFHSUserEnv
+                                                                                {
+                                                                                    extraBwrapArgs = extraBwrapArgs ;
+                                                                                    name = name ;
+                                                                                    runScript =
+                                                                                        ''
+                                                                                            bash -c '
+                                                                                                if [[ -t 0 ]]
+                                                                                                then
+                                                                                                    ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                else
+                                                                                                    ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                                                fi
+                                                                                            ' "$0" "$@"
+                                                                                        '' ;
+                                                                                    targetPkgs =
+                                                                                        pkgs :
+                                                                                            [
+                                                                                                (
+                                                                                                    writeShellApplication
+                                                                                                        {
+                                                                                                            name = name ;
+                                                                                                            runtimeInputs = ( targetPkgs pkgs ) ;
+                                                                                                            text = text ;
+                                                                                                        }
+                                                                                                )
+                                                                                            ] ;
+                                                                                }
+                                                                        )
+                                                                    ] ;
+                                                                text =
+                                                                    ''
+                                                                        ${ pre }
+                                                                        if [[ -t 0 ]]
+                                                                        then
+                                                                            ${ name } "$@"
+                                                                        else
+                                                                            ${ name } "@" <&0
+                                                                        fi
+                                                                        ${ post }
+                                                                    '' ;
+                                                            } ;
                                                 set =
                                                     {
                                                         create =
