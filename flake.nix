@@ -684,7 +684,7 @@
                                                                         runtimeInputs = [ coreutils ] ;
                                                                         text =
                                                                             ''
-                                                                                mkdir --parents $out
+                                                                                mkdir --parents "$out"
                                                                                 check
                                                                             '' ;
                                                                     } ;
