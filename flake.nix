@@ -798,15 +798,9 @@
                                                                                                                 echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
                                                                                                                 echo "$EXPECTED_STATUS" > "/out//expected/diff/status"
                                                                                                                 mkdir --parents "/out/expected/jd"
-                                                                                                                cat > "/out/expected/jd/stale-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-stale-init }
-                                                                                                                EOF
-                                                                                                                cat > "/out/expected/jd/valid-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-valid-init }
-                                                                                                                EOF
-                                                                                                                cat > "/out/expected/jd/invalid-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-invalid-init }
-                                                                                                                EOF
+                                                                                                                cp ${ expected-stale-init } /out/expected/jd/stale-init.json
+                                                                                                                cp ${ expected-valid-init } /out/expected/jd/valid-init.json
+                                                                                                                cp ${ expected-invalid-init } /out/expected/jd/invalid-init.json
 
                                                                                                                 redis-server --dir /redis --daemonize yes
                                                                                                                 while ! redis-cli ping
