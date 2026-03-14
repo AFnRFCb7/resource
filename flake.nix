@@ -683,13 +683,13 @@
                                                                         text =
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
-#                                                                                cleanup ( ) {
-#                                                                                    if [[ -f ${ resources-directory }/log/trace.log ]]
-#                                                                                    then
-#                                                                                        cat ${ resources-directory }/log/trace.log
-#                                                                                    fi
-#                                                                                }
-#                                                                                trap cleanup EXIT
+                                                                                cleanup ( ) {
+                                                                                    if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                    then
+                                                                                        cat ${ resources-directory }/log/trace.log
+                                                                                    fi
+                                                                                }
+                                                                                trap cleanup EXIT
                                                                                 mkdir --parents "$out"
                                                                                 test-check
                                                                             '' ;
@@ -698,109 +698,7 @@
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
-                                                            (
-                                                                buildFHSUserEnv
-                                                                    {
-                                                                        extraBwrapArgs =
-                                                                            [
-                                                                                "--bind $out /out"
-                                                                                "--tmpfs /redis"
-                                                                            ] ;
-                                                                        name = "test-check" ;
-                                                                        runScript = "test-check";
-                                                                        targetPkgs =
-                                                                            pkgs :
-                                                                                [
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "test-check" ;
-                                                                                                runtimeInputs =
-                                                                                                    [
-                                                                                                        pkgs.coreutils
-                                                                                                        pkgs.findutils
-                                                                                                        pkgs.redis
-                                                                                                        (
-                                                                                                            pkgs.writeShellApplication
-                                                                                                                {
-                                                                                                                    name = "fixture" ;
-                                                                                                                    runtimeInputs = [ ] ;
-                                                                                                                    text =
-                                                                                                                        visitor
-                                                                                                                            {
-                                                                                                                                lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
-                                                                                                                                null = path : value : "" ;
-                                                                                                                            }
-                                                                                                                            fixture ;
-                                                                                                                }
-                                                                                                        )
-                                                                                                        (
-                                                                                                            pkgs.writeShellApplication
-                                                                                                                {
-                                                                                                                     name = "subscribe" ;
-                                                                                                                     runtimeInputs = [ coreutils redis ] ;
-                                                                                                                     text =
-                                                                                                                        ''
-                                                                                                                            CHANNEL="$1"
-                                                                                                                            redis-cli --raw SUBSCRIBE "$CHANNEL" | {
-                                                                                                                                read -r _     # skip "subscribe"
-                                                                                                                                read -r _     # skip channel name
-                                                                                                                                read -r _     # skip
-                                                                                                                                read -r _     # skip
-                                                                                                                                read -r _
-                                                                                                                                read -r PAYLOAD
-                                                                                                                                mkdir --parents "/out/observed/jd"
-                                                                                                                                echo "$PAYLOAD" > "/out/observed/jd/$CHANNEL.json"
-                                                                                                                            }
-                                                                                                                        '' ;
-                                                                                                                }
-                                                                                                        )
-                                                                                                        failure
-                                                                                                    ] ;
-                                                                                                text =
-                                                                                                    let
-                                                                                                        expected-standard-error_ =
-                                                                                                            visitor
-                                                                                                                {
-                                                                                                                    null = path : value : "" ;
-                                                                                                                    string = path : value : value ;
-                                                                                                                }
-                                                                                                                expected-standard-error ;
-                                                                                                        expected-standard-output_ =
-                                                                                                            visitor
-                                                                                                                {
-                                                                                                                    null = path : value : "" ;
-                                                                                                                    string = path : value : value ;
-                                                                                                                }
-                                                                                                                expected-standard-output ;
-                                                                                                        expected-status_ =
-                                                                                                            visitor
-                                                                                                                {
-                                                                                                                    int = path : value : builtins.toString value ;
-                                                                                                                    null = path : value : "0" ;
-                                                                                                                }
-                                                                                                                expected-status ;
-                                                                                                        resource =
-                                                                                                            implementation
-                                                                                                                {
-                                                                                                                    depth = depth ;
-                                                                                                                    init = init ;
-                                                                                                                    init-resolutions = init-resolutions ;
-                                                                                                                    release = release ;
-                                                                                                                    release-resolutions = release-resolutions ;
-                                                                                                                    seed = seed ;
-                                                                                                                    targets = targets ;
-                                                                                                                    transient = transient ;
-                                                                                                                } ;
-                                                                                                        in
-                                                                                                            ''
 
-                                                                                                            '' ;
-                                                                                            }
-                                                                                    )
-                                                                                ] ;
-                                                                    }
-                                                            )
                                                         ] ;
                                                     src = ./. ;
                                                 } ;
