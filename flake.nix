@@ -683,19 +683,15 @@
                                                                         text =
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
-                                                                                cleanup ( ) {
-                                                                                    if [[ -f ${ resources-directory }/log/trace.log ]]
-                                                                                    then
-                                                                                        cat ${ resources-directory }/log/trace.log
-                                                                                    fi
-                                                                                }
-                                                                                trap cleanup EXIT
+#                                                                                cleanup ( ) {
+#                                                                                    if [[ -f ${ resources-directory }/log/trace.log ]]
+#                                                                                    then
+#                                                                                        cat ${ resources-directory }/log/trace.log
+#                                                                                    fi
+#                                                                                }
+#                                                                                trap cleanup EXIT
                                                                                 mkdir --parents "$out"
                                                                                 test-check
-#                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
-#                                                                                then
-#                                                                                    cat ${ resources-directory }/log/trace.log
-#                                                                                fi
                                                                             '' ;
                                                                     } ;
                                                                 in "${ application }/bin/check" ;
