@@ -486,7 +486,7 @@
                                             writeShellApplication
                                                 {
                                                     name = "get-or-create" ;
-                                                    runtimeInputs = [ environments.create environments.failure coreutils js procps redis ] ;
+                                                    runtimeInputs = [ environments.create environments.failure coreutils jq procps redis ] ;
                                                     text =
                                                         let
                                                             stringed =
