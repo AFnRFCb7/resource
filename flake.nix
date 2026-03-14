@@ -8,6 +8,7 @@
                     {
                         buildFHSUserEnv ,
                         coreutils ,
+                        flock ,
                         gc-root-directory ,
                         invalid-init-channel ,
                         jq ,
@@ -46,6 +47,7 @@
                                                                         runtimeInputs =
                                                                             [
                                                                                 coreutils
+                                                                                flock
                                                                                 (
                                                                                     buildFHSUserEnv
                                                                                         {
@@ -159,12 +161,8 @@
                                                         failure =
                                                             {
                                                                 extraBwrapArgs = [ ] ;
-                                                                post =
-                                                                    ''
-                                                                    '' ;
-                                                                pre =
-                                                                    ''
-                                                                    '' ;
+                                                                post = "" ;
+                                                                pre = "" ;
                                                                 targetPkgs = pkgs : [ pkgs.coreutils pkgs.yq-go ] ;
                                                                 text =
                                                                     ''
@@ -275,11 +273,9 @@
                                                             } ;
                                                         sequential =
                                                             {
-                                                                gc-root = null ;
-                                                                lock = true ;
-                                                                log = null ;
-                                                                mount = null ;
-                                                                sequential = true ;
+                                                                extraBwrapArgs = [ "--bind ${ resources-directory }/sequential /sequential" ] ;
+                                                                post = "" ;
+                                                                pre = "mkdir --parents ${ resources-directory }/sequential" ;
                                                                 targetPkgs = pkgs : [ pkgs.coreutils pkgs.flock environments.failure ] ;
                                                                 text =
                                                                     ''
@@ -296,12 +292,16 @@
                                                             } ;
                                                         trace =
                                                             {
-                                                                gc-root = null ;
-                                                                lock = true ;
-                                                                log = true ;
-                                                                mount = null ;
-                                                                sequential = null ;
-                                                                targetPkgs = pkgs : [ pkgs.coreutils pkgs.flock pkgs.yq-go environments.failure ] ;
+                                                                extraBwrapArgs = [ "--bind ${ resources-directory }/log /log" ] ;
+                                                                post = "rm ${ resources-directory }/lock/trace" ;
+                                                                pre =
+                                                                    ''
+                                                                        mkdir --parents ${ resources-directory }/log
+                                                                        mkdir --parents ${ resources-directory }/lock
+                                                                        exec 203> ${ resources-directory }/lock/trace
+                                                                        flock -x 203
+                                                                    '' ;
+                                                                targetPkgs = pkgs : [ pkgs.coreutils pkgs.yq-go environments.failure ] ;
                                                                 text =
                                                                     ''
                                                                         ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || failure 22397
@@ -333,7 +333,6 @@
                                                                 log = null ;
                                                                 mount = true ;
                                                                 sequential = null ;
-
                                                                 targetPkgs = pkgs : [ pkgs.coreutils pkgs.gnugrep pkgs.gnused environments.failure ] ;
                                                                 text =
                                                                     ''
