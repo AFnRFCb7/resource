@@ -738,14 +738,15 @@
                                                                                                                 else
                                                                                                                     OBSERVED_STATUS="$?"
                                                                                                                 fi
+                                                                                                                EXPECTED_STANDARD_ERROR='${ visitor { null = path : value : "" ; string = path : value : value ; } expected-standard-error }'
                                                                                                                 OBSERVED_STANDARD_ERROR="$( cat /build/standard-error )" || failure 3231
                                                                                                                 if [[ -f ${ resources-directory }/log/trace.log ]]
                                                                                                                 then
                                                                                                                     cat ${ resources-directory }/log/trace.log
                                                                                                                 fi
-                                                                                                                if [[ '${ visitor { null = path : value : "" ; string = path : value : value ; } expected-standard-error }' != "$OBSERVED_STANDARD_ERROR" ]]
+                                                                                                                if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
                                                                                                                 then
-                                                                                                                    failure 30877 EXPECTED_STANDARD_ERROR=${ visitor { null = path : value : "" ; string = path : value : value ; } expected-standard-error }' "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
+                                                                                                                    failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
                                                                                                                 elif [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                                                 then
                                                                                                                     failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
