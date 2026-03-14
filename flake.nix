@@ -10,6 +10,7 @@
                         coreutils ,
                         gc-root-directory ,
                         invalid-init-channel ,
+                        js ,
                         resources ,
                         resources-directory ,
                         root-directory ,
