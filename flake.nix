@@ -647,7 +647,6 @@
                                                                 runtimeInputs = [ coreutils ] ;
                                                                 text =
                                                                     ''
-                                                                        : ${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }
                                                                         mkdir --parents ${ resources-directory }/sequential
                                                                         echo 9068 > ${ resources-directory }/sequential/sequential.counter" ,
                                                                     '' ;
@@ -674,11 +673,7 @@
                                         } :
                                             mkDerivation
                                                 {
-                                                    installPhase =
-                                                        ''
-                                                            mkdir --parents "$out"
-                                                            check
-                                                        '' ;
+                                                    installPhase = "check" ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
@@ -695,6 +690,7 @@
                                                                                             name = "check" ;
                                                                                             text =
                                                                                                 ''
+                                                                                                    : ${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }
                                                                                                     mkdir --parents "$out"
                                                                                                     check
                                                                                                 '' ;
