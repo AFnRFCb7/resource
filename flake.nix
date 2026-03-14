@@ -667,7 +667,7 @@
                                                     else
                                                         mkDerivation
                                                             {
-                                                                install = ''mkdir --parents "$out" && check "$out"'' ;
+                                                                install = builtins.trace "WTF" ''mkdir --parents "$out" && check "$out"'' ;
                                                                 name = "check" ;
                                                                 nativeBuildInputs =
                                                                     [
