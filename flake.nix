@@ -809,6 +809,13 @@
                                                                                             string = path : value : value ;
                                                                                         }
                                                                                         expected-standard-error ;
+                                                                                expected-standard-output_ =
+                                                                                    visitor
+                                                                                        {
+                                                                                            null = path : value : "" ;
+                                                                                            string = path : value : value ;
+                                                                                        }
+                                                                                        expected-standard-output ;
                                                                                 expected-status_ =
                                                                                     visitor
                                                                                         {
