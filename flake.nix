@@ -869,6 +869,7 @@
                                                                                                                 } ;
                                                                                                         in
                                                                                                             ''
+                                                                                                                : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                                                 mkdir --parents "/out/expected/diff"
                                                                                                                 EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
                                                                                                                 echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
