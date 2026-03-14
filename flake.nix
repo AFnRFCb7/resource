@@ -15,7 +15,6 @@
                         redis ,
                         resources ,
                         resources-directory ,
-                        root-directory ,
                         sequential-start ,
                         stale-init-channel ,
                         valid-init-channel ,
