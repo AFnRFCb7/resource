@@ -153,7 +153,7 @@
                                                                 targetPkgs = pkgs : [ pkgs.coreutils pkgs.yq-go ] ;
                                                                 text =
                                                                     ''
-                                                                        ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || exit 68
+                                                                        ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || exit 33
                                                                         if [[ -t 0 ]]
                                                                         then
                                                                             # shellcheck disable=SC2016
@@ -832,6 +832,7 @@
                                                                                                                 fi
                                                                                                                 # find /out/expected/jd | while read -r FULLY_QUALIFIED_NAME
                                                                                                                 # do
+                                                                                                                #
                                                                                                                 # done
                                                                                                             '' ;
                                                                                             }
