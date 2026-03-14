@@ -96,7 +96,7 @@
                                                     {
                                                         create =
                                                             {
-                                                                extraBwrapArgs = [ ''--bind "${ resources-directory }/canonical'' ''--bind ${ resources-directory }/log /log'' ] ;
+                                                                extraBwrapArgs = [ ''--bind ${ resources-directory }/canonical'' ''--bind ${ resources-directory }/log /log'' ] ;
                                                                 post = "" ;
                                                                 pre =
                                                                     ''
@@ -112,13 +112,13 @@
                                                                         ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
                                                                         STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
                                                                         STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 7574
-                                                                        if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                        if init "$@" > "/log/$STANDARD_OUTPUT_SEQUENCE" 2> "/log/$STANDARD_ERROR_SEQUENCE"
                                                                         then
                                                                             STATUS="$?"
                                                                         else
                                                                             STATUS="$?"
                                                                         fi
-                                                                        chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
+                                                                        chmod 0400 "/log/$STANDARD_OUTPUT_SEQUENCE" "/log/$STANDARD_ERROR_SEQUENCE"
                                                                         JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                         jq \
                                                                             --null-input \
