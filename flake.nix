@@ -683,6 +683,13 @@
                                                                         text =
                                                                             ''
                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
+                                                                                cleanup ( ) {
+                                                                                    if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                    then
+                                                                                        cat ${ resources-directory }/log/trace.log
+                                                                                    fi
+                                                                                }
+                                                                                trap cleanup EXIT
                                                                                 mkdir --parents "$out"
                                                                                 test-check
 #                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
@@ -715,6 +722,7 @@
                                                                                                 runtimeInputs =
                                                                                                     [
                                                                                                         pkgs.coreutils
+                                                                                                        pkgs.findutils
                                                                                                         pkgs.redis
                                                                                                         (
                                                                                                             pkgs.writeShellApplication
@@ -751,6 +759,7 @@
                                                                                                                         '' ;
                                                                                                                 }
                                                                                                         )
+                                                                                                        failure
                                                                                                     ] ;
                                                                                                 text =
                                                                                                     let
@@ -801,7 +810,6 @@
                                                                                                                 cp ${ expected-stale-init } /out/expected/jd/stale-init.json
                                                                                                                 cp ${ expected-valid-init } /out/expected/jd/valid-init.json
                                                                                                                 cp ${ expected-invalid-init } /out/expected/jd/invalid-init.json
-
                                                                                                                 redis-server --dir /redis --daemonize yes
                                                                                                                 while ! redis-cli ping
                                                                                                                 do
@@ -825,6 +833,7 @@
                                                                                                                 then
                                                                                                                     failure 15846
                                                                                                                 fi
+                                                                                                                find
                                                                                                             '' ;
                                                                                             }
                                                                                     )
