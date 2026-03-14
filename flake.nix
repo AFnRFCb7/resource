@@ -550,6 +550,7 @@
                                                                         int = stringable ;
                                                                         float = stringable ;
                                                                         lambda = path : value : { path = path ; type = "lambda" ; value = null ; } ;
+                                                                        null = stringable ;
                                                                         path = stringable ;
                                                                         string = stringable ;
                                                                     }
