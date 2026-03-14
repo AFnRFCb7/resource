@@ -684,7 +684,7 @@
                                                                         runtimeInputs = [ coreutils ] ;
                                                                         text =
                                                                             ''
-                                                                                : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }
+                                                                                : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                 mkdir --parents "$out"
                                                                                 check
                                                                             '' ;
@@ -698,6 +698,7 @@
                                                                     {
                                                                         extraBwrapArgs =
                                                                             [
+                                                                                "--bind-ro ${ resources-directory }/log /log"
                                                                                 "--bind /build/redis" "/redis"
                                                                                 "--bind $out /out"
                                                                             ] ;
@@ -735,8 +736,8 @@
                                                                                                                 } ;
                                                                                                         in
                                                                                                             ''
-                                                                                                                mkdir --parents /build/redis
-                                                                                                                redis-server --dir /build/redis --daemonize yes
+                                                                                                                mkdir --parents /redis
+                                                                                                                redis-server --dir /redis --daemonize yes
                                                                                                                 while ! redis-cli ping
                                                                                                                 do
                                                                                                                     sleep 0
