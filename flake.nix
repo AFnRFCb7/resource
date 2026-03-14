@@ -625,24 +625,22 @@
                                         {
                                             buildFHSUserEnv ,
                                             depth ? 0 ,
-                                            init ? null ,
-                                            init-resolutions ? null ,
-                                            expected-invalid-init ,
-                                            expected-resource ,
-                                            expected-stale-init ,
+                                            expected-invalid-init ? null ,
+                                            expected-resource ? "18955" ,
+                                            expected-stale-init ? null ,
                                             expected-status ? 0 ,
                                             expected-valid-init ,
                                             failure ? 12489 ,
-                                            fixture ,
-                                            gc-root-directory ? "/build/gc-root" ,
+                                            fixture ? { gc-root-directory , resources-directory } : "echo 9068 > ${ resources-directory }/sequential/sequential.counter" ;
+                                            init ? null ,
+                                            init-resolutions ? null ,
                                             invalid-init-channel ? "23567" ,
                                             lazy ? false ,
                                             mkDerivation ,
                                             release ? null ,
                                             release-resolutions ? null ,
                                             resources ? null ,
-                                            resources-directory ? "/build/resources" ,
-                                            seed ? null ,
+                                            seed ? 17507 ,
                                             sequential-start ? "16669" ,
                                             setup ? setup : setup ,
                                             stale-init-channel ? "21286" ,
@@ -651,138 +649,146 @@
                                             valid-init-channel ? "21286" ,
                                             writeShellApplication
                                         } :
-                                            mkDerivation
-                                                {
-                                                    install = ''check "$out"'' ;
-                                                    name = "check" ;
-                                                    nativeBuildInputs =
-                                                        [
-                                                            (
-                                                                buildFHSUserEnv
-                                                                    {
-                                                                        name = "check" ;
-                                                                        runScript = ''check "$@"'' ;
-                                                                        targetPkgs =
-                                                                            pkgs :
-                                                                                [
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "check" ;
-                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.redis ] ;
-                                                                                                text =
-                                                                                                    let
-                                                                                                        resource =
-                                                                                                            implementation
+                                            let
+                                                gc-root-directory = "/build/gc-root" ;
+                                                nulls = builtins.filter ( value : value == null ) [ expected-invalid-init expected-stale-init expected-valid-init ] ;
+                                                resources-directory = "/build/resources" ;
+                                                sets = builtins.filter builtins.isAttrs [ expected-invalid-init expected-stale-init expected-valid-init ] ;
+                                                in
+                                                    assert builtins.length sets == 1 ;
+                                                    assert builtins.length nulls == 1 ;
+                                                    mkDerivation
+                                                        {
+                                                            install = ''check "$out"'' ;
+                                                            name = "check" ;
+                                                            nativeBuildInputs =
+                                                                [
+                                                                    (
+                                                                        buildFHSUserEnv
+                                                                            {
+                                                                                name = "check" ;
+                                                                                runScript = ''check "$@"'' ;
+                                                                                targetPkgs =
+                                                                                    pkgs :
+                                                                                        [
+                                                                                            (
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "check" ;
+                                                                                                        runtimeInputs = [ pkgs.coreutils pkgs.redis ] ;
+                                                                                                        text =
+                                                                                                            let
+                                                                                                                resource =
+                                                                                                                    implementation
+                                                                                                                        {
+                                                                                                                            depth = depth ;
+                                                                                                                            init = init ;
+                                                                                                                            init-resolutions = init-resolutions ;
+                                                                                                                            release = release ;
+                                                                                                                            release-resolutions = release-resolutions ;
+                                                                                                                            seed = seed ;
+                                                                                                                            targets = targets ;
+                                                                                                                            transient = transient ;
+                                                                                                                        } ;
+                                                                                                                in
+                                                                                                                    ''
+                                                                                                                        OUT="$1"
+                                                                                                                        mkdir --parents "$OUT"
+                                                                                                                        mkdir --parents /build/redis
+                                                                                                                        redis-server --dir /build/redis --daemonize yes
+                                                                                                                        while ! redis-cli ping
+                                                                                                                        do
+                                                                                                                            sleep 0
+                                                                                                                        done
+                                                                                                                        fixture
+                                                                                                                        nohup subscribe "$OUT" stale-init-channel > /dev/null 2>&1 &
+                                                                                                                        nohup subscribe "$OUT" valid-init-channel > /dev/null 2>&1  &
+                                                                                                                        nohup subscribe "$OUT" invalid-init-channel > /dev/null 2>&1  &
+                                                                                                                        if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } }
+                                                                                                                        then
+                                                                                                                            OBSERVED_STATUS="$?"
+                                                                                                                        else
+                                                                                                                            OBSERVED_STATUS="$?"
+                                                                                                                        fi
+                                                                                                                        if [[ -f ${ resources-directory }/log/trace.log ]]
+                                                                                                                        then
+                                                                                                                            cat ${ resources-directory }/log/trace.log
+                                                                                                                        fi
+                                                                                                                        if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
+                                                                                                                        then
+                                                                                                                            failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
+                                                                                                                        fi
+                                                                                                                        if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
+                                                                                                                        then
+                                                                                                                            failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
+                                                                                                                        fi
+                                                                                                                        mkdir --parents "$OUT/expected"
+                                                                                                                        cat > "$OUT/expected/stale-init.json" <<EOF
+                                                                                                                        ${ builtins.toJSON expected-stale-init }
+                                                                                                                        EOF
+                                                                                                                        cat > "$OUT/expected/valid-init.json" <<EOF
+                                                                                                                        ${ builtins.toJSON expected-valid-init }
+                                                                                                                        EOF
+                                                                                                                        cat > "$OUT/expected/invalid-init.json" <<EOF
+                                                                                                                        ${ builtins.toJSON expected-invalid-init }
+                                                                                                                        EOF
+                                                                                                                        chmod 0400 "$OUT/expected/stale-init.json" "$OUT/expected/valid-init.json" "$OUT/expected/invalid-init.json"
+                                                                                                                        if ! jd "$OUT/expected/stale-init.json" "$OUT/observed/stale-init.json"
+                                                                                                                        then
+                                                                                                                            failure 979
+                                                                                                                        elif ! jd "$OUT/expected/valid-init.json" "$OUT/observed/valid-init.json"
+                                                                                                                        then
+                                                                                                                            failure 24531
+                                                                                                                        elif ! jd "$OUT/expected/invalid-init.json" "$OUT/observed/invalid-init.json"
+                                                                                                                        then
+                                                                                                                            failure 13198
+                                                                                                                        fi
+                                                                                                                    '' ;
+                                                                                                    }
+                                                                                            )
+                                                                                            (
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "fixture" ;
+                                                                                                        runtimeInputs = [ ] ;
+                                                                                                        text =
+                                                                                                            visitor
                                                                                                                 {
-                                                                                                                    depth = depth ;
-                                                                                                                    init = init ;
-                                                                                                                    init-resolutions = init-resolutions ;
-                                                                                                                    release = release ;
-                                                                                                                    release-resolutions = release-resolutions ;
-                                                                                                                    seed = seed ;
-                                                                                                                    targets = targets ;
-                                                                                                                    transient = transient ;
-                                                                                                                } ;
-                                                                                                        in
+                                                                                                                    lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
+                                                                                                                    null = path : value : "" ;
+                                                                                                                }
+                                                                                                                fixture ;
+                                                                                                    }
+                                                                                            )
+                                                                                            (
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                         name = "subscribe" ;
+                                                                                                         runtimeInputs = [ coreutils redis ] ;
+                                                                                                         text =
                                                                                                             ''
                                                                                                                 OUT="$1"
-                                                                                                                mkdir --parents "$OUT"
-                                                                                                                mkdir --parents /build/redis
-                                                                                                                redis-server --dir /build/redis --daemonize yes
-                                                                                                                while ! redis-cli ping
-                                                                                                                do
-                                                                                                                    sleep 0
-                                                                                                                done
-                                                                                                                fixture
-                                                                                                                nohup subscribe "$OUT" stale-init-channel > /dev/null 2>&1 &
-                                                                                                                nohup subscribe "$OUT" valid-init-channel > /dev/null 2>&1  &
-                                                                                                                nohup subscribe "$OUT" invalid-init-channel > /dev/null 2>&1  &
-                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } }
-                                                                                                                then
-                                                                                                                    OBSERVED_STATUS="$?"
-                                                                                                                else
-                                                                                                                    OBSERVED_STATUS="$?"
-                                                                                                                fi
-                                                                                                                if [[ -f ${ resources-directory }/log/trace.log ]]
-                                                                                                                then
-                                                                                                                    cat ${ resources-directory }/log/trace.log
-                                                                                                                fi
-                                                                                                                if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
-                                                                                                                then
-                                                                                                                    failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
-                                                                                                                fi
-                                                                                                                if [[ "${ expected-resource }" != "$OBSERVED_RESOURCE" ]]
-                                                                                                                then
-                                                                                                                    failure f780406e "EXPECTED_RESOURCE=${ expected-resource }" "OBSERVED_RESOURCE=$OBSERVED_RESOURCE"
-                                                                                                                fi
-                                                                                                                mkdir --parents "$OUT/expected"
-                                                                                                                cat > "$OUT/expected/stale-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-stale-init }
-                                                                                                                EOF
-                                                                                                                cat > "$OUT/expected/stale-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-stale-init }
-                                                                                                                EOF
-                                                                                                                cat > "$OUT/expected/stale-init.json" <<EOF
-                                                                                                                ${ builtins.toJSON expected-stale-init }
-                                                                                                                EOF
-                                                                                                                chmod 0400 "$OUT/expected/stale-init.json" "$OUT/expected/valid-init.json" "$OUT/expected/invalid-init.json"
-                                                                                                                if ! jd "$OUT/expected/stale-init.json" "$OUT/observed/stale-init.json"
-                                                                                                                then
-                                                                                                                    failure 979
-                                                                                                                elif ! jd "$OUT/expected/valid-init.json" "$OUT/observed/valid-init.json"
-                                                                                                                then
-                                                                                                                    failure 24531
-                                                                                                                elif ! jd "$OUT/expected/invalid-init.json" "$OUT/observed/invalid-init.json"
-                                                                                                                then
-                                                                                                                    failure 13198
-                                                                                                                fi
+                                                                                                                CHANNEL="$2"
+                                                                                                                redis-cli --raw SUBSCRIBE "$CHANNEL" | {
+                                                                                                                    read -r _     # skip "subscribe"
+                                                                                                                    read -r _     # skip channel name
+                                                                                                                    read -r _     # skip
+                                                                                                                    read -r _     # skip
+                                                                                                                    read -r _
+                                                                                                                    read -r PAYLOAD
+                                                                                                                    mkdir --parents "$OUT/observed"
+                                                                                                                    echo "$PAYLOAD" > "$OUT/observed/$CHANNEL.json"
+                                                                                                                    chmod 0400 "$OUT/observed/$CHANNEL.json"
+                                                                                                                }
                                                                                                             '' ;
-                                                                                            }
-                                                                                    )
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "fixture" ;
-                                                                                                runtimeInputs = [ ] ;
-                                                                                                text =
-                                                                                                    visitor
-                                                                                                        {
-                                                                                                            lambda = path : value : value resources-directory ;
-                                                                                                            null = path : value : "" ;
-                                                                                                        }
-                                                                                                        fixture ;
-                                                                                            }
-                                                                                    )
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                 name = "subscribe" ;
-                                                                                                 runtimeInputs = [ coreutils redis ] ;
-                                                                                                 text =
-                                                                                                    ''
-                                                                                                        OUT="$1"
-                                                                                                        CHANNEL="$2"
-                                                                                                        redis-cli --raw SUBSCRIBE "$CHANNEL" | {
-                                                                                                            read -r _     # skip "subscribe"
-                                                                                                            read -r _     # skip channel name
-                                                                                                            read -r _     # skip
-                                                                                                            read -r _     # skip
-                                                                                                            read -r _
-                                                                                                            read -r PAYLOAD
-                                                                                                            mkdir --parents "$OUT/observed"
-                                                                                                            echo "$PAYLOAD" > "$OUT/observed/$CHANNEL.json"
-                                                                                                            chmod 0400 "$OUT/observed/$CHANNEL.json"
-                                                                                                        }
-                                                                                                    '' ;
-                                                                                            }
-                                                                                    )
-                                                                                ] ;
-                                                                    }
-                                                            )
-                                                        ] ;
-                                                    src = ./. ;
-                                                } ;
+                                                                                                    }
+                                                                                            )
+                                                                                        ] ;
+                                                                            }
+                                                                    )
+                                                                ] ;
+                                                            src = ./. ;
+                                                        } ;
                                     implementation = implementation ;
                                 } ;
             } ;
