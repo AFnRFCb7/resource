@@ -96,10 +96,11 @@
                                                     {
                                                         create =
                                                             {
-                                                                extraBwrapArgs = [ ''--bind ${ resources-directory }/log /log'' ] ;
+                                                                extraBwrapArgs = [ ''--bind "${ resources-directory }/canonical'' ''--bind ${ resources-directory }/log /log'' ] ;
                                                                 post = "" ;
                                                                 pre =
                                                                     ''
+                                                                        mkdir --parents "${ resources-directory }/canonical"
                                                                         mkdir --parents "${ resources-directory }/log"
                                                                     '' ;
                                                                 targetPkgs = pkgs : [ environments.failure environments.sequential environments.init environments.sequential pkgs.coreutils ] ;
@@ -140,6 +141,7 @@
                                                                             }' > "$JSON_FILE"
                                                                         if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                         then
+                                                                            ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
                                                                             redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                             echo "${ resources-directory }/mounts/$HASH"
                                                                         else
@@ -563,7 +565,7 @@
                                                                         STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
                                                                         export STANDARD_INPUT_FILE
                                                                         HAS_STANDARD_INPUT=true
-                                                                        cat <&0 > "$STANDARD_INPUT_FILE"
+                                                                        cat > "$STANDARD_INPUT_FILE"
                                                                         STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 12348
                                                                         PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
                                                                         ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
@@ -576,7 +578,7 @@
                                                                     if [[ -L "${ resources-directory }/mounts/$HASH" ]]
                                                                     then
                                                                         LINK="$( readlink --canonical "${ resources-directory }/mounts/$HASH" )" || failure 3789
-                                                                        INDEX=$( basename "$LINK" )" || failure 13919
+                                                                        INDEX="$( basename "$LINK" )" || failure 13919
                                                                         mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
                                                                         touch "${ resources-directory }/originator-pids/$INDEX/$ULTIMATE_PID"
                                                                         echo "${ resources-directory }/mounts/$HASH"
