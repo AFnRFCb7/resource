@@ -869,7 +869,7 @@
                                                                                                                 } ;
                                                                                                         in
                                                                                                             ''
-                                                                                                                mkdir --parents "/out/expected/diff"
+#                                                                                                                mkdir --parents "/out/expected/diff"
 #                                                                                                                EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
 #                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
 #                                                                                                                EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
