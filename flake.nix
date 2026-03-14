@@ -698,7 +698,7 @@
                                                     nativeBuildInputs =
                                                         [
                                                             (
-                                                                buildHSFUserEnv
+                                                                buildFSHUserEnv
                                                                     {
                                                                         extraBwrapArgs =
                                                                             [
