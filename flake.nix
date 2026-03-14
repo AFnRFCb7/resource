@@ -598,7 +598,7 @@
                                                     nativeBuildInputs =
                                                         [
                                                             (
-                                                                buildFSHUserEnv
+                                                                buildFHSUserEnv
                                                                     {
                                                                         name = "check" ;
                                                                         runScript = ''check "$@"'' ;
