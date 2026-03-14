@@ -181,8 +181,9 @@
                                                                                 eval \
                                                                                 --null-input \
                                                                                 --prettyPrint \
-                                                                                --argjsonq ARGUMENTS "$ARGUMENTS" \
-                                                                                '{ "arguments": $ARGUMENTS , standard-input : $STANDARD_INPUT }'
+                                                                                --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                '{ "arguments" : $ARGUMENTS , standard-input : $STANDARD_INPUT }'
                                                                         fi
                                                                         exit 66
                                                                     '' ;
