@@ -698,7 +698,23 @@
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
+                                                            (
+                                                                buildFHSUserEnv
+                                                                    {
+                                                                        extraBwrapArgs =
+                                                                            [
+                                                                                "--bind $out /out"
+                                                                                "--tmpfs /redis"
+                                                                            ] ;
+                                                                        name = "test-check" ;
+                                                                        runScript = "test-check";
+                                                                        targetPkgs =
+                                                                            pkgs :
+                                                                                [
 
+                                                                                ] ;
+                                                                    }
+                                                            )
                                                         ] ;
                                                     src = ./. ;
                                                 } ;
