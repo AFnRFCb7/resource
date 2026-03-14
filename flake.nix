@@ -111,9 +111,7 @@
                                                                         ARGUMENTS=( "$@" )
                                                                         ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
                                                                         STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
-                                                                        STANDARD_ERROR_FILE="/log/$STANDARD_ERROR_SEQUENCE.txt"
                                                                         STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 7574
-                                                                        STANDARD_OUTPUT_FILE="/log/$STANDARD_OUTPUT_SEQUENCE.txt"
                                                                         if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                         then
                                                                             STATUS="$?"
@@ -122,30 +120,29 @@
                                                                         fi
                                                                         chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
                                                                         JSON_SEQUENCE="$( sequential )" || failure 32761
-                                                                        JSON_FILE="/log/$JSON_SEQUENCE"
                                                                         jq \
                                                                             --null-input \
                                                                             --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                             --arg HASH "$HASH" \
-                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                            --arg STANDARD_ERROR_SEQUENCE "$STANDARD_ERROR_SEQUENCE" \
                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                            --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                            --arg STANDARD_OUTPUT_SEQUENCE "$STANDARD_OUTPUT_SEQUENCE" \
                                                                             '{
                                                                                 "arguments" : $ARGUMENTS ,
                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                 "hash" : $HASH ,
-                                                                                "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                "standard-error-sequence" : $STANDARD_ERROR_SEQUENCE ,
                                                                                 "standard-input" : $STANDARD_INPUT ,
-                                                                                "standard-output-file" : $STANDARD_OUTPUT_FILE
-                                                                            }' > "$JSON_FILE"
+                                                                                "standard-output-sequence" : $STANDARD_OUTPUT_SEQUENCE
+                                                                            }' > "/log/$JSON_SEQUENCE"
                                                                         if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                         then
                                                                             ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
-                                                                            redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                            echo "${ resources-directory }/mounts/$HASH"
+                                                                            redis-cli PUBLISH ${ valid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
+                                                                            echo "````${ resources-directory }/mounts/$HASH"
                                                                         else
-                                                                            redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
+                                                                            redis-cli PUBLISH ${ invalid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
                                                                             echo "${ resources-directory }/mounts/$HASH"
                                                                             failure 21103
                                                                         fi
