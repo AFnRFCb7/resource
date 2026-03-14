@@ -639,20 +639,21 @@
                                             expected-status ? 0 ,
                                             expected-valid-init ,
                                             failure ? 12489 ,
-                                            fixture ? { gc-root-directory , resources-directory } :
-                                                let
-                                                    application =
-                                                        writeShellApplication
-                                                            {
-                                                                name = "fixture" ;
-                                                                runtimeInputs = [ coreutils ] ;
-                                                                text =
-                                                                    ''
-                                                                        mkdir --parents ${ resources-directory }/sequential
-                                                                        echo 9068 > ${ resources-directory }/sequential/sequential.counter" ,
-                                                                    '' ;
-                                                            } ;
-                                                    in "${ application }/bin/fixture" ,
+                                            fixture ?
+                                                { gc-root-directory , resources-directory } :
+                                                    let
+                                                        application =
+                                                            writeShellApplication
+                                                                {
+                                                                    name = "fixture" ;
+                                                                    runtimeInputs = [ coreutils ] ;
+                                                                    text =
+                                                                        ''
+                                                                            mkdir --parents ${ resources-directory }/sequential
+                                                                            echo 9068 > ${ resources-directory }/sequential/sequential.counter ,
+                                                                        '' ;
+                                                                } ;
+                                                        in "${ application }/bin/fixture" ,
                                             gc-root-directory ? "/build/gc-root" ,
                                             init ? null ,
                                             init-resolutions ? null ,
@@ -785,6 +786,15 @@
                                                                                                             null = path : value : "" ;
                                                                                                         }
                                                                                                         fixture ;
+                                                                                            }
+                                                                                    )
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "resource" ;
+                                                                                                text =
+                                                                                                    ''
+                                                                                                    '' ;
                                                                                             }
                                                                                     )
                                                                                     (
