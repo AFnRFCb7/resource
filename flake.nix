@@ -18,7 +18,6 @@
                         root-directory ,
                         sequential-start ,
                         stale-init-channel ,
-                        transient ,
                         valid-init-channel ,
                         visitor ,
                         writeShellApplication
