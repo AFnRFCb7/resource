@@ -658,7 +658,7 @@
                                         } :
                                             mkDerivation
                                                 {
-                                                    install = builtins.trace "WTF" ''mkdir --parents "$out" && check "$out"'' ;
+                                                    install = ''check "$out"'' ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
