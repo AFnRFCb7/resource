@@ -576,6 +576,7 @@
                                         {
                                             buildFHSUserEnv ,
                                             expected-invalid-init ,
+                                            expected-resource ,
                                             expected-stale-init ,
                                             expected-status ,
                                             expected-valid-init ,
