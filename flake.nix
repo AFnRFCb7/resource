@@ -834,6 +834,27 @@
                                                                                                     ] ;
                                                                                                 text =
                                                                                                     let
+                                                                                                        expected-standard-error_ =
+                                                                                                            visitor
+                                                                                                                {
+                                                                                                                    null = path : value : "" ;
+                                                                                                                    string = path : value : value ;
+                                                                                                                }
+                                                                                                                expected-standard-error ;
+                                                                                                        expected-standard-output_ =
+                                                                                                            visitor
+                                                                                                                {
+                                                                                                                    null = path : value : "" ;
+                                                                                                                    string = path : value : value ;
+                                                                                                                }
+                                                                                                                expected-standard-output ;
+                                                                                                        expected-status_ =
+                                                                                                            visitor
+                                                                                                                {
+                                                                                                                    int = path : value : builtins.toString value ;
+                                                                                                                    null = path : value : "0" ;
+                                                                                                                }
+                                                                                                                expected-status ;
                                                                                                         resource =
                                                                                                             implementation
                                                                                                                 {
@@ -848,13 +869,13 @@
                                                                                                                 } ;
                                                                                                         in
                                                                                                             ''
-                                                                                                                mkdir --parents "$out/expected/diff"
+                                                                                                                mkdir --parents "/out/expected/diff"
                                                                                                                 EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
-                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "$out/expected/diff/standard-error"
+                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
                                                                                                                 EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
-                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "$out/expected/diff/standard-output"
+                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
                                                                                                                 EXPECTED_STATUS='${ expected-status_ }'
-                                                                                                                echo "$EXPECTED_STATUS" > "$out/diff/expected/status"
+                                                                                                                echo "$EXPECTED_STATUS" > "/out/diff/expected/status"
 
                                                                                                                 redis-server --dir /redis --daemonize yes
                                                                                                                 while ! redis-cli ping
