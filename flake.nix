@@ -632,7 +632,7 @@
                                         {
                                             buildFHSUserEnv ,
                                             depth ? 0 ,
-                                            expected-failure ? null ,
+                                            expected-standard-error ? null ,
                                             expected-invalid-init ? null ,
                                             expected-resource ? "18955" ,
                                             expected-stale-init ? null ,
@@ -730,19 +730,23 @@
                                                                                                                 done
                                                                                                                 fixture
                                                                                                                 nohup subscribe stale-init-channel > /dev/null 2>&1 &
-                                                                                                                nohup subscribe valid-init-channel > /dev/null 2>&1  &
-                                                                                                                nohup subscribe invalid-init-channel > /dev/null 2>&1  &
-                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } }
+                                                                                                                nohup subscribe valid-init-channel > /dev/null 2>&1 &
+                                                                                                                nohup subscribe invalid-init-channel > /dev/null 2>&1 &
+                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; lazy = lazy ; setup = setup ; } } 2> /build/standard-error
                                                                                                                 then
                                                                                                                     OBSERVED_STATUS="$?"
                                                                                                                 else
                                                                                                                     OBSERVED_STATUS="$?"
                                                                                                                 fi
+                                                                                                                OBSERVED_STANDARD_ERROR="$( cat /build/standard-error )" || failure 3231
                                                                                                                 if [[ -f ${ resources-directory }/log/trace.log ]]
                                                                                                                 then
                                                                                                                     cat ${ resources-directory }/log/trace.log
                                                                                                                 fi
-                                                                                                                if [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
+                                                                                                                if [[ '${ visitor { null = path : value : "" ; string = path : value : value ; } expected-standard-error }' != "$OBSERVED_STANDARD_ERROR" ]]
+                                                                                                                then
+                                                                                                                    failure 30877 EXPECTED_STANDARD_ERROR=${ expected-standard-error }' "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
+                                                                                                                elif [[ ${ builtins.toString expected-status } != "$OBSERVED_STATUS" ]]
                                                                                                                 then
                                                                                                                     failure 94defd57 "EXPECTED_STATUS=${ builtins.toString expected-status }" "OBSERVED_STATUS=$OBSERVED_STATUS"
                                                                                                                 fi
