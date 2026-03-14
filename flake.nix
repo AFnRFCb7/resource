@@ -721,7 +721,6 @@
                                                                                                         pkgs.findutils
                                                                                                         pkgs.redis
 
-                                                                                                        failure
                                                                                                     ] ;
                                                                                                 text =
                                                                                                     let
