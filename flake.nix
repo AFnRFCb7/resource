@@ -638,7 +638,20 @@
                                             expected-status ? 0 ,
                                             expected-valid-init ,
                                             failure ? 12489 ,
-                                            fixture ? { gc-root-directory , resources-directory } : "echo 9068 > ${ resources-directory }/sequential/sequential.counter" ,
+                                            fixture ? { gc-root-directory , resources-directory } :
+                                                let
+                                                    application =
+                                                        pkgs.writeShellApplication
+                                                            {
+                                                                name = "fixture" ;
+                                                                runtimeInputs = [ pkgs.coreutils ] ;
+                                                                text =
+                                                                    ''
+                                                                        mkdir --parents ${ resources-directory }/sequential
+                                                                        echo 9068 > ${ resources-directory }/sequential/sequential.counter" ,
+                                                                    '' ;
+                                                            } ;
+                                                    in "${ application }/bin/fixture" ;
                                             gc-root-directory ? "/build/gc-root" ,
                                             init ? null ,
                                             init-resolutions ? null ,
@@ -673,7 +686,19 @@
                                                                     {
                                                                         extraBwrapArgs = [ "--bind $out /out" ] ;
                                                                         name = "check" ;
-                                                                        runScript = ''check'' ;
+                                                                        runScript =
+                                                                            let
+                                                                                application =
+                                                                                    writeShellApplication
+                                                                                        {
+                                                                                            name = "check" ;
+                                                                                            text =
+                                                                                                ''
+                                                                                                    mkdir --parents "$out"
+                                                                                                    check
+                                                                                                '' ;
+                                                                                        } ;
+                                                                                    in "${ application }/bin/check" ;
                                                                         targetPkgs =
                                                                             pkgs :
                                                                                 [
