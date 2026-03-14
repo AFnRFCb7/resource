@@ -871,12 +871,12 @@
                                                                                                             ''
                                                                                                                 : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
                                                                                                                 mkdir --parents "/out/expected/diff"
-                                                                                                                EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
-                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
-                                                                                                                EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
-                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
-                                                                                                                EXPECTED_STATUS='${ expected-status_ }'
-                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
+#                                                                                                                EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
+#                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
+#                                                                                                                EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
+#                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
+#                                                                                                                EXPECTED_STATUS='${ expected-status_ }'
+#                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
 
                                                                                                                 redis-server --dir /redis --daemonize yes
                                                                                                                 while ! redis-cli ping
