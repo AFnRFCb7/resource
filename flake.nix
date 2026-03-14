@@ -12,6 +12,7 @@
                         invalid-init-channel ,
                         js ,
                         procps ,
+                        redis ,
                         resources ,
                         resources-directory ,
                         root-directory ,
