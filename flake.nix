@@ -214,19 +214,26 @@
                                                                                     {
                                                                                         name = "init" ;
                                                                                         text =
-                                                                                            let
-                                                                                                arguments =
-                                                                                                    {
-                                                                                                        failure = environments.failure ;
-                                                                                                        gc-root = environments.gc-root ;
-                                                                                                        pkgs = pkgs ;
-                                                                                                        resources = resources ;
-                                                                                                        seed = seed ;
-                                                                                                        trace = environments.trace ;
-                                                                                                        sequential = environments.sequential ;
-                                                                                                        wrap = environments.wrap ;
-                                                                                                    } ;
-                                                                                                in init arguments ;
+                                                                                            visitor
+                                                                                                {
+                                                                                                    lambda =
+                                                                                                        path : value :
+                                                                                                            let
+                                                                                                                arguments =
+                                                                                                                    {
+                                                                                                                        failure = environments.failure ;
+                                                                                                                        gc-root = environments.gc-root ;
+                                                                                                                        pkgs = pkgs ;
+                                                                                                                        resources = resources ;
+                                                                                                                        seed = seed ;
+                                                                                                                        trace = environments.trace ;
+                                                                                                                        sequential = environments.sequential ;
+                                                                                                                        wrap = environments.wrap ;
+                                                                                                                    } ;
+                                                                                                                in value arguments ;
+                                                                                                    null = path : value "true" ;
+                                                                                                }
+                                                                                                init ;
                                                                                     }
                                                                             )
                                                                         ] ;
