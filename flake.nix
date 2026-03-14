@@ -826,7 +826,7 @@
 
                                                                                                                 if ! diff --recursive /out/expected/diff /out/observed/diff
                                                                                                                 then
-                                                                                                                    failure 15846
+                                                                                                                    exit 68
                                                                                                                 fi
                                                                                                             '' ;
                                                                                             }
