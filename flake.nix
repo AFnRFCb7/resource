@@ -568,14 +568,17 @@
                                                                         PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
                                                                         ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
                                                                     fi
-                                                                    export ULTIMATE_PID
                                                                     ARGUMENTS=( "$@" )
                                                                     ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
                                                                     TRANSIENT=${ visitor { bool = path : value : if value then "$( sequential ) || failure 5672" else "-1" ; } transient }
                                                                     SCRIPTS="$( scripts )" || failure 31964
-                                                                    HASH="$( echo "${ builtins.hashString "sha512" ( builtins.toJSON stringed ) } ${ builtins.concatStringsSep "5291" [ "$" "{" "ARGUMENTS[*]" "}" ] } $HAS_STANDARD_INPUT" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                    HASH="$( echo "${ builtins.hashString "sha512" ( builtins.toJSON stringed ) } ${ builtins.concatStringsSep " " [ "$" "{" "ARGUMENTS[*]" "}" ] } $HAS_STANDARD_INPUT" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                     if [[ -L "${ resources-directory }/mounts/$HASH" ]]
                                                                     then
+                                                                        LINK="$( readlink --canonical "${ resources-directory }/mounts/$HASH" )" || failure 3789
+                                                                        INDEX=$( basename "$LINK" )" || failure 13919
+                                                                        mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
+                                                                        touch "${ resources-directory }/originator-pids/$INDEX/$ULTIMATE_PID"
                                                                         echo "${ resources-directory }/mounts/$HASH"
                                                                         JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                         JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
