@@ -785,9 +785,8 @@
                                                                                                             read -r _     # skip
                                                                                                             read -r _
                                                                                                             read -r PAYLOAD
-                                                                                                            mkdir --parents "/out/observed"
-                                                                                                            echo "$PAYLOAD" > "/out/observed/$CHANNEL.json"
-                                                                                                            chmod 0400 "/out/observed/$CHANNEL.json"
+                                                                                                            mkdir --parents "/out/observed/payload"
+                                                                                                            echo "$PAYLOAD" > "/out/observed/payload/$CHANNEL.json"
                                                                                                         }
                                                                                                     '' ;
                                                                                             }
@@ -832,21 +831,22 @@
                                                                                         OBSERVED_STANDARD_OUTPUT="$( cat "$out/observed/standard-output" )" || failure 4651
                                                                                         EXPECTED_STATUS='${ expected-status_ }'
                                                                                         OBSERVED_STATUS="$( cat "$out/observed/status" )" || failure 7786
-                                                                                        mkdir --parents "$OUT/expected"
-                                                                                        cat > "/out/expected/stale-init.json" <<EOF
+                                                                                        mkdir --parents "$OUT/expected/payload"
+                                                                                        cat > "/out/expected/payload/stale-init.json" <<EOF
                                                                                         ${ builtins.toJSON expected-stale-init }
                                                                                         EOF
-                                                                                        cat > "/out/expected/valid-init.json" <<EOF
+                                                                                        cat > "/out/expected/payload/valid-init.json" <<EOF
                                                                                         ${ builtins.toJSON expected-valid-init }
                                                                                         EOF
-                                                                                        cat > "/out/expected/invalid-init.json" <<EOF
+                                                                                        cat > "/out/expected/payload/invalid-init.json" <<EOF
                                                                                         ${ builtins.toJSON expected-invalid-init }
                                                                                         EOF
-                                                                                        chmod 0400 "/out/expected/stale-init.json" "/out/expected/valid-init.json" "/out/expected/invalid-init.json"
+                                                                                        chmod 0400 "/out/expected/payload/stale-init.json" "/out/expected/valid-init.json" "/out/expected/invalid-init.json"
                                                                                         if [[ -f ${ resources-directory }/log/trace.log ]]
                                                                                         then
                                                                                             cat ${ resources-directory }/log/trace.log
-                                                                                        elif [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
+                                                                                        fi
+                                                                                        if [[ "$EXPECTED_STANDARD_ERROR" != "$OBSERVED_STANDARD_ERROR" ]]
                                                                                         then
                                                                                             failure 30877 "EXPECTED_STANDARD_ERROR=$EXPECTED_STANDARD_ERROR" "OBSERVED_STANDARD_ERROR=$OBSERVED_STANDARD_ERROR"
                                                                                         elif [[ "$EXPECTED_STANDARD_OUTPUT" != "$OBSERVED_STANDARD_OUTPUT" ]]
@@ -855,13 +855,13 @@
                                                                                         elif [[ "$EXPECTED_STATUS" != "$OBSERVED_STATUS" ]]
                                                                                         then
                                                                                             failure 94defd57 "EXPECTED_STATUS=$EXPECTED_STATUS" "OBSERVED_STATUS=$OBSERVED_STATUS"
-                                                                                        elif ! jd "/out/expected/stale-init.json" "/out/observed/stale-init.json"
+                                                                                        elif ! jd "/out/expected/payload/stale-init.json" "/out/observed/payload/stale-init.json"
                                                                                         then
                                                                                             failure 979
-                                                                                        elif ! jd "/out/expected/valid-init.json" "/out/observed/valid-init.json"
+                                                                                        elif ! jd "/out/expected/payload/valid-init.json" "/out/observed/payload/valid-init.json"
                                                                                         then
                                                                                             failure 24531
-                                                                                        elif ! jd "/out/expected/invalid-init.json" "/out/observed/invalid-init.json"
+                                                                                        elif ! jd "/out/expected/payload/invalid-init.json" "/out/observed/payload/invalid-init.json"
                                                                                         then
                                                                                             failure 13198
                                                                                         fi
