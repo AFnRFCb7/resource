@@ -651,7 +651,7 @@
                                                                         echo 9068 > ${ resources-directory }/sequential/sequential.counter" ,
                                                                     '' ;
                                                             } ;
-                                                    in "${ application }/bin/fixture" ;
+                                                    in "${ application }/bin/fixture" ,
                                             gc-root-directory ? "/build/gc-root" ,
                                             init ? null ,
                                             init-resolutions ? null ,
