@@ -815,7 +815,7 @@
                                                                                                                 nohup subscribe valid-init-channel > /dev/null 2>&1 &
                                                                                                                 nohup subscribe invalid-init-channel > /dev/null 2>&1 &
                                                                                                                 mkdir --parents /out/observed/diff
-                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; setup = setup ; } } 2> /out/observed/standard-error
+                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; setup = setup ; } } 2> /out/diff/observed/standard-error
                                                                                                                 then
                                                                                                                     OBSERVED_STATUS="$?"
                                                                                                                 else
