@@ -631,7 +631,7 @@
                                             expected-status ? 0 ,
                                             expected-valid-init ,
                                             failure ? 12489 ,
-                                            fixture ? { gc-root-directory , resources-directory } : "echo 9068 > ${ resources-directory }/sequential/sequential.counter" ;
+                                            fixture ? { gc-root-directory , resources-directory } : "echo 9068 > ${ resources-directory }/sequential/sequential.counter" ,
                                             init ? null ,
                                             init-resolutions ? null ,
                                             invalid-init-channel ? "23567" ,
