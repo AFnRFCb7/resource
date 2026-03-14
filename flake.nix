@@ -720,7 +720,41 @@
                                                                                                         pkgs.coreutils
                                                                                                         pkgs.findutils
                                                                                                         pkgs.redis
-
+                                                                                                        (
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                    name = "fixture" ;
+                                                                                                                    runtimeInputs = [ ] ;
+                                                                                                                    text =
+                                                                                                                        visitor
+                                                                                                                            {
+                                                                                                                                lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
+                                                                                                                                null = path : value : "" ;
+                                                                                                                            }
+                                                                                                                            fixture ;
+                                                                                                                }
+                                                                                                        )
+                                                                                                        (
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                     name = "subscribe" ;
+                                                                                                                     runtimeInputs = [ coreutils redis ] ;
+                                                                                                                     text =
+                                                                                                                        ''
+                                                                                                                            CHANNEL="$1"
+                                                                                                                            redis-cli --raw SUBSCRIBE "$CHANNEL" | {
+                                                                                                                                read -r _     # skip "subscribe"
+                                                                                                                                read -r _     # skip channel name
+                                                                                                                                read -r _     # skip
+                                                                                                                                read -r _     # skip
+                                                                                                                                read -r _
+                                                                                                                                read -r PAYLOAD
+                                                                                                                                mkdir --parents "/out/observed/jd"
+                                                                                                                                echo "$PAYLOAD" > "/out/observed/jd/$CHANNEL.json"
+                                                                                                                            }
+                                                                                                                        '' ;
+                                                                                                                }
+                                                                                                        )
                                                                                                     ] ;
                                                                                                 text =
                                                                                                     let
