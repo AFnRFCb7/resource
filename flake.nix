@@ -623,7 +623,7 @@
                                                     [
                                                         ''"$( ''
                                                         ( setup "${ get-or-create }/bin/get-or-create" )
-                                                        '' )''
+                                                        '' )"''
                                                         " || "
                                                         "${ environments.failure }/bin/failure ${ builtins.toString failure }"
                                                     ] ;
