@@ -174,15 +174,15 @@
                                                                                 --null-input \
                                                                                 --prettyPrint \
                                                                                 --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                '{ arguments : $ARGUMENTS }'
+                                                                                '{ "arguments" : $ARGUMENTS }'
                                                                         else
                                                                             STANDARD_INPUT="$( cat )" || failure 65
                                                                             yq \
                                                                                 eval \
                                                                                 --null-input \
                                                                                 --prettyPrint \
-                                                                                --argjson arguments ARGUMENTS "$ARGUMENTS" \
-                                                                                '{ arguments: $arguments , standard-input : $STANDARD_INPUT }'
+                                                                                --argjsonq ARGUMENTS "$ARGUMENTS" \
+                                                                                '{ "arguments": $ARGUMENTS , standard-input : $STANDARD_INPUT }'
                                                                         fi
                                                                         exit 66
                                                                     '' ;
