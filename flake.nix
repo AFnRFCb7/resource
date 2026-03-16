@@ -269,7 +269,7 @@
                                                                                                                     let
                                                                                                                         arguments =
                                                                                                                             if typeOf path == "list" && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" && builtins.typeOf ( builtins.elemAt path 1 ) == "string" && builtins.elemAt path 1 == "task" then
-                                                                                                                                {
+                                                                                                                                builtins.trace "NO" {
                                                                                                                                     failure = environments.failure ;
                                                                                                                                     gc-root = environments.gc-root ;
                                                                                                                                     pkgs = pkgs ;
