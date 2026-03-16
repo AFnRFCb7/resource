@@ -696,7 +696,7 @@
                                                                                         ''
                                                                                             : "${ builtins.concatStringsSep "" [ "$" "{" "out:?must be exported" "}" ] }"
                                                                                             echo '${ builtins.toJSON observed }' > "$out"
-                                                                                            cat "${ out }" >&2
+                                                                                            cat "$out" >&2
                                                                                             exit 64
                                                                                         '' ;
                                                                     }
