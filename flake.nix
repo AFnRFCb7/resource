@@ -617,7 +617,6 @@
                                 {
                                     check =
                                         {
-                                            buildFHSUserEnv ,
                                             depth ? 0 ,
                                             expected ? "" ,
                                             fixture ? null ,
