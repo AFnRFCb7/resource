@@ -643,17 +643,20 @@
                                                                         text =
                                                                             let
                                                                                 observed =
-                                                                                    implementation
-                                                                                        {
-                                                                                            depth = depth ;
-                                                                                            init = init ;
-                                                                                            init-resolutions = init-resolutions ;
-                                                                                            release = release ;
-                                                                                            release-resolutions = release-resolutions ;
-                                                                                            seed = seed ;
-                                                                                            targets = targets ;
-                                                                                            transient = transient ;
-                                                                                        } ;
+                                                                                    builtins.toString
+                                                                                        (
+                                                                                            implementation
+                                                                                                {
+                                                                                                    depth = depth ;
+                                                                                                    init = init ;
+                                                                                                    init-resolutions = init-resolutions ;
+                                                                                                    release = release ;
+                                                                                                    release-resolutions = release-resolutions ;
+                                                                                                    seed = seed ;
+                                                                                                    targets = targets ;
+                                                                                                    transient = transient ;
+                                                                                                }
+                                                                                        ) ;
                                                                                 in
                                                                                     if expected == observed then
                                                                                         ''
@@ -665,10 +668,10 @@
                                                                                             : "${ builtins.concatStringsSep "" [ "$" "{" "out:?must be exported" "}" ] }"
                                                                                             echo "We were expecting" >&2
                                                                                             echo >&2
-                                                                                            echo '${ builtins.toJSON expected }' >&2
+                                                                                            echo '${ expected }' >&2
                                                                                             echo "but we observed " >&2
                                                                                             echo >&2
-                                                                                            echo '${ builtins.toJSON observed }' > "$out"
+                                                                                            echo '${ ins.toJSON observed }' > "$out"
                                                                                             cat "$out" >&2
                                                                                             exit 64
                                                                                         '' ;
