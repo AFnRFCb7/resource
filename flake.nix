@@ -306,7 +306,7 @@
                                                                                                         } ;
                                                                                                 in
                                                                                                     ''
-                                                                                                        echo hi
+                                                                                                        jq --null-input --arg-json SCRIPTS '${ builtins.toJSON scripts }' '$SCRIPTS'
                                                                                                     '' ;
                                                                                     }
                                                                             )
