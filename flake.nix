@@ -269,7 +269,7 @@
                                                                                                                     let
                                                                                                                         arguments =
                                                                                                                             if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then
-                                                                                                                                builtins.trace "NO" {
+                                                                                                                                builtins.trace "NO ${ ( builtins.toJSON path ) }" {
                                                                                                                                     failure = environments.failure ;
                                                                                                                                     gc-root = environments.gc-root ;
                                                                                                                                     pkgs = pkgs ;
