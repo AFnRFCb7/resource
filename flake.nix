@@ -16,7 +16,6 @@
                         redis ,
                         resources ,
                         resources-directory ,
-                        sequential-start ,
                         stale-init-channel ,
                         valid-init-channel ,
                         visitor ,
@@ -326,7 +325,7 @@
                                                                         then
                                                                             CURRENT="$( cat /sequential/sequential.counter )" || failure 5766
                                                                         else
-                                                                            CURRENT=${ sequential-start }
+                                                                            CURRENT=0
                                                                         fi
                                                                         NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
                                                                         echo "$NEXT" > /sequential/sequential.counter
