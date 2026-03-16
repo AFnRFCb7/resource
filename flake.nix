@@ -618,7 +618,6 @@
                                         {
                                             depth ? 0 ,
                                             expected ? "" ,
-                                            fixture ? null ,
                                             init ? null ,
                                             init-resolutions ? null ,
                                             mkDerivation ,
@@ -629,7 +628,6 @@
                                             setup ? setup : setup ,
                                             targets ? [ ] ,
                                             transient ? false ,
-                                            writeShellApplication
                                         } :
                                             mkDerivation
                                                 {
