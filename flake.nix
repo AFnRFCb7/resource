@@ -279,7 +279,7 @@
                                                                                                                                     sequential = environments.sequential ;
                                                                                                                                     wrap = environments.wrap ;
                                                                                                                                 }
-                                                                                                                            else builtins.trace ( builtins.toJSON path )
+                                                                                                                            else builtins.trace "YES ${ ( builtins.toJSON path ) }"
                                                                                                                                 {
                                                                                                                                     failure = environments.failure ;
                                                                                                                                     pkgs = pkgs ;
