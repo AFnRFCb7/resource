@@ -671,7 +671,7 @@
                                                                                             echo '${ expected }' >&2
                                                                                             echo "but we observed " >&2
                                                                                             echo >&2
-                                                                                            echo '${ ins.toJSON observed }' > "$out"
+                                                                                            echo '${ observed }' > "$out"
                                                                                             cat "$out" >&2
                                                                                             exit 64
                                                                                         '' ;
