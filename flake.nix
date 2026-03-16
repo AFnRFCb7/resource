@@ -618,7 +618,7 @@
                                     check =
                                         {
                                             buildFHSUserEnv ,
-                                            expected ,
+                                            expected ? "" ,
                                             fixture ?
                                                 { gc-root-directory , resources-directory } :
                                                     let
@@ -652,29 +652,7 @@
                                         } :
                                             mkDerivation
                                                 {
-                                                    installPhase =
-                                                        let
-                                                            application =
-                                                                writeShellApplication
-                                                                    {
-                                                                        name = "check" ;
-                                                                        runtimeInputs = [ coreutils ] ;
-                                                                        text =
-                                                                            ''
-                                                                                : "${ builtins.concatStringsSep "" [ "$" "{" "out:?out must be exported" "}" ] }"
-                                                                                cleanup ( ) {
-                                                                                    echo "DERIVATION=$out $0"
-                                                                                    if [[ -f ${ resources-directory }/log/trace.log ]]
-                                                                                    then
-                                                                                        cat ${ resources-directory }/log/trace.log
-                                                                                    fi
-                                                                                }
-                                                                                trap cleanup EXIT
-                                                                                mkdir --parents "$out"
-                                                                                test-check
-                                                                            '' ;
-                                                                    } ;
-                                                                in "${ application }/bin/check" ;
+                                                    installPhase = "check" ;
                                                     name = "check" ;
                                                     nativeBuildInputs =
                                                         [
@@ -685,7 +663,18 @@
                                                                         runtimeInputs = [ coreutils ] ;
                                                                         text =
                                                                             let
-                                                                                observed = implementation { } ;
+                                                                                observed =
+                                                                                    implementation
+                                                                                        {
+                                                                                            depth = depth ;
+                                                                                            init = init ;
+                                                                                            init-resolutions = init-resolutions ;
+                                                                                            release = release ;
+                                                                                            release-resolutions = release-resolutions ;
+                                                                                            seed = seed ;
+                                                                                            targets = targets ;
+                                                                                            transient = transient ;
+                                                                                        } ;
                                                                                 in
                                                                                     if expected == observed then
                                                                                         ''
@@ -700,7 +689,6 @@
                                                                                             exit 64
                                                                                         '' ;
                                                                     }
-                                                            )
                                                         ] ;
                                                     src = ./. ;
                                                 } ;
