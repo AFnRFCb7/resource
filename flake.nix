@@ -620,21 +620,7 @@
                                             buildFHSUserEnv ,
                                             depth ? 0 ,
                                             expected ? "" ,
-                                            fixture ?
-                                                { gc-root-directory , resources-directory } :
-                                                    let
-                                                        application =
-                                                            writeShellApplication
-                                                                {
-                                                                    name = "fixture" ;
-                                                                    runtimeInputs = [ coreutils ] ;
-                                                                    text =
-                                                                        ''
-                                                                            mkdir --parents ${ resources-directory }/sequential
-                                                                            echo 9068 > ${ resources-directory }/sequential/sequential.counter ,
-                                                                        '' ;
-                                                                } ;
-                                                        in "${ application }/bin/fixture" ,
+                                            fixture ? null ,
                                             init ? null ,
                                             init-resolutions ? null ,
                                             invalid-init-channel ? "23567" ,
