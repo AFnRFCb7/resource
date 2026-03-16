@@ -618,6 +618,7 @@
                                     check =
                                         {
                                             buildFHSUserEnv ,
+                                            depth ? 0 ,
                                             expected ? "" ,
                                             fixture ?
                                                 { gc-root-directory , resources-directory } :
