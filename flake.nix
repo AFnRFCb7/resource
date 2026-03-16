@@ -618,14 +618,7 @@
                                     check =
                                         {
                                             buildFHSUserEnv ,
-                                            depth ? 0 ,
-                                            expected-invalid-init ? null ,
-                                            expected-standard-error ? null ,
-                                            expected-standard-output ? null ,
-                                            expected-stale-init ? null ,
-                                            expected-status ? 0 ,
-                                            expected-valid-init ,
-                                            failure ? 12489 ,
+                                            expected ,
                                             fixture ?
                                                 { gc-root-directory , resources-directory } :
                                                     let
@@ -644,7 +637,6 @@
                                             init ? null ,
                                             init-resolutions ? null ,
                                             invalid-init-channel ? "23567" ,
-                                            lazy ? false ,
                                             mkDerivation ,
                                             release ? null ,
                                             release-resolutions ? null ,
@@ -687,143 +679,26 @@
                                                     nativeBuildInputs =
                                                         [
                                                             (
-                                                                buildFHSUserEnv
+                                                                writeShellApplication
                                                                     {
-                                                                        extraBwrapArgs =
-                                                                            [
-                                                                                "--bind $out /out"
-                                                                                "--tmpfs /redis"
-                                                                            ] ;
-                                                                        name = "test-check" ;
-                                                                        runScript = "test-check" ;
-                                                                        targetPkgs =
-                                                                            pkgs :
-                                                                                [
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "test-check" ;
-                                                                                                runtimeInputs =
-                                                                                                    [
-                                                                                                        pkgs.coreutils
-                                                                                                        pkgs.findutils
-                                                                                                        pkgs.redis
-                                                                                                        (
-                                                                                                            pkgs.writeShellApplication
-                                                                                                                {
-                                                                                                                    name = "fixture" ;
-                                                                                                                    runtimeInputs = [ ] ;
-                                                                                                                    text =
-                                                                                                                        visitor
-                                                                                                                            {
-                                                                                                                                lambda = path : value : value { gc-root-directory = gc-root-directory ; resources-directory = resources-directory ; } ;
-                                                                                                                                null = path : value : "" ;
-                                                                                                                            }
-                                                                                                                            fixture ;
-                                                                                                                }
-                                                                                                        )
-                                                                                                        (
-                                                                                                            pkgs.writeShellApplication
-                                                                                                                {
-                                                                                                                     name = "subscribe" ;
-                                                                                                                     runtimeInputs = [ coreutils redis ] ;
-                                                                                                                     text =
-                                                                                                                        ''
-                                                                                                                            CHANNEL="$1"
-                                                                                                                            redis-cli --raw SUBSCRIBE "$CHANNEL" | {
-                                                                                                                                read -r _     # skip "subscribe"
-                                                                                                                                read -r _     # skip channel name
-                                                                                                                                read -r _     # skip
-                                                                                                                                read -r _     # skip
-                                                                                                                                read -r _
-                                                                                                                                read -r PAYLOAD
-                                                                                                                                mkdir --parents "/out/observed/jd"
-                                                                                                                                echo "$PAYLOAD" > "/out/observed/jd/$CHANNEL.json"
-                                                                                                                            }
-                                                                                                                        '' ;
-                                                                                                                }
-                                                                                                        )
-                                                                                                    ] ;
-                                                                                                text =
-                                                                                                    let
-                                                                                                        expected-standard-error_ =
-                                                                                                            visitor
-                                                                                                                {
-                                                                                                                    null = path : value : "" ;
-                                                                                                                    string = path : value : value ;
-                                                                                                                }
-                                                                                                                expected-standard-error ;
-                                                                                                        expected-standard-output_ =
-                                                                                                            visitor
-                                                                                                                {
-                                                                                                                    null = path : value : "" ;
-                                                                                                                    string = path : value : value ;
-                                                                                                                }
-                                                                                                                expected-standard-output ;
-                                                                                                        expected-status_ =
-                                                                                                            visitor
-                                                                                                                {
-                                                                                                                    int = path : value : builtins.toString value ;
-                                                                                                                    null = path : value : "0" ;
-                                                                                                                }
-                                                                                                                expected-status ;
-                                                                                                        resource =
-                                                                                                            implementation
-                                                                                                                {
-                                                                                                                    depth = depth ;
-                                                                                                                    init = init ;
-                                                                                                                    init-resolutions = init-resolutions ;
-                                                                                                                    release = release ;
-                                                                                                                    release-resolutions = release-resolutions ;
-                                                                                                                    seed = seed ;
-                                                                                                                    targets = targets ;
-                                                                                                                    transient = transient ;
-                                                                                                                } ;
-                                                                                                        in
-                                                                                                            builtins.trace "if OBSERVED_RESOURCE=${ resource { failure = failure ; setup = setup ; } } 2> /out/observed/diff/standard-error"
-                                                                                                            ''
-                                                                                                                mkdir --parents "/out/expected/diff"
-                                                                                                                EXPECTED_STANDARD_ERROR='${ expected-standard-error_ }'
-                                                                                                                echo "$EXPECTED_STANDARD_ERROR" > "/out/expected/diff/standard-error"
-                                                                                                                EXPECTED_STANDARD_OUTPUT='${ expected-standard-output_ }'
-                                                                                                                echo "$EXPECTED_STANDARD_OUTPUT" > "/out/expected/diff/standard-output"
-                                                                                                                EXPECTED_STATUS='${ expected-status_ }'
-                                                                                                                echo "$EXPECTED_STATUS" > "/out/expected/diff/status"
-                                                                                                                echo "$EXPECTED_STATUS" > "/out//expected/diff/status"
-                                                                                                                mkdir --parents "/out/expected/jd"
-                                                                                                                cp ${ expected-stale-init } /out/expected/jd/stale-init.json
-                                                                                                                cp ${ expected-valid-init } /out/expected/jd/valid-init.json
-                                                                                                                cp ${ expected-invalid-init } /out/expected/jd/invalid-init.json
-                                                                                                                redis-server --dir /redis --daemonize yes
-                                                                                                                while ! redis-cli ping
-                                                                                                                do
-                                                                                                                    sleep 0
-                                                                                                                done
-                                                                                                                fixture
-                                                                                                                nohup subscribe stale-init-channel > /dev/null 2>&1 &
-                                                                                                                nohup subscribe valid-init-channel > /dev/null 2>&1 &
-                                                                                                                nohup subscribe invalid-init-channel > /dev/null 2>&1 &
-                                                                                                                mkdir --parents /out/observed/diff
-                                                                                                                if OBSERVED_RESOURCE=${ resource { failure = failure ; setup = setup ; } } 2> /out/observed/diff/standard-error
-                                                                                                                then
-                                                                                                                    OBSERVED_STATUS="$?"
-                                                                                                                else
-                                                                                                                    OBSERVED_STATUS="$?"
-                                                                                                                fi
-                                                                                                                echo "$OBSERVED_RESOURCE" > /out/observed/diff/standard-output
-                                                                                                                echo "$OBSERVED_STATUS" > /out/observed/diff/status
-                                                                                                                if ! diff --recursive /out/expected/diff /out/observed/diff
-                                                                                                                then
-                                                                                                                    exit 68
-                                                                                                                fi
-                                                                                                                # find /out/expected/jd | while read -r FULLY_QUALIFIED_NAME
-                                                                                                                # do
-                                                                                                                #
-                                                                                                                # done
-                                                                                                            '' ;
-                                                                                            }
-                                                                                    )
-                                                                                ] ;
+                                                                        name = "check" ;
+                                                                        runtimeInputs = [ pkgs.coreutils ] ;
+                                                                        text =
+                                                                            let
+                                                                                observed = implementation { } ;
+                                                                                in
+                                                                                    if expected == observed then
+                                                                                        ''
+                                                                                            : "${ builtins.concatStringsSep "" [ "$" "{" "out:?must be exported" "}" ] }"
+                                                                                            touch "$out"
+                                                                                        ''
+                                                                                    else
+                                                                                        ''
+                                                                                            : "${ builtins.concatStringsSep "" [ "$" "{" "out:?must be exported" "}" ] }"
+                                                                                            echo '${ builtins.toJSON observed }' > "$out"
+                                                                                            cat "${ out }" >&2
+                                                                                            exit 64
+                                                                                        '' ;
                                                                     }
                                                             )
                                                         ] ;
