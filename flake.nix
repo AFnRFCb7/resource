@@ -656,7 +656,7 @@
                                                                                             seed = seed ;
                                                                                             targets = targets ;
                                                                                             transient = transient ;
-                                                                                        }
+                                                                                        } ;
                                                                                 in
                                                                                     if expected == observed then
                                                                                         ''
