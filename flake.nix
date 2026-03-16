@@ -682,7 +682,7 @@
                                                                 writeShellApplication
                                                                     {
                                                                         name = "check" ;
-                                                                        runtimeInputs = [ pkgs.coreutils ] ;
+                                                                        runtimeInputs = [ coreutils ] ;
                                                                         text =
                                                                             let
                                                                                 observed = implementation { } ;
