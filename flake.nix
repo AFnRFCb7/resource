@@ -623,18 +623,14 @@
                                             fixture ? null ,
                                             init ? null ,
                                             init-resolutions ? null ,
-                                            invalid-init-channel ? "23567" ,
                                             mkDerivation ,
                                             release ? null ,
                                             release-resolutions ? null ,
                                             resources ? null ,
                                             seed ? 17507 ,
-                                            sequential-start ? "16669" ,
                                             setup ? setup : setup ,
-                                            stale-init-channel ? "21286" ,
                                             targets ? [ ] ,
                                             transient ? false ,
-                                            valid-init-channel ? "21286" ,
                                             writeShellApplication
                                         } :
                                             mkDerivation
