@@ -527,7 +527,7 @@
                                                             } ;
                                                     } ;
                                                 in builtins.mapAttrs mapper set ;
-                                        get-or-create =
+                                        in
                                             writeShellApplication
                                                 {
                                                     name = "get-or-create" ;
@@ -613,20 +613,6 @@
                                                                     fi
                                                                 '' ;
                                                 } ;
-                                        in
-                                            {
-                                                failure ? 10996 ,
-                                                setup ? setup : "${ setup }"
-                                            } :
-                                                builtins.concatStringsSep
-                                                    ""
-                                                    [
-                                                        ''"$( ''
-                                                        ( setup "${ get-or-create }/bin/get-or-create" )
-                                                        '' )"''
-                                                        " || "
-                                                        "${ environments.failure }/bin/failure ${ builtins.toString failure }"
-                                                    ] ;
                             in
                                 {
                                     check =
