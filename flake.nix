@@ -268,7 +268,7 @@
                                                                                                                 path : value :
                                                                                                                     let
                                                                                                                         arguments =
-                                                                                                                            if builtins typeOf path == "list" && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" && builtins.typeOf ( builtins.elemAt path 1 ) == "string" && builtins.elemAt path 1 == "task" then
+                                                                                                                            if builtins typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init"
                                                                                                                                 builtins.trace "NO" {
                                                                                                                                     failure = environments.failure ;
                                                                                                                                     gc-root = environments.gc-root ;
@@ -292,16 +292,10 @@
                                                                                                             null = path : value : null ;
                                                                                                         }
                                                                                                         {
-                                                                                                            init =
-                                                                                                                {
-                                                                                                                    task = init ;
-                                                                                                                    resolutions = init-resolutions ;
-                                                                                                                } ;
-                                                                                                            release =
-                                                                                                                {
-                                                                                                                    task = release ;
-                                                                                                                    resolutions = release-resolutions ;
-                                                                                                                } ;
+                                                                                                            init = init ;
+                                                                                                            init-resolutions = init-resolutions ;
+                                                                                                            release = release ;
+                                                                                                            release-resolutions = release-resolutions ;
                                                                                                         } ;
                                                                                                 in
                                                                                                     ''
