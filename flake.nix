@@ -713,8 +713,10 @@
                                                                             SCRIPTS_HASH="WTF" || failure 15672
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS_HASH" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
-                                                                            echo "$HASH"
-                                                                            echo "$ULTIMATE_PID"
+                                                                            echo "HASH=$HASH"
+                                                                            echo "ULTIMATE_PID=$ULTIMATE_PID"
+                                                                            SCRIPTS="$( scripts-hash )" || failure 9514
+                                                                            echo "SCRIPTS_HASH=$SCRIPTS"
                                                                         '' ;
                                                         } ;
                                                 application2 =
