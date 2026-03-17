@@ -643,7 +643,8 @@
                                                                                                     "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                     "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                     "standard-output-file" : $STANDARD_OUTPUT_FILE ,
-                                                                                                    "targets-expected" : $TARGETS_EXPECTED
+                                                                                                    "targets-expected" : $TARGETS_EXPECTED ,
+                                                                                                    "targets-observed" : $TARGES_OBSERVED
                                                                                                 }' > "$JSON_FILE"
                                                                                             chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$JSON_FILE"
                                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
