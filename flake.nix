@@ -638,38 +638,35 @@
                                                 buildFHSUserEnv
                                                     {
                                                         name = "sequential" ;
-                                                        runScript =
-                                                            ''
-                                                                mkdir --parents ${ resources-directory }/sequential
-                                                                mkdir --parents ${ resources-directory }/locks
-                                                                sequential
-                                                            '' ;
-                                                    targetPkgs =
-                                                        pkgs :
-                                                            [
-                                                                (
-                                                                    pkgs.writeShellApplication
-                                                                        {
-                                                                            name = "sequential" ;
-                                                                            runtimeInputs = [ failure pkgs.coreutils pkgs.flock ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    exex 203> ${ resources-directory }/locks/sequential
-                                                                                    flock -x 203
-                                                                                    if [[ -s ${ resources-directory }/sequential/sequential.counter ]]
-                                                                                    then
-                                                                                        CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure 5766
-                                                                                    else
-                                                                                        CURRENT=0
-                                                                                    fi
-                                                                                    NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
-                                                                                    echo "$NEXT" > /sequential/sequential.counter
-                                                                                    printf "%016d\n" "$CURRENT"
-                                                                                    rm ${ resources-directory }/locks/sequential
-                                                                                '' ;
-                                                                        }
-                                                                )
-                                                            ] ;
+                                                        runScript = "sequential" ;
+                                                        targetPkgs =
+                                                            pkgs :
+                                                                [
+                                                                    (
+                                                                        pkgs.writeShellApplication
+                                                                            {
+                                                                                name = "sequential" ;
+                                                                                runtimeInputs = [ failure pkgs.coreutils pkgs.flock ] ;
+                                                                                text =
+                                                                                    ''
+                                                                                        mkdir --parents ${ resources-directory }/sequential
+                                                                                        mkdir --parents ${ resources-directory }/locks
+                                                                                        exec 203> ${ resources-directory }/locks/sequential
+                                                                                        flock -x 203
+                                                                                        if [[ -s ${ resources-directory }/sequential/sequential.counter ]]
+                                                                                        then
+                                                                                            CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure 5766
+                                                                                        else
+                                                                                            CURRENT=0
+                                                                                        fi
+                                                                                        NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
+                                                                                        echo "$NEXT" > /sequential/sequential.counter
+                                                                                        printf "%016d\n" "$CURRENT"
+                                                                                        rm ${ resources-directory }/locks/sequential
+                                                                                    '' ;
+                                                                            }
+                                                                    )
+                                                                ] ;
                                                     text =
                                                         ''
                                                             if [[ -s /sequential/sequential.counter ]]
@@ -765,9 +762,9 @@
                                                                             STANDARD_INPUT_HASH="$( sha512sum "$STANDARD_INPUT_FILE" | cut --characters -128 )" || failure 12800
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PRE_HASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
-                                                                            if [[ -L "${ resources-directory }/mounts/$HASH" ]]
+                                                                            if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                             then
-                                                                                LINK="$( readlink --canonical "${ resources-directory }/mounts/$HASH" )" || failure 3789
+                                                                                LINK="$( readlink --canonical "${ resources-directory }/canonical/$HASH" )" || failure 3789
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
                                                                                 mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
                                                                                 touch "${ resources-directory }/originator-pids/$INDEX/$ULTIMATE_PID"
