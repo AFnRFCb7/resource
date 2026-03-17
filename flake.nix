@@ -572,7 +572,7 @@
                                             buildFHSUserEnv
                                                 {
                                                     name = "scripts-hash" ;
-                                                    runtimeScript = "scripts-hash" ;
+                                                    runScript = "scripts-hash" ;
                                                     targetPkgs =
                                                         pkgs :
                                                             [
