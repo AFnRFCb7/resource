@@ -614,7 +614,7 @@
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                                     # shellcheck disable=SC2016
-                                                                                                                    SCRIPT='${ script init a }'
+                                                                                                                    SCRIPT="$( ${ script init a } )"
                                                                                                                     STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
                                                                                                                     STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
