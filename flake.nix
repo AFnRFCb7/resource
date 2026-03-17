@@ -597,12 +597,22 @@
                                                                                                                             if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then
                                                                                                                                 {
                                                                                                                                     failure = failure ;
+                                                                                                                                    gc-root = gc-root ;
+                                                                                                                                    pkgs = pkgs ;
+                                                                                                                                    resources = resources ;
+                                                                                                                                    seed = seed ;
+                                                                                                                                    sequential = null ;
                                                                                                                                     trace = null ;
+                                                                                                                                    wrap = null ;
                                                                                                                                 }
                                                                                                                             else
                                                                                                                                 {
                                                                                                                                     failure = failure ;
-                                                                                                                                    trace = trace ;
+                                                                                                                                    pkgs = pkgs ;
+                                                                                                                                    resources = resources ;
+                                                                                                                                    seed = seed ;
+                                                                                                                                    sequential = null ;
+                                                                                                                                    trace = null ;
                                                                                                                                 } ;
                                                                                                                         in value arguments ;
                                                                                                             } ;
