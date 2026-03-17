@@ -634,13 +634,62 @@
                                                                 )
                                                             ] ;
                                                 } ;
+                                            sequential =
+                                                buildFHSUserEnv
+                                                    {
+                                                        name = "sequential" ;
+                                                        runScript =
+                                                            ''
+                                                                mkdir --parents ${ resources-directory }/sequential
+                                                                mkdir --parents ${ resources-directory }/locks
+                                                                sequential
+                                                            '' ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "sequential" ;
+                                                                            runtimeInputs = [ failure pkgs.coreutils pkgs.flock ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    exex 203> ${ resources-directory }/locks/sequential
+                                                                                    flock -x 203
+                                                                                    if [[ -s ${ resources-directory }/sequential/sequential.counter ]]
+                                                                                    then
+                                                                                        CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure 5766
+                                                                                    else
+                                                                                        CURRENT=0
+                                                                                    fi
+                                                                                    NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
+                                                                                    echo "$NEXT" > /sequential/sequential.counter
+                                                                                    printf "%016d\n" "$CURRENT"
+                                                                                    rm ${ resources-directory }/locks/sequential
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                            ] ;
+                                                    text =
+                                                        ''
+                                                            if [[ -s /sequential/sequential.counter ]]
+                                                            then
+                                                                CURRENT="$( cat /sequential/sequential.counter )" || failure 5766
+                                                            else
+                                                                CURRENT=0
+                                                            fi
+                                                            NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
+                                                            echo "$NEXT" > /sequential/sequential.counter
+                                                            printf "%016d\n" "$CURRENT"
+                                                        '' ;
+                                                } ;
                                         in
                                             let
                                                 application =
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
-                                                            runtimeInputs = [ coreutils failure jq scripts-hash ] ;
+                                                            runtimeInputs = [ coreutils failure jq scripts-hash sequential ] ;
                                                             text =
                                                                 let
                                                                     stringable =
@@ -694,25 +743,48 @@
                                                                             transient ;
                                                                     in
                                                                         ''
+                                                                            STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 27125
+                                                                            mkdir --parents "${ resources-directory }/logs"
+                                                                            STANDARD_INPUT_FILE=${ resources-directory }/logs/STANDARD_INPUT_SEQUENCE
                                                                             if [[ -t 0 ]]
                                                                             then
                                                                                 HAS_STANDARD_INPUT=false
-                                                                                STANDARD_INPUT=
+                                                                                touch "$STANDARD_INPUT_FILE"
                                                                                 ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
                                                                             else
                                                                                 STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
                                                                                 export STANDARD_INPUT_FILE
                                                                                 HAS_STANDARD_INPUT=true
                                                                                 cat > "$STANDARD_INPUT_FILE"
-                                                                                STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 12348
                                                                                 PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
                                                                                 ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
                                                                             fi
                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || failure 14587
                                                                             PREHASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
-                                                                            SCRIPTS_HASH="WTF" || failure 15672
+                                                                            SCRIPTS_HASH="$( scripts-hash )" || failure 15672
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS_HASH" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            if [[ -L "${ resources-directory }/mounts/$HASH" ]]
+                                                                            then
+                                                                                --null-output \
+                                                                                --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                --arg HASH "$HASH" \
+                                                                                --arg INDEX "$INDEX" \
+                                                                                --argjson SCRIPTS "$SCRIPTS" \
+                                                                                --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                --arg TRANSIENT "$TRANSIENT" \
+                                                                                '{
+                                                                                    "arguments" : $ARGUMENTS ,
+                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                    "hash" : $HASH ,
+                                                                                    "index" : $INDEX ,
+                                                                                    "scripts" : $SCRIPTS ,
+                                                                                    "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                    "transient" : $TRANSIENT
+                                                                                }' > "$JSON_FILE"
+                                                                            redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE"
+                                                                            fi
                                                                             echo "HASH=$HASH"
                                                                             echo "ULTIMATE_PID=$ULTIMATE_PID"
                                                                             SCRIPTS="$( scripts-hash )" || failure 9514
