@@ -596,7 +596,7 @@
                                                                             fi
                                                                             ARGUMENTS=( "$@" )
                                                                             ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
-                                                                            PREHASH='${ builtins.sha512 "" ( builtins.toJSON stringable ) }'
+                                                                            PREHASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
                                                                             SCRIPTS="WTF"
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS_JSON" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
