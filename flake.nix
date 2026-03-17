@@ -556,8 +556,11 @@
                                                                             fi
                                                                             ARGUMENTS=( "$@" )
                                                                             ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
+                                                                            PREHASH="WTF"
+                                                                            SCRIPTS="WTF"
                                                                             TRANSIENT=${ transient_ }
-                                                                            HASH="$( echo "${ builtins.concatStringsSep " " [ "$" "{" "ARGUMENTS[*]" "}" ] } $HAS_STANDARD_INPUT" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            HASH="$( echo "${ builtins.concatStringsSep " " [ "$" "{" "ARGUMENTS[*]" "}" ] } $HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            echo "$HASH"
                                                                         '' ;
                                                         } ;
                                                 application2 =
