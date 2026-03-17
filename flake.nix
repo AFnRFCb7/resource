@@ -520,13 +520,64 @@
                                                             } ;
                                                     } ;
                                                 in builtins.mapAttrs mapper set ;
+                                        failure =
+                                            buildFHSUserEnv
+                                                {
+                                                    runScript =
+                                                        ''
+                                                            bash -c '
+                                                                if [[ -t 0 ]]
+                                                                then
+                                                                    ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                else
+                                                                    ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                fi
+                                                            ' "$0" "$@"
+                                                        '' ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "failure" ;
+                                                                            runtimeInputs = [ pkgs.coreutils pkgs.yg-go ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . - )" || exit 64
+                                                                                    if [[ -t 0 ]]
+                                                                                    then
+                                                                                        # shellcheck disable=SC2016
+                                                                                        yq \
+                                                                                            eval \
+                                                                                            --null-input \
+                                                                                            --prettyPrint \
+                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                            '{ "arguments" : $ARGUMENTS }'
+                                                                                    else
+                                                                                        STANDARD_INPUT="$( cat )" || failure 65
+                                                                                        # shellcheck disable=SC2016
+                                                                                        yq \
+                                                                                            eval \
+                                                                                            --null-input \
+                                                                                            --prettyPrint \
+                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                            --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                            '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }'
+                                                                                    fi
+                                                                                    exit 66
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                            ] ;
+                                                } ;
                                         in
                                             let
                                                 application =
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
-                                                            runtimeInputs = [ coreutils jq ] ;
+                                                            runtimeInputs = [ coreutils failure jq ] ;
                                                             text =
                                                                 let
                                                                     stringable =
