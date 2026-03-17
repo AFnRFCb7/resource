@@ -526,7 +526,7 @@
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
-                                                            runtimeInputs = [ coreutils jq ] ;
+                                                            runtimeInputs = [ environments.failure coreutils jq ] ;
                                                             text =
                                                                 let
                                                                     transient_ =
