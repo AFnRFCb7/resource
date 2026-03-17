@@ -545,7 +545,7 @@
                                                                             runtimeInputs = [ pkgs.coreutils pkgs.yq-go ] ;
                                                                             text =
                                                                                 ''
-                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . - )" || exit 64
+                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input --slurp '. | map(.)' -o=json )" || exit 64
                                                                                     if [[ -t 0 ]]
                                                                                     then
                                                                                         # shellcheck disable=SC2016
