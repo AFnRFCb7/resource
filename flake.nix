@@ -597,7 +597,7 @@
                                                                                                                             if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then
                                                                                                                                 {
                                                                                                                                     failure = failure ;
-                                                                                                                                    gc-root = gc-root ;
+                                                                                                                                    gc-root = null ;
                                                                                                                                     pkgs = pkgs ;
                                                                                                                                     resources = resources ;
                                                                                                                                     seed = seed ;
