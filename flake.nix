@@ -542,7 +542,7 @@
                                                                     pkgs.writeShellApplication
                                                                         {
                                                                             name = "failure" ;
-                                                                            runtimeInputs = [ pkgs.coreutils pkgs.yg-go ] ;
+                                                                            runtimeInputs = [ pkgs.coreutils pkgs.yq-go ] ;
                                                                             text =
                                                                                 ''
                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . - )" || exit 64
