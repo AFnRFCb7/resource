@@ -650,6 +650,7 @@
                                                                                                                             "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                                             "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                            "status" : $STATUS ,
                                                                                                                             "targets-expected" : $TARGETS_EXPECTED ,
                                                                                                                             "targets-observed" : $TARGETS_OBSERVED
                                                                                                                         }' > "$JSON_FILE"
