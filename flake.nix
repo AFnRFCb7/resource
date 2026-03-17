@@ -520,6 +520,110 @@
                                                             } ;
                                                     } ;
                                                 in builtins.mapAttrs mapper set ;
+
+                                        arguments =
+                                            {
+                                                init =
+                                                    pkgs :
+                                                        {
+                                                            failure = failure ;
+                                                            gc-root = null ;
+                                                            pkgs = pkgs ;
+                                                            resources = resources ;
+                                                            seed = seed ;
+                                                            sequential = null ;
+                                                            trace = null ;
+                                                            wrap = null ;
+                                                        } ;
+                                                release =
+                                                    pkgs :
+                                                        {
+                                                            failure = failure ;
+                                                            pkgs = pkgs ;
+                                                            resources = resources ;
+                                                            seed = seed ;
+                                                            sequential = null ;
+                                                            trace = null ;
+                                                        } ;
+                                            } ;
+                                        create =
+                                            buildFHSUserEnv
+                                                {
+                                                    name = "create" ;
+                                                    runScript = "create" ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "create" ;
+                                                                            runtimeInputs =
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "create" ;
+                                                                                                runtimeInputs = [ failure init sequential pkgs.coreutils pkgs.jq ] ;
+                                                                                                text =
+                                                                                                    ''
+                                                                                                        mkdir --parents ${ resources-directory }/logs
+                                                                                                        INDEX="$( sequential )" || failure 5607
+                                                                                                        ARGUMENTS="$( printf '%s\n' "$@ | jq -R . | jq -s . )" || failure 14587
+                                                                                                        STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
+                                                                                                        STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
+                                                                                                        STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
+                                                                                                        STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
+                                                                                                        if init "$@" > "/log/$STANDARD_OUTPUT_FILE" 2> "/logs/$STANDARD_ERROR_FILE"
+                                                                                                        then
+                                                                                                            STATUS="$?"
+                                                                                                        else
+                                                                                                            STATUS="$?"
+                                                                                                        fi
+                                                                                                        TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 | sed 's:/*$::' | sort | jq --raw-input . | jq --slurp . )" || failure 28445
+                                                                                                        JSON_SEQUENCE="$( sequential )" || failure 32761
+                                                                                                        JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                        jq \
+                                                                                                            --null-input \
+                                                                                                            --argjson ARGUMENTS "$ARGUMENTS\" \
+                                                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                            --arg HASH "$HASH" \
+                                                                                                            --arg INDEX "$INDEX" \
+                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                                            --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                                            --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                                            --arg STATUS "$STATUS" \
+                                                                                                            --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED"
+                                                                                                            --argjson TARGET_OBSERVED "$TARGETS_OBSERVED"
+                                                                                                            '{
+                                                                                                                "arguments" : $ARGUMENTS ,
+                                                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                "hash" : $HASH ,
+                                                                                                                "index" : $INDEX ,
+                                                                                                                "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                                                "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                                                "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                "targets-expected" : $TARGETS_EXPECTED
+                                                                                                            }' > "/log/$JSON_SEQUENCE"
+                                                                                                        chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$JSON_FILE"
+                                                                                                        if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
+                                                                                                        then
+                                                                                                            ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
+                                                                                                            redis-cli PUBLISH ${ valid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
+                                                                                                            echo "${ resources-directory }/mounts/$HASH"
+                                                                                                        else
+                                                                                                            redis-cli PUBLISH ${ invalid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
+                                                                                                            echo "${ resources-directory }/mounts/$HASH"
+                                                                                                            failure 21103 "$JSON_FILE"
+                                                                                                        fi
+                                                                                                    '' ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
+                                                                        }
+                                                                )
+                                                            ] ;
+                                            } ;
                                         failure =
                                             buildFHSUserEnv
                                                 {
@@ -568,6 +672,38 @@
                                                                 )
                                                             ] ;
                                                 } ;
+                                        init =
+                                            buildFHSUserEnv
+                                                {
+                                                    extraBwrapArgs =
+                                                        [
+                                                            "--bind ${ resources-directory }/mounts/$INDEX /mount"
+                                                            "--tmpfs /scratch"
+                                                        ] ;
+                                                    name = "init" ;
+                                                    runScript =
+                                                        ''
+                                                            init -c '
+                                                                if "$HAS_STANDARD_INPUT"
+                                                                then
+                                                                    init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                else
+                                                                    init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
+                                                                fi
+                                                            ' "$0" "$@"
+                                                        '' ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "init" ;
+                                                                            text = init arguments.init ;
+                                                                        }
+                                                                )
+                                                            ] ;
+                                                } ;
                                         scripts-hash =
                                             buildFHSUserEnv
                                                 {
@@ -594,26 +730,8 @@
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         arguments =
-                                                                                                                            if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then
-                                                                                                                                {
-                                                                                                                                    failure = failure ;
-                                                                                                                                    gc-root = null ;
-                                                                                                                                    pkgs = pkgs ;
-                                                                                                                                    resources = resources ;
-                                                                                                                                    seed = seed ;
-                                                                                                                                    sequential = null ;
-                                                                                                                                    trace = null ;
-                                                                                                                                    wrap = null ;
-                                                                                                                                }
-                                                                                                                            else
-                                                                                                                                {
-                                                                                                                                    failure = failure ;
-                                                                                                                                    pkgs = pkgs ;
-                                                                                                                                    resources = resources ;
-                                                                                                                                    seed = seed ;
-                                                                                                                                    sequential = null ;
-                                                                                                                                    trace = null ;
-                                                                                                                                } ;
+                                                                                                                            if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then arguments.init pkgs
+                                                                                                                            else arguments.release pkgs ;
                                                                                                                         in builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.concatLists [ path [ ( builtins.toString ( value arguments ) ) ] ] ) ) ;
                                                                                                             } ;
                                                                                                 list = path : list : builtins.hashString "sha512" ( builtins.toJSON [ path list ] ) ;
@@ -634,52 +752,52 @@
                                                                 )
                                                             ] ;
                                                 } ;
-                                            sequential =
-                                                buildFHSUserEnv
-                                                    {
-                                                        name = "sequential" ;
-                                                        runScript = "sequential" ;
-                                                        targetPkgs =
-                                                            pkgs :
-                                                                [
-                                                                    (
-                                                                        pkgs.writeShellApplication
-                                                                            {
-                                                                                name = "sequential" ;
-                                                                                runtimeInputs = [ failure pkgs.coreutils pkgs.flock ] ;
-                                                                                text =
-                                                                                    ''
-                                                                                        mkdir --parents ${ resources-directory }/sequential
-                                                                                        mkdir --parents ${ resources-directory }/locks
-                                                                                        exec 203> ${ resources-directory }/locks/sequential
-                                                                                        flock -x 203
-                                                                                        if [[ -s ${ resources-directory }/sequential/sequential.counter ]]
-                                                                                        then
-                                                                                            CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure 5766
-                                                                                        else
-                                                                                            CURRENT=0
-                                                                                        fi
-                                                                                        NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
-                                                                                        echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
-                                                                                        printf "%016d\n" "$CURRENT"
-                                                                                        rm ${ resources-directory }/locks/sequential
-                                                                                    '' ;
-                                                                            }
-                                                                    )
-                                                                ] ;
-                                                    text =
-                                                        ''
-                                                            if [[ -s /sequential/sequential.counter ]]
-                                                            then
-                                                                CURRENT="$( cat /sequential/sequential.counter )" || failure 5766
-                                                            else
-                                                                CURRENT=0
-                                                            fi
-                                                            NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
-                                                            echo "$NEXT" > /sequential/sequential.counter
-                                                            printf "%016d\n" "$CURRENT"
-                                                        '' ;
-                                                } ;
+                                        sequential =
+                                            buildFHSUserEnv
+                                                {
+                                                    name = "sequential" ;
+                                                    runScript = "sequential" ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "sequential" ;
+                                                                            runtimeInputs = [ failure pkgs.coreutils pkgs.flock ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    mkdir --parents ${ resources-directory }/sequential
+                                                                                    mkdir --parents ${ resources-directory }/locks
+                                                                                    exec 203> ${ resources-directory }/locks/sequential
+                                                                                    flock -x 203
+                                                                                    if [[ -s ${ resources-directory }/sequential/sequential.counter ]]
+                                                                                    then
+                                                                                        CURRENT="$( cat ${ resources-directory }/sequential/sequential.counter )" || failure 5766
+                                                                                    else
+                                                                                        CURRENT=0
+                                                                                    fi
+                                                                                    NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
+                                                                                    echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
+                                                                                    printf "%016d\n" "$CURRENT"
+                                                                                    rm ${ resources-directory }/locks/sequential
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                            ] ;
+                                                text =
+                                                    ''
+                                                        if [[ -s /sequential/sequential.counter ]]
+                                                        then
+                                                            CURRENT="$( cat /sequential/sequential.counter )" || failure 5766
+                                                        else
+                                                            CURRENT=0
+                                                        fi
+                                                        NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
+                                                        echo "$NEXT" > /sequential/sequential.counter
+                                                        printf "%016d\n" "$CURRENT"
+                                                    '' ;
+                                            } ;
                                         in
                                             let
                                                 application =
@@ -747,12 +865,14 @@
                                                                             then
                                                                                 HAS_STANDARD_INPUT=false
                                                                                 touch "$STANDARD_INPUT_FILE"
+                                                                                chmod 0400 "$STANDARD_INPUT_FILE"
                                                                                 ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
                                                                             else
                                                                                 STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
                                                                                 export STANDARD_INPUT_FILE
                                                                                 HAS_STANDARD_INPUT=true
                                                                                 cat > "$STANDARD_INPUT_FILE"
+                                                                                chmod 0400 "$STANDARD_INPUT_FILE"
                                                                                 PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
                                                                                 ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
                                                                             fi
@@ -760,6 +880,7 @@
                                                                             PRE_HASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
                                                                             SCRIPTS_HASH="$( scripts-hash )" || failure 15672
                                                                             STANDARD_INPUT_HASH="$( sha512sum "$STANDARD_INPUT_FILE" | cut --characters -128 )" || failure 12800
+                                                                            TARGETS_EXPECTED='${ builtins.toJSON ( builtins.sort ( a : b : builtins.compare a b ) targets ) }'
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PRE_HASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             if [[ -L "${ resources-directory }/canonical/$HASH" ]]
@@ -777,19 +898,27 @@
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
-                                                                                    --argjson SCRIPTS "$SCRIPTS" \
+                                                                                    --argjson SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                     --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                    --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                     '{
                                                                                         "arguments" : $ARGUMENTS ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "hash" : $HASH ,
                                                                                         "index" : $INDEX ,
-                                                                                        "scripts" : $SCRIPTS ,
+                                                                                        "scripts-hash" : $SCRIPTS_HASH ,
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                        "targets-expected" : $TARGETS_EXPECTED ,
                                                                                         "transient" : $TRANSIENT
                                                                                     }' > "$JSON_FILE"
-                                                                            redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE"
+                                                                                redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE"
+                                                                            else
+                                                                                export HAS_STANDARD_INPUT
+                                                                                export HASH
+                                                                                export STANDARD_INPUT_FILE
+                                                                                export TARGETS_EXPECTED
+                                                                                create "$@"
                                                                             fi
                                                                             echo "HASH=$HASH"
                                                                             echo "ULTIMATE_PID=$ULTIMATE_PID"
