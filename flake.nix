@@ -640,7 +640,7 @@
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
-                                                            runtimeInputs = [ coreutils failure jq scripts ] ;
+                                                            runtimeInputs = [ coreutils failure jq scripts-hash ] ;
                                                             text =
                                                                 let
                                                                     stringable =
