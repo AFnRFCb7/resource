@@ -766,6 +766,13 @@
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS_HASH" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             if [[ -L "${ resources-directory }/mounts/$HASH" ]]
                                                                             then
+                                                                                LINK="$( readlink --canonical "${ resources-directory }/mounts/$HASH" )" || failure 3789
+                                                                                INDEX="$( basename "$LINK" )" || failure 13919
+                                                                                mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
+                                                                                touch "${ resources-directory }/originator-pids/$INDEX/$ULTIMATE_PID"
+                                                                                echo "${ resources-directory }/mounts/$HASH"
+                                                                                JSON_SEQUENCE="$( sequential )" || failure 30634
+                                                                                JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
                                                                                 --null-output \
                                                                                 --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -844,8 +851,8 @@
                                                                             then
                                                                                 LINK="$( readlink --canonical "${ resources-directory }/mounts/$HASH" )" || failure 3789
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
-                                                                                mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
-                                                                                touch "${ resources-directory }/originator-pids/$INDEX/$ULTIMATE_PID"
+                                                                                mkdir --parents "${ resources-directory }/pids/$INDEX"
+                                                                                touch "${ resources-directory }/pids/$INDEX/$ULTIMATE_PID"
                                                                                 echo "${ resources-directory }/mounts/$HASH"
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                                 JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
