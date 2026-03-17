@@ -886,6 +886,7 @@
                                                                             PRE_HASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
                                                                             SCRIPTS_HASH="$( scripts-hash )" || failure 15672
                                                                             STANDARD_INPUT_HASH="$( sha512sum "$STANDARD_INPUT_FILE" | cut --characters -128 )" || failure 12800
+                                                                            # shellcheck disable=SC2089,SC2090
                                                                             TARGETS_EXPECTED='${ builtins.toJSON ( builtins.sort ( a : b : builtins.compare a b ) targets ) }'
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PRE_HASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
