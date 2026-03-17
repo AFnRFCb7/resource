@@ -602,11 +602,12 @@
                                                                                             INDEX="$( sequential )" || failure 5607
                                                                                             export INDEX
                                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
+                                                                                            SCRIPT='$( script init arguments.init }'
                                                                                             STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
                                                                                             STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                             STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
                                                                                             STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
-                                                                                            if init "$@" > "/log/$STANDARD_OUTPUT_FILE" 2> "/logs/$STANDARD_ERROR_FILE"
+                                                                                            if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                             then
                                                                                                 STATUS="$?"
                                                                                             else
@@ -621,6 +622,7 @@
                                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                 --arg HASH "$HASH" \
                                                                                                 --arg INDEX "$INDEX" \
+                                                                                                --arg SCRIPT "$SCRIPT" \
                                                                                                 --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                 --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                 --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
@@ -632,6 +634,7 @@
                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                     "hash" : $HASH ,
                                                                                                     "index" : $INDEX ,
+                                                                                                    "script" : $SCRIPT ,
                                                                                                     "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                     "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                     "standard-output-file" : $STANDARD_OUTPUT_FILE ,
@@ -702,7 +705,7 @@
                                                             ] ;
                                                 } ;
                                         script =
-                                            script :
+                                            script : arguments :
                                                 buildFHSUserEnv
                                                     {
                                                         name = "script" ;
@@ -710,6 +713,30 @@
                                                         targetPkgs =
                                                             pkgs :
                                                                 [
+                                                                    (
+                                                                        pkgs.writeShellApplication
+                                                                            {
+                                                                                name = "script" ;
+                                                                                runtimeInputs = [ failure pkgs.coreutils sequential ] ;
+                                                                                text =
+                                                                                    let
+                                                                                        application =
+                                                                                            let
+                                                                                                application =
+                                                                                                    pkgs.writeShellApplication
+                                                                                                        {
+                                                                                                            name = "application" ;
+                                                                                                            text = script arguments ;
+                                                                                                        } ;
+                                                                                                    in "${ application }/bin/application" ;
+                                                                                        in
+                                                                                            ''
+                                                                                                SEQUENCE="$( sequential )" || failure 18903
+                                                                                                FILE="${ resources-directory }/logs/$SEQUENCE"
+                                                                                                ln --symbolic ${ application } "$FILE"
+                                                                                            '' ;
+                                                                            }
+                                                                    )
                                                                 ] ;
                                                     } ;
                                         scripts-hash =
