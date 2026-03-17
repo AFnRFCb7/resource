@@ -529,27 +529,30 @@
                                                             runtimeInputs = [ coreutils jq ] ;
                                                             text =
                                                                 let
-                                                                    prehash =
+                                                                    stringable =
                                                                         let
                                                                             stringable =
                                                                                 path : value :
-                                                                                    {
-                                                                                        path = path ;
+                                                                                    let
                                                                                         type = builtins.typeOf value ;
-                                                                                        value = value ;
-                                                                                    } ;
+                                                                                        in
+                                                                                            {
+                                                                                                path = path ;
+                                                                                                type = type ;
+                                                                                                value = if type == "lambda" then null else value ;
+                                                                                            } ;
                                                                         in
                                                                             visitor
-                                                                            {
-                                                                                bool = stringable ;
-                                                                                int = stringable ;
-                                                                                float = stringable ;
-                                                                                lambda = path : value : { path = path ; type = "lambda" ; value = null ; } ;
-                                                                                null = stringable ;
-                                                                                path = stringable ;
-                                                                                string = stringable ;
-                                                                            }
-                                                                            [ primary secondary ] ;
+                                                                                {
+                                                                                    bool = stringable ;
+                                                                                    int = stringable ;
+                                                                                    float = stringable ;
+                                                                                    lambda = path : value : { path = path ; type = "lambda" ; value = null ; } ;
+                                                                                    null = stringable ;
+                                                                                    path = stringable ;
+                                                                                    string = stringable ;
+                                                                                }
+                                                                                [ primary secondary ] ;
                                                                     transient_ =
                                                                         visitor
                                                                             {
@@ -577,7 +580,7 @@
                                                                             fi
                                                                             ARGUMENTS=( "$@" )
                                                                             ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
-                                                                            PREHASH="${ prehash }"
+                                                                            PREHASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
                                                                             SCRIPTS="WTF"
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS_JSON" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
