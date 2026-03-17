@@ -585,7 +585,10 @@
                                                                                                             pkgs.writeShellApplication
                                                                                                                 {
                                                                                                                     name = "init" ;
-                                                                                                                    text = init ( arguments.init pkgs ) ;
+                                                                                                                    text =
+                                                                                                                        let
+                                                                                                                            a = arguments.init pkgs ;
+                                                                                                                            in init a ;
                                                                                                                 }
                                                                                                         )
                                                                                                     ] ;
