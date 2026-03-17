@@ -580,7 +580,42 @@
                                                                     pkgs.writeShellApplication
                                                                         {
                                                                             name = "scripts" ;
-                                                                            text = "" ;
+                                                                            text =
+                                                                                let
+                                                                                    scripts =
+                                                                                        visitor
+                                                                                            {
+                                                                                                lambda =
+                                                                                                    path : value :
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "script" ;
+                                                                                                                runtimeInputs = [ ] ;
+                                                                                                                text =
+                                                                                                                    let
+                                                                                                                        arguments =
+                                                                                                                            if builtins.typeOf path == "list" and builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then
+                                                                                                                                {
+
+                                                                                                                                }
+                                                                                                                            else
+                                                                                                                                {
+
+                                                                                                                                } ;
+                                                                                                                        in value arguments ;
+                                                                                                            } ;
+                                                                                                null = path : value : null ;
+                                                                                            }
+                                                                                            {
+                                                                                                init = init ;
+                                                                                                init-resolutions = init-resolutions ;
+                                                                                                release = release ;
+                                                                                                release-resolutions = release-resolutions ;
+                                                                                            } ;
+                                                                                    in
+                                                                                        ''
+                                                                                            yq --eval --prettyPrint '${ builtins.toJSON scripts }'
+                                                                                        '' ;
                                                                         }
                                                                 )
                                                             ] ;
