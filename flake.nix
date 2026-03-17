@@ -531,9 +531,25 @@
                                                                 let
                                                                     stringable =
                                                                         let
+                                                                            breaker =
+                                                                                let
+                                                                                    mapper =
+                                                                                        name : value :
+                                                                                            if name == "resources" then
+                                                                                                {
+                                                                                                    resources = true ;
+                                                                                                    value = null ;
+                                                                                                }
+                                                                                            else
+                                                                                                {
+                                                                                                    resources = false ;
+                                                                                                    value = value ;
+                                                                                                } ;
+                                                                                    in builtins.mapAttrs mapper primary ;
                                                                             stringable =
                                                                                 path : value :
                                                                                     let
+                                                                                        resources = if value == resources then true else false ;
                                                                                         type = builtins.typeOf value ;
                                                                                         in
                                                                                             {
@@ -552,7 +568,7 @@
                                                                                     path = stringable ;
                                                                                     string = stringable ;
                                                                                 }
-                                                                                [ primary secondary ] ;
+                                                                                [ breaker secondary ] ;
                                                                     transient_ =
                                                                         visitor
                                                                             {
@@ -580,7 +596,7 @@
                                                                             fi
                                                                             ARGUMENTS=( "$@" )
                                                                             ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
-                                                                            PREHASH="WTF"
+                                                                            PREHASH='${ builtins.sha512 "" ( builtins.toJSON stringable ) }'
                                                                             SCRIPTS="WTF"
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS_JSON" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
