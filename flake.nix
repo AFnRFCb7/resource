@@ -617,7 +617,7 @@
                                                                                             JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                             jq \
                                                                                                 --null-input \
-                                                                                                --argjson ARGUMENTS "$ARGUMENTS\" \
+                                                                                                --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                 --arg HASH "$HASH" \
                                                                                                 --arg INDEX "$INDEX" \
