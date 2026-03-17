@@ -762,8 +762,9 @@
                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || failure 14587
                                                                             PREHASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
                                                                             SCRIPTS_HASH="$( scripts-hash )" || failure 15672
+                                                                            STANDARD_INPUT_HASH="$( sha512-sum "$STANDARD_INPUT_FILE" | cut --characters -128 )" || failure 12800
                                                                             TRANSIENT=${ transient_ }
-                                                                            HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS_HASH" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             if [[ -L "${ resources-directory }/mounts/$HASH" ]]
                                                                             then
                                                                                 LINK="$( readlink --canonical "${ resources-directory }/mounts/$HASH" )" || failure 3789
