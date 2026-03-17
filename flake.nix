@@ -555,72 +555,110 @@
                                                         pkgs :
                                                             [
                                                                 (
-                                                                    pkgs.writeShellApplication
-                                                                        {
-                                                                            name = "create" ;
-                                                                            runtimeInputs =
-                                                                                [
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "create" ;
-                                                                                                runtimeInputs = [ failure init sequential pkgs.coreutils pkgs.jq ] ;
-                                                                                                text =
-                                                                                                    ''
-                                                                                                        mkdir --parents ${ resources-directory }/logs
-                                                                                                        INDEX="$( sequential )" || failure 5607
-                                                                                                        ARGUMENTS="$( printf '%s\n' "$@ | jq -R . | jq -s . )" || failure 14587
-                                                                                                        STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
-                                                                                                        STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
-                                                                                                        STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
-                                                                                                        STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
-                                                                                                        if init "$@" > "/log/$STANDARD_OUTPUT_FILE" 2> "/logs/$STANDARD_ERROR_FILE"
+                                                                    let
+                                                                        applications =
+                                                                            {
+                                                                                init =
+                                                                                    buildFHSUserEnv
+                                                                                        {
+                                                                                            extraBwrapArgs =
+                                                                                                [
+                                                                                                    "--bind ${ resources-directory }/mounts/$INDEX /mount"
+                                                                                                    "--tmpfs /scratch"
+                                                                                                ] ;
+                                                                                            name = "init" ;
+                                                                                            runScript =
+                                                                                                ''
+                                                                                                    init -c '
+                                                                                                        if "$HAS_STANDARD_INPUT"
                                                                                                         then
-                                                                                                            STATUS="$?"
+                                                                                                            init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                                                         else
-                                                                                                            STATUS="$?"
+                                                                                                            init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
                                                                                                         fi
-                                                                                                        TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 | sed 's:/*$::' | sort | jq --raw-input . | jq --slurp . )" || failure 28445
-                                                                                                        JSON_SEQUENCE="$( sequential )" || failure 32761
-                                                                                                        JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                        jq \
-                                                                                                            --null-input \
-                                                                                                            --argjson ARGUMENTS "$ARGUMENTS\" \
-                                                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                            --arg HASH "$HASH" \
-                                                                                                            --arg INDEX "$INDEX" \
-                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                                            --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                                            --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                                            --arg STATUS "$STATUS" \
-                                                                                                            --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED"
-                                                                                                            --argjson TARGET_OBSERVED "$TARGETS_OBSERVED"
-                                                                                                            '{
-                                                                                                                "arguments" : $ARGUMENTS ,
-                                                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                "hash" : $HASH ,
-                                                                                                                "index" : $INDEX ,
-                                                                                                                "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                                                "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                                                "standard-output-file" : $STANDARD_OUTPUT_FILE ,
-                                                                                                                "targets-expected" : $TARGETS_EXPECTED
-                                                                                                            }' > "/log/$JSON_SEQUENCE"
-                                                                                                        chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$JSON_FILE"
-                                                                                                        if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
-                                                                                                        then
-                                                                                                            ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
-                                                                                                            redis-cli PUBLISH ${ valid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
-                                                                                                            echo "${ resources-directory }/mounts/$HASH"
-                                                                                                        else
-                                                                                                            redis-cli PUBLISH ${ invalid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
-                                                                                                            echo "${ resources-directory }/mounts/$HASH"
-                                                                                                            failure 21103 "$JSON_FILE"
-                                                                                                        fi
-                                                                                                    '' ;
-                                                                                            }
-                                                                                    )
-                                                                                ] ;
-                                                                        }
+                                                                                                    ' "$0" "$@"
+                                                                                                '' ;
+                                                                                            targetPkgs =
+                                                                                                pkgs :
+                                                                                                    [
+                                                                                                        (
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                    name = "init" ;
+                                                                                                                    text = "echo init arguments.init" ;
+                                                                                                                }
+                                                                                                        )
+                                                                                                    ] ;
+                                                                                        } ;
+                                                                            } ;
+                                                                        in
+                                                                            pkgs.writeShellApplication
+                                                                                {
+                                                                                    name = "create" ;
+                                                                                    runtimeInputs =
+                                                                                        [
+                                                                                            (
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "create" ;
+                                                                                                        runtimeInputs = [ applications.init failure sequential pkgs.coreutils pkgs.jq ] ;
+                                                                                                        text =
+                                                                                                            ''
+                                                                                                                mkdir --parents ${ resources-directory }/logs
+                                                                                                                INDEX="$( sequential )" || failure 5607
+                                                                                                                export INDEX
+                                                                                                                ARGUMENTS="$( printf '%s\n' "$@ | jq -R . | jq -s . )" || failure 14587
+                                                                                                                STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
+                                                                                                                STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
+                                                                                                                STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
+                                                                                                                STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
+                                                                                                                if init "$@" > "/log/$STANDARD_OUTPUT_FILE" 2> "/logs/$STANDARD_ERROR_FILE"
+                                                                                                                then
+                                                                                                                    STATUS="$?"
+                                                                                                                else
+                                                                                                                    STATUS="$?"
+                                                                                                                fi
+                                                                                                                TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 | sed 's:/*$::' | sort | jq --raw-input . | jq --slurp . )" || failure 28445
+                                                                                                                JSON_SEQUENCE="$( sequential )" || failure 32761
+                                                                                                                JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                jq \
+                                                                                                                    --null-input \
+                                                                                                                    --argjson ARGUMENTS "$ARGUMENTS\" \
+                                                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                    --arg HASH "$HASH" \
+                                                                                                                    --arg INDEX "$INDEX" \
+                                                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                                                    --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                                                    --arg STATUS "$STATUS" \
+                                                                                                                    --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED"
+                                                                                                                    --argjson TARGET_OBSERVED "$TARGETS_OBSERVED"
+                                                                                                                    '{
+                                                                                                                        "arguments" : $ARGUMENTS ,
+                                                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                        "hash" : $HASH ,
+                                                                                                                        "index" : $INDEX ,
+                                                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                                                        "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                        "targets-expected" : $TARGETS_EXPECTED
+                                                                                                                    }' > "/log/$JSON_SEQUENCE"
+                                                                                                                chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$JSON_FILE"
+                                                                                                                if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
+                                                                                                                then
+                                                                                                                    ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
+                                                                                                                    redis-cli PUBLISH ${ valid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
+                                                                                                                    echo "${ resources-directory }/mounts/$HASH"
+                                                                                                                else
+                                                                                                                    redis-cli PUBLISH ${ invalid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
+                                                                                                                    echo "${ resources-directory }/mounts/$HASH"
+                                                                                                                    failure 21103 "$JSON_FILE"
+                                                                                                                fi
+                                                                                                            '' ;
+                                                                                                    }
+                                                                                            )
+                                                                                        ] ;
+                                                                                }
                                                                 )
                                                             ] ;
                                             } ;
@@ -668,38 +706,6 @@
                                                                                     fi
                                                                                     exit 66
                                                                                 '' ;
-                                                                        }
-                                                                )
-                                                            ] ;
-                                                } ;
-                                        init =
-                                            buildFHSUserEnv
-                                                {
-                                                    extraBwrapArgs =
-                                                        [
-                                                            "--bind ${ resources-directory }/mounts/$INDEX /mount"
-                                                            "--tmpfs /scratch"
-                                                        ] ;
-                                                    name = "init" ;
-                                                    runScript =
-                                                        ''
-                                                            init -c '
-                                                                if "$HAS_STANDARD_INPUT"
-                                                                then
-                                                                    init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                else
-                                                                    init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
-                                                                fi
-                                                            ' "$0" "$@"
-                                                        '' ;
-                                                    targetPkgs =
-                                                        pkgs :
-                                                            [
-                                                                (
-                                                                    pkgs.writeShellApplication
-                                                                        {
-                                                                            name = "init" ;
-                                                                            text = "echo init arguments.init" ;
                                                                         }
                                                                 )
                                                             ] ;
