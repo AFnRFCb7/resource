@@ -526,7 +526,7 @@
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
-                                                            runtimeInputs = [ coreutils ] ;
+                                                            runtimeInputs = [ coreutils jq ] ;
                                                             text =
                                                                 let
                                                                     in
@@ -545,6 +545,8 @@
                                                                                 PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
                                                                                 ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
                                                                             fi
+                                                                            ARGUMENTS=( "$@" )
+                                                                            ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
                                                                         '' ;
                                                         } ;
                                                 application2 =
