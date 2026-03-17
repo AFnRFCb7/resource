@@ -602,6 +602,7 @@
                                                                                             INDEX="$( sequential )" || failure 5607
                                                                                             export INDEX
                                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
+                                                                                            # shellcheck disable=SC2016
                                                                                             SCRIPT='$( script init arguments.init }'
                                                                                             STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
                                                                                             STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
