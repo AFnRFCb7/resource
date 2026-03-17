@@ -529,6 +529,12 @@
                                                             runtimeInputs = [ coreutils jq ] ;
                                                             text =
                                                                 let
+                                                                    transient_ =
+                                                                        _visitor.implementation
+                                                                            {
+                                                                                bool = path : value : value ;
+                                                                            }
+                                                                            transient ;
                                                                     in
                                                                         ''
                                                                             if [[ -t 0 ]]
@@ -547,6 +553,7 @@
                                                                             fi
                                                                             ARGUMENTS=( "$@" )
                                                                             ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
+                                                                            TRANSIENT=${ transient_ }
                                                                         '' ;
                                                         } ;
                                                 application2 =
