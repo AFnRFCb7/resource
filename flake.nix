@@ -526,10 +526,26 @@
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
-                                                            runtimeInputs = [ ] ;
+                                                            runtimeInputs = [ coreutils ] ;
                                                             text =
-                                                                ''
-                                                                '' ;
+                                                                let
+                                                                    in
+                                                                        ''
+                                                                            if [[ -t 0 ]]
+                                                                            then
+                                                                                HAS_STANDARD_INPUT=false
+                                                                                STANDARD_INPUT=
+                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
+                                                                            else
+                                                                                STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
+                                                                                export STANDARD_INPUT_FILE
+                                                                                HAS_STANDARD_INPUT=true
+                                                                                cat > "$STANDARD_INPUT_FILE"
+                                                                                STANDARD_INPUT="$( cat "$STANDARD_INPUT_FILE" )" || failure 12348
+                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
+                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
+                                                                            fi
+                                                                        '' ;
                                                         } ;
                                                 application2 =
                                                     writeShellApplication
