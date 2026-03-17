@@ -748,7 +748,7 @@
                                                 buildFHSUserEnv
                                                     {
                                                         name = "script" ;
-                                                        runScript = "script" ;
+                                                        runScript = "echo hi" ;
                                                         targetPkgs =
                                                             pkgs :
                                                                 [
