@@ -572,7 +572,7 @@
                                             buildFHSUserEnv
                                                 {
                                                     name = "scripts" ;
-                                                    runtimeInputs = "scripts" ;
+                                                    runtimeScript = "scripts" ;
                                                     targetPkgs =
                                                         pkgs :
                                                             [
