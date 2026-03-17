@@ -559,7 +559,7 @@
                                                                             PREHASH="WTF"
                                                                             SCRIPTS="WTF"
                                                                             TRANSIENT=${ transient_ }
-                                                                            HASH="$( echo "${ builtins.concatStringsSep " " [ "$" "{" "ARGUMENTS[*]" "}" ] } $HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            HASH="$( echo "$ARGUMENTS_JSON" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             echo "$HASH"
                                                                         '' ;
                                                         } ;
