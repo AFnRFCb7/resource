@@ -660,7 +660,7 @@
                                                                                             CURRENT=0
                                                                                         fi
                                                                                         NEXT=$(( ( CURRENT + 1 ) % 10000000000000000 ))
-                                                                                        echo "$NEXT" > /sequential/sequential.counter
+                                                                                        echo "$NEXT" > ${ resources-directory }/sequential/sequential.counter
                                                                                         printf "%016d\n" "$CURRENT"
                                                                                         rm ${ resources-directory }/locks/sequential
                                                                                     '' ;
