@@ -601,7 +601,7 @@
                                                                                             mkdir --parents ${ resources-directory }/logs
                                                                                             INDEX="$( sequential )" || failure 5607
                                                                                             export INDEX
-                                                                                            ARGUMENTS="$( printf '%s\n' "$@ | jq -R . | jq -s . )" || failure 14587
+                                                                                            ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                             STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
                                                                                             STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                             STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
@@ -701,6 +701,17 @@
                                                                 )
                                                             ] ;
                                                 } ;
+                                        script =
+                                            script :
+                                                buildFHSUserEnv
+                                                    {
+                                                        name = "script" ;
+                                                        runScript = "script" ;
+                                                        targetPkgs =
+                                                            pkgs :
+                                                                [
+                                                                ] ;
+                                                    } ;
                                         scripts-hash =
                                             buildFHSUserEnv
                                                 {
