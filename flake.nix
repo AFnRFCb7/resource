@@ -590,7 +590,7 @@
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
                                                                                                                 name = "script" ;
-                                                                                                                runtimeInputs = [ ] ;
+                                                                                                                runtimeInputs = [ pkgs.jq ] ;
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         arguments =
@@ -626,7 +626,7 @@
                                                                                             } ;
                                                                                     in
                                                                                         ''
-                                                                                            yq --eval --prettyPrint '${ builtins.toJSON scripts }'
+                                                                                            jq --null-input '${ builtins.toJSON scripts }'
                                                                                         '' ;
                                                                         }
                                                                 )
