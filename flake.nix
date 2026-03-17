@@ -748,40 +748,43 @@
                                                 } ;
                                         script =
                                             script : arguments :
-                                                buildFHSUserEnv
-                                                    {
-                                                        name = "script" ;
-                                                        runScript = "script" ;
-                                                        targetPkgs =
-                                                            pkgs :
-                                                                [
-                                                                    (
-                                                                        pkgs.writeShellApplication
-                                                                            {
-                                                                                name = "script" ;
-                                                                                runtimeInputs = [ failure pkgs.coreutils sequential ] ;
-                                                                                text =
-                                                                                    let
-                                                                                        application =
+                                                let
+                                                    application =
+                                                        buildFHSUserEnv
+                                                            {
+                                                                name = "script" ;
+                                                                runScript = "script" ;
+                                                                targetPkgs =
+                                                                    pkgs :
+                                                                        [
+                                                                            (
+                                                                                pkgs.writeShellApplication
+                                                                                    {
+                                                                                        name = "script" ;
+                                                                                        runtimeInputs = [ failure pkgs.coreutils sequential ] ;
+                                                                                        text =
                                                                                             let
                                                                                                 application =
-                                                                                                    pkgs.writeShellApplication
-                                                                                                        {
-                                                                                                            name = "application" ;
-                                                                                                            text = script arguments ;
-                                                                                                        } ;
-                                                                                                    in "${ application }/bin/application" ;
-                                                                                        in
-                                                                                            ''
-                                                                                                SEQUENCE="$( sequential )" || failure 18903
-                                                                                                FILE="${ resources-directory }/logs/$SEQUENCE"
-                                                                                                ln --symbolic ${ application } "$FILE"
-                                                                                                echo "$FILE"
-                                                                                            '' ;
-                                                                            }
-                                                                    )
-                                                                ] ;
-                                                    } ;
+                                                                                                    let
+                                                                                                        application =
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                    name = "application" ;
+                                                                                                                    text = script arguments ;
+                                                                                                                } ;
+                                                                                                            in "${ application }/bin/application" ;
+                                                                                                in
+                                                                                                    ''
+                                                                                                        SEQUENCE="$( sequential )" || failure 18903
+                                                                                                        FILE="${ resources-directory }/logs/$SEQUENCE"
+                                                                                                        ln --symbolic ${ application } "$FILE"
+                                                                                                        echo "$FILE"
+                                                                                                    '' ;
+                                                                                    }
+                                                                            )
+                                                                        ] ;
+                                                            } ;
+                                                    in "${ application }/bin/application" ;
                                         scripts-hash =
                                             buildFHSUserEnv
                                                 {
