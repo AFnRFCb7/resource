@@ -530,7 +530,7 @@
                                                             text =
                                                                 let
                                                                     transient_ =
-                                                                        _visitor.implementation
+                                                                        visitor
                                                                             {
                                                                                 bool = path : value : value ;
                                                                             }
