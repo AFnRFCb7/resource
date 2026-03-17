@@ -340,7 +340,7 @@
                                                                 targetPkgs = pkgs : [ pkgs.coreutils pkgs.yq-go environments.failure ] ;
                                                                 text =
                                                                     ''
-                                                                        ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . )" || failure 22397
+                                                                        ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input --slurp '. | map(.)' -o=json )" || failure 22397
                                                                         if [[ -t 0 ]]
                                                                         then
                                                                             # shellcheck disable=SC2016
@@ -556,7 +556,7 @@
                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                             '{ "arguments" : $ARGUMENTS }'
                                                                                     else
-                                                                                        STANDARD_INPUT="$( cat )" || failure 65
+                                                                                        STANDARD_INPUT="$( cat )" || exit 65
                                                                                         # shellcheck disable=SC2016
                                                                                         yq \
                                                                                             eval \
