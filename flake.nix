@@ -626,7 +626,7 @@
                                                                                             } ;
                                                                                     in
                                                                                         ''
-                                                                                            jq --null-input '${ builtins.toJSON scripts }'
+                                                                                            echo jq --null-input '${ builtins.toJSON scripts }'
                                                                                         '' ;
                                                                         }
                                                                 )
