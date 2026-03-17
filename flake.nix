@@ -699,7 +699,7 @@
                                                                     pkgs.writeShellApplication
                                                                         {
                                                                             name = "init" ;
-                                                                            text = init arguments.init ;
+                                                                            text = "echo init arguments.init" ;
                                                                         }
                                                                 )
                                                             ] ;
