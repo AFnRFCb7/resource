@@ -528,9 +528,9 @@
                                                             bash -c '
                                                                 if [[ -t 0 ]]
                                                                 then
-                                                                    ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                    failure "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                 else
-                                                                    ${ name } "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                    failure "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                                 fi
                                                             ' "$0" "$@"
                                                         '' ;
