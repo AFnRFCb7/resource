@@ -152,7 +152,7 @@
                                                                 targetPkgs = pkgs : [ pkgs.coreutils pkgs.yq-go ] ;
                                                                 text =
                                                                     ''
-                                                                        ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . - )" || exit 33
+                                                                        ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input . | yq eval --slurp . - )" || exit 64
                                                                         if [[ -t 0 ]]
                                                                         then
                                                                             # shellcheck disable=SC2016
@@ -526,9 +526,30 @@
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
-                                                            runtimeInputs = [ environments.failure coreutils jq ] ;
+                                                            runtimeInputs = [ coreutils jq ] ;
                                                             text =
                                                                 let
+                                                                    prehash =
+                                                                        let
+                                                                            stringable =
+                                                                                path : value :
+                                                                                    {
+                                                                                        path = path ;
+                                                                                        type = builtins.typeOf value ;
+                                                                                        value = value ;
+                                                                                    } ;
+                                                                        in
+                                                                            visitor
+                                                                            {
+                                                                                bool = stringable ;
+                                                                                int = stringable ;
+                                                                                float = stringable ;
+                                                                                lambda = path : value : { path = path ; type = "lambda" ; value = null ; } ;
+                                                                                null = stringable ;
+                                                                                path = stringable ;
+                                                                                string = stringable ;
+                                                                            }
+                                                                            [ primary secondary ] ;
                                                                     transient_ =
                                                                         visitor
                                                                             {
@@ -556,7 +577,7 @@
                                                                             fi
                                                                             ARGUMENTS=( "$@" )
                                                                             ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
-                                                                            PREHASH="WTF"
+                                                                            PREHASH="${ prehash }"
                                                                             SCRIPTS="WTF"
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS_JSON" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
