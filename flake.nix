@@ -625,8 +625,8 @@
                                                                                                 --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                 --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                                 --arg STATUS "$STATUS" \
-                                                                                                --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED"
-                                                                                                --argjson TARGET_OBSERVED "$TARGETS_OBSERVED"
+                                                                                                --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
+                                                                                                --argjson TARGET_OBSERVED "$TARGETS_OBSERVED" \
                                                                                                 '{
                                                                                                     "arguments" : $ARGUMENTS ,
                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
