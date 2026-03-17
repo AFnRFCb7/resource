@@ -601,6 +601,7 @@
                                                                                             mkdir --parents ${ resources-directory }/logs
                                                                                             INDEX="$( sequential )" || failure 5607
                                                                                             export INDEX
+                                                                                            mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                             # shellcheck disable=SC2016
                                                                                             SCRIPT='$( script init arguments.init }'
