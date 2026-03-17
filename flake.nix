@@ -626,7 +626,8 @@
                                                                                             } ;
                                                                                     in
                                                                                         ''
-                                                                                            echo jq --null-input '${ builtins.toJSON scripts }'
+                                                                                            # jq --null-input '${ builtins.toJSON scripts }'
+                                                                                            echo wetqwrtsd
                                                                                         '' ;
                                                                         }
                                                                 )
