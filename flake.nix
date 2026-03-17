@@ -542,27 +542,23 @@
                                                                     pkgs.writeShellApplication
                                                                         {
                                                                             name = "failure" ;
-                                                                            runtimeInputs = [ pkgs.coreutils pkgs.yq-go ] ;
+                                                                            runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.yq-go ] ;
                                                                             text =
                                                                                 ''
-                                                                                    # ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 74
+                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 74
                                                                                     if [[ -t 0 ]]
                                                                                     then
                                                                                         # shellcheck disable=SC2016
-                                                                                        yq \
-                                                                                            eval \
+                                                                                        jq \
                                                                                             --null-input \
-                                                                                            --prettyPrint \
-                                                                                            --argjson ARGUMENTS "[]" \
+                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                             '{ "arguments" : $ARGUMENTS }'
                                                                                     else
                                                                                         STANDARD_INPUT="$( cat )" || exit 65
                                                                                         # shellcheck disable=SC2016
-                                                                                        yq \
-                                                                                            eval \
+                                                                                        jq \
                                                                                             --null-input \
-                                                                                            --prettyPrint \
-                                                                                            --argjson ARGUMENTS "[]" \
+                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                             '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }'
                                                                                     fi
