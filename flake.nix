@@ -589,7 +589,7 @@
                                                                                                     path : value :
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
-                                                                                                                name = "scripts" ;
+                                                                                                                name = "script" ;
                                                                                                                 runtimeInputs = [ pkgs.jq ] ;
                                                                                                                 text =
                                                                                                                     let
