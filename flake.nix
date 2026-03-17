@@ -568,6 +568,23 @@
                                                                 )
                                                             ] ;
                                                 } ;
+                                        scripts =
+                                            buildFHSUserEnv
+                                                {
+                                                    name = "scripts" ;
+                                                    runtimeInputs = "scripts" ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "scripts" ;
+                                                                            text = "" ;
+                                                                        }
+                                                                )
+                                                            ] ;
+                                                } ;
                                         in
                                             let
                                                 application =
@@ -642,12 +659,11 @@
                                                                                 PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
                                                                                 ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
                                                                             fi
-                                                                            ARGUMENTS=( "$@" )
-                                                                            ARGUMENTS_JSON="$( printf '%s\n' "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" | jq -R . | jq -s . )" || failure 14587
+                                                                            ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || failure 14587
                                                                             PREHASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
-                                                                            SCRIPTS="WTF"
+                                                                            SCRIPTS="$( scripts )" || failure 15672
                                                                             TRANSIENT=${ transient_ }
-                                                                            HASH="$( echo "$ARGUMENTS_JSON" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             echo "$HASH"
                                                                             echo "$ULTIMATE_PID"
                                                                         '' ;
