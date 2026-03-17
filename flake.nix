@@ -745,7 +745,7 @@
                                                                         ''
                                                                             STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 27125
                                                                             mkdir --parents "${ resources-directory }/logs"
-                                                                            STANDARD_INPUT_FILE=${ resources-directory }/logs/STANDARD_INPUT_SEQUENCE
+                                                                            STANDARD_INPUT_FILE="${ resources-directory }/logs/$STANDARD_INPUT_SEQUENCE"
                                                                             if [[ -t 0 ]]
                                                                             then
                                                                                 HAS_STANDARD_INPUT=false
@@ -773,23 +773,24 @@
                                                                                 echo "${ resources-directory }/mounts/$HASH"
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                                 JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
-                                                                                --null-output \
-                                                                                --argjson ARGUMENTS "$ARGUMENTS_JSON" \
-                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                --arg HASH "$HASH" \
-                                                                                --arg INDEX "$INDEX" \
-                                                                                --argjson SCRIPTS "$SCRIPTS" \
-                                                                                --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                --arg TRANSIENT "$TRANSIENT" \
-                                                                                '{
-                                                                                    "arguments" : $ARGUMENTS ,
-                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                    "hash" : $HASH ,
-                                                                                    "index" : $INDEX ,
-                                                                                    "scripts" : $SCRIPTS ,
-                                                                                    "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                    "transient" : $TRANSIENT
-                                                                                }' > "$JSON_FILE"
+                                                                                jq \
+                                                                                    --null-output \
+                                                                                    --argjson ARGUMENTS "$ARGUMENTS_JSON" \
+                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                    --arg HASH "$HASH" \
+                                                                                    --arg INDEX "$INDEX" \
+                                                                                    --argjson SCRIPTS "$SCRIPTS" \
+                                                                                    --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                    --arg TRANSIENT "$TRANSIENT" \
+                                                                                    '{
+                                                                                        "arguments" : $ARGUMENTS ,
+                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                        "hash" : $HASH ,
+                                                                                        "index" : $INDEX ,
+                                                                                        "scripts" : $SCRIPTS ,
+                                                                                        "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                        "transient" : $TRANSIENT
+                                                                                    }' > "$JSON_FILE"
                                                                             redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE"
                                                                             fi
                                                                             echo "HASH=$HASH"
