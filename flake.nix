@@ -545,7 +545,7 @@
                                                                             runtimeInputs = [ pkgs.coreutils pkgs.yq-go ] ;
                                                                             text =
                                                                                 ''
-                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 74
+                                                                                    # ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 74
                                                                                     if [[ -t 0 ]]
                                                                                     then
                                                                                         # shellcheck disable=SC2016
