@@ -526,6 +526,15 @@
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
+                                                            runtimeInputs = [ ] ;
+                                                            text =
+                                                                ''
+                                                                '' ;
+                                                        } ;
+                                                application2 =
+                                                    writeShellApplication
+                                                        {
+                                                            name = "get-or-create" ;
                                                             runtimeInputs = [ environments.create environments.failure environments.scripts coreutils jq procps redis ] ;
                                                             text =
                                                                 let
