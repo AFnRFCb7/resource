@@ -596,11 +596,11 @@
                                                                                                                         arguments =
                                                                                                                             if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then
                                                                                                                                 {
-
+                                                                                                                                    failure = failure ;
                                                                                                                                 }
                                                                                                                             else
                                                                                                                                 {
-
+                                                                                                                                    failure = failure ;
                                                                                                                                 } ;
                                                                                                                         in value arguments ;
                                                                                                             } ;
@@ -626,7 +626,7 @@
                                                     writeShellApplication
                                                         {
                                                             name = "get-or-create" ;
-                                                            runtimeInputs = [ coreutils failure jq ] ;
+                                                            runtimeInputs = [ coreutils failure jq scripts ] ;
                                                             text =
                                                                 let
                                                                     stringable =
