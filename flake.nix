@@ -735,10 +735,10 @@
                                                                                                                 runtimeInputs = [ pkgs.coreutils ] ;
                                                                                                                 text =
                                                                                                                     let
-                                                                                                                        arguments =
+                                                                                                                        a =
                                                                                                                             if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then arguments.init pkgs
                                                                                                                             else arguments.release pkgs ;
-                                                                                                                        in builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.concatLists [ path [ ( builtins.toString ( value arguments ) ) ] ] ) ) ;
+                                                                                                                        in builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.concatLists [ path [ ( builtins.toString ( value a ) ) ] ] ) ) ;
                                                                                                             } ;
                                                                                                 list = path : list : builtins.hashString "sha512" ( builtins.toJSON [ path list ] ) ;
                                                                                                 null = path : value : builtins.hashString "sha512" ( builtins.concatStringsSep "" path ) ;
