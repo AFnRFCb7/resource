@@ -760,11 +760,11 @@
                                                                                 ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
                                                                             fi
                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || failure 14587
-                                                                            PREHASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
+                                                                            PRE_HASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
                                                                             SCRIPTS_HASH="$( scripts-hash )" || failure 15672
-                                                                            STANDARD_INPUT_HASH="$( sha512-sum "$STANDARD_INPUT_FILE" | cut --characters -128 )" || failure 12800
+                                                                            STANDARD_INPUT_HASH="$( sha512sum "$STANDARD_INPUT_FILE" | cut --characters -128 )" || failure 12800
                                                                             TRANSIENT=${ transient_ }
-                                                                            HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PRE_HASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             if [[ -L "${ resources-directory }/mounts/$HASH" ]]
                                                                             then
                                                                                 LINK="$( readlink --canonical "${ resources-directory }/mounts/$HASH" )" || failure 3789
