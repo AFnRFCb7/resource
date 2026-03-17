@@ -568,21 +568,21 @@
                                                                 )
                                                             ] ;
                                                 } ;
-                                        scripts =
+                                        scripts-hash =
                                             buildFHSUserEnv
                                                 {
-                                                    name = "scripts" ;
-                                                    runtimeScript = "scripts" ;
+                                                    name = "scripts-hash" ;
+                                                    runtimeScript = "scripts-hash" ;
                                                     targetPkgs =
                                                         pkgs :
                                                             [
                                                                 (
                                                                     pkgs.writeShellApplication
                                                                         {
-                                                                            name = "scripts" ;
+                                                                            name = "scripts-hash" ;
                                                                             text =
                                                                                 let
-                                                                                    scripts =
+                                                                                    scripts-hash =
                                                                                         visitor
                                                                                             {
                                                                                                 lambda =
@@ -590,7 +590,7 @@
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
                                                                                                                 name = "script" ;
-                                                                                                                runtimeInputs = [ pkgs.jq ] ;
+                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         arguments =
@@ -614,9 +614,11 @@
                                                                                                                                     sequential = null ;
                                                                                                                                     trace = null ;
                                                                                                                                 } ;
-                                                                                                                        in value arguments ;
+                                                                                                                        in builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.concatLists [ path [ ( builtins.toString ( value arguments ) ) ] ] ) ) ;
                                                                                                             } ;
-                                                                                                null = path : value : null ;
+                                                                                                list = path : list : builtins.hashString "sha512" ( builtins.toJSON [ path list ] ) ;
+                                                                                                null = path : value : builtins.hashString "sha512" ( builtins.concatStringsSep "" path ) ;
+                                                                                                set = path : set : builtins.hashString "sha512" ( builtins.toJSON [ path set ] ) ;
                                                                                             }
                                                                                             {
                                                                                                 init = init ;
@@ -626,8 +628,7 @@
                                                                                             } ;
                                                                                     in
                                                                                         ''
-                                                                                            # jq --null-input '${ builtins.toJSON scripts }'
-                                                                                            echo wetqwrtsd
+                                                                                            echo ${ scripts-hash }
                                                                                         '' ;
                                                                         }
                                                                 )
@@ -709,9 +710,9 @@
                                                                             fi
                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || failure 14587
                                                                             PREHASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
-                                                                            SCRIPTS="$( scripts )" || failure 15672
+                                                                            SCRIPTS_HASH="WTF" || failure 15672
                                                                             TRANSIENT=${ transient_ }
-                                                                            HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PREHASH" "$SCRIPTS_HASH" "$STANDARD_INPUT" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             echo "$HASH"
                                                                             echo "$ULTIMATE_PID"
                                                                         '' ;
