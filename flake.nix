@@ -232,6 +232,11 @@
                                         destroy =
                                             buildFHSUserEnv
                                                 {
+                                                    extraBwrapArgs =
+                                                        [
+                                                            ''--bind-ro "${ resources-directory }/mounts/$INDEX" /mount''
+                                                            "--tmpfs /scratch"
+                                                        ] ;
                                                     name = "destroy" ;
                                                     runScript = "destroy" ;
                                                     targetPkgs =
@@ -252,7 +257,10 @@
                                                                                     find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
                                                                                     do
                                                                                         FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
-                                                                                        inotify-wait --event delete-self "$FILE"
+                                                                                        if [[ "${ resources-directory }/mounts/$INDEX" == "FILE" ]]
+                                                                                        then
+                                                                                            inotify-wait --event delete-self "$LINK"
+                                                                                        fi
                                                                                     done
                                                                                     exec 203> "${ resources-directory }/locks/$INDEX"
                                                                                     flock -x 203
