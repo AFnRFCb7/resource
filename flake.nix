@@ -132,7 +132,7 @@
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                                     # shellcheck disable=SC2016
-                                                                                                                    SCRIPT="$( ${ script init a } )"
+                                                                                                                    SCRIPT_FILE="$( ${ script-file init a } )"
                                                                                                                     STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 7574
                                                                                                                     STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
@@ -153,7 +153,7 @@
                                                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                         --arg HASH "$HASH" \
                                                                                                                         --arg INDEX "$INDEX" \
-                                                                                                                        --arg SCRIPT "$SCRIPT" \
+                                                                                                                        --arg SCRIPT_FILE "$SCRIPT" \
                                                                                                                         --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                         --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                         --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
@@ -165,7 +165,7 @@
                                                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                             "hash" : $HASH ,
                                                                                                                             "index" : $INDEX ,
-                                                                                                                            "script" : $SCRIPT ,
+                                                                                                                            "script-file" : $SCRIPT_FILE ,
                                                                                                                             "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                                             "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
@@ -303,7 +303,7 @@
                                                                 )
                                                             ] ;
                                                 } ;
-                                        script =
+                                        script-file =
                                             script : arguments :
                                                 let
                                                     application =
@@ -751,7 +751,7 @@
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                 touch "${ resources-directory }/pids/$INDEX/$ULTIMATE_PID"
-                                                                                echo "${ resources-directory }/mounts/$HASH"
+                                                                                echo "${ resources-directory }/mounts/$INDEX"
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                 jq \
