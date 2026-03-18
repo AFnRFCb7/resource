@@ -178,23 +178,11 @@
                                                                                                                     then
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
-                                                                                                                        redis-cli PUBLISH ${ valid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
+                                                                                                                        redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
-                                                                                                                        redis-cli PUBLISH ${ invalid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
+                                                                                                                        redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
-                                                                                                                        if [[ ! -s "$STANDARD_ERROR_FILE" ]]
-                                                                                                                        then
-                                                                                                                            A=Y
-                                                                                                                        else
-                                                                                                                            A=N
-                                                                                                                        fi
-                                                                                                                        if [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
-                                                                                                                        then
-                                                                                                                            B=Y
-                                                                                                                        else
-                                                                                                                            B=N
-                                                                                                                        fi
                                                                                                                         failure 30398 "$JSON_FILE" "STATUS=$STATUS" "A=$A" "B=$B" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
                                                                                                                 '' ;
@@ -222,7 +210,7 @@
                                                                                                                 }' > "$JSON_FILE"
                                                                                                             chmod 0400 "$JSON_FILE"
                                                                                                             ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
-                                                                                                            redis-cli PUBLISH ${ valid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
+                                                                                                            redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                                             echo "${ resources-directory }/mounts/$HASH"
                                                                                                         '' ;
                                                                                             }
@@ -786,7 +774,7 @@
                                                                                         "targets-expected" : $TARGETS_EXPECTED ,
                                                                                         "transient" : $TRANSIENT
                                                                                     }' > "$JSON_FILE"
-                                                                                redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE"
+                                                                                redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE" > /dev/null 2>&1 || true
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
