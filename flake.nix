@@ -659,10 +659,10 @@
                                                                                                                     then
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
                                                                                                                         redis-cli PUBLISH ${ valid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
-                                                                                                                        echo "${ resources-directory }/mounts/$HASH"
+                                                                                                                        echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
                                                                                                                         redis-cli PUBLISH ${ invalid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
-                                                                                                                        echo "${ resources-directory }/mounts/$HASH"
+                                                                                                                        echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 21103 "$JSON_FILE"
                                                                                                                     fi
                                                                                                                 '' ;
