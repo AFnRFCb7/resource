@@ -153,7 +153,7 @@
                                                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                         --arg HASH "$HASH" \
                                                                                                                         --arg INDEX "$INDEX" \
-                                                                                                                        --arg SCRIPT_FILE "$SCRIPT" \
+                                                                                                                        --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                         --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                         --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                         --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
