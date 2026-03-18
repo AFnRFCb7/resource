@@ -129,7 +129,13 @@
                                                                                                                     mkdir --parents ${ resources-directory }/logs
                                                                                                                     INDEX="$( sequential )" || failure 5607
                                                                                                                     export INDEX
+                                                                                                                    mkdir --parents ${ resources-directory }/marks
+                                                                                                                    touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
+                                                                                                                    mkdir --parents "${ resources-directory }/release"
+                                                                                                                    RELEASE="${ resources-directory }/release/$INDEX"
+                                                                                                                    sed -e "s#\$INDEX#$INDEX#" -e "w$RELEASE" ${ destroy }/bin/destroy
+                                                                                                                    chmod 0500 "$RELEASE"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                                     # shellcheck disable=SC2016
                                                                                                                     SCRIPT_FILE="$( ${ script-file init a } )"
@@ -153,6 +159,7 @@
                                                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                         --arg HASH "$HASH" \
                                                                                                                         --arg INDEX "$INDEX" \
+                                                                                                                        --arg RELEASE "$RELEASE" \
                                                                                                                         --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                         --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                         --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
@@ -166,6 +173,7 @@
                                                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                             "hash" : $HASH ,
                                                                                                                             "index" : $INDEX ,
+                                                                                                                            "release" : $RELEASE" ,
                                                                                                                             "script-file" : $SCRIPT_FILE ,
                                                                                                                             "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                             "standard-error-file" : $STANDARD_ERROR_FILE ,
@@ -221,6 +229,45 @@
                                                                 )
                                                             ] ;
                                             } ;
+                                        destroy =
+                                            buildFHSUserEnv
+                                                {
+                                                    name = "destroy" ;
+                                                    runScript = "destroy" ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "destroy" ;
+                                                                            runtimeInputs = [ pkgs.coreutils pkgs.findutils  pkgs.flock pkgs.inotify-tools pkgs.zstd ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    rm "${ resources-directory }/marks/$INDEX"
+                                                                                    find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} | while read -r PID
+                                                                                    do
+                                                                                        tail --follow /dev/null --pid "$PID"
+                                                                                    done
+                                                                                    find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
+                                                                                    do
+                                                                                        FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
+                                                                                        inotify-wait --event delete-self "$FILE"
+                                                                                    done
+                                                                                    exec 203> ${ resources-directory }/locks/$INDEX
+                                                                                    flock -x 203
+                                                                                    if "${ resources-directory }/marks/$INDEX"
+                                                                                    then
+                                                                                         ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
+                                                                                         tar --create --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                    else
+                                                                                        "$0"
+                                                                                    fi
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                            ] ;
+                                                }
                                         failure =
                                             buildFHSUserEnv
                                                 {
@@ -751,6 +798,8 @@
                                                                             then
                                                                                 LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 3789
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
+                                                                                mkdir --parents "${ resources-directory }/marks"
+                                                                                touch "${ resources-directory }/marks/$INDEX"
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                 touch "${ resources-directory }/pids/$INDEX/$ULTIMATE_PID"
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
