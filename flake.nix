@@ -630,7 +630,7 @@
                                                                                                                     else
                                                                                                                         STATUS="$?"
                                                                                                                     fi
-                                                                                                                    TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --raw-input . | jq --slurp . )" || failure 28445
+                                                                                                                    TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | jq --raw-input . | jq --compact-output --slurp . )" || failure 28445
                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                                                                     JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                                                     jq \
