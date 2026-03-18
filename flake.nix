@@ -657,7 +657,8 @@
                                                                                                                     chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$JSON_FILE"
                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                                                                     then
-                                                                                                                        ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
+                                                                                                                        mkdir --parents ${ resources-directory }/canonical
+                                                                                                                        ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         redis-cli PUBLISH ${ valid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
