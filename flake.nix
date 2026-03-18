@@ -109,7 +109,27 @@
                                                                                 release =
                                                                                     buildFHSUserEnv
                                                                                         {
-
+                                                                                            extraBwrapArgs =
+                                                                                                [
+                                                                                                    ''--bind-ro "${ resources-directory }/mounts/$INDEX /mount''
+                                                                                                    ''--tmpfs /scratch''
+                                                                                                ] ;
+                                                                                            name = "release" ;
+                                                                                            runScript = "release" ;
+                                                                                            targetPkgs =
+                                                                                                 pkgs :
+                                                                                                    [
+                                                                                                        (
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                    name = "release" ;
+                                                                                                                    text =
+                                                                                                                        let
+                                                                                                                            a = arguments.release pkgs ;
+                                                                                                                            in release a ;
+                                                                                                                }
+                                                                                                        )
+                                                                                                    ] ;
                                                                                         } ;
                                                                             } ;
                                                                         in
@@ -254,7 +274,7 @@
                                                                                         pkgs.writeShellApplication
                                                                                             {
                                                                                                 name = "destroy" ;
-                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.findutils  pkgs.flock pkgs.inotify-tools pkgs.zstd ] ;
+                                                                                                runtimeInputs = [ applications.release failure pkgs.coreutils pkgs.findutils pkgs.flock pkgs.inotify-tools pkgs.zstd sequential ] ;
                                                                                                 text =
                                                                                                     ''
                                                                                                         rm "${ resources-directory }/marks/$INDEX"
@@ -278,6 +298,17 @@
                                                                                                         then
                                                                                                             rm "${ resources-directory }/canonical/$HASH"
                                                                                                             flock -u 203
+                                                                                                            mkdir --parents ${ resources-directory }/logs
+                                                                                                            STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 16457
+                                                                                                            STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
+                                                                                                            STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 27852
+                                                                                                            STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
+                                                                                                            if release > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                            then
+                                                                                                                STATUS="$?"
+                                                                                                            else
+                                                                                                                STATUS="$?"
+                                                                                                            fi
                                                                                                             ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
                                                                                                             tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                             rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
