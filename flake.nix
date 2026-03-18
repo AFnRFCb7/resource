@@ -765,7 +765,7 @@
                                                                                 touch "${ resources-directory }/originator-pids/$INDEX/$ULTIMATE_PID"
                                                                                 echo "${ resources-directory }/mounts/$HASH"
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
-                                                                                JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
+                                                                                JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                 jq \
                                                                                     --compact-output \
                                                                                     --null-output \
