@@ -245,7 +245,7 @@
                                                                             text =
                                                                                 ''
                                                                                     rm "${ resources-directory }/marks/$INDEX"
-                                                                                    find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} | while read -r PID
+                                                                                    find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                     do
                                                                                         tail --follow /dev/null --pid "$PID"
                                                                                     done
