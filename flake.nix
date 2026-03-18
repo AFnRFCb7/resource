@@ -173,7 +173,7 @@
                                                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                             "hash" : $HASH ,
                                                                                                                             "index" : $INDEX ,
-                                                                                                                            "release" : $RELEASE" ,
+                                                                                                                            "release" : $RELEASE ,
                                                                                                                             "script-file" : $SCRIPT_FILE ,
                                                                                                                             "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                             "standard-error-file" : $STANDARD_ERROR_FILE ,
