@@ -254,14 +254,14 @@
                                                                                         FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
                                                                                         inotify-wait --event delete-self "$FILE"
                                                                                     done
-                                                                                    exec 203> ${ resources-directory }/locks/$INDEX
+                                                                                    exec 203> "${ resources-directory }/locks/$INDEX"
                                                                                     flock -x 203
                                                                                     if "${ resources-directory }/marks/$INDEX"
                                                                                     then
                                                                                          ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
                                                                                          tar --create --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                     else
-                                                                                        "$0"
+                                                                                        nohup "$0" &
                                                                                     fi
                                                                                 '' ;
                                                                         }
