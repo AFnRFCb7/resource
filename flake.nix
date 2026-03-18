@@ -116,7 +116,7 @@
                                                                             pkgs.writeShellApplication
                                                                                 {
                                                                                     name = "create" ;
-                                                                                    runtimeInputs = [ applications.init failure sequential pkgs.coreutils pkgs.gnused pkgs.jq ] ;
+                                                                                    runtimeInputs = [ applications.init failure sequential pkgs.coreutils pkgs.flock pkgs.gnused pkgs.jq ] ;
                                                                                     text =
                                                                                         visitor
                                                                                             {
@@ -129,6 +129,8 @@
                                                                                                                     mkdir --parents ${ resources-directory }/logs
                                                                                                                     INDEX="$( sequential )" || failure 5607
                                                                                                                     export INDEX
+                                                                                                                    exec 204> "${ resources-directory }/locks/$INDEX"
+                                                                                                                    exec -x 204
                                                                                                                     mkdir --parents ${ resources-directory }/marks
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
@@ -262,8 +264,11 @@
                                                                                             inotify-wait --event delete-self "$LINK"
                                                                                         fi
                                                                                     done
-                                                                                    exec 203> "${ resources-directory }/locks/$INDEX"
+                                                                                    exec 203> "${ resources-directory }/locks/$HASH"
                                                                                     flock -x 203
+                                                                                    rm "${ resources-directory }/mounts/$HASH"
+                                                                                    exec 204> "${ resources-directory }/locks/$INDEX"
+                                                                                    flock -x 204
                                                                                     if "${ resources-directory }/marks/$INDEX"
                                                                                     then
                                                                                          ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
@@ -722,7 +727,7 @@
                                                     writeShellApplication
                                                         {
                                                             name = "setup" ;
-                                                            runtimeInputs = [ coreutils create failure jq scripts-hash sequential ] ;
+                                                            runtimeInputs = [ coreutils create failure flock jq scripts-hash sequential ] ;
                                                             text =
                                                                 let
                                                                     stringable =
@@ -802,10 +807,15 @@
                                                                             TARGETS_EXPECTED='${ builtins.toJSON ( builtins.sort ( a : b : builtins.compare a b ) targets ) }'
                                                                             TRANSIENT=${ transient_ }
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PRE_HASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
+                                                                            mkdir --parents "${ resources-directory }/locks"
+                                                                            exec 203> "${ resources-directory }/locks/$HASH"
+                                                                            flock -x 203
                                                                             if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                             then
                                                                                 LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 3789
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
+                                                                                exec 204> "${ resources-directory }/locks/$INDEX"
+                                                                                flock -s 204
                                                                                 mkdir --parents "${ resources-directory }/marks"
                                                                                 touch "${ resources-directory }/marks/$INDEX"
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
