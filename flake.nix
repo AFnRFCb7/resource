@@ -232,78 +232,74 @@
                                                                 )
                                                             ] ;
                                             } ;
-                                        destroy-canonical =
-                                            buildFHSUserEnv
-                                                {
-                                                    name = "destroy-canonical" ;
-                                                    runScript = "destroy-canonical" ;
-                                                    targetPkgs =
-                                                        pkgs :
-                                                            [
-                                                                (
-                                                                    pkgs.writeShellApplication
-                                                                        {
-                                                                            name = "destroy-canonical" ;
-                                                                            runtimeInputs = [ pkgs.coreutils pkgs.flock ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    exec 203> "${ resources-directory }/locks/$HASH"
-                                                                                    flock -x 203
-                                                                                    rm "${ resources-directory }/canonical/$HASH"
-                                                                                '' ;
-                                                                        }
-                                                                )
-                                                            ] ;
-                                                } ;
                                         destroy =
-                                            buildFHSUserEnv
+                                            writeShellApplication
                                                 {
-                                                    extraBwrapArgs =
-                                                        [
-                                                            ''--bind-ro "${ resources-directory }/mounts/$INDEX" /mount''
-                                                            "--tmpfs /scratch"
-                                                        ] ;
                                                     name = "destroy" ;
-                                                    runScript = "destroy" ;
-                                                    targetPkgs =
-                                                        pkgs :
-                                                            [
-                                                                (
-                                                                    pkgs.writeShellApplication
-                                                                        {
-                                                                            name = "destroy" ;
-                                                                            runtimeInputs = [ pkgs.coreutils pkgs.findutils  pkgs.flock pkgs.inotify-tools pkgs.zstd ] ;
-                                                                            text =
-                                                                                ''
-                                                                                    rm "${ resources-directory }/marks/$INDEX"
-                                                                                    find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
-                                                                                    do
-                                                                                        tail --follow /dev/null --pid "$PID"
-                                                                                    done
-                                                                                    find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
-                                                                                    do
-                                                                                        FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
-                                                                                        if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
-                                                                                        then
-                                                                                            inotify-wait --event delete-self "$LINK"
-                                                                                        fi
-                                                                                    done
-                                                                                    exec 203> "${ resources-directory }/locks/$HASH"
-                                                                                    flock -x 203
-                                                                                    rm "${ resources-directory }/mounts/$HASH"
-                                                                                    exec 204> "${ resources-directory }/locks/$INDEX"
-                                                                                    flock -x 204
-                                                                                    if "${ resources-directory }/marks/$INDEX"
-                                                                                    then
-                                                                                         ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
-                                                                                         tar --create --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
-                                                                                    else
-                                                                                        nohup "$0" &
-                                                                                    fi
-                                                                                '' ;
-                                                                        }
-                                                                )
-                                                            ] ;
+                                                    runtimeInputs =
+                                                        [
+                                                            (
+                                                                buildFHSUserEnv
+                                                                    {
+                                                                        extraBwrapArgs =
+                                                                            [
+                                                                                "--bind ${ gc-root-directory } ${ gc-root-directory }"
+                                                                                "--bind ${ resources-directory} ${ resources-directory }"
+                                                                            ] ;
+                                                                        name = "destroy" ;
+                                                                        runScript = "destroy" ;
+                                                                            '' ;
+                                                                        targetPkgs =
+                                                                            pkgs :
+                                                                                [
+                                                                                    (
+                                                                                        pkgs.writeShellApplication
+                                                                                            {
+                                                                                                name = "destroy" ;
+                                                                                                runtimeInputs = [ pkgs.coreutils pkgs.findutils  pkgs.flock pkgs.inotify-tools pkgs.zstd ] ;
+                                                                                                text =
+                                                                                                    ''
+                                                                                                        rm "${ resources-directory }/marks/$INDEX"
+                                                                                                        find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
+                                                                                                        do
+                                                                                                            tail --follow /dev/null --pid "$PID"
+                                                                                                        done
+                                                                                                        find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
+                                                                                                        do
+                                                                                                            FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
+                                                                                                            if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
+                                                                                                            then
+                                                                                                                inotify-wait --event delete-self "$LINK"
+                                                                                                            fi
+                                                                                                        done
+                                                                                                        exec 203> "${ resources-directory }/locks/$HASH"
+                                                                                                        flock -x 203
+                                                                                                        exec 204> "${ resources-directory }/locks/$INDEX"
+                                                                                                        flock -x 204
+                                                                                                        if [[ -e "${ resources-directory }/marks/$INDEX" ]]
+                                                                                                        then
+                                                                                                            rm "${ resources-directory }/canonical/$HASH"
+                                                                                                            flock -u 203
+                                                                                                            ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
+                                                                                                            tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                            rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                        else
+                                                                                                            flock -u 203
+                                                                                                            flock -u 204
+                                                                                                            nohup "$0" &
+                                                                                                        fi
+                                                                                                    '' ;
+                                                                                            }
+                                                                                    )
+                                                                                ] ;
+                                                                    }
+                                                            )
+                                                        ] ;
+                                                    text =
+                                                        ''
+                                                            export HASH=$HASH
+                                                            export INDEX=$INDEX
+                                                        '' ;
                                                 } ;
                                         failure =
                                             buildFHSUserEnv
