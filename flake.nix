@@ -767,8 +767,7 @@
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                 jq \
-                                                                                    --compact-output \
-                                                                                    --null-output \
+                                                                                    --null-input \
                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg HASH "$HASH" \
