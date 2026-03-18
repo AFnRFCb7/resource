@@ -248,7 +248,6 @@
                                                                             ] ;
                                                                         name = "destroy" ;
                                                                         runScript = "destroy" ;
-                                                                            '' ;
                                                                         targetPkgs =
                                                                             pkgs :
                                                                                 [
