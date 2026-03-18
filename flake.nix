@@ -798,6 +798,7 @@
                                                                             fi
                                                                         '' ;
                                                         } ;
+                                                in "${ application }/bin/get-or-create" ;
                             in
                                 {
                                     check =
@@ -864,6 +865,6 @@
                                                     src = ./. ;
                                                 } ;
                                     implementation = implementation ;
-                                } ;
+                                }
             } ;
 }
