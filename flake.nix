@@ -681,7 +681,7 @@
                                                                                                                         else
                                                                                                                             B=N
                                                                                                                         fi
-                                                                                                                        failure 30398 "$JSON_FILE" "STATUS="$STATUS" "A=$A" "B=$B"
+                                                                                                                        failure 30398 "$JSON_FILE" "STATUS=$STATUS" "A=$A" "B=$B"
                                                                                                                     fi
                                                                                                                 '' ;
                                                                                                 null =
