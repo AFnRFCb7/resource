@@ -132,6 +132,85 @@
                                                                                                     ] ;
                                                                                         } ;
                                                                             } ;
+                                                                        destroy =
+                                                                            writeShellApplication
+                                                                                {
+                                                                                    name = "destroy" ;
+                                                                                    runtimeInputs =
+                                                                                        [
+                                                                                            (
+                                                                                                buildFHSUserEnv
+                                                                                                    {
+                                                                                                        extraBwrapArgs =
+                                                                                                            [
+                                                                                                                "--bind ${ gc-root-directory } ${ gc-root-directory }"
+                                                                                                                "--bind ${ resources-directory} ${ resources-directory }"
+                                                                                                            ] ;
+                                                                                                        name = "destroy" ;
+                                                                                                        runScript = "destroy" ;
+                                                                                                        targetPkgs =
+                                                                                                            pkgs :
+                                                                                                                [
+                                                                                                                    (
+                                                                                                                        pkgs.writeShellApplication
+                                                                                                                            {
+                                                                                                                                name = "destroy" ;
+                                                                                                                                runtimeInputs = [ applications.release failure pkgs.coreutils pkgs.findutils pkgs.flock pkgs.inotify-tools pkgs.zstd sequential ] ;
+                                                                                                                                text =
+                                                                                                                                    ''
+                                                                                                                                        rm "${ resources-directory }/marks/$INDEX"
+                                                                                                                                        find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
+                                                                                                                                        do
+                                                                                                                                            tail --follow /dev/null --pid "$PID"
+                                                                                                                                        done
+                                                                                                                                        find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
+                                                                                                                                        do
+                                                                                                                                            FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
+                                                                                                                                            if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
+                                                                                                                                            then
+                                                                                                                                                inotify-wait --event delete-self "$LINK"
+                                                                                                                                            fi
+                                                                                                                                        done
+                                                                                                                                        exec 203> "${ resources-directory }/locks/$HASH"
+                                                                                                                                        flock -x 203
+                                                                                                                                        exec 204> "${ resources-directory }/locks/$INDEX"
+                                                                                                                                        flock -x 204
+                                                                                                                                        if [[ -e "${ resources-directory }/marks/$INDEX" ]]
+                                                                                                                                        then
+                                                                                                                                            rm "${ resources-directory }/canonical/$HASH"
+                                                                                                                                            flock -u 203
+                                                                                                                                            mkdir --parents ${ resources-directory }/logs
+                                                                                                                                            STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 16457
+                                                                                                                                            STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
+                                                                                                                                            STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 27852
+                                                                                                                                            STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
+                                                                                                                                            if release > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                            then
+                                                                                                                                                STATUS="$?"
+                                                                                                                                            else
+                                                                                                                                                STATUS="$?"
+                                                                                                                                            fi
+                                                                                                                                            ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
+                                                                                                                                            tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                                                            rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                                                        else
+                                                                                                                                            flock -u 203
+                                                                                                                                            flock -u 204
+                                                                                                                                            nohup "$0" &
+                                                                                                                                        fi
+                                                                                                                                    '' ;
+                                                                                                                            }
+                                                                                                                    )
+                                                                                                                ] ;
+                                                                                                    }
+                                                                                            )
+                                                                                        ] ;
+                                                                                    text =
+                                                                                        ''
+                                                                                            export HASH=$HASH
+                                                                                            export INDEX=$INDEX
+                                                                                        '' ;
+                                                                                } ;
                                                                         in
                                                                             pkgs.writeShellApplication
                                                                                 {
@@ -251,85 +330,6 @@
                                                                 )
                                                             ] ;
                                             } ;
-                                        destroy =
-                                            writeShellApplication
-                                                {
-                                                    name = "destroy" ;
-                                                    runtimeInputs =
-                                                        [
-                                                            (
-                                                                buildFHSUserEnv
-                                                                    {
-                                                                        extraBwrapArgs =
-                                                                            [
-                                                                                "--bind ${ gc-root-directory } ${ gc-root-directory }"
-                                                                                "--bind ${ resources-directory} ${ resources-directory }"
-                                                                            ] ;
-                                                                        name = "destroy" ;
-                                                                        runScript = "destroy" ;
-                                                                        targetPkgs =
-                                                                            pkgs :
-                                                                                [
-                                                                                    (
-                                                                                        pkgs.writeShellApplication
-                                                                                            {
-                                                                                                name = "destroy" ;
-                                                                                                runtimeInputs = [ applications.release failure pkgs.coreutils pkgs.findutils pkgs.flock pkgs.inotify-tools pkgs.zstd sequential ] ;
-                                                                                                text =
-                                                                                                    ''
-                                                                                                        rm "${ resources-directory }/marks/$INDEX"
-                                                                                                        find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
-                                                                                                        do
-                                                                                                            tail --follow /dev/null --pid "$PID"
-                                                                                                        done
-                                                                                                        find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
-                                                                                                        do
-                                                                                                            FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
-                                                                                                            if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
-                                                                                                            then
-                                                                                                                inotify-wait --event delete-self "$LINK"
-                                                                                                            fi
-                                                                                                        done
-                                                                                                        exec 203> "${ resources-directory }/locks/$HASH"
-                                                                                                        flock -x 203
-                                                                                                        exec 204> "${ resources-directory }/locks/$INDEX"
-                                                                                                        flock -x 204
-                                                                                                        if [[ -e "${ resources-directory }/marks/$INDEX" ]]
-                                                                                                        then
-                                                                                                            rm "${ resources-directory }/canonical/$HASH"
-                                                                                                            flock -u 203
-                                                                                                            mkdir --parents ${ resources-directory }/logs
-                                                                                                            STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 16457
-                                                                                                            STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
-                                                                                                            STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 27852
-                                                                                                            STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
-                                                                                                            if release > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                                            then
-                                                                                                                STATUS="$?"
-                                                                                                            else
-                                                                                                                STATUS="$?"
-                                                                                                            fi
-                                                                                                            ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
-                                                                                                            tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
-                                                                                                            rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
-                                                                                                        else
-                                                                                                            flock -u 203
-                                                                                                            flock -u 204
-                                                                                                            nohup "$0" &
-                                                                                                        fi
-                                                                                                    '' ;
-                                                                                            }
-                                                                                    )
-                                                                                ] ;
-                                                                    }
-                                                            )
-                                                        ] ;
-                                                    text =
-                                                        ''
-                                                            export HASH=$HASH
-                                                            export INDEX=$INDEX
-                                                        '' ;
-                                                } ;
                                         failure =
                                             buildFHSUserEnv
                                                 {
