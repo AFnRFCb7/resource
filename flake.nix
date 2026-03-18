@@ -761,29 +761,25 @@
                                                                             then
                                                                                 LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 3789
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
-                                                                                mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
-                                                                                touch "${ resources-directory }/originator-pids/$INDEX/$ULTIMATE_PID"
+                                                                                mkdir --parents "${ resources-directory }/pids/$INDEX"
+                                                                                touch "${ resources-directory }/pids/$INDEX/$ULTIMATE_PID"
                                                                                 echo "${ resources-directory }/mounts/$HASH"
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                 jq \
                                                                                     --null-input \
-                                                                                    --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
                                                                                     --argjson SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                     --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                    --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                     '{
-                                                                                        "arguments" : $ARGUMENTS ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "hash" : $HASH ,
                                                                                         "index" : $INDEX ,
                                                                                         "scripts-hash" : $SCRIPTS_HASH ,
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                        "targets-expected" : $TARGETS_EXPECTED ,
                                                                                         "transient" : $TRANSIENT
                                                                                     }' > "$JSON_FILE"
                                                                                 redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE"
