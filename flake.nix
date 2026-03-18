@@ -259,7 +259,7 @@
                                                                                     find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
                                                                                     do
                                                                                         FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
-                                                                                        if [[ "${ resources-directory }/mounts/$INDEX" == "FILE" ]]
+                                                                                        if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                         then
                                                                                             inotify-wait --event delete-self "$LINK"
                                                                                         fi
