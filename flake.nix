@@ -136,7 +136,7 @@
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
                                                                                                                     RELEASE="${ resources-directory }/release/$INDEX"
-                                                                                                                    sed -e "s#\$HASH#$HASH" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                    sed -e "s#\$INDEX#$INDEX#" -e "w$RELEASE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                     chmod 0500 "$RELEASE"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                                     # shellcheck disable=SC2016
