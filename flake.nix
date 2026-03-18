@@ -593,6 +593,11 @@
                                                                                                         )
                                                                                                     ] ;
                                                                                         } ;
+                                                                                release =
+                                                                                    buildFHSUserEnv
+                                                                                        {
+
+                                                                                        } ;
                                                                             } ;
                                                                         in
                                                                             pkgs.writeShellApplication
@@ -664,7 +669,19 @@
                                                                                                                     else
                                                                                                                         redis-cli PUBLISH ${ invalid-init-channel } "$JSON_SEQUENCE" > /dev/null 2>&1 || true
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
-                                                                                                                        failure 21103 "$JSON_FILE"
+                                                                                                                        if [[ ! -s "$STANDARD_ERROR_FILE" ]]
+                                                                                                                        then
+                                                                                                                            A=Y
+                                                                                                                        else
+                                                                                                                            A=N
+                                                                                                                        fi
+                                                                                                                        if [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
+                                                                                                                        then
+                                                                                                                            B=Y
+                                                                                                                        else
+                                                                                                                            B=N
+                                                                                                                        fi
+                                                                                                                        failure 30398 "$JSON_FILE" "STATUS="$STATUS" "A=$A" "B=$B"
                                                                                                                     fi
                                                                                                                 '' ;
                                                                                                 null =
