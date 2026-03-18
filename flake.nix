@@ -634,6 +634,7 @@
                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                                                                     JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                                                     jq \
+                                                                                                                        --compact-output \
                                                                                                                         --null-input \
                                                                                                                         --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -994,6 +995,7 @@
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                                 JSON_FILE="${ resources-directory }/log/$JSON_SEQUENCE"
                                                                                 jq \
+                                                                                    --compact-output \
                                                                                     --null-output \
                                                                                     --argjson ARGUMENTS "$ARGUMENTS_JSON" \
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -1022,10 +1024,6 @@
                                                                                 export TARGETS_EXPECTED
                                                                                 create "$@"
                                                                             fi
-                                                                            echo "HASH=$HASH"
-                                                                            echo "ULTIMATE_PID=$ULTIMATE_PID"
-                                                                            SCRIPTS="$( scripts-hash )" || failure 9514
-                                                                            echo "SCRIPTS_HASH=$SCRIPTS"
                                                                         '' ;
                                                         } ;
                                                 application2 =
