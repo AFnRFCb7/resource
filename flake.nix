@@ -987,7 +987,7 @@
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PRE_HASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                             then
-                                                                                LINK="$( readlink --canonical "${ resources-directory }/canonical/$HASH" )" || failure 3789
+                                                                                LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 3789
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
                                                                                 mkdir --parents "${ resources-directory }/originator-pids/$INDEX"
                                                                                 touch "${ resources-directory }/originator-pids/$INDEX/$ULTIMATE_PID"
