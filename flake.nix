@@ -154,6 +154,7 @@
                                                                                                                         --arg HASH "$HASH" \
                                                                                                                         --arg INDEX "$INDEX" \
                                                                                                                         --arg SCRIPT_FILE "$SCRIPT_FILE" \
+                                                                                                                        --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                         --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                         --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                         --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
@@ -166,6 +167,7 @@
                                                                                                                             "hash" : $HASH ,
                                                                                                                             "index" : $INDEX ,
                                                                                                                             "script-file" : $SCRIPT_FILE ,
+                                                                                                                            "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                             "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                                             "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
@@ -664,7 +666,7 @@
                                                 application =
                                                     writeShellApplication
                                                         {
-                                                            name = "get-or-create" ;
+                                                            name = "setup" ;
                                                             runtimeInputs = [ coreutils create failure jq scripts-hash sequential ] ;
                                                             text =
                                                                 let
@@ -778,6 +780,7 @@
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
+                                                                                export SCRIPTS_HASH
                                                                                 export STANDARD_INPUT_FILE
                                                                                 # shellcheck disable=SC2090
                                                                                 export TARGETS_EXPECTED
@@ -785,7 +788,7 @@
                                                                             fi
                                                                         '' ;
                                                         } ;
-                                                in "${ application }/bin/get-or-create" ;
+                                                in "${ application }/bin/setup" ;
                             in
                                 {
                                     check =
