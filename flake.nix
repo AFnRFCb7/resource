@@ -11,7 +11,6 @@
                         flock ,
                         gc-root-directory ,
                         invalid-init-channel ,
-                        is-logged ,
                         jq ,
                         procps ,
                         redis ,
