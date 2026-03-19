@@ -346,7 +346,7 @@
                                                                                                                             "index" : $INDEX ,
                                                                                                                             "script-file" : $SCRIPT_FILE ,
                                                                                                                             "scripts-hash" : $SCRIPTS_HASH ,
-                                                                                                                            "seed" $SEED ,
+                                                                                                                            "seed" : $SEED ,
                                                                                                                             "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                                             "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
