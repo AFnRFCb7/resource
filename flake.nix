@@ -347,6 +347,7 @@
                                                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                             "hash" : $HASH ,
                                                                                                                             "index" : $INDEX ,
+                                                                                                                            "release" : $RELEASE ,
                                                                                                                             "script-file" : $SCRIPT_FILE ,
                                                                                                                             "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                             "seed" : $SEED ,
@@ -398,6 +399,7 @@
                                                                                                                     "arguments" : $ARGUMENTS ,
                                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                     "hash" : $HASH ,
+                                                                                                                    "release" : $RELEASE ,
                                                                                                                     "seed" : $SEED ,
                                                                                                                     "index" : $INDEX ,
                                                                                                                 }' > "$JSON_FILE"
