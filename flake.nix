@@ -182,12 +182,16 @@
                                                                                                                                                                 inotify-wait --event delete-self "$LINK"
                                                                                                                                                             fi
                                                                                                                                                         done
+                                                                                                                                                        trace 23482
                                                                                                                                                         exec 203> "${ resources-directory }/locks/$HASH"
                                                                                                                                                         flock -x 203
+                                                                                                                                                        trace 24754
                                                                                                                                                         exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                                                         flock -x 204
+                                                                                                                                                        trace 30327
                                                                                                                                                         if [[ -e "${ resources-directory }/marks/$INDEX" ]]
                                                                                                                                                         then
+                                                                                                                                                            trace 15683
                                                                                                                                                             rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                             flock -u 203
                                                                                                                                                             mkdir --parents ${ resources-directory }/logs
@@ -216,7 +220,7 @@
                                                                                                                                                                 --argjson SEED "$SEED" \
                                                                                                                                                                 --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                                                                 --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                                                                                                --arg STATUS "$STATUS"
+                                                                                                                                                                --arg STATUS "$STATUS" \
                                                                                                                                                                 '{
                                                                                                                                                                     "hash" : $HASH ,
                                                                                                                                                                     "index" : $INDEX ,
@@ -233,6 +237,7 @@
                                                                                                                                                                 redis-cli PUBLISH ${ invalid-release-channel } "$JSON_FILE"
                                                                                                                                                             fi
                                                                                                                                                         else
+                                                                                                                                                            trace 12340
                                                                                                                                                             flock -u 203
                                                                                                                                                             flock -u 204
                                                                                                                                                             nohup "$0" &
