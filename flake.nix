@@ -184,6 +184,7 @@
                                                                                                                                                             rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                             flock -u 203
                                                                                                                                                             mkdir --parents ${ resources-directory }/logs
+                                                                                                                                                            SCRIPT_FILE=${ script-file release arguments.release }
                                                                                                                                                             STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 16457
                                                                                                                                                             STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                                                             STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 27852
@@ -197,6 +198,25 @@
                                                                                                                                                             ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
                                                                                                                                                             tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                             rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                                                                            JSON_SEQUENCE="$( sequential )" || failure 4228
+                                                                                                                                                            JSON_FILE=${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                                                            jq \
+                                                                                                                                                                --arg HASH "$HASH" \
+                                                                                                                                                                --arg INDEX "$INDEX" \
+                                                                                                                                                                --arg SCRIPT_FILE "$SCRIPT_FILE" \
+                                                                                                                                                                --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                                                                                                --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                                                                                                --arg STATUS "$STATUS"
+                                                                                                                                                                '{
+                                                                                                                                                                    "hash" : $HASH ,
+                                                                                                                                                                    "index" : $INDEX ,
+                                                                                                                                                                    "script-file" : $SCRIPT_FILE ,
+                                                                                                                                                                    "standard-error-file": $STANDARD_ERROR_FILE ,
+                                                                                                                                                                    "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                                                                    "status" : $STATUS ,
+                                                                                                                                                                }' > "$JSON_FILE"
+                                                                                                                                                            chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE
+                                                                                                                                                            redis-cli PUBLIC ${ release-channel } "$JSON_FILE"
                                                                                                                                                         else
                                                                                                                                                             flock -u 203
                                                                                                                                                             flock -u 204
