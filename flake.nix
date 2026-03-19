@@ -129,7 +129,7 @@
                                                                                                                         let
                                                                                                                             # a = arguments.release pkgs ;
                                                                                                                             # in release a ;
-                                                                                                                            "" ;
+                                                                                                                            in "" ;
                                                                                                                 }
                                                                                                         )
                                                                                                     ] ;
