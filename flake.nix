@@ -996,7 +996,7 @@
                                                                                     --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
                                                                                     --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
-                                                                                    --argjson SEED "$SEED"
+                                                                                    --argjson SEED "$SEED" \
                                                                                     --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                     --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
