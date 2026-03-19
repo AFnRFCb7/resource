@@ -500,7 +500,7 @@
                                                                                                             pkgs.writeShellApplication
                                                                                                                 {
                                                                                                                     name = "application" ;
-                                                                                                                    text = script ( builtins.trace ( builtins.toJSON ( builtins.attrValues arguments ) ) arguments.release ) ;
+                                                                                                                    text = script ( arguments.release pkgs ) ;
                                                                                                                 } ;
                                                                                                             in "${ application }/bin/application" ;
                                                                                                 in
