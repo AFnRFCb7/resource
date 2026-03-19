@@ -220,7 +220,7 @@
                                                                                                                                                                     "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                                                     "status" : $STATUS ,
                                                                                                                                                                 }' > "$JSON_FILE"
-                                                                                                                                                            chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE
+                                                                                                                                                            chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                                                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                                                             then
                                                                                                                                                                 redis-cli PUBLISH ${ valid-release-channel } "$JSON_FILE"
