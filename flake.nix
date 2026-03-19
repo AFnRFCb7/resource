@@ -305,7 +305,9 @@
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
-                                                                                                                    ###
+                                                                                                                    RELEASE="${ resources-directory }/release/$INDEX"
+                                                                                                                    sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE" ${ applications.release }
+                                                                                                                    chmod 0500 "$RELEASE"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                                     # shellcheck disable=SC2016
                                                                                                                     SCRIPT_FILE="$( ${ script-file init a } )"
@@ -330,6 +332,7 @@
                                                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                         --arg HASH "$HASH" \
                                                                                                                         --arg INDEX "$INDEX" \
+                                                                                                                        --arg RELEASE "$RELEASE" \
                                                                                                                         --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                         --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                         --argjson SEED "$SEED" \
@@ -374,6 +377,10 @@
                                                                                                             export INDEX
                                                                                                             mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
+                                                                                                            mkdir --parents ${ resources-directory }/release"
+                                                                                                            RELEASE="${ resources-directory }/release/$INDEX"
+                                                                                                            sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE" ${ applications.release }
+                                                                                                            chmod 0500 "$RELEASE"
                                                                                                             SEED='${ builtins.toJSON seed }'
                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                                                             JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
@@ -384,6 +391,7 @@
                                                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                 --arg HASH "$HASH" \
                                                                                                                 --arg INDEX "$INDEX" \
+                                                                                                                --arg RELEASE "$RELEASE" \
                                                                                                                 --arg SEED "$SEED" \
                                                                                                                 --arg STATUS "$STATUS" \
                                                                                                                 '{
