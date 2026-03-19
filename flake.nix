@@ -294,6 +294,7 @@
                                                                                                                     export INDEX
                                                                                                                     exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                     flock -x 204
+                                                                                                                    pid "$ULTIMATE_PID" ${ depth } "$INDEX"
                                                                                                                     mkdir --parents ${ resources-directory }/marks
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
@@ -473,6 +474,48 @@
                                                                         }
                                                                 )
                                                             ] ;
+                                                } ;
+                                        pid =
+                                            buildFHSUserEnv
+                                                {
+                                                    name = "pid" ;
+                                                    runScript =
+                                                        ''
+                                                            bash -c '
+                                                                if [[ -t 0 ]]
+                                                                then
+                                                                    pid "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                else
+                                                                    pid "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                fi
+                                                            ' "$0" "$@"
+                                                        '' ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "pid" ;
+                                                                            runtimeInputs = [ coreutils failure procps ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    CHILD="$1"
+                                                                                    DEPTH="$2"
+                                                                                    INDEX="$3"
+                                                                                    mkdir --parents "${ resources-directory }/pids/$INDEX"
+                                                                                    touch "${ resources-directory }/pids/$INDEX/$CHILD"
+                                                                                    chmod 0400 "${ resources-directory }/pids/$INDEX/$CHILD"
+                                                                                    if [[ "$DEPTH" -gt "0" ]] && [[ "$CHILD" -gt "1" ]]
+                                                                                    then
+                                                                                        PARENT="$( ps -o ppid= -p "$CHILD" | tr -d '[:space:]' )" || failure 7862
+                                                                                        NEXT=$(( DEPTH - 1 ))
+                                                                                        "$0" "$PARENT" "$NEXT" "$INDEX"
+                                                                                    fi
+                                                                                '' ;
+                                                                        }
+                                                                    )
+                                                                ] ;
                                                 } ;
                                         script-file =
                                             script : arguments :
@@ -928,7 +971,7 @@
                                                                                 mkdir --parents "${ resources-directory }/marks"
                                                                                 touch "${ resources-directory }/marks/$INDEX"
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
-                                                                                touch "${ resources-directory }/pids/$INDEX/$ULTIMATE_PID"
+                                                                                pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
