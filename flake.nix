@@ -635,7 +635,7 @@
                                                                     pkgs.writeShellApplication
                                                                         {
                                                                             name = "trace" ;
-                                                                            runtimeInputs = [ pkgs.yg-go ] ;
+                                                                            runtimeInputs = [ pkgs.yq-go ] ;
                                                                             text =
                                                                                 ''
                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input --slurp '. | map(.)' -o=json )" || failure 22397
