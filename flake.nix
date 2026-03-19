@@ -11,6 +11,7 @@
                         flock ,
                         gc-root-directory ,
                         invalid-init-channel ,
+                        invalid-release-channel ,
                         jq ,
                         procps ,
                         redis ,
@@ -18,6 +19,7 @@
                         resources-directory ,
                         stale-init-channel ,
                         valid-init-channel ,
+                        valid-release-channel ,
                         visitor ,
                         writeShellApplication
                     } @primary :
@@ -216,7 +218,12 @@
                                                                                                                                                                     "status" : $STATUS ,
                                                                                                                                                                 }' > "$JSON_FILE"
                                                                                                                                                             chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE
-                                                                                                                                                            redis-cli PUBLIC ${ release-channel } "$JSON_FILE"
+                                                                                                                                                            if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]]
+                                                                                                                                                            then
+                                                                                                                                                                redis-cli PUBLISH ${ release-channel } "$JSON_FILE"
+                                                                                                                                                            else
+                                                                                                                                                                redis-cli PUBLISH ${ invalid-release-channel } "$JSON_FILE"
+                                                                                                                                                            fi
                                                                                                                                                         else
                                                                                                                                                             flock -u 203
                                                                                                                                                             flock -u 204
