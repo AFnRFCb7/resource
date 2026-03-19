@@ -498,7 +498,7 @@
                                                                                                             pkgs.writeShellApplication
                                                                                                                 {
                                                                                                                     name = "application" ;
-                                                                                                                    text = script ( arguments.release pkgs ) ;
+                                                                                                                    text = script arguments ;
                                                                                                                 } ;
                                                                                                             in "${ application }/bin/application" ;
                                                                                                 in
