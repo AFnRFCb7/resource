@@ -108,7 +108,7 @@
                                                                                                         )
                                                                                                     ] ;
                                                                                         } ;
-                                                                                release = builtins.trace "28219 ${ builtins.typeOf arguments }" (
+                                                                                release =
                                                                                     buildFHSUserEnv
                                                                                         {
                                                                                             extraBwrapArgs =
@@ -132,7 +132,7 @@
                                                                                                                 }
                                                                                                         )
                                                                                                     ] ;
-                                                                                        } ) ;
+                                                                                        } ;
                                                                             } ;
                                                                         destroy =
                                                                             writeShellApplication
@@ -300,9 +300,7 @@
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
-                                                                                                                    RELEASE="${ resources-directory }/release/$INDEX"
-
-                                                                                                                    chmod 0500 "$RELEASE"
+                                                                                                                    ###
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                                     # shellcheck disable=SC2016
                                                                                                                     SCRIPT_FILE="$( ${ script-file init a } )"
@@ -326,7 +324,6 @@
                                                                                                                         --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                         --arg HASH "$HASH" \
                                                                                                                         --arg INDEX "$INDEX" \
-                                                                                                                        --arg RELEASE "$RELEASE" \
                                                                                                                         --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                         --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                         --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
@@ -340,7 +337,6 @@
                                                                                                                             "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                             "hash" : $HASH ,
                                                                                                                             "index" : $INDEX ,
-                                                                                                                            "release" : $RELEASE ,
                                                                                                                             "script-file" : $SCRIPT_FILE ,
                                                                                                                             "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                             "standard-error-file" : $STANDARD_ERROR_FILE ,
