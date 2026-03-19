@@ -279,7 +279,7 @@
                                                                             pkgs.writeShellApplication
                                                                                 {
                                                                                     name = "create" ;
-                                                                                    runtimeInputs = [ applications.init failure sequential pkgs.coreutils pkgs.flock pkgs.gnused pkgs.jq ] ;
+                                                                                    runtimeInputs = [ applications.init failure pid pkgs.coreutils pkgs.flock pkgs.gnused pkgs.jq sequential ] ;
                                                                                     text =
                                                                                         visitor
                                                                                             {
@@ -879,7 +879,7 @@
                                                     writeShellApplication
                                                         {
                                                             name = "setup" ;
-                                                            runtimeInputs = [ coreutils create failure flock jq scripts-hash sequential ] ;
+                                                            runtimeInputs = [ coreutils create failure flock jq pid scripts-hash sequential ] ;
                                                             text =
                                                                 let
                                                                     stringable =
