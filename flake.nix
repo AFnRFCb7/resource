@@ -186,7 +186,7 @@
                                                                                                                                                             rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                             flock -u 203
                                                                                                                                                             mkdir --parents ${ resources-directory }/logs
-                                                                                                                                                            SCRIPT_FILE=${ script-file release arguments.release }
+                                                                                                                                                            ###
                                                                                                                                                             STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 16457
                                                                                                                                                             STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                                                             STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 27852
@@ -205,14 +205,12 @@
                                                                                                                                                             jq \
                                                                                                                                                                 --arg HASH "$HASH" \
                                                                                                                                                                 --arg INDEX "$INDEX" \
-                                                                                                                                                                --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                                                                 --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                                                                 --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                                                                 --arg STATUS "$STATUS"
                                                                                                                                                                 '{
                                                                                                                                                                     "hash" : $HASH ,
                                                                                                                                                                     "index" : $INDEX ,
-                                                                                                                                                                    "script-file" : $SCRIPT_FILE ,
                                                                                                                                                                     "standard-error-file": $STANDARD_ERROR_FILE ,
                                                                                                                                                                     "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                                                     "status" : $STATUS ,
