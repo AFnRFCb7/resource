@@ -504,7 +504,7 @@
                                                                                                             pkgs.writeShellApplication
                                                                                                                 {
                                                                                                                     name = "application" ;
-                                                                                                                    text = script arguments.release ;
+                                                                                                                    text = script ( builtins.trace ( builtins.typeOf arguments ) arguments.release ) ;
                                                                                                                 } ;
                                                                                                             in "${ application }/bin/application" ;
                                                                                                 in
