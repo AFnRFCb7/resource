@@ -113,7 +113,7 @@
                                                                                         {
                                                                                             extraBwrapArgs =
                                                                                                 [
-                                                                                                    ''--bind-ro "${ resources-directory }/mounts/$INDEX" /mount''
+                                                                                                    ''--bind "${ resources-directory }/mounts/$INDEX" /mount''
                                                                                                     ''--tmpfs /scratch''
                                                                                                 ] ;
                                                                                             name = "release" ;
