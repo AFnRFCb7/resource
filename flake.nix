@@ -157,20 +157,25 @@
                                                                                                                         pkgs.writeShellApplication
                                                                                                                             {
                                                                                                                                 name = "destroy" ;
-                                                                                                                                runtimeInputs = [ applications.release failure pkgs.coreutils pkgs.findutils pkgs.flock pkgs.inotify-tools pkgs.zstd sequential ] ;
+                                                                                                                                runtimeInputs = [ applications.release failure pkgs.coreutils pkgs.findutils pkgs.flock pkgs.inotify-tools pkgs.zstd sequential trace ] ;
                                                                                                                                 text =
                                                                                                                                     visitor
                                                                                                                                         {
                                                                                                                                             lambda =
                                                                                                                                                 path : value :
                                                                                                                                                     ''
+                                                                                                                                                        trace 15841
                                                                                                                                                         rm "${ resources-directory }/marks/$INDEX"
+                                                                                                                                                        trace 29874
                                                                                                                                                         find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                         do
+                                                                                                                                                            trace 15412 "PID=$PID"
                                                                                                                                                             tail --follow /dev/null --pid "$PID"
                                                                                                                                                         done
+                                                                                                                                                        trace 19784
                                                                                                                                                         find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
                                                                                                                                                         do
+                                                                                                                                                            trace 2060 "LINK=$LINK"
                                                                                                                                                             FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
                                                                                                                                                             if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                                                                                             then
@@ -202,7 +207,7 @@
                                                                                                                                                             tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                             rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 4228
-                                                                                                                                                            JSON_FILE=${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                                                            JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                                                                                             jq \
                                                                                                                                                                 --compact-output \
                                                                                                                                                                 --null-input \
