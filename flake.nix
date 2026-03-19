@@ -108,7 +108,7 @@
                                                                                                         )
                                                                                                     ] ;
                                                                                         } ;
-                                                                                release = builtins.trace "28219" (
+                                                                                release = builtins.trace "28219 ${ builtins.typeOf arguments }" (
                                                                                     buildFHSUserEnv
                                                                                         {
                                                                                             extraBwrapArgs =
