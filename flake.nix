@@ -127,8 +127,9 @@
                                                                                                                     name = "release" ;
                                                                                                                     text =
                                                                                                                         let
-                                                                                                                            a = arguments.release pkgs ;
-                                                                                                                            in release a ;
+                                                                                                                            # a = arguments.release pkgs ;
+                                                                                                                            # in release a ;
+                                                                                                                            "" ;
                                                                                                                 }
                                                                                                         )
                                                                                                     ] ;
