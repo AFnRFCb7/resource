@@ -1003,6 +1003,7 @@
                                                                                 export STANDARD_INPUT_FILE
                                                                                 # shellcheck disable=SC2090
                                                                                 export TARGETS_EXPECTED
+                                                                                export ULTIMATE_PID
                                                                                 create "$@"
                                                                             fi
                                                                         '' ;
