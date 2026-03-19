@@ -270,7 +270,8 @@
                                                                                             )
                                                                                         ] ;
                                                                                     text =
-                                                                                        ''applications.init
+                                                                                        ''
+                                                                                            applications.init
                                                                                             export HASH=$HASH
                                                                                             export INDEX=$INDEX
                                                                                         '' ;
