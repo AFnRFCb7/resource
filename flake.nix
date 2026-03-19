@@ -294,7 +294,7 @@
                                                                                                                     export INDEX
                                                                                                                     exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                     flock -x 204
-                                                                                                                    pid "$ULTIMATE_PID" ${ depth } "$INDEX"
+                                                                                                                    pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
                                                                                                                     mkdir --parents ${ resources-directory }/marks
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
