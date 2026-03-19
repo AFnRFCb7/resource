@@ -108,7 +108,7 @@
                                                                                                         )
                                                                                                     ] ;
                                                                                         } ;
-                                                                                release =
+                                                                                release = builtins.trace "28219" (
                                                                                     buildFHSUserEnv
                                                                                         {
                                                                                             extraBwrapArgs =
@@ -132,7 +132,7 @@
                                                                                                                 }
                                                                                                         )
                                                                                                     ] ;
-                                                                                        } ;
+                                                                                        } ) ;
                                                                             } ;
                                                                         destroy =
                                                                             writeShellApplication
