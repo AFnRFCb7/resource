@@ -127,9 +127,8 @@
                                                                                                                     name = "release" ;
                                                                                                                     text =
                                                                                                                         let
-                                                                                                                            # a = arguments.release pkgs ;
-                                                                                                                            # in release a ;
-                                                                                                                            in "" ;
+                                                                                                                            a = arguments.release pkgs ;
+                                                                                                                            in release a ;
                                                                                                                 }
                                                                                                         )
                                                                                                     ] ;
@@ -158,7 +157,7 @@
                                                                                                                         pkgs.writeShellApplication
                                                                                                                             {
                                                                                                                                 name = "destroy" ;
-                                                                                                                                runtimeInputs = [ applications.release failure pkgs.coreutils pkgs.findutils pkgs.flock pkgs.inotify-tools pkgs.zstd sequential ] ;
+                                                                                                                                runtimeInputs = [ failure pkgs.coreutils pkgs.findutils pkgs.flock pkgs.inotify-tools pkgs.zstd sequential ] ;
                                                                                                                                 text =
                                                                                                                                     visitor
                                                                                                                                         {
