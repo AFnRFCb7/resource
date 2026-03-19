@@ -332,7 +332,7 @@
                                                                                                                         --arg INDEX "$INDEX" \
                                                                                                                         --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                         --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
-                                                                                                                        --argjson SEED "$SEED"
+                                                                                                                        --argjson SEED "$SEED" \
                                                                                                                         --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                         --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                         --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
