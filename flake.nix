@@ -286,9 +286,9 @@
                                                                                         ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            applications.init
                                                                                             export HASH=$HASH
                                                                                             export INDEX=$INDEX
+                                                                                            destroy
                                                                                         '' ;
                                                                                 } ;
                                                                         in
