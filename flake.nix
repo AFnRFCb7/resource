@@ -205,7 +205,7 @@
                                                                                                                                                                     rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                                     flock -u 203
                                                                                                                                                                     mkdir --parents ${ resources-directory }/logs
-                                                                                                                                                                    SCRIPT_FILE="$( ${ script-file release a } ) " || failure 17419
+                                                                                                                                                                    SCRIPT_FILE="$( ${ script-file release a } )" || failure 17419
                                                                                                                                                                     SEED='${ builtins.toJSON seed }'
                                                                                                                                                                     STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 16457
                                                                                                                                                                     STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
