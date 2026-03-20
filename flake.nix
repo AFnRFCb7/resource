@@ -240,7 +240,7 @@
                                                                                                                                                             trace 4083 "$0" "JSON_FILE=$JSON_FILE" "STATUS=$STATUS"
                                                                                                                                                             if [[ "$STATUS" == 0 ]]
                                                                                                                                                             then
-                                                                                                                                                                trace 15336 "STATUS="$STATUS"
+                                                                                                                                                                trace 15336 "STATUS=$STATUS"
                                                                                                                                                             fi
                                                                                                                                                             if [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                                                             then
