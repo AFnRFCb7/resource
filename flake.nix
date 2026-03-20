@@ -450,7 +450,7 @@
                                                                             runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.yq-go ] ;
                                                                             text =
                                                                                 ''
-                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq -R . | jq -s . )" || exit 74
+                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || exit 74
                                                                                     if [[ -t 0 ]]
                                                                                     then
                                                                                         # shellcheck disable=SC2016
@@ -709,7 +709,7 @@
                                                                             runtimeInputs = [ pkgs.yq-go ] ;
                                                                             text =
                                                                                 ''
-                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | yq eval --raw-input --slurp '. | map(.)' -o=json )" || failure 22397
+                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 22397
                                                                                     if [[ -t 0 ]]
                                                                                     then
                                                                                         # shellcheck disable=SC2016
