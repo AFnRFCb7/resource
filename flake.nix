@@ -237,7 +237,15 @@
                                                                                                                                                                     "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                                                     "status" : $STATUS ,
                                                                                                                                                                 }' > "$JSON_FILE"
-                                                                                                                                                            echo 4083 "$0" "JSON_FILE=$JSON_FILE"
+                                                                                                                                                            trace 4083 "$0" "JSON_FILE=$JSON_FILE" "STATUS=$STATUS"
+                                                                                                                                                            if [[ "$STATUS" == 0 ]]
+                                                                                                                                                            then
+                                                                                                                                                                trace 15336
+                                                                                                                                                            fi
+                                                                                                                                                            if [[ ! -s "$STANDARD_ERROR_FILE" ]]
+                                                                                                                                                            then
+                                                                                                                                                                trace 2865
+                                                                                                                                                            fi
                                                                                                                                                             chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                                                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                                                             then
