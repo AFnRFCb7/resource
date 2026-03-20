@@ -212,6 +212,7 @@
                                                                                                                                                             rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 4228
                                                                                                                                                             JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                                                            echo 12595 "$0"
                                                                                                                                                             jq \
                                                                                                                                                                 --compact-output \
                                                                                                                                                                 --null-input \
@@ -229,6 +230,7 @@
                                                                                                                                                                     "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                                                     "status" : $STATUS ,
                                                                                                                                                                 }' > "$JSON_FILE"
+                                                                                                                                                            echo 4083 "$0"
                                                                                                                                                             chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                                                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                                                             then
