@@ -174,6 +174,7 @@
                                                                                                                                                         done
                                                                                                                                                         trace 19784
                                                                                                                                                         mkdir --parents "${ gc-root-directory }/$INDEX"
+                                                                                                                                                        trace 24208
                                                                                                                                                         find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
                                                                                                                                                         do
                                                                                                                                                             trace 2060 "LINK=$LINK"
@@ -192,6 +193,11 @@
                                                                                                                                                         trace 30327
                                                                                                                                                         if [[ -e "${ resources-directory }/marks/$INDEX" ]]
                                                                                                                                                         then
+                                                                                                                                                            trace 12340
+                                                                                                                                                            flock -u 203
+                                                                                                                                                            flock -u 204
+                                                                                                                                                            nohup "$0" &
+                                                                                                                                                        else
                                                                                                                                                             trace 15683
                                                                                                                                                             rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                             flock -u 203
@@ -239,11 +245,6 @@
                                                                                                                                                             else
                                                                                                                                                                 redis-cli PUBLISH ${ invalid-release-channel } "$JSON_FILE"
                                                                                                                                                             fi
-                                                                                                                                                        else
-                                                                                                                                                            trace 12340
-                                                                                                                                                            flock -u 203
-                                                                                                                                                            flock -u 204
-                                                                                                                                                            nohup "$0" &
                                                                                                                                                         fi
                                                                                                                                                     '' ;
                                                                                                                                             null =
@@ -723,7 +724,7 @@
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                             '{ "arguments" : $ARGUMENTS }' \
-                                                                                            | yq eval --prettyPrint "." \
+                                                                                            | yq eval --prettyPrint "[.]" \
                                                                                             >> ${ resources-directory }/logs/trace.log.yaml
                                                                                     else
                                                                                         STANDARD_INPUT="$( cat )" || failure 32061
@@ -734,7 +735,7 @@
                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                             '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }' \
-                                                                                            | yq eval --prettyPrint "." \
+                                                                                            | yq eval --prettyPrint "[.]" \
                                                                                             >> ${ resources-directory }/logs/trace.log.yaml
                                                                                     fi
                                                                                 '' ;
