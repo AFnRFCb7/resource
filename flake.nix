@@ -708,31 +708,31 @@
                                                                     pkgs.writeShellApplication
                                                                         {
                                                                             name = "trace" ;
-                                                                            runtimeInputs = [ pkgs.yq-go ] ;
+                                                                            runtimeInputs = [ pkgs.jq pkgs.yq-go ] ;
                                                                             text =
                                                                                 ''
                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 22397
                                                                                     if [[ -t 0 ]]
                                                                                     then
                                                                                         # shellcheck disable=SC2016
-                                                                                        yq \
-                                                                                            eval \
+                                                                                        jq \
+                                                                                            --compact-output \
                                                                                             --null-input \
-                                                                                            --prettyPrint \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                             '{ "arguments" : $ARGUMENTS }' \
+                                                                                            | yq eval --prettyPrint "." \
                                                                                             >> ${ resources-directory }/logs/trace.log.yaml
                                                                                     else
                                                                                         STANDARD_INPUT="$( cat )" || failure 32061
                                                                                         # shellcheck disable=SC2016
-                                                                                        yq \
-                                                                                            eval \
+                                                                                        jq \
+                                                                                            --compact-output \
                                                                                             --null-input \
-                                                                                            --prettyPrint \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                             '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }' \
-                                                                                            > ${ resources-directory }/logs/trace.log.yaml
+                                                                                            | yq eval --prettyPrint "." \
+                                                                                            >> ${ resources-directory }/logs/trace.log.yaml\
                                                                                     fi
                                                                                 '' ;
                                                                         }
