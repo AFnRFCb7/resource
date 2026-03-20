@@ -227,7 +227,6 @@
                                                                                                                                                                 --arg INDEX "$INDEX" \
                                                                                                                                                                 --argjson SEED "$SEED" \
                                                                                                                                                                 --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                                                                                                --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                                                                 --arg STATUS "$STATUS" \
                                                                                                                                                                 '{
                                                                                                                                                                     "hash" : $HASH ,
