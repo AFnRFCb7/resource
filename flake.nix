@@ -311,7 +311,6 @@
                                                                                                                 ''
                                                                                                                     mkdir --parents ${ resources-directory }/logs
                                                                                                                     INDEX="$( sequential )" || failure 5607
-                                                                                                                    touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     export INDEX
                                                                                                                     exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                     flock -x 204
@@ -391,6 +390,7 @@
                                                                                                         ''
                                                                                                             INDEX="$( sequential )" || failure 5607
                                                                                                             export INDEX
+                                                                                                            mkdir --parents ${ resources-directory }/marks
                                                                                                             touch "${ resources-directory }/marks/$INDEX"
                                                                                                             mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
@@ -1007,7 +1007,7 @@
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
                                                                                 exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                 flock -s 204
-                                                                                mkdir --parents "${ resources-directory }/marks"
+                                                                                mkdir --parents ${ resources-directory }/marks
                                                                                 touch "${ resources-directory }/marks/$INDEX"
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                 pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
