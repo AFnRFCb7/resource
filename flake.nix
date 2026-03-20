@@ -732,7 +732,7 @@
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                             '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }' \
                                                                                             | yq eval --prettyPrint "." \
-                                                                                            >> ${ resources-directory }/logs/trace.log.yaml\
+                                                                                            >> ${ resources-directory }/logs/trace.log.yaml
                                                                                     fi
                                                                                 '' ;
                                                                         }
