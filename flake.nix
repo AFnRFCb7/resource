@@ -286,7 +286,7 @@
                                                                                         ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            mkdir --parents "${ gc-roots-directory }/$INDEX"
+                                                                                            mkdir --parents "${ gc-root-directory }/$INDEX"
                                                                                             export HASH=$HASH
                                                                                             export INDEX=$INDEX
                                                                                             destroy
