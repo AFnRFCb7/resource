@@ -240,11 +240,12 @@
                                                                                                                                                             trace 4083 "$0" "JSON_FILE=$JSON_FILE" "STATUS=$STATUS"
                                                                                                                                                             if [[ "$STATUS" == 0 ]]
                                                                                                                                                             then
-                                                                                                                                                                trace 15336
+                                                                                                                                                                trace 15336 "STATUS="$STATUS"
                                                                                                                                                             fi
                                                                                                                                                             if [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                                                             then
                                                                                                                                                                 trace 2865
+                                                                                                                                                                sha512sum "$STANDARD_ERROR_FILE"
                                                                                                                                                             fi
                                                                                                                                                             chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                                                                                                             if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]]
