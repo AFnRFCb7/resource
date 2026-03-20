@@ -205,7 +205,7 @@
                                                                                                                                                                     rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                                     flock -u 203
                                                                                                                                                                     mkdir --parents ${ resources-directory }/logs
-                                                                                                                                                                    SCRIPT-FILE="$( ${ script-file release a } ) " || failure 17419
+                                                                                                                                                                    SCRIPT_FILE="$( ${ script-file release a } ) " || failure 17419
                                                                                                                                                                     SEED='${ builtins.toJSON seed }'
                                                                                                                                                                     STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 16457
                                                                                                                                                                     STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
@@ -228,7 +228,7 @@
                                                                                                                                                                         --null-input \
                                                                                                                                                                         --arg HASH "$HASH" \
                                                                                                                                                                         --arg INDEX "$INDEX" \
-                                                                                                                                                                        --arg "SCRIPT_FILE" "$SCRIPT_FILE" \
+                                                                                                                                                                        --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                                                                         --argjson SEED "$SEED" \
                                                                                                                                                                         --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                                                                         --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
