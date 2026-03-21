@@ -305,15 +305,15 @@
                                                                                         ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            trace 3422
+                                                                                            echo 3422
                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
-                                                                                            trace 27578
+                                                                                            echo 27578
                                                                                             export HASH=$HASH
-                                                                                            trace 4298
+                                                                                            echo 4298
                                                                                             export INDEX=$INDEX
-                                                                                            trace 14982
-                                                                                            trace destroy
-                                                                                            trace 127
+                                                                                            echo 14982
+                                                                                            echo destroy
+                                                                                            echo 127
                                                                                         '' ;
                                                                                 } ;
                                                                         in
