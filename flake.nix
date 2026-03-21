@@ -168,41 +168,41 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
-                                                                                                                                                                echo 15841
+                                                                                                                                                                trace 15841
                                                                                                                                                                 rm "${ resources-directory }/marks/$INDEX"
-                                                                                                                                                                echo 29874
+                                                                                                                                                                trace 29874
                                                                                                                                                                 find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                                 do
-                                                                                                                                                                    echo 15412 "PID=$PID"
+                                                                                                                                                                    trace 15412 "PID=$PID"
                                                                                                                                                                     tail --follow /dev/null --pid "$PID"
                                                                                                                                                                 done
-                                                                                                                                                                echo 19784
+                                                                                                                                                                trace 19784
                                                                                                                                                                 mkdir --parents "${ gc-root-directory }/$INDEX"
-                                                                                                                                                                echo 24208
+                                                                                                                                                                trace 24208
                                                                                                                                                                 find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
                                                                                                                                                                 do
-                                                                                                                                                                    echo 2060 "LINK=$LINK"
+                                                                                                                                                                    trace 2060 "LINK=$LINK"
                                                                                                                                                                     FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
                                                                                                                                                                     if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                                                                                                     then
                                                                                                                                                                         inotify-wait --event delete-self "$LINK"
                                                                                                                                                                     fi
                                                                                                                                                                 done
-                                                                                                                                                                echo 23482
+                                                                                                                                                                trace 23482
                                                                                                                                                                 exec 203> "${ resources-directory }/locks/$HASH"
                                                                                                                                                                 flock -x 203
-                                                                                                                                                                echo 24754
+                                                                                                                                                                trace 24754
                                                                                                                                                                 exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                                                                 flock -x 204
-                                                                                                                                                                echo 30327
+                                                                                                                                                                trace 30327
                                                                                                                                                                 if [[ -e "${ resources-directory }/marks/$INDEX" ]]
                                                                                                                                                                 then
-                                                                                                                                                                    echo 12340
+                                                                                                                                                                    trace 12340
                                                                                                                                                                     flock -u 203
                                                                                                                                                                     flock -u 204
                                                                                                                                                                     nohup "$0" &
                                                                                                                                                                 else
-                                                                                                                                                                    echo 15683
+                                                                                                                                                                    trace 15683
                                                                                                                                                                     rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                                     flock -u 203
                                                                                                                                                                     mkdir --parents ${ resources-directory }/logs
@@ -223,7 +223,7 @@
                                                                                                                                                                     rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 4228
                                                                                                                                                                     JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                                                                                    echo 12595 "$0"
+                                                                                                                                                                    trace 12595 "$0"
                                                                                                                                                                     jq \
                                                                                                                                                                         --compact-output \
                                                                                                                                                                         --null-input \
@@ -243,14 +243,14 @@
                                                                                                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                                                             "status" : $STATUS ,
                                                                                                                                                                         }' > "$JSON_FILE"
-                                                                                                                                                                    echo 4083 "$0" "JSON_FILE=$JSON_FILE" "STATUS=$STATUS"
+                                                                                                                                                                    trace 4083 "$0" "JSON_FILE=$JSON_FILE" "STATUS=$STATUS"
                                                                                                                                                                     if [[ "$STATUS" == 0 ]]
                                                                                                                                                                     then
-                                                                                                                                                                        echo 15336 "STATUS=$STATUS"
+                                                                                                                                                                        trace 15336 "STATUS=$STATUS"
                                                                                                                                                                     fi
                                                                                                                                                                     if [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                                                                     then
-                                                                                                                                                                        echo 2865
+                                                                                                                                                                        trace 2865
                                                                                                                                                                         sha512sum "$STANDARD_ERROR_FILE"
                                                                                                                                                                     fi
                                                                                                                                                                     chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
@@ -305,15 +305,10 @@
                                                                                         ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            echo 3422
                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
-                                                                                            echo 27578
                                                                                             export HASH=$HASH
-                                                                                            echo 4298
                                                                                             export INDEX=$INDEX
-                                                                                            echo 14982
                                                                                             destroy
-                                                                                            echo 10757
                                                                                         '' ;
                                                                                 } ;
                                                                         in
@@ -717,12 +712,7 @@
                                                     runScript =
                                                         ''
                                                             bash -c '
-                                                                if [[ -t 0 ]]
-                                                                then
-                                                                    trace "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                else
-                                                                    trace "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
-                                                                fi
+                                                                trace "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
                                                             ' "$0" "$@"
                                                         '' ;
                                                     targetPkgs =
@@ -736,28 +726,15 @@
                                                                             text =
                                                                                 ''
                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 22397
-                                                                                    if [[ -t 0 ]]
-                                                                                    then
-                                                                                        # shellcheck disable=SC2016
-                                                                                        jq \
-                                                                                            --compact-output \
-                                                                                            --null-input \
-                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                            '{ "arguments" : $ARGUMENTS }' \
-                                                                                            | yq eval --prettyPrint "[.]" \
-                                                                                            >> ${ resources-directory }/logs/trace.log.yaml
-                                                                                    else
-                                                                                        STANDARD_INPUT="$( cat )" || failure 32061
-                                                                                        # shellcheck disable=SC2016
-                                                                                        jq \
-                                                                                            --compact-output \
-                                                                                            --null-input \
-                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                            --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                            '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }' \
-                                                                                            | yq eval --prettyPrint "[.]" \
-                                                                                            >> ${ resources-directory }/logs/trace.log.yaml
-                                                                                    fi
+                                                                                    # shellcheck disable=SC2016
+                                                                                    jq \
+                                                                                        --compact-output \
+                                                                                        --null-input \
+                                                                                        --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                        --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                        '$ARGUMENTS'
+                                                                                        | yq eval --prettyPrint "[.]" \
+                                                                                        >> ${ resources-directory }/logs/trace.log.yaml
                                                                                 '' ;
                                                                         }
                                                                 )
