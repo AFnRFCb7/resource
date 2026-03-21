@@ -304,10 +304,15 @@
                                                                                         ] ;
                                                                                     text =
                                                                                         ''
+                                                                                            trace 3422
                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
+                                                                                            trace 27578
                                                                                             export HASH=$HASH
+                                                                                            trace 4298
                                                                                             export INDEX=$INDEX
+                                                                                            trace 14982
                                                                                             destroy
+                                                                                            trace 127
                                                                                         '' ;
                                                                                 } ;
                                                                         in
