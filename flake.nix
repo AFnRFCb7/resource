@@ -173,7 +173,7 @@
                                                                                                                                                                 find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                                 do
                                                                                                                                                                     trace 15412 "PID=$PID"
-                                                                                                                                                                    trace tail --follow /dev/null --pid "$PID"
+                                                                                                                                                                    trace 4777 tail --follow /dev/null --pid "$PID"
                                                                                                                                                                 done
                                                                                                                                                                 trace 19784
                                                                                                                                                                 mkdir --parents "${ gc-root-directory }/$INDEX"
@@ -184,7 +184,7 @@
                                                                                                                                                                     FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
                                                                                                                                                                     if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                                                                                                     then
-                                                                                                                                                                        trace inotify-wait --event delete-self "$LINK"
+                                                                                                                                                                        trace 2578 inotify-wait --event delete-self "$LINK"
                                                                                                                                                                     fi
                                                                                                                                                                 done
                                                                                                                                                                 trace 23482
