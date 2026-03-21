@@ -312,7 +312,7 @@
                                                                                             trace 4298
                                                                                             export INDEX=$INDEX
                                                                                             trace 14982
-                                                                                            destroy
+                                                                                            trace destroy
                                                                                             trace 127
                                                                                         '' ;
                                                                                 } ;
