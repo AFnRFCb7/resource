@@ -731,8 +731,7 @@
                                                                                         --compact-output \
                                                                                         --null-input \
                                                                                         --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                        '$ARGUMENTS'
-                                                                                        | yq eval --prettyPrint "[.]" \
+                                                                                        '$ARGUMENTS' | yq eval --prettyPrint "[.]" \
                                                                                         >> ${ resources-directory }/logs/trace.log.yaml
                                                                                 '' ;
                                                                         }
