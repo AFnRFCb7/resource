@@ -312,7 +312,7 @@
                                                                                             echo 4298
                                                                                             export INDEX=$INDEX
                                                                                             echo 14982
-                                                                                            echo destroy
+                                                                                            destroy
                                                                                             echo 127
                                                                                         '' ;
                                                                                 } ;
