@@ -168,41 +168,41 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
-                                                                                                                                                                trace 15841
+                                                                                                                                                                echo 15841
                                                                                                                                                                 rm "${ resources-directory }/marks/$INDEX"
-                                                                                                                                                                trace 29874
+                                                                                                                                                                echo 29874
                                                                                                                                                                 find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                                 do
-                                                                                                                                                                    trace 15412 "PID=$PID"
+                                                                                                                                                                    echo 15412 "PID=$PID"
                                                                                                                                                                     tail --follow /dev/null --pid "$PID"
                                                                                                                                                                 done
-                                                                                                                                                                trace 19784
+                                                                                                                                                                echo 19784
                                                                                                                                                                 mkdir --parents "${ gc-root-directory }/$INDEX"
-                                                                                                                                                                trace 24208
+                                                                                                                                                                echo 24208
                                                                                                                                                                 find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
                                                                                                                                                                 do
-                                                                                                                                                                    trace 2060 "LINK=$LINK"
+                                                                                                                                                                    echo 2060 "LINK=$LINK"
                                                                                                                                                                     FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
                                                                                                                                                                     if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                                                                                                     then
                                                                                                                                                                         inotify-wait --event delete-self "$LINK"
                                                                                                                                                                     fi
                                                                                                                                                                 done
-                                                                                                                                                                trace 23482
+                                                                                                                                                                echo 23482
                                                                                                                                                                 exec 203> "${ resources-directory }/locks/$HASH"
                                                                                                                                                                 flock -x 203
-                                                                                                                                                                trace 24754
+                                                                                                                                                                echo 24754
                                                                                                                                                                 exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                                                                 flock -x 204
-                                                                                                                                                                trace 30327
+                                                                                                                                                                echo 30327
                                                                                                                                                                 if [[ -e "${ resources-directory }/marks/$INDEX" ]]
                                                                                                                                                                 then
-                                                                                                                                                                    trace 12340
+                                                                                                                                                                    echo 12340
                                                                                                                                                                     flock -u 203
                                                                                                                                                                     flock -u 204
                                                                                                                                                                     nohup "$0" &
                                                                                                                                                                 else
-                                                                                                                                                                    trace 15683
+                                                                                                                                                                    echo 15683
                                                                                                                                                                     rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                                     flock -u 203
                                                                                                                                                                     mkdir --parents ${ resources-directory }/logs
@@ -243,14 +243,14 @@
                                                                                                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                                                             "status" : $STATUS ,
                                                                                                                                                                         }' > "$JSON_FILE"
-                                                                                                                                                                    trace 4083 "$0" "JSON_FILE=$JSON_FILE" "STATUS=$STATUS"
+                                                                                                                                                                    echo 4083 "$0" "JSON_FILE=$JSON_FILE" "STATUS=$STATUS"
                                                                                                                                                                     if [[ "$STATUS" == 0 ]]
                                                                                                                                                                     then
-                                                                                                                                                                        trace 15336 "STATUS=$STATUS"
+                                                                                                                                                                        echo 15336 "STATUS=$STATUS"
                                                                                                                                                                     fi
                                                                                                                                                                     if [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                                                                     then
-                                                                                                                                                                        trace 2865
+                                                                                                                                                                        echo 2865
                                                                                                                                                                         sha512sum "$STANDARD_ERROR_FILE"
                                                                                                                                                                     fi
                                                                                                                                                                     chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
