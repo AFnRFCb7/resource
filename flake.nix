@@ -140,6 +140,7 @@
                                                                                     name = "destroy" ;
                                                                                     runtimeInputs =
                                                                                         [
+                                                                                            trace
                                                                                             (
                                                                                                 buildFHSUserEnv
                                                                                                     {
