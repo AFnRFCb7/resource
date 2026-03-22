@@ -74,40 +74,47 @@
                                                                         applications =
                                                                             {
                                                                                 init =
-                                                                                    buildFHSUserEnv
+                                                                                    visitor
                                                                                         {
-                                                                                            extraBwrapArgs =
-                                                                                                [
-                                                                                                    "--bind ${ resources-directory }/mounts/$INDEX /mount"
-                                                                                                    "--tmpfs /scratch"
-                                                                                                ] ;
-                                                                                            name = "init" ;
-                                                                                            runScript =
-                                                                                                ''
-                                                                                                    init -c '
-                                                                                                        if "$HAS_STANDARD_INPUT"
-                                                                                                        then
-                                                                                                            init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
-                                                                                                        else
-                                                                                                            init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
-                                                                                                        fi
-                                                                                                    ' "$0" "$@"
-                                                                                                '' ;
-                                                                                            targetPkgs =
-                                                                                                pkgs :
-                                                                                                    [
-                                                                                                        (
-                                                                                                            pkgs.writeShellApplication
-                                                                                                                {
-                                                                                                                    name = "init" ;
-                                                                                                                    text =
-                                                                                                                        let
-                                                                                                                            a = arguments.init pkgs ;
-                                                                                                                            in init a ;
-                                                                                                                }
-                                                                                                        )
-                                                                                                    ] ;
-                                                                                        } ;
+                                                                                            lambda =
+                                                                                                path : value :
+                                                                                                    buildFHSUserEnv
+                                                                                                        {
+                                                                                                            extraBwrapArgs =
+                                                                                                                [
+                                                                                                                    "--bind ${ resources-directory }/mounts/$INDEX /mount"
+                                                                                                                    "--tmpfs /scratch"
+                                                                                                                ] ;
+                                                                                                            name = "init" ;
+                                                                                                            runScript =
+                                                                                                                ''
+                                                                                                                    init -c '
+                                                                                                                        if "$HAS_STANDARD_INPUT"
+                                                                                                                        then
+                                                                                                                            init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                                        else
+                                                                                                                            init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
+                                                                                                                        fi
+                                                                                                                    ' "$0" "$@"
+                                                                                                                '' ;
+                                                                                                            targetPkgs =
+                                                                                                                pkgs :
+                                                                                                                    [
+                                                                                                                        (
+                                                                                                                            pkgs.writeShellApplication
+                                                                                                                                {
+                                                                                                                                    name = "init" ;
+                                                                                                                                    text =
+                                                                                                                                        let
+                                                                                                                                            a = arguments.init pkgs ;
+                                                                                                                                            in value a ;
+                                                                                                                                }
+                                                                                                                        )
+                                                                                                                    ] ;
+                                                                                                        } ;
+                                                                                            null = path : value : "true" ;
+                                                                                        }
+                                                                                        init ;
                                                                                 release =
                                                                                     buildFHSUserEnv
                                                                                         {
