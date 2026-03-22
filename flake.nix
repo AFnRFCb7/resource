@@ -112,34 +112,41 @@
                                                                                                                         )
                                                                                                                     ] ;
                                                                                                         } ;
-                                                                                            null = path : value : "true" ;
+                                                                                            null = path : value : null ;
                                                                                         }
                                                                                         init ;
                                                                                 release =
-                                                                                    buildFHSUserEnv
+                                                                                    visitor
                                                                                         {
-                                                                                            extraBwrapArgs =
-                                                                                                [
-                                                                                                    ''--bind "${ resources-directory }/mounts/$INDEX" /mount''
-                                                                                                    ''--tmpfs /scratch''
-                                                                                                ] ;
-                                                                                            name = "release" ;
-                                                                                            runScript = "release" ;
-                                                                                            targetPkgs =
-                                                                                                 pkgs :
-                                                                                                    [
-                                                                                                        (
-                                                                                                            pkgs.writeShellApplication
-                                                                                                                {
-                                                                                                                    name = "release" ;
-                                                                                                                    text =
-                                                                                                                        let
-                                                                                                                            a = arguments.release pkgs ;
-                                                                                                                            in release a ;
-                                                                                                                }
-                                                                                                        )
-                                                                                                    ] ;
-                                                                                        } ;
+                                                                                            lambda =
+                                                                                                path : value :
+                                                                                                    buildFHSUserEnv
+                                                                                                        {
+                                                                                                            extraBwrapArgs =
+                                                                                                                [
+                                                                                                                    ''--bind "${ resources-directory }/mounts/$INDEX" /mount''
+                                                                                                                    ''--tmpfs /scratch''
+                                                                                                                ] ;
+                                                                                                            name = "release" ;
+                                                                                                            runScript = "release" ;
+                                                                                                            targetPkgs =
+                                                                                                                 pkgs :
+                                                                                                                    [
+                                                                                                                        (
+                                                                                                                            pkgs.writeShellApplication
+                                                                                                                                {
+                                                                                                                                    name = "release" ;
+                                                                                                                                    text =
+                                                                                                                                        let
+                                                                                                                                            a = arguments.release pkgs ;
+                                                                                                                                            in value a ;
+                                                                                                                                }
+                                                                                                                        )
+                                                                                                                    ] ;
+                                                                                                        } ;
+                                                                                            null = path : value : null ;
+                                                                                        }
+                                                                                        release ;
                                                                             } ;
                                                                         destroy =
                                                                             writeShellApplication
