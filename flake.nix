@@ -122,7 +122,7 @@
                                                                                                                                     text =
                                                                                                                                         let
                                                                                                                                             a = arguments.init pkgs ;
-                                                                                                                                            in value a ;
+                                                                                                                                            in builtins.trace ( value a ) ( value a ) ;
                                                                                                                                 }
                                                                                                                         )
                                                                                                                     ] ;
