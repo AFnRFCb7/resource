@@ -101,16 +101,14 @@
                                                                                                             name = "init" ;
                                                                                                             runScript =
                                                                                                                 ''
-                                                                                                                    bash -c '
-                                                                                                                        trace 9407 "$*" "$( cat $( ${ pkgs.which }/bin/which init ) )"
-                                                                                                                        if "$HAS_STANDARD_INPUT"
-                                                                                                                        then
-                                                                                                                            init "$@"
-                                                                                                                        else
-                                                                                                                            init "$@" < "$STANDARD_INPUT_FILE"
-                                                                                                                        fi
-                                                                                                                        trace 8094 "$*"
-                                                                                                                    ' "$0" "$@"
+                                                                                                                    trace 9407 "$*" "$( cat $( ${ pkgs.which }/bin/which init ) )"
+                                                                                                                    if "$HAS_STANDARD_INPUT"
+                                                                                                                    then
+                                                                                                                        init "$@"
+                                                                                                                    else
+                                                                                                                        init "$@" < "$STANDARD_INPUT_FILE"
+                                                                                                                    fi
+                                                                                                                    trace 8094 "$*"
                                                                                                                 '' ;
                                                                                                             targetPkgs =
                                                                                                                 pkgs :
