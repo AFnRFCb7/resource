@@ -65,7 +65,17 @@
                                             buildFHSUserEnv
                                                 {
                                                     name = "create" ;
-                                                    runScript = "create" ;
+                                                    runScript =
+                                                        ''
+                                                            bash -c '
+                                                                if "$HAS_STANDARD_INPUT"
+                                                                then
+                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                else
+                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
+                                                                fi
+                                                            ' "$0" "$@"
+                                                        '' ;
                                                     targetPkgs =
                                                         pkgs :
                                                             [
@@ -1056,7 +1066,9 @@
                                                                                 # shellcheck disable=SC2090
                                                                                 export TARGETS_EXPECTED
                                                                                 export ULTIMATE_PID
+                                                                                trace 17539 "$*"
                                                                                 create "$@"
+                                                                                trace "$*"
                                                                             fi
                                                                         '' ;
                                                         } ;
