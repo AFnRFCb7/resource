@@ -110,7 +110,7 @@
                                                                                                                             init "$@" < "$STANDARD_INPUT_FILE"
                                                                                                                         fi
                                                                                                                         trace 8094 "$*"
-                                                                                                                    ' - "$@"
+                                                                                                                    ' "$0" "$@"
                                                                                                                 '' ;
                                                                                                             targetPkgs =
                                                                                                                 pkgs :
