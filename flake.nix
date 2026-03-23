@@ -101,13 +101,15 @@
                                                                                                             name = "init" ;
                                                                                                             runScript =
                                                                                                                 ''
-                                                                                                                    init -c '
+                                                                                                                    bash -c '
+                                                                                                                        trace 9407 "$*"
                                                                                                                         if "$HAS_STANDARD_INPUT"
                                                                                                                         then
                                                                                                                             init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                                                                         else
                                                                                                                             init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
                                                                                                                         fi
+                                                                                                                        trace 8094 "$*"
                                                                                                                     ' "$0" "$@"
                                                                                                                 '' ;
                                                                                                             targetPkgs =
@@ -374,6 +376,7 @@
                                                                                                                     STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
                                                                                                                     STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
+                                                                                                                    trace 21750 "$@"
                                                                                                                     if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                     then
                                                                                                                         STATUS="$?"
