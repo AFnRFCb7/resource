@@ -68,17 +68,20 @@
                                                     runScript =
                                                         ''
                                                             bash -c '
+                                                                trace 2256 "$*"
                                                                 if "$HAS_STANDARD_INPUT"
                                                                 then
                                                                     create "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
                                                                 else
                                                                     create "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
                                                                 fi
+                                                                trace 5487 "$*"
                                                             ' "$0" "$@"
                                                         '' ;
                                                     targetPkgs =
                                                         pkgs :
                                                             [
+                                                                trace
                                                                 (
                                                                     let
                                                                         applications =
@@ -339,7 +342,7 @@
                                                                             pkgs.writeShellApplication
                                                                                 {
                                                                                     name = "create" ;
-                                                                                    runtimeInputs = [ applications.init failure pid pkgs.coreutils pkgs.flock pkgs.gnused pkgs.jq sequential ] ;
+                                                                                    runtimeInputs = [ applications.init failure pid pkgs.coreutils pkgs.flock pkgs.gnused pkgs.jq sequential trace ] ;
                                                                                     text =
                                                                                         visitor
                                                                                             {
@@ -349,6 +352,7 @@
                                                                                                             a = arguments.init pkgs ;
                                                                                                             in
                                                                                                                 ''
+                                                                                                                    trace 5542 "$*"
                                                                                                                     mkdir --parents ${ resources-directory }/logs
                                                                                                                     INDEX="$( sequential )" || failure 5607
                                                                                                                     export INDEX
