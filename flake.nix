@@ -102,7 +102,7 @@
                                                                                                             runScript =
                                                                                                                 ''
                                                                                                                     bash -c '
-                                                                                                                        trace 9407 "$*" "$( ${ pkgs.which }/bin/which init )"
+                                                                                                                        trace 9407 "$*" "$( cat $( ${ pkgs.which }/bin/which init ) )"
                                                                                                                         if "$HAS_STANDARD_INPUT"
                                                                                                                         then
                                                                                                                             init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
@@ -122,7 +122,7 @@
                                                                                                                                     text =
                                                                                                                                         let
                                                                                                                                             a = arguments.init pkgs ;
-                                                                                                                                            in builtins.trace ( value a ) ( value a ) ;
+                                                                                                                                            in value a ;
                                                                                                                                 }
                                                                                                                         )
                                                                                                                     ] ;
