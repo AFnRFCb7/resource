@@ -105,9 +105,9 @@
                                                                                                                         trace 9407 "$*" "$( cat $( ${ pkgs.which }/bin/which init ) )"
                                                                                                                         if "$HAS_STANDARD_INPUT"
                                                                                                                         then
-                                                                                                                            init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                                                                            init "$@"
                                                                                                                         else
-                                                                                                                            init "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
+                                                                                                                            init "$@" < "$STANDARD_INPUT_FILE"
                                                                                                                         fi
                                                                                                                         trace 8094 "$*"
                                                                                                                     ' "$0" "$@"
