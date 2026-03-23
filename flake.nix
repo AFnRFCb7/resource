@@ -938,7 +938,7 @@
                                                     writeShellApplication
                                                         {
                                                             name = "setup" ;
-                                                            runtimeInputs = [ coreutils create failure flock jq pid scripts-hash sequential ] ;
+                                                            runtimeInputs = [ coreutils create failure flock jq pid scripts-hash sequential trace ] ;
                                                             text =
                                                                 let
                                                                     stringable =
