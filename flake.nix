@@ -657,36 +657,58 @@
                                                                             text =
                                                                                 let
                                                                                     scripts-hash =
-                                                                                        visitor
-                                                                                            {
-                                                                                                lambda =
-                                                                                                    path : value :
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "script" ;
-                                                                                                                runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                                text =
-                                                                                                                    let
-                                                                                                                        a =
-                                                                                                                            if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then arguments.init pkgs
-                                                                                                                            else arguments.release pkgs ;
-                                                                                                                        in builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.concatLists [ path [ ( builtins.toString ( value a ) ) ] ] ) ) ;
-                                                                                                            } ;
-                                                                                                list = path : list : builtins.hashString "sha512" ( builtins.toJSON [ path list ] ) ;
-                                                                                                null = path : value : builtins.hashString "sha512" ( builtins.concatStringsSep "" path ) ;
-                                                                                                set = path : set : builtins.hashString "sha512" ( builtins.toJSON [ path set ] ) ;
-                                                                                            }
-                                                                                            {
-                                                                                                init = init ;
-                                                                                                init-resolutions = init-resolutions ;
-                                                                                                invalid-init-channel = invalid-init-channel ;
-                                                                                                invalid-release-channel = invalid-release-channel ;
-                                                                                                release = release ;
-                                                                                                release-resolutions = release-resolutions ;
-                                                                                                stale-init-channel = stale-init-channel ;
-                                                                                                valid-init-channel = valid-init-channel ;
-                                                                                                valid-release-channel = valid-release-channel ;
-                                                                                            } ;
+                                                                                        let
+                                                                                            hash =
+                                                                                                path : value :
+                                                                                                    builtins.hashString
+                                                                                                        "sha512"
+                                                                                                        (
+                                                                                                            builtins.concatStringsSep
+                                                                                                                ""
+                                                                                                                (
+                                                                                                                    builtins.concatLists
+                                                                                                                        [
+                                                                                                                            path
+                                                                                                                            [
+                                                                                                                                (
+                                                                                                                                    builtins.toString value
+                                                                                                                                )
+                                                                                                                            ]
+                                                                                                                        ]
+                                                                                                                )
+                                                                                                        ) ;
+                                                                                            in
+                                                                                                visitor
+                                                                                                    {
+                                                                                                        lambda =
+                                                                                                            path : value :
+                                                                                                                pkgs.writeShellApplication
+                                                                                                                    {
+                                                                                                                        name = "script" ;
+                                                                                                                        runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                                        text =
+                                                                                                                            let
+                                                                                                                                a =
+                                                                                                                                    if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then arguments.init pkgs
+                                                                                                                                    else arguments.release pkgs ;
+                                                                                                                                in builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.concatLists [ path [ ( builtins.toString ( value a ) ) ] ] ) ) ;
+                                                                                                                    } ;
+                                                                                                        list = path : list : builtins.hashString "sha512" ( builtins.toJSON [ path list ] ) ;
+                                                                                                        null = hash ;
+                                                                                                        set = path : set : builtins.hashString "sha512" ( builtins.toJSON [ path set ] ) ;
+                                                                                                        string = hash ;
+                                                                                                    }
+                                                                                                    {
+                                                                                                        init = init ;
+                                                                                                        init-resolutions = init-resolutions ;
+                                                                                                        invalid-init-channel = invalid-init-channel ;
+                                                                                                        invalid-release-channel = invalid-release-channel ;
+                                                                                                        release = release ;
+                                                                                                        release-resolutions = release-resolutions ;
+                                                                                                        stale-init-channel = stale-init-channel ;
+                                                                                                        valid-init-channel = valid-init-channel ;
+                                                                                                        valid-release-channel = valid-release-channel ;
+                                                                                                    } ;
                                                                                     in
                                                                                         ''
                                                                                             echo ${ scripts-hash }
@@ -992,7 +1014,7 @@
                                                                                     path = stringable ;
                                                                                     string = stringable ;
                                                                                 }
-                                                                                [ breaker ] ;
+                                                                                [ breaker secondary ] ;
                                                                     transient_ =
                                                                         visitor
                                                                             {
