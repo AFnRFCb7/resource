@@ -992,7 +992,7 @@
                                                                                     path = stringable ;
                                                                                     string = stringable ;
                                                                                 }
-                                                                                [ breaker secondary ] ;
+                                                                                [ breaker ] ;
                                                                     transient_ =
                                                                         visitor
                                                                             {
