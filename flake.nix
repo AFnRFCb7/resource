@@ -95,6 +95,8 @@
                                                                                                         {
                                                                                                             extraBwrapArgs =
                                                                                                                 [
+                                                                                                                    "--bind ${ resources-directory }/locks ${ resources-directory }/locks"
+                                                                                                                    "--bind ${ resources-directory }/logs ${ resources-directory }/logs"
                                                                                                                     "--bind ${ resources-directory }/mounts/$INDEX /mount"
                                                                                                                     "--tmpfs /scratch"
                                                                                                                 ] ;
