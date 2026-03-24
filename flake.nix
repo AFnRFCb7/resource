@@ -10,16 +10,11 @@
                         coreutils ,
                         flock ,
                         gc-root-directory ,
-                        invalid-init-channel ,
-                        invalid-release-channel ,
                         jq ,
                         procps ,
                         redis ,
                         resources ,
                         resources-directory ,
-                        stale-init-channel ,
-                        valid-init-channel ,
-                        valid-release-channel ,
                         visitor ,
                         writeShellApplication
                     } @primary :
@@ -29,11 +24,16 @@
                                     depth ,
                                     init ,
                                     init-resolutions ,
+                                    invalid-init-channel ,
+                                    invalid-release-channel ,
                                     release ,
                                     release-resolutions ,
                                     seed ,
+                                    stale-init-channel ,
                                     targets ,
-                                    transient
+                                    transient ,
+                                    valid-init-channel ,
+                                    valid-release-channel
                                 } @secondary :
                                     let
                                         arguments =
@@ -1088,14 +1088,19 @@
                                             expected ? "" ,
                                             init ? null ,
                                             init-resolutions ? null ,
+                                            invalid-init-channel ? "25169" ,
+                                            invalid-release-channel ? "30428" ,
                                             mkDerivation ,
                                             release ? null ,
                                             release-resolutions ? null ,
                                             resources ? null ,
                                             seed ? 17507 ,
                                             setup ? setup : setup ,
+                                            stale-init-channel ? "8476" ,
                                             targets ? [ ] ,
                                             transient ? false ,
+                                            valid-init-channel ? "5475" ,
+                                            valid-release-channel ? "31093"
                                         } :
                                             mkDerivation
                                                 {
@@ -1116,11 +1121,16 @@
                                                                                             depth = depth ;
                                                                                             init = init ;
                                                                                             init-resolutions = init-resolutions ;
+                                                                                            invalid-init-channel = invalid-init-channel ;
+                                                                                            invalid-release-channel = invalid-release-channel ;
                                                                                             release = release ;
                                                                                             release-resolutions = release-resolutions ;
                                                                                             seed = seed ;
+                                                                                            stale-init-channel = stale-init-channel ;
                                                                                             targets = targets ;
                                                                                             transient = transient ;
+                                                                                            valid-init-channel = valid-init-channel ;
+                                                                                            valid-release-channel = valid-release-channel ;
                                                                                         } ;
                                                                                 in
                                                                                     if expected == observed then
