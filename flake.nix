@@ -679,8 +679,13 @@
                                                                                             {
                                                                                                 init = init ;
                                                                                                 init-resolutions = init-resolutions ;
+                                                                                                invalid-init-channel = invalid-init-channel ;
+                                                                                                invalid-release-channel = invalid-release-channel ;
                                                                                                 release = release ;
                                                                                                 release-resolutions = release-resolutions ;
+                                                                                                stale-init-channel = stale-init-channel ;
+                                                                                                valid-init-channel = valid-init-channel ;
+                                                                                                valid-release-channel = valid-release-channel ;
                                                                                             } ;
                                                                                     in
                                                                                         ''
