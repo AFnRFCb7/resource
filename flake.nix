@@ -97,6 +97,7 @@
                                                                                                                 [
                                                                                                                     "--bind ${ resources-directory }/locks ${ resources-directory }/locks"
                                                                                                                     "--bind ${ resources-directory }/logs ${ resources-directory }/logs"
+                                                                                                                    "--bind ${ resources-directory }/mounts ${ resources-directory }/mounts"
                                                                                                                     "--bind ${ resources-directory }/mounts/$INDEX /mount"
                                                                                                                     "--tmpfs /scratch"
                                                                                                                 ] ;
