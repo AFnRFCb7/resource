@@ -509,7 +509,7 @@
                                                                                         jq \
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                            '{ "arguments" : $ARGUMENTS }'
+                                                                                            '{ "arguments" : $ARGUMENTS }' >&2
                                                                                     else
                                                                                         STANDARD_INPUT="$( cat )" || exit 65
                                                                                         # shellcheck disable=SC2016
@@ -517,7 +517,7 @@
                                                                                             --null-input \
                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                             --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                            '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }'
+                                                                                            '{ "arguments" : $ARGUMENTS , "standard-input" : $STANDARD_INPUT }' >&2
                                                                                     fi
                                                                                     exit 66
                                                                                 '' ;
