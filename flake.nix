@@ -866,6 +866,8 @@
                                                                                                 elif [[ "$STYLE" == "plain" ]]
                                                                                                 then
                                                                                                     BRACED="\$$VARIABLE"
+                                                                                                else
+                                                                                                    failure 21548 "We were expecting brace or plain but we got $STYLE" "$*"
                                                                                                 fi
                                                                                                 if ! grep --fixed-string "$BRACED" "$INPUT"
                                                                                                 then
