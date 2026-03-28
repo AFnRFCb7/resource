@@ -554,8 +554,8 @@
                                                                                     DIRECTORY="$( dirname "$TARGET" )" || failure 30095
                                                                                     SEQUENCE="$( sequential )" || failure 18737
                                                                                     mkdir --parents "${ gc-root-directory }/$INDEX/$SEQUENCE/$DIRECTORY"
-                                                                                    ln --symbolic "$TARGET" "${ gc-root-directory }/$INDEX/SEQUENCE/$DIRECTORY"
-                                                                                    trace Rooted "TARGET=$TARGET" at "DESTINATION=${ gc-root-directory }/$INDEX/SEQUENCE/$DIRECTORY"
+                                                                                    ln --symbolic "$TARGET" "${ gc-root-directory }/$INDEX/$SEQUENCE$DIRECTORY"
+                                                                                    trace Rooted "TARGET=$TARGET" at "DESTINATION=${ gc-root-directory }/$INDEX/$SEQUENCE$DIRECTORY"
                                                                                 '' ;
                                                                         }
                                                                 )
