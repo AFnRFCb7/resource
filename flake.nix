@@ -547,12 +547,12 @@
                                                                     pkgs.writeShellApplication
                                                                         {
                                                                             name = "gc-root" ;
-                                                                            runtimeInputs = [ pkgs.coreutils trace ] ;
+                                                                            runtimeInputs = [ pkgs.coreutils sequential trace ] ;
                                                                             text =
                                                                                 ''
                                                                                     TARGET="$1"
                                                                                     DIRECTORY="$( dirname "$TARGET" )" || failure 30095
-                                                                                    SEQUENCE="$( sequence )" || failure 18737
+                                                                                    SEQUENCE="$( sequential )" || failure 18737
                                                                                     mkdir --parents "${ gc-root-directory }/$INDEX/$SEQUENCE/$DIRECTORY"
                                                                                     ln --symbolic "$TARGET" "${ gc-root-directory }/$INDEX/SEQUENCE/$DIRECTORY"
                                                                                     trace Rooted "TARGET=$TARGET" at "DESTINATION=${ gc-root-directory }/$INDEX/SEQUENCE/$DIRECTORY"
