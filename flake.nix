@@ -48,7 +48,7 @@
                                                             seed = seed ;
                                                             sequential = sequential ;
                                                             trace = trace ;
-                                                            wrap = null ;
+                                                            wrap = wrap ;
                                                         } ;
                                                 release =
                                                     pkgs :
