@@ -908,7 +908,7 @@
                                                                                                 failure 15883 "We were expecting --inherit, --literal, --set, or --uuid but we observed $*"
                                                                                         esac
                                                                                     done
-                                                                                    mapfile --trim-newline FOUND_PLACEHOLDERS < <(
+                                                                                    mapfile -t FOUND_PLACEHOLDERS < <(
                                                                                         grep --only-matching --extended-regexp '\$\{[A-Za-z_][A-Za-z0-9_]*\}|\$[A-Za-z_][A-Za-z0-9_]*' "$INPUT" | sort --unique
                                                                                     )
                                                                                     UNRESOLVED=()
