@@ -379,7 +379,7 @@
                                                                                                                     trace 21750 "$@"
                                                                                                                     if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                     then
-                                                                                                                        STATUS="$?"
+                                                                                                                        STATUS="0"
                                                                                                                     else
                                                                                                                         STATUS="$?"
                                                                                                                     fi
