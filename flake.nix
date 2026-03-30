@@ -428,7 +428,7 @@
                                                                                                                     else
                                                                                                                         redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
-                                                                                                                        failure 30398
+                                                                                                                        failure 30398 "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
                                                                                                                 '' ;
                                                                                                 null =
