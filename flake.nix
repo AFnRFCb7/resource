@@ -830,6 +830,10 @@
                                                                                                 fi
                                                                                                 STYLE="$2"
                                                                                                 VARIABLE="$3"
+                                                                                                if [[ -z "${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE+x" "}" ] }" ]]
+                                                                                                then
+                                                                                                    failure 26274 "The environment variable '$VARIABLE' is not set, but it is required for --inherit."
+                                                                                                fi
                                                                                                 VALUE="${ builtins.concatStringsSep "" [ "$" "{" "!VARIABLE" "}" ] }"
                                                                                                 if [[ "$STYLE" == "brace" ]]
                                                                                                 then
