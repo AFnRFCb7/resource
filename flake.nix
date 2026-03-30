@@ -874,7 +874,7 @@
                                                                                                 fi
                                                                                                 if ! grep --fixed-string "$BRACED" "$INPUT"
                                                                                                 then
-                                                                                                    failure 9160 "We were expecting literal $BRACED to be in the input file but it was not" "$*"
+                                                                                                    failure 9160 "We were expecting literal $BRACED to be in the input file $INPUT but it was not" "$*"
                                                                                                 fi
                                                                                                 ALLOWED_PLACEHOLDERS+=( "$BRACED" )
                                                                                                 # With sed we do not need to do anything for literal-brace
