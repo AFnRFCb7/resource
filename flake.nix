@@ -795,7 +795,7 @@
                                                                                 ''
                                                                                     if [[ 3 -gt "$#" ]]
                                                                                     then
-                                                                                        failure 4721 "We were expecting input output permissions but we observed $# arguments:  $*"
+                                                                                        failure 4721 "We were expecting input output permissions but we observed $# arguments:" "$*"
                                                                                     fi
                                                                                     INPUT="$1"
                                                                                     if [[ ! -f "$INPUT" ]]
