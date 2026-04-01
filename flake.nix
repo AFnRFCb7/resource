@@ -424,9 +424,11 @@
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
+                                                                                                                        trace 29114
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
                                                                                                                         redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
+                                                                                                                        trace 32730
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
@@ -468,7 +470,8 @@
                                                                                                             chmod 0400 "$JSON_FILE"
                                                                                                             ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
                                                                                                             redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                                                            echo "${ resources-directory }/mounts/$HASH"
+                                                                                                            trace 18406
+                                                                                                            echo "${ resources-directory }/mounts/$INDEX"
                                                                                                         '' ;
                                                                                             }
                                                                                             init ;
@@ -1043,6 +1046,7 @@
                                                                             flock -x 203
                                                                             if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                             then
+                                                                                trace 1981
                                                                                 LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 3789
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
                                                                                 exec 204> "${ resources-directory }/locks/$INDEX"
@@ -1052,9 +1056,10 @@
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                 pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
                                                                                 SEED='${ builtins.toJSON seed }'
-                                                                                echo "${ resources-directory }/mounts/$INDEX"
+                                                                                trace 31071
                                                                                 JSON_SEQUENCE="$( sequential )" || failure 30634
                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                trace 5908
                                                                                 jq \
                                                                                     --null-input \
                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
@@ -1077,7 +1082,10 @@
                                                                                         "targets" : $TARGETS_EXPECTED ,
                                                                                         "transient" : $TRANSIENT
                                                                                     }' > "$JSON_FILE"
+                                                                                trace 22019
                                                                                 redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE" > /dev/null 2>&1 || true
+                                                                                trace 21948
+                                                                                echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
                                                                                 export HASH
