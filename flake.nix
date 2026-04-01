@@ -1007,21 +1007,29 @@
                                                                             STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 27125
                                                                             mkdir --parents "${ resources-directory }/logs"
                                                                             STANDARD_INPUT_FILE="${ resources-directory }/logs/$STANDARD_INPUT_SEQUENCE"
-                                                                            if [[ -t 0 ]]
-                                                                            then
-                                                                                HAS_STANDARD_INPUT=false
-                                                                                touch "$STANDARD_INPUT_FILE"
-                                                                                chmod 0400 "$STANDARD_INPUT_FILE"
-                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
-                                                                            else
-                                                                                STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
-                                                                                export STANDARD_INPUT_FILE
-                                                                                HAS_STANDARD_INPUT=true
-                                                                                cat > "$STANDARD_INPUT_FILE"
-                                                                                chmod 0400 "$STANDARD_INPUT_FILE"
-                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
-                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
-                                                                            fi
+                                                                            # KLUDGE.
+                                                                            # WE NOTICED THAT THE STANDARD INPUT CODE SOMETIMES MAL FUNCTIONED
+                                                                            # AND WE WERE NOT USING STANDARD INPUT
+                                                                            # SO THE EASIEST THING TO DO IS DISABLE IT
+                                                                            HAS_STANDARD_INPUT=false
+                                                                            touch "$STANDARD_INPUT_FILE"
+                                                                            chmod 0400 "$STANDARD_INPUT_FILE"
+                                                                            ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 22859
+#                                                                            if [[ -t 0 ]]
+#                                                                            then
+#                                                                                HAS_STANDARD_INPUT=false
+#                                                                                touch "$STANDARD_INPUT_FILE"
+#                                                                                chmod 0400 "$STANDARD_INPUT_FILE"
+#                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 28567
+#                                                                            else
+#                                                                                STANDARD_INPUT_FILE="$( mktemp )" || failure 29248
+#                                                                                export STANDARD_INPUT_FILE
+#                                                                                HAS_STANDARD_INPUT=true
+#                                                                                cat > "$STANDARD_INPUT_FILE"
+#                                                                                chmod 0400 "$STANDARD_INPUT_FILE"
+#                                                                                PENULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 27339
+#                                                                                ULTIMATE_PID="$( ps -o ppid= -p "$PENULTIMATE_PID" | tr -d '[:space:]' )" || failure 17331
+#                                                                            fi
                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                             PRE_HASH='${ builtins.hashString "sha512" ( builtins.toJSON stringable ) }'
                                                                             SCRIPTS_HASH="$( scripts-hash )" || failure 15672
