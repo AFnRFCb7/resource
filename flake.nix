@@ -850,7 +850,7 @@
                                                                                                 fi
                                                                                                 if ! grep --fixed-string "$BRACED" "$INPUT"
                                                                                                 then
-                                                                                                    failure 28342 "We were expecting inherit $BRACED to be in the input file but it was not" "$*"
+                                                                                                    failure 28342 "We were expecting inherit $BRACED to be in the input file $INPUT but it was not" "$*"
                                                                                                 fi
                                                                                                 ALLOWED_PLACEHOLDERS+=( "$BRACED" )
                                                                                                 COMMANDS+=( -e "s#$BRACED#$VALUE#g" )
