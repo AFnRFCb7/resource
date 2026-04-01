@@ -71,9 +71,9 @@
                                                                 trace 2256 "$*"
                                                                 if "$HAS_STANDARD_INPUT"
                                                                 then
-                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
                                                                 else
-                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" < "$STANDARD_INPUT_FILE"
+                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" < "$STANDARD_INPUT_FILE"
                                                                 fi
                                                                 trace 5487 "$*"
                                                             ' "$0" "$@"
@@ -485,9 +485,9 @@
                                                             bash -c '
                                                                 if [[ -t 0 ]]
                                                                 then
-                                                                    failure "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                    failure "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
                                                                 else
-                                                                    failure "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                    failure "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
                                                                 fi
                                                             ' "$0" "$@"
                                                         '' ;
@@ -533,9 +533,9 @@
                                                             bash -c '
                                                                 if [[ -t 0 ]]
                                                                 then
-                                                                    gc-root "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                    gc-root "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
                                                                 else
-                                                                    gc-root "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                    gc-root "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
                                                                 fi
                                                             ' "$0" "$@"
                                                         '' ;
@@ -569,9 +569,9 @@
                                                             bash -c '
                                                                 if [[ -t 0 ]]
                                                                 then
-                                                                    pid "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                    pid "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
                                                                 else
-                                                                    pid "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                    pid "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
                                                                 fi
                                                             ' "$0" "$@"
                                                         '' ;
@@ -742,7 +742,7 @@
                                                     runScript =
                                                         ''
                                                             bash -c '
-                                                                trace "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                trace "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
                                                             ' "$0" "$@"
                                                         '' ;
                                                     targetPkgs =
@@ -777,9 +777,9 @@
                                                             bash -c '
                                                                 if [[ -t 0 ]]
                                                                 then
-                                                                    wrap "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }"
+                                                                    wrap "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
                                                                 else
-                                                                    wrap "${ builtins.concatStringsSep "" [ "$" "{" "@" "}" ] }" <&0
+                                                                    wrap "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
                                                                 fi
                                                             ' "$0" "$@"
                                                         '' ;
