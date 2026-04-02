@@ -376,7 +376,7 @@
                                                                                                                     STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
                                                                                                                     STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
-                                                                                                                    trace 21750 "$@"
+                                                                                                                    trace 21750 "INDEX=$INDEX" "$@"
                                                                                                                     if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                     then
                                                                                                                         STATUS="0"
@@ -424,11 +424,11 @@
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                                                                        trace 29114
+                                                                                                                        trace 29114 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
                                                                                                                         redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                                                                        trace 32730
+                                                                                                                        trace 32730 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
@@ -470,7 +470,7 @@
                                                                                                             chmod 0400 "$JSON_FILE"
                                                                                                             ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
                                                                                                             redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                                                            trace 18406
+                                                                                                            trace 18406 "INDEX=$INDEX"
                                                                                                             echo "${ resources-directory }/mounts/$INDEX"
                                                                                                         '' ;
                                                                                             }
@@ -1082,9 +1082,9 @@
                                                                                         "targets" : $TARGETS_EXPECTED ,
                                                                                         "transient" : $TRANSIENT
                                                                                     }' > "$JSON_FILE"
-                                                                                trace 22019
+                                                                                trace 22019 "INDEX=$INDEX"
                                                                                 redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                                trace 21948
+                                                                                trace 21948 "INDEX=$INDEX"
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
