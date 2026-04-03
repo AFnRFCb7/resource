@@ -198,7 +198,7 @@
                                                                                                                                                         in
                                                                                                                                                             ''
                                                                                                                                                                 trace 15841
-                                                                                                                                                                rm "${ resources-directory }/marks/$INDEX"
+                                                                                                                                                                rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 trace 29874
                                                                                                                                                                 find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                                 do
@@ -294,7 +294,7 @@
                                                                                                                                             null =
                                                                                                                                                 path : value :
                                                                                                                                                     ''
-                                                                                                                                                        rm "${ resources-directory }/marks/$INDEX"
+                                                                                                                                                        rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                         mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                                                                                         find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                         do
