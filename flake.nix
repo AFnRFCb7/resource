@@ -368,8 +368,8 @@
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
                                                                                                                     RELEASE_FILE="${ resources-directory }/release/$INDEX"
-                                                                                                                    sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                                    chmod 0500 "$RELEASE"
+                                                                                                                    sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                    chmod 0500 "$RELEASE_FILE"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                                     # shellcheck disable=SC2016
                                                                                                                     SCRIPT_FILE="$( ${ script-file init a } )"
@@ -445,9 +445,9 @@
                                                                                                             mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                             mkdir --parents ${ resources-directory }/release
-                                                                                                            RELEASE="${ resources-directory }/release/$INDEX"
-                                                                                                            sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                            chmod 0500 "$RELEASE"
+                                                                                                            RELEASE_FILE="${ resources-directory }/release/$INDEX"
+                                                                                                            sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                            chmod 0500 "$RELEASE_FILEi"
                                                                                                             SEED='${ builtins.toJSON seed }'
                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                                                             JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
@@ -458,14 +458,14 @@
                                                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                 --arg HASH "$HASH" \
                                                                                                                 --arg INDEX "$INDEX" \
-                                                                                                                --arg RELEASE "$RELEASE" \
+                                                                                                                --arg RELEASE_FILE "$RELEASE_FILE" \
                                                                                                                 --arg SEED "$SEED" \
                                                                                                                 --arg STATUS "$STATUS" \
                                                                                                                 '{
                                                                                                                     "arguments" : $ARGUMENTS ,
                                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                     "hash" : $HASH ,
-                                                                                                                    "release" : $RELEASE ,
+                                                                                                                    "release-file" : $RELEASE_FILE ,
                                                                                                                     "seed" : $SEED ,
                                                                                                                     "index" : $INDEX ,
                                                                                                                 }' > "$JSON_FILE"
