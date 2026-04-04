@@ -368,6 +368,10 @@
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
                                                                                                                     RELEASE_FILE="${ resources-directory }/release/$INDEX"
+                                                                                                                    if [[ -e "$RELEASE_FILE" ]]
+                                                                                                                    then
+                                                                                                                        failure 16697
+                                                                                                                    fi
                                                                                                                     sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                     chmod 0500 "$RELEASE_FILE"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
@@ -446,6 +450,10 @@
                                                                                                             ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                             mkdir --parents ${ resources-directory }/release
                                                                                                             RELEASE_FILE="${ resources-directory }/release/$INDEX"
+                                                                                                            if [[ -e "$RELEASE_FILE" ]]
+                                                                                                            then
+                                                                                                                failure 15975
+                                                                                                            fi
                                                                                                             sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                             chmod 0500 "$RELEASE_FILE"
                                                                                                             SEED='${ builtins.toJSON seed }'
