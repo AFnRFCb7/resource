@@ -198,7 +198,9 @@
                                                                                                                                                         in
                                                                                                                                                             ''
                                                                                                                                                                 trace 15841
+                                                                                                                                                                echo 625 rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
+                                                                                                                                                                echo 5006
                                                                                                                                                                 trace 29874
                                                                                                                                                                 find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                                 do
@@ -232,8 +234,9 @@
                                                                                                                                                                     nohup "$0" &
                                                                                                                                                                 else
                                                                                                                                                                     trace 15683
+                                                                                                                                                                    echo 17328 rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                                     rm "${ resources-directory }/canonical/$HASH"
-                                                                                                                                                                    flock -u 203
+                                                                                                                                                                    flock -u 203 echo 10200
                                                                                                                                                                     mkdir --parents ${ resources-directory }/logs
                                                                                                                                                                     SCRIPT_FILE="$( ${ script-file release a } )" || failure 17419
                                                                                                                                                                     SEED='${ builtins.toJSON seed }'
@@ -249,7 +252,9 @@
                                                                                                                                                                     fi
                                                                                                                                                                     ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
                                                                                                                                                                     tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                                                                                    echo 20301 rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                                     rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                                                                                    echo 31757
                                                                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 4228
                                                                                                                                                                     JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                                                                                                     trace 12595 "$0"
