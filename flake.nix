@@ -447,7 +447,7 @@
                                                                                                             mkdir --parents ${ resources-directory }/release
                                                                                                             RELEASE_FILE="${ resources-directory }/release/$INDEX"
                                                                                                             sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                            chmod 0500 "$RELEASE_FILEi"
+                                                                                                            chmod 0500 "$RELEASE_FILE"
                                                                                                             SEED='${ builtins.toJSON seed }'
                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                                                             JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
