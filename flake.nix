@@ -208,17 +208,20 @@
                                                                                                                                                                     tail --follow /dev/null --pid "$PID"
                                                                                                                                                                 done
                                                                                                                                                                 trace 19784
-                                                                                                                                                                mkdir --parents "${ gc-root-directory }/$INDEX"
-                                                                                                                                                                trace 24208
-                                                                                                                                                                find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
+                                                                                                                                                                mkdir --parents "${ gc-root-directory }"
+                                                                                                                                                                echo 24208
+                                                                                                                                                                find ${ gc-root-directory } -mindepth 1 -type l | while read -r LINK
                                                                                                                                                                 do
-                                                                                                                                                                    trace 2060 "LINK=$LINK"
                                                                                                                                                                     FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
+                                                                                                                                                                    echo 2060 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                                     if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                                                                                                     then
+                                                                                                                                                                        echo 7010 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                                         inotify-wait --event delete-self "$LINK"
+                                                                                                                                                                        echo 8287 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                                     fi
                                                                                                                                                                 done
+                                                                                                                                                                echo 7264
                                                                                                                                                                 trace 23482
                                                                                                                                                                 exec 203> "${ resources-directory }/locks/$HASH"
                                                                                                                                                                 flock -x 203
