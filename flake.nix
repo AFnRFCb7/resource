@@ -318,8 +318,12 @@
                                                                                                                                                         flock -x 203
                                                                                                                                                         exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                                                         flock -x 204
-                                                                                                                                                        if [[ ! -e "${ resources-directory }/marks/$INDEX" ]]
+                                                                                                                                                        if [[ -e "${ resources-directory }/marks/$INDEX" ]]
                                                                                                                                                         then
+                                                                                                                                                            flock -u 203
+                                                                                                                                                            flock -u 204
+                                                                                                                                                            nohup "$0" &
+                                                                                                                                                        else
                                                                                                                                                             echo 13649
                                                                                                                                                             rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                             echo  9251
@@ -329,10 +333,6 @@
                                                                                                                                                             echo 763
                                                                                                                                                             rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                             echo 5731
-                                                                                                                                                        else
-                                                                                                                                                            flock -u 203
-                                                                                                                                                            flock -u 204
-                                                                                                                                                            nohup "$0" &
                                                                                                                                                         fi
                                                                                                                                                     '' ;
                                                                                                                                         }
