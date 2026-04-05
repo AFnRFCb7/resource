@@ -197,7 +197,7 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
-                                                                                                                                                                echo 2089324406  "INDEX=$INDEX"
+                                                                                                                                                                echo 2089324406 "INDEX=$INDEX"
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 echo 5006
                                                                                                                                                                 trace 29874
@@ -309,7 +309,8 @@
                                                                                                                                                             tail --follow /dev/null --pid "$PID"
                                                                                                                                                         done
                                                                                                                                                         mkdir --parents "${ gc-root-directory }"
-                                                                                                                                                        echo 30425
+                                                                                                                                                        echo 30425 find "${ gc-root-directory }" -mindepth 1 -type l
+                                                                                                                                                        find "${ gc-root-directory }" -mindepth 1 -type l
                                                                                                                                                         find "${ gc-root-directory }" -mindepth 1 -type l | while read -r LINK
                                                                                                                                                         do
                                                                                                                                                             FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
