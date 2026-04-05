@@ -299,7 +299,9 @@
                                                                                                                                             null =
                                                                                                                                                 path : value :
                                                                                                                                                     ''
+                                                                                                                                                        echo 7612
                                                                                                                                                         rm --force "${ resources-directory }/marks/$INDEX"
+                                                                                                                                                        echo 336
                                                                                                                                                         mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                                                                                         find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                         do
@@ -320,11 +322,15 @@
                                                                                                                                                         flock -x 204
                                                                                                                                                         if [[ -e "${ resources-directory }/marks/$INDEX" ]]
                                                                                                                                                         then
+                                                                                                                                                            echo 13649
                                                                                                                                                             rm "${ resources-directory }/canonical/$HASH"
+                                                                                                                                                            echo  9251
                                                                                                                                                             flock -u 203
                                                                                                                                                             ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
                                                                                                                                                             tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                                                                            echo 763
                                                                                                                                                             rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                                                                            echo 5731
                                                                                                                                                         else
                                                                                                                                                             flock -u 203
                                                                                                                                                             flock -u 204
