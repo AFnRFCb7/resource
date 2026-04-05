@@ -299,28 +299,14 @@
                                                                                                                                             null =
                                                                                                                                                 path : value :
                                                                                                                                                     ''
-                                                                                                                                                        echo 7612 ${ resources-directory }
-                                                                                                                                                        printf 'INDEX=[%s]\n' "$INDEX"
-                                                                                                                                                        printf 'DIR=[%q]\n' "${resources-directory}"
-                                                                                                                                                        printf 'INDEX=[%q]\n' "$INDEX"
-                                                                                                                                                        printf 'TARGET=[%q]\n' "${resources-directory}/marks/$INDEX"
-                                                                                                                                                        ${ pkgs.gnused }/bin/sed -n '1,30p' "$(${ pkgs.which }/bin/which destroy)"
-                                                                                                                                                        echo
-                                                                                                                                                        echo
-                                                                                                                                                        echo
-                                                                                                                                                        echo
-                                                                                                                                                        echo
-                                                                                                                                                        echo
-                                                                                                                                                        echo
                                                                                                                                                         rm --force "${ resources-directory }/marks/$INDEX"
-                                                                                                                                                        echo 336
                                                                                                                                                         mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                                                                                         find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                         do
                                                                                                                                                             tail --follow /dev/null --pid "$PID"
                                                                                                                                                         done
-                                                                                                                                                        mkdir --parents "${ gc-root-directory }/$INDEX"
-                                                                                                                                                        find "${ gc-root-directory }/$INDEX" -mindepth 1 -type l | while read -r LINK
+                                                                                                                                                        mkdir --parents ${ gc-root-directory }
+                                                                                                                                                        find "${ gc-root-directory }" -mindepth 1 -type l | while read -r LINK
                                                                                                                                                         do
                                                                                                                                                             FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
                                                                                                                                                             if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
@@ -332,7 +318,7 @@
                                                                                                                                                         flock -x 203
                                                                                                                                                         exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                                                         flock -x 204
-                                                                                                                                                        if [[ -e "${ resources-directory }/marks/$INDEX" ]]
+                                                                                                                                                        if [[ ! -e "${ resources-directory }/marks/$INDEX" ]]
                                                                                                                                                         then
                                                                                                                                                             echo 13649
                                                                                                                                                             rm "${ resources-directory }/canonical/$HASH"
