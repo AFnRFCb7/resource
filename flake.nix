@@ -333,7 +333,20 @@
                                                                                                                                                             tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                             echo 763
                                                                                                                                                             rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
-                                                                                                                                                            echo 5731
+                                                                                                                                                            JSON_SEQUENCE="$( sequential )" || failure 32030
+                                                                                                                                                            JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                                                            jq \
+                                                                                                                                                                --compact-output \
+                                                                                                                                                                --null-input \
+                                                                                                                                                                --arg HASH "$HASH" \
+                                                                                                                                                                --arg INDEX "$INDEX" \
+                                                                                                                                                                --argjson SEED "$SEED" \
+                                                                                                                                                                '{
+                                                                                                                                                                    "hash" : $HASH ,
+                                                                                                                                                                    "index" : $INDEX ,
+                                                                                                                                                                    "seed" : $SEED
+                                                                                                                                                                }' > "$JSON_FILE"
+                                                                                                                                                            redis-cli PUBLISH ${ valid-release-channel } "$JSON_FILE"
                                                                                                                                                         fi
                                                                                                                                                     '' ;
                                                                                                                                         }
