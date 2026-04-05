@@ -175,7 +175,7 @@
                                                                                                     {
                                                                                                         extraBwrapArgs =
                                                                                                             [
-                                                                                                                ''--bind "${ gc-root-directory }/$INDEX" ${ gc-root-directory }''
+                                                                                                                ''--bind ${ gc-root-directory } ${ gc-root-directory }''
                                                                                                                 "--bind ${ resources-directory} ${ resources-directory }"
                                                                                                             ] ;
                                                                                                         name = "destroy" ;
