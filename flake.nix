@@ -299,7 +299,8 @@
                                                                                                                                             null =
                                                                                                                                                 path : value :
                                                                                                                                                     ''
-                                                                                                                                                        echo 7612
+                                                                                                                                                        echo 7612 ${ resources-directory }
+                                                                                                                                                        printf 'INDEX=[%s]\n' "$INDEX"
                                                                                                                                                         rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                         echo 336
                                                                                                                                                         mkdir --parents "${ resources-directory }/pids/$INDEX"
