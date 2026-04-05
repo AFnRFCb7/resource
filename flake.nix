@@ -197,8 +197,7 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
-                                                                                                                                                                trace 15841
-                                                                                                                                                                echo 625
+                                                                                                                                                                echo 2089324406  "INDEX=$INDEX"
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 echo 5006
                                                                                                                                                                 trace 29874
@@ -302,6 +301,7 @@
                                                                                                                                             null =
                                                                                                                                                 path : value :
                                                                                                                                                     ''
+                                                                                                                                                        echo 1111927120 "INDEX=$INDEX"
                                                                                                                                                         rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                         mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                                                                                         find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
