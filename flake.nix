@@ -216,7 +216,7 @@
                                                                                                                                                                     if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                                                                                                     then
                                                                                                                                                                         echo 7010 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
-                                                                                                                                                                        inotify-wait --event delete-self "$LINK"
+                                                                                                                                                                        inotifywait --event delete-self "$LINK"
                                                                                                                                                                         echo 8287 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                                     fi
                                                                                                                                                                 done
@@ -318,7 +318,7 @@
                                                                                                                                                             if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                                                                                             then
                                                                                                                                                                 echo 9337 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
-                                                                                                                                                                inotify-wait --event delete-self "$LINK"
+                                                                                                                                                                inotifywait --event delete-self "$LINK"
                                                                                                                                                                 echo 5614 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                             fi
                                                                                                                                                         done
