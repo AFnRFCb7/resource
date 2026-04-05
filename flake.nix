@@ -198,7 +198,7 @@
                                                                                                                                                         in
                                                                                                                                                             ''
                                                                                                                                                                 trace 15841
-                                                                                                                                                                echo 625 rm --force "${ resources-directory }/marks/$INDEX"
+                                                                                                                                                                echo 625
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 echo 5006
                                                                                                                                                                 trace 29874
@@ -234,7 +234,7 @@
                                                                                                                                                                     nohup "$0" &
                                                                                                                                                                 else
                                                                                                                                                                     trace 15683
-                                                                                                                                                                    echo 17328 rm "${ resources-directory }/canonical/$HASH"
+                                                                                                                                                                    echo 17328
                                                                                                                                                                     rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                                     flock -u 203 echo 10200
                                                                                                                                                                     mkdir --parents ${ resources-directory }/logs
@@ -252,7 +252,7 @@
                                                                                                                                                                     fi
                                                                                                                                                                     ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
                                                                                                                                                                     tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
-                                                                                                                                                                    echo 20301 rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
+                                                                                                                                                                    echo 20301
                                                                                                                                                                     rm --recursive --force "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
                                                                                                                                                                     echo 31757
                                                                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 4228
