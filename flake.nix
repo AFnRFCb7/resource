@@ -305,7 +305,7 @@
                                                                                                                                                         printf 'INDEX=[%q]\n' "$INDEX"
                                                                                                                                                         printf 'TARGET=[%q]\n' "${resources-directory}/marks/$INDEX"
                                                                                                                                                         rm --force "${ resources-directory }/marks/$INDEX"
-                                                                                                                                                        ${ pkgs.gnused }/bin/sed -n '1,30p' $(${ pkgs.which }/bin/which destroy)
+                                                                                                                                                        ${ pkgs.gnused }/bin/sed -n '1,30p' "$(${ pkgs.which }/bin/which destroy)"
                                                                                                                                                         echo 336
                                                                                                                                                         mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                                                                                         find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
