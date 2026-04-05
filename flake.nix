@@ -301,6 +301,9 @@
                                                                                                                                                     ''
                                                                                                                                                         echo 7612 ${ resources-directory }
                                                                                                                                                         printf 'INDEX=[%s]\n' "$INDEX"
+                                                                                                                                                        printf 'DIR=[%q]\n' "${resources-directory}"
+                                                                                                                                                        printf 'INDEX=[%q]\n' "$INDEX"
+                                                                                                                                                        printf 'TARGET=[%q]\n' "${resources-directory}/marks/$INDEX"
                                                                                                                                                         rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                         echo 336
                                                                                                                                                         mkdir --parents "${ resources-directory }/pids/$INDEX"
