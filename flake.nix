@@ -318,7 +318,7 @@
                                                                                                                                                                 echo 5614 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                             fi
                                                                                                                                                         done
-                                                                                                                                                        echo 4351 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
+                                                                                                                                                        echo 4351
                                                                                                                                                         exec 203> "${ resources-directory }/locks/$HASH"
                                                                                                                                                         flock -x 203
                                                                                                                                                         exec 204> "${ resources-directory }/locks/$INDEX"
