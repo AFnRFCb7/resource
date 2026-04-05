@@ -310,7 +310,7 @@
                                                                                                                                                         find "${ gc-root-directory }" -mindepth 1 -type l | while read -r LINK
                                                                                                                                                         do
                                                                                                                                                             FILE="$( readlink --canonicalize "$LINK" )" || failure 15150
-                                                                                                                                                            echo 1656 "LINK=$LINK" "FILE=$FILE"
+                                                                                                                                                            echo 1656 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                             if [[ "${ resources-directory }/mounts/$INDEX" == "$FILE" ]]
                                                                                                                                                             then
                                                                                                                                                                 echo 9337 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
@@ -318,7 +318,7 @@
                                                                                                                                                                 echo 5614 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                             fi
                                                                                                                                                         done
-                                                                                                                                                        echo 4351
+                                                                                                                                                        echo 4351 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                         exec 203> "${ resources-directory }/locks/$HASH"
                                                                                                                                                         flock -x 203
                                                                                                                                                         exec 204> "${ resources-directory }/locks/$INDEX"
