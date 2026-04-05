@@ -328,6 +328,7 @@
                                                                                                                                                             rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                             echo  9251
                                                                                                                                                             flock -u 203
+                                                                                                                                                            SEED='${ builtins.toJSON seed }'
                                                                                                                                                             ARCHIVE="$( mktemp --dry-run --suffix ".tar.xz" )" || failure 7546
                                                                                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
                                                                                                                                                             tar --create --xz --file "$ARCHIVE" "${ gc-root-directory }/$INDEX" "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/pids/$INDEX" "${ resources-directory }/release/$INDEX"
