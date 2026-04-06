@@ -102,7 +102,9 @@
                                                                                                             runScript =
                                                                                                                 ''
                                                                                                                     bash -c '
-                                                                                                                        trace 9407 "$*" "$( cat $( ${ pkgs.which }/bin/which init ) )"
+                                                                                                                        trace 9407 "$*"
+                                                                                                                        trace 7222 "$( cat $( ${ pkgs.which }/bin/which init ) )"
+                                                                                                                        trace 4953 init "$@"
                                                                                                                         if "$HAS_STANDARD_INPUT"
                                                                                                                         then
                                                                                                                             init "$@"
