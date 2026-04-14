@@ -432,13 +432,10 @@
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
                                                                                                                     STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                     trace 21750 "INDEX=$INDEX" "$@"
-                                                                                                                    SIGNAL_SEQUENCE="$( sequential )" || failure
-                                                                                                                    if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                                                    then
-                                                                                                                        STATUS="0"
-                                                                                                                    else
-                                                                                                                        STATUS="$?"
-                                                                                                                    fi
+                                                                                                                    SIGNAL_SEQUENCE="$( sequential )" || failure 31017
+                                                                                                                    export SIGNAL="${ resources-directory }/$SIGNAL_SEQUENCE"
+                                                                                                                    init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                    STATUS="$( cat "$SIGNAL/signal" )" || failure 11902
                                                                                                                     TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | jq --raw-input . | jq --compact-output --slurp . )" || failure 28445
                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                                                                     JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
