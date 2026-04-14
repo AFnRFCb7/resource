@@ -64,6 +64,10 @@
                                         create =
                                             buildFHSUserEnv
                                                 {
+                                                    extraBwrapArgs =
+                                                        [
+                                                            ''--bind "${ resources-directory }/logs/$SIGNAL" /signal''
+                                                        ] ;
                                                     name = "create" ;
                                                     runScript =
                                                         ''
@@ -71,9 +75,19 @@
                                                                 trace 2256 "$*"
                                                                 if "$HAS_STANDARD_INPUT"
                                                                 then
-                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
+                                                                    if create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
+                                                                    then
+                                                                        echo "$?" > /signal/signal
+                                                                    else
+                                                                        echo "$?" > /signal/signal
+                                                                    fi
                                                                 else
-                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" < "$STANDARD_INPUT_FILE"
+                                                                    if create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" < "$STANDARD_INPUT_FILE"
+                                                                    then
+                                                                        echo "$?" > /signal/signal
+                                                                    else
+                                                                        echo "$?" > /signal/signal
+                                                                    fi
                                                                 fi
                                                                 trace 5487 "$*"
                                                             ' "$0" "$@"
@@ -418,6 +432,7 @@
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
                                                                                                                     STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                     trace 21750 "INDEX=$INDEX" "$@"
+                                                                                                                    SIGNAL_SEQUENCE="$( sequential )" || failure
                                                                                                                     if init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                     then
                                                                                                                         STATUS="0"
