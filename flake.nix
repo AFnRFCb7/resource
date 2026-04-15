@@ -66,7 +66,7 @@
                                                 {
                                                     extraBwrapArgs =
                                                         [
-                                                            ''--bind "${ resources-directory }/logs/$SIGNAL" /signal''
+                                                            ''--bind "$SIGNAL" /signal''
                                                         ] ;
                                                     name = "create" ;
                                                     runScript =
@@ -432,8 +432,8 @@
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
                                                                                                                     STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                     trace 21750 "INDEX=$INDEX" "$@"
-                                                                                                                    SIGNAL="$( sequential )" || failure 31017
-                                                                                                                    export SIGNAL
+                                                                                                                    SIGNAL_SEQUENCE="$( sequential )" || failure 31017
+                                                                                                                    export SIGNAL="${ resources-directory }/logs/$SIGNAL_SEQUENCE"
                                                                                                                     mkdir --parent "$SIGNAL"
                                                                                                                     init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                     STATUS="$( cat "${ resources-directory }/logs/$SIGNAL/signal" )" || failure 11902
