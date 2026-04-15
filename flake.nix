@@ -436,7 +436,7 @@
                                                                                                                     export SIGNAL="${ resources-directory }/logs/$SIGNAL_SEQUENCE"
                                                                                                                     mkdir --parent "$SIGNAL"
                                                                                                                     init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                                                    STATUS="$( cat "${ resources-directory }/logs/$SIGNAL/signal" )" || failure 11902
+                                                                                                                    STATUS="$( cat "$SIGNAL/signal" )" || failure 11902
                                                                                                                     TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | jq --raw-input . | jq --compact-output --slurp . )" || failure 28445
                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                                                                     JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
