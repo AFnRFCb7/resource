@@ -437,7 +437,8 @@
                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 32761
                                                                                                                     while [[ ! -e "$SIGNAL/signal" ]]
                                                                                                                     do
-                                                                                                                        sleep
+                                                                                                                        sleep 0
+                                                                                                                        trace 13550 "SIGNAL=$SIGNAL"
                                                                                                                     done
                                                                                                                     STATUS="$( cat "$SIGNAL/signal" )" || failure 11902
                                                                                                                     JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
