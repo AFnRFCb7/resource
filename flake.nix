@@ -1155,7 +1155,7 @@
                                                                                 mkdir --parents "$SIGNAL"
                                                                                 create "$@"
                                                                                 trace "$*"
-                                                                                STATUS="$( cat "$SIGNAL" )" || failure 13801
+                                                                                STATUS="$( cat "$SIGNAL/signal" )" || failure 13801
                                                                                 exit "$STATUS"
                                                                             fi
                                                                         '' ;
