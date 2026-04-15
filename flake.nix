@@ -64,10 +64,6 @@
                                         create =
                                             buildFHSUserEnv
                                                 {
-                                                    extraBwrapArgs =
-                                                        [
-                                                            ''--bind "$SIGNAL" /signal''
-                                                        ] ;
                                                     name = "create" ;
                                                     runScript =
                                                         ''
@@ -75,19 +71,9 @@
                                                                 trace 2256 "$*"
                                                                 if "$HAS_STANDARD_INPUT"
                                                                 then
-                                                                    if create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
-                                                                    then
-                                                                        echo "$?" > /signal/signal
-                                                                    else
-                                                                        echo "$?" > /signal/signal
-                                                                    fi
+                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
                                                                 else
-                                                                    if create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" < "$STANDARD_INPUT_FILE"
-                                                                    then
-                                                                        echo "$?" > /signal/signal
-                                                                    else
-                                                                        echo "$?" > /signal/signal
-                                                                    fi
+                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" < "$STANDARD_INPUT_FILE"
                                                                 fi
                                                                 trace 5487 "$*"
                                                             ' "$0" "$@"
@@ -110,20 +96,28 @@
                                                                                                             extraBwrapArgs =
                                                                                                                 [
                                                                                                                     "--bind ${ resources-directory }/mounts/$INDEX /mount"
+                                                                                                                    ''--bind "$SIGNAL" /signal''
                                                                                                                     "--tmpfs /scratch"
                                                                                                                 ] ;
                                                                                                             name = "init" ;
                                                                                                             runScript =
                                                                                                                 ''
                                                                                                                     bash -c '
-                                                                                                                        trace 9407 "$*"
-                                                                                                                        trace 7222 "$( cat $( ${ pkgs.which }/bin/which init ) )"
-                                                                                                                        trace 4953 init "$@"
                                                                                                                         if "$HAS_STANDARD_INPUT"
                                                                                                                         then
-                                                                                                                            init "$@"
+                                                                                                                            if init "$@"
+                                                                                                                            then
+                                                                                                                                echo "$?" > /signal/signal
+                                                                                                                            else
+                                                                                                                                echo "$?" > /signal/signal
+                                                                                                                            fi
                                                                                                                         else
-                                                                                                                            init "$@" < "$STANDARD_INPUT_FILE"
+                                                                                                                            if init "$@" < "$STANDARD_INPUT_FILE"
+                                                                                                                            then
+                                                                                                                                echo "$?" > /signal/signal
+                                                                                                                            else
+                                                                                                                                echo "$?" > /signal/signal
+                                                                                                                            fi
                                                                                                                         fi
                                                                                                                         trace 8094 "$*"
                                                                                                                     ' "$0" "$@"
