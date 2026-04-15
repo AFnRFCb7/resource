@@ -432,12 +432,7 @@
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
                                                                                                                     STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                     trace 21750 "INDEX=$INDEX" "$@"
-                                                                                                                    SIGNAL_SEQUENCE="$( sequential )" || failure 31017
-                                                                                                                    export SIGNAL="${ resources-directory }/logs/$SIGNAL_SEQUENCE"
-                                                                                                                    mkdir --parent "$SIGNAL"
-                                                                                                                    trace 17588
                                                                                                                     init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
-                                                                                                                    trace 22650
                                                                                                                     STATUS="$( cat "$SIGNAL/signal" )" || failure 11902
                                                                                                                     TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | jq --raw-input . | jq --compact-output --slurp . )" || failure 28445
                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 32761
@@ -1155,8 +1150,13 @@
                                                                                 export TARGETS_EXPECTED
                                                                                 export ULTIMATE_PID
                                                                                 trace 17539 "$*"
+                                                                                SIGNAL_SEQUENCE="$( sequential )" || failure 28752
+                                                                                export SIGNAL="${ resources-directory }/logs/$SIGNAL_SEQUENCE"
+                                                                                mkdir --parents "$SIGNAL"
                                                                                 create "$@"
                                                                                 trace "$*"
+                                                                                STATUS="$( cat "$SIGNAL" )" || failure 13801
+                                                                                exit "$STATUS"
                                                                             fi
                                                                         '' ;
                                                         } ;
