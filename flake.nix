@@ -429,54 +429,84 @@
                                                                                                                     init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                     TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | jq --raw-input . | jq --compact-output --slurp . )" || failure 28445
                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 32761
+                                                                                                                    JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                                                     while [[ ! -e "$SIGNAL/signal" ]]
                                                                                                                     do
                                                                                                                         sleep 0
                                                                                                                         trace 13550 "SIGNAL=$SIGNAL"
                                                                                                                     done
                                                                                                                     STATUS="$( cat "$SIGNAL/signal" )" || failure 11902
-                                                                                                                    JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                                    jq \
-                                                                                                                        --compact-output \
-                                                                                                                        --null-input \
-                                                                                                                        --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                                                        --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                        --arg HASH "$HASH" \
-                                                                                                                        --arg INDEX "$INDEX" \
-                                                                                                                        --arg RELEASE_FILE "$RELEASE_FILE" \
-                                                                                                                        --arg SCRIPT_FILE "$SCRIPT_FILE" \
-                                                                                                                        --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
-                                                                                                                        --argjson SEED "$SEED" \
-                                                                                                                        --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                                                        --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                                                        --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                                                        --arg STATUS "$STATUS" \
-                                                                                                                        --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
-                                                                                                                        --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
-                                                                                                                        '{
-                                                                                                                            "arguments" : $ARGUMENTS ,
-                                                                                                                            "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                            "hash" : $HASH ,
-                                                                                                                            "index" : $INDEX ,
-                                                                                                                            "release-file" : $RELEASE_FILE ,
-                                                                                                                            "script-file" : $SCRIPT_FILE ,
-                                                                                                                            "scripts-hash" : $SCRIPTS_HASH ,
-                                                                                                                            "seed" : $SEED ,
-                                                                                                                            "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                                                            "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                                                            "standard-output-file" : $STANDARD_OUTPUT_FILE ,
-                                                                                                                            "status" : $STATUS ,
-                                                                                                                            "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
-                                                                                                                        }' > "$JSON_FILE"
                                                                                                                     chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$JSON_FILE"
                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                                                                     then
+                                                                                                                        jq \
+                                                                                                                            --compact-output \
+                                                                                                                            --null-input \
+                                                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                            --arg HASH "$HASH" \
+                                                                                                                            --arg INDEX "$INDEX" \
+                                                                                                                            --arg RELEASE_FILE "$RELEASE_FILE" \
+                                                                                                                            --arg SCRIPT_FILE "$SCRIPT_FILE" \
+                                                                                                                            --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
+                                                                                                                            --argjson SEED "$SEED" \
+                                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                                                            --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                                                            --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                                                            --arg STATUS "$STATUS" \
+                                                                                                                            --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
+                                                                                                                            --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
+                                                                                                                            '{
+                                                                                                                                "arguments" : $ARGUMENTS ,
+                                                                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                                "hash" : $HASH ,
+                                                                                                                                "index" : $INDEX ,
+                                                                                                                                "release-file" : $RELEASE_FILE ,
+                                                                                                                                "script-file" : $SCRIPT_FILE ,
+                                                                                                                                "scripts-hash" : $SCRIPTS_HASH ,
+                                                                                                                                "seed" : $SEED ,
+                                                                                                                                "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                                                                "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                                                                "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                                "status" : $STATUS ,
+                                                                                                                                "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
+                                                                                                                            }' > "$JSON_FILE"
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                                                         trace 29114 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
+                                                                                                                        jq \
+                                                                                                                            --compact-output \
+                                                                                                                            --null-input \
+                                                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                            --arg HASH "$HASH" \
+                                                                                                                            --arg INDEX "$INDEX" \
+                                                                                                                            --arg SCRIPT_FILE "$SCRIPT_FILE" \
+                                                                                                                            --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
+                                                                                                                            --argjson SEED "$SEED" \
+                                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                                                            --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                                                            --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                                                            --arg STATUS "$STATUS" \
+                                                                                                                            --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
+                                                                                                                            --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
+                                                                                                                            '{
+                                                                                                                                "arguments" : $ARGUMENTS ,
+                                                                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                                "hash" : $HASH ,
+                                                                                                                                "index" : $INDEX ,
+                                                                                                                                "script-file" : $SCRIPT_FILE ,
+                                                                                                                                "scripts-hash" : $SCRIPTS_HASH ,
+                                                                                                                                "seed" : $SEED ,
+                                                                                                                                "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                                                                "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                                                                "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                                "status" : $STATUS ,
+                                                                                                                                "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
+                                                                                                                            }' > "$JSON_FILE"
                                                                                                                         redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                                                         trace 32730 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
