@@ -410,13 +410,6 @@
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
-                                                                                                                    RELEASE_FILE="${ resources-directory }/release/$INDEX"
-                                                                                                                    if [[ -e "$RELEASE_FILE" ]]
-                                                                                                                    then
-                                                                                                                        failure 16697
-                                                                                                                    fi
-                                                                                                                    sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                                    chmod 0500 "$RELEASE_FILE"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
                                                                                                                     # shellcheck disable=SC2016
                                                                                                                     SCRIPT_FILE="$( ${ script-file init a } )"
@@ -439,6 +432,13 @@
                                                                                                                     chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$JSON_FILE"
                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                                                                     then
+                                                                                                                        RELEASE_FILE="${ resources-directory }/release/$INDEX"
+                                                                                                                        if [[ -e "$RELEASE_FILE" ]]
+                                                                                                                        then
+                                                                                                                            failure 16697
+                                                                                                                        fi
+                                                                                                                        sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                        chmod 0500 "$RELEASE_FILE"
                                                                                                                         jq \
                                                                                                                             --compact-output \
                                                                                                                             --null-input \
