@@ -431,7 +431,7 @@
                                                                                                                     done
                                                                                                                     STATUS="$( cat "$SIGNAL/signal" )" || failure 11902
                                                                                                                     trace 8840339113720601
-                                                                                                                    chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE" "$JSON_FILE"
+                                                                                                                    chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                                                                     then
                                                                                                                         RELEASE_FILE="${ resources-directory }/release/$INDEX"
@@ -474,6 +474,7 @@
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
                                                                                                                             }' > "$JSON_FILE"
+                                                                                                                        chmod 0400 "$JSON_FILE"
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
