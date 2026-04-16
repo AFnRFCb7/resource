@@ -511,6 +511,7 @@
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
                                                                                                                             }' > "$JSON_FILE"
+                                                                                                                        chmod 0400 "$JSON_FILE"
                                                                                                                         redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
                                                                                                                         trace 32730 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
