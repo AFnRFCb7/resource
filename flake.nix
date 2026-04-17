@@ -397,7 +397,13 @@
                                                                                                 in
                                                                                                     [
                                                                                                         ''
-                                                                                                            chmod 0500 $RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }
+                                                                                                            mkdir --parents $RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }
+                                                                                                        ''
+                                                                                                        ''
+                                                                                                            sed -e "s#\$INDEX#$INDEX#" -e "w$RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                        ''
+                                                                                                        ''
+                                                                                                            chmod 0500 $RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh
                                                                                                         ''
                                                                                                     ] ;
                                                                                     list = path : list : builtins.concatLists list ;
