@@ -424,7 +424,7 @@
                                                                                                                         mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        RESOLUTIOINS_PATH='${ builtins.toJSON path }' sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "s#\SCRIPT#${ b }#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        RESOLUTIONS_PATH='${ builtins.toJSON path }' sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
