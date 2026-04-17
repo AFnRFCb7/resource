@@ -425,7 +425,7 @@
                                                                                                                         RESOLUTIONS_PATH='${ builtins.toJSON path }'
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -442,7 +442,7 @@
                                                                                                                 RESOLUTIONS_PATH='${ builtins.toJSON path }'
                                                                                                             ''
                                                                                                             ''
-                                                                                                                sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                sed -e "s#\HAS_SCRIPT#false#" "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                             ''
                                                                                                             ''
                                                                                                                 chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -466,10 +466,11 @@
                                                                                                                 STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
                                                                                                                 STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                 ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
+                                                                                                                _HAS_SCRIPT=$HAS_SCRIPT
                                                                                                                 if [[ -t 0 ]]
                                                                                                                 then
                                                                                                                     HAS_STANDARD_INPUT=false
-                                                                                                                    if [[ -n "$SCRIPT" ]]
+                                                                                                                    if "$_HAS_SCRIPT"
                                                                                                                     then
                                                                                                                         if "$SCRIPT" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                         then
@@ -481,7 +482,7 @@
                                                                                                                 else
                                                                                                                     HAS_STANDARD_INPUT=true
                                                                                                                     cat "$STANDARD_INPUT_FILE"
-                                                                                                                    if [[ -n "$SCRIPT" ]]
+                                                                                                                    if "$_HAS_SCRIPT"
                                                                                                                     then
                                                                                                                         if "$SCRIPT" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                         then
@@ -496,6 +497,7 @@
                                                                                                                 jq \
                                                                                                                     --compact-output \
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                                                    --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                     --arg _RESOLUTION_PATH "$RESOLUTION_PATH" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
@@ -504,6 +506,7 @@
                                                                                                                     --arg STATUS "$STATUS" \
                                                                                                                     '{
                                                                                                                         "arguments" : $ARGUMENTS ,
+                                                                                                                        "has-script" : $_HAS_SCRIPT ,
                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                         "resolution-path" : $_RESOLUTION_PATH ,
                                                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
@@ -530,7 +533,7 @@
                                                                                                         mkdir --parents "${ directory }"
                                                                                                     ''
                                                                                                     ''
-                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "w${ directory }/resolve.sh" ${ resolve }
+                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "w${ directory }/resolve.sh" ${ resolve }
                                                                                                     ''
                                                                                                     ''
                                                                                                         chmod 0500 "${ directory }/resolve.sh"
