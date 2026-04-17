@@ -396,15 +396,6 @@
                                                                                                 b = value a ;
                                                                                                 in
                                                                                                     [
-                                                                                                        (
-                                                                                                            let
-                                                                                                                resolve =
-                                                                                                                    pkgs.writeShellApplication
-                                                                                                                    in
-                                                                                                                        ''
-                                                                                                                            sed -e "" -e "w$RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }" ${ resolve }
-                                                                                                                        ''
-                                                                                                        )
                                                                                                         ''
                                                                                                             chmod 0500 $RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }
                                                                                                         ''
