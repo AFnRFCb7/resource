@@ -431,7 +431,19 @@
                                                                                                                     ''
                                                                                                                 ] ;
                                                                                                 list = path : list : builtins.concatLists list ;
-                                                                                                null = path : value : [ ] ;
+                                                                                                null =
+                                                                                                    path : value :
+                                                                                                        [
+                                                                                                            ''
+                                                                                                                mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
+                                                                                                            ''
+                                                                                                            ''
+                                                                                                                sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                            ''
+                                                                                                            ''
+                                                                                                                chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
+                                                                                                            ''
+                                                                                                        ] ;
                                                                                                 set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
                                                                                             }
                                                                                             source-resolutions ;
@@ -468,7 +480,7 @@
                                                                                                                         "standard-input" : $STANDARD_INPUT \
                                                                                                                     }' > "$JSON_FILE"
                                                                                                                 redis-cli PUBLISH valid-init "$JSON_FILE"
-                                                                                                                rm --recursive --force "${ directory }"
+                                                                                                                rm --recursive --force ${ directory }
                                                                                                             '' ;
                                                                                                     } ;
                                                                                             in "${ application }/bin/resolve" ;
