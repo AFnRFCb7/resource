@@ -463,6 +463,7 @@
                                                                                                                 STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
                                                                                                                 STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                 STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 8384911191384463
+                                                                                                                STANDARD_INPUT_FILE="${ resources-directory }/logs/$STANDARD_INPUT_SEQUENCE"
                                                                                                                 STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
                                                                                                                 STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                 ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
