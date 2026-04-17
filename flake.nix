@@ -482,7 +482,7 @@
                                                                                                                         "standard-input" : $STANDARD_INPUT \
                                                                                                                     }' > "$JSON_FILE"
                                                                                                                 redis-cli PUBLISH valid-init "$JSON_FILE"
-                                                                                                                rm --recursive --force ${ directory }
+                                                                                                                rm --recursive --force "${ directory }"
                                                                                                             '' ;
                                                                                                     } ;
                                                                                             in "${ application }/bin/resolve" ;
