@@ -427,10 +427,10 @@
                                                                                                                         RESOLUTIONS_PATH='${ builtins.toJSON path }'
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        # sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
+                                                                                                                        # chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
                                                                                                                     ''
                                                                                                                 ] ;
                                                                                                 list = path : list : builtins.concatLists list ;
@@ -441,10 +441,10 @@
                                                                                                                 mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
                                                                                                             ''
                                                                                                             ''
-                                                                                                                sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                # sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                             ''
                                                                                                             ''
-                                                                                                                chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
+                                                                                                                # chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
                                                                                                             ''
                                                                                                         ] ;
                                                                                                 set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
@@ -470,18 +470,16 @@
                                                                                                                 fi
                                                                                                                 JSON_SEQUENCE="$( sequence )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                                # shellcheck disable=SC2269,SC2153
-                                                                                                                RESOLUTION_PATH_1="$RESOLUTION_PATH"
                                                                                                                 jq \
                                                                                                                     --compact-output \
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                    --arg RESOLUTION_PATH "$RESOLUTION_PATH_1" \
+                                                                                                                    --arg _RESOLUTION_PATH "$RESOLUTION_PATH" \
                                                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                     '{
                                                                                                                         "arguments" : $ARGUMENTS \
                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT \
-                                                                                                                        "resolution-path" : $RESOLUTION_PATH \
+                                                                                                                        "resolution-path" : $_RESOLUTION_PATH \
                                                                                                                         "standard-input" : $STANDARD_INPUT \
                                                                                                                     }' > "$JSON_FILE"
                                                                                                                 redis-cli PUBLISH valid-init "$JSON_FILE"
