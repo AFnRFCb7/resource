@@ -502,7 +502,6 @@
                                                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                             --arg HASH "$HASH" \
                                                                                                                             --arg INDEX "$INDEX" \
-                                                                                                                            --arg RESOLVE_DIRECTORY "$RESOLVE_DIRECTORY" \
                                                                                                                             --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                             --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                             --argjson SEED "$SEED" \
@@ -517,7 +516,6 @@
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "hash" : $HASH ,
                                                                                                                                 "index" : $INDEX ,
-                                                                                                                                "resolve-directory" : $RESOLVE_DIRECTORY ,
                                                                                                                                 "script-file" : $SCRIPT_FILE ,
                                                                                                                                 "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                                 "seed" : $SEED ,
