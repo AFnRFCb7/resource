@@ -386,6 +386,18 @@
                                                                                             destroy
                                                                                         '' ;
                                                                                 } ;
+                                                                        resolve =
+                                                                            let
+                                                                                application =
+                                                                                    pkgs.writeShellApplication
+                                                                                        {
+                                                                                            name = "resolve" ;
+                                                                                            runtimeInputs = [ ] ;
+                                                                                            text =
+                                                                                                ''
+                                                                                                '' ;
+                                                                                        } ;
+                                                                                in "${ application }/bin/resolve" ;
                                                                         in
                                                                             pkgs.writeShellApplication
                                                                                 {
@@ -481,6 +493,8 @@
                                                                                                                         trace 29114 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
+                                                                                                                        RESOLVE_DIRECTORY="${ resources-files }/invalid-index/$INDEX"
+                                                                                                                        mkdir --parents "$RESOLVE_DIRECTORY"
                                                                                                                         jq \
                                                                                                                             --compact-output \
                                                                                                                             --null-input \
@@ -488,6 +502,7 @@
                                                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                             --arg HASH "$HASH" \
                                                                                                                             --arg INDEX "$INDEX" \
+                                                                                                                            --arg RESOLVE_DIRECTORY "$RESOLVE_DIRECTORY" \
                                                                                                                             --arg SCRIPT_FILE "$SCRIPT_FILE" \
                                                                                                                             --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                             --argjson SEED "$SEED" \
@@ -502,6 +517,7 @@
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "hash" : $HASH ,
                                                                                                                                 "index" : $INDEX ,
+                                                                                                                                "resolve-directory" " $RESOLVE_DIRECTORY ,
                                                                                                                                 "script-file" : $SCRIPT_FILE ,
                                                                                                                                 "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                                 "seed" : $SEED ,
