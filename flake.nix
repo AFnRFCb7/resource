@@ -493,7 +493,7 @@
                                                                                                                         trace 29114 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
-                                                                                                                        RESOLVE_DIRECTORY="${ resources-directory }/invalid-index/$INDEX"
+                                                                                                                        RESOLVE_DIRECTORY="${ resources-directory }/invalid-init/$INDEX"
                                                                                                                         mkdir --parents "$RESOLVE_DIRECTORY"
                                                                                                                         jq \
                                                                                                                             --compact-output \
