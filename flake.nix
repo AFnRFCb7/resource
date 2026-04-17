@@ -402,12 +402,10 @@
                                                                                                     path : value :
                                                                                                         if value then
                                                                                                             ''
-                                                                                                                ${ resources-directory }/invalid-init/$INDEX
-                                                                                                            ''
+                                                                                                                ${ resources-directory }/invalid-init/$INDEX''
                                                                                                         else
                                                                                                             ''
-                                                                                                                ${ resources-directory }/invalid-release/$INDEX
-                                                                                                            '' ;
+                                                                                                                ${ resources-directory }/invalid-release/$INDEX'' ;
                                                                                             }
                                                                                             source ;
                                                                                     resolutions =
