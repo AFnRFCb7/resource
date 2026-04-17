@@ -387,64 +387,110 @@
                                                                                         '' ;
                                                                                 } ;
                                                                         resolutions =
-                                                                            visitor
-                                                                                {
-                                                                                    lambda =
-                                                                                        path : value :
-                                                                                            let
-                                                                                                a = arguments.release pkgs ;
-                                                                                                b = value a ;
-                                                                                                in
-                                                                                                    [
-                                                                                                        ''
-                                                                                                            mkdir --parents $RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }
-                                                                                                        ''
-                                                                                                        ''
-                                                                                                            sed -e "s#\$INDEX#$INDEX#" -e "w$RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
-                                                                                                        ''
-                                                                                                        ''
-                                                                                                            chmod 0500 $RESOLVE_DIRECTORY/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh
-                                                                                                        ''
-                                                                                                    ] ;
-                                                                                    list = path : list : builtins.concatLists list ;
-                                                                                    null = path : value : [ ] ;
-                                                                                    set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
-                                                                                }
-                                                                                init-resolutions ;
-                                                                        resolve =
-                                                                            let
-                                                                                application =
-                                                                                    pkgs.writeShellApplication
-                                                                                        {
-                                                                                            name = "resolve" ;
-                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.redis ] ;
-                                                                                            text =
-                                                                                                ''
-                                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
-                                                                                                    if [[ -t 0 ]]
-                                                                                                    then
-                                                                                                        HAS_STANDARD_INPUT=false
-                                                                                                        STANDARD_INPUT=
-                                                                                                    else
-                                                                                                        HAS_STANDARD_INPUT=true
-                                                                                                        STANDARD_INPUT="$( cat )" || failure 7836856270790388
-                                                                                                    fi
-                                                                                                    JSON_SEQUENCE="$( sequence )" || failure 8452556526050122
-                                                                                                    JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                    jq \
-                                                                                                        --compact-output \
-                                                                                                        --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                        --arg STANDARD_INPUT "STANDARD_INPUT" \
-                                                                                                        '{
-                                                                                                            "arguments" : $ARGUMENTS \
-                                                                                                            "has-standard-input" : $HAS_STANDARD_INPUT \
-                                                                                                            "standard-input" : $STANDARD_INPUT \
-                                                                                                        }' > "$JSON_FILE"
-                                                                                                    redis-cli PUBLISH valid-init "$JSON_FILE"
-                                                                                                    rm --recursive --force "${ resources-directory }/invalid-init/$INDEX"
-                                                                                                '' ;
-                                                                                        } ;
-                                                                                in "${ application }/bin/resolve" ;
+                                                                            source :
+                                                                                let
+                                                                                    channel =
+                                                                                        visitor
+                                                                                            {
+                                                                                                bool = path : value : if value then valid-init-channel else valid-release-channel ;
+                                                                                            }
+                                                                                            source ;
+                                                                                    directory =
+                                                                                        visitor
+                                                                                            {
+                                                                                                bool =
+                                                                                                    path : value :
+                                                                                                        if value then
+                                                                                                            ''
+                                                                                                                "${ resources-directory }/invalid-init/$INDEX"
+                                                                                                            ''
+                                                                                                        else
+                                                                                                            ''
+                                                                                                                "${ resources-directory }/invalid-release/$INDEX"
+                                                                                                            '' ;
+                                                                                            }
+                                                                                            source ;
+                                                                                    resolutions =
+                                                                                        visitor
+                                                                                            {
+                                                                                                lambda =
+                                                                                                    path : value :
+                                                                                                        let
+                                                                                                            a = arguments.release pkgs ;
+                                                                                                            b = value a ;
+                                                                                                            in
+                                                                                                                [
+                                                                                                                    ''
+                                                                                                                        mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
+                                                                                                                    ''
+                                                                                                                    ''
+                                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                    ''
+                                                                                                                    ''
+                                                                                                                        chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
+                                                                                                                    ''
+                                                                                                                ] ;
+                                                                                                list = path : list : builtins.concatLists list ;
+                                                                                                null = path : value : [ ] ;
+                                                                                                set = path : set : builtins.concatLists ( builtins.attrValues set ) ;
+                                                                                            }
+                                                                                            source-resolutions ;
+                                                                                    resolve =
+                                                                                        let
+                                                                                            application =
+                                                                                                pkgs.writeShellApplication
+                                                                                                    {
+                                                                                                        name = "resolve" ;
+                                                                                                        runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.redis ] ;
+                                                                                                        text =
+                                                                                                            ''
+                                                                                                                ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
+                                                                                                                if [[ -t 0 ]]
+                                                                                                                then
+                                                                                                                    HAS_STANDARD_INPUT=false
+                                                                                                                    STANDARD_INPUT=
+                                                                                                                else
+                                                                                                                    HAS_STANDARD_INPUT=true
+                                                                                                                    STANDARD_INPUT="$( cat )" || failure 7836856270790388
+                                                                                                                fi
+                                                                                                                JSON_SEQUENCE="$( sequence )" || failure 8452556526050122
+                                                                                                                JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                jq \
+                                                                                                                    --compact-output \
+                                                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                    --arg STANDARD_INPUT "STANDARD_INPUT" \
+                                                                                                                    '{
+                                                                                                                        "arguments" : $ARGUMENTS \
+                                                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT \
+                                                                                                                        "standard-input" : $STANDARD_INPUT \
+                                                                                                                    }' > "$JSON_FILE"
+                                                                                                                redis-cli PUBLISH valid-init "$JSON_FILE"
+                                                                                                                rm --recursive --force "${ directory }"
+                                                                                                            '' ;
+                                                                                                    } ;
+                                                                                            in "${ application }/bin/resolve" ;
+                                                                                    source-resolutions =
+                                                                                        visitor
+                                                                                            {
+                                                                                                bool = path : value : if value then init-resolutions else release-resolutions ;
+                                                                                            }
+                                                                                            source ;
+                                                                                    in
+                                                                                        builtins.concatLists
+                                                                                            [
+                                                                                                [
+                                                                                                    ''
+                                                                                                        mkdir --parents "${ directory }"
+                                                                                                    ''
+                                                                                                    ''
+                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "w${ directory }/resolve/resolve.sh" ${ resolve }
+                                                                                                    ''
+                                                                                                    ''
+                                                                                                        chmod 0500 ${ directory }/resolve/resolve.sh
+                                                                                                    ''
+                                                                                                ]
+                                                                                                resolutions
+                                                                                            ] ;
                                                                         in
                                                                             pkgs.writeShellApplication
                                                                                 {
@@ -540,10 +586,7 @@
                                                                                                                         trace 29114 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
-                                                                                                                        RESOLVE_DIRECTORY="${ resources-directory }/invalid-init/$INDEX"
-                                                                                                                        mkdir --parents "$RESOLVE_DIRECTORY"
-                                                                                                                        sed -e "e#\$INDEX#$INDEX" -e "w$RESOLVE_DIRECTORY/resolve.sh" ${ resolve }
-                                                                                                                        chmod 0500 $RESOLVE_DIRECTORY/resolve.sh
+                                                                                                                        ${ builtins.concatStringsSep "\n" ( resolutions true ) }
                                                                                                                         jq \
                                                                                                                             --compact-output \
                                                                                                                             --null-input \
