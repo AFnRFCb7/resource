@@ -517,7 +517,7 @@
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "hash" : $HASH ,
                                                                                                                                 "index" : $INDEX ,
-                                                                                                                                "resolve-directory" " $RESOLVE_DIRECTORY ,
+                                                                                                                                "resolve-directory" : $RESOLVE_DIRECTORY ,
                                                                                                                                 "script-file" : $SCRIPT_FILE ,
                                                                                                                                 "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                                 "seed" : $SEED ,
