@@ -424,7 +424,7 @@
                                                                                                                         mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#${ builtins.toJSON path }#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -455,13 +455,16 @@
                                                                                                                 fi
                                                                                                                 JSON_SEQUENCE="$( sequence )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                RESOLUTION_PATH="$RESOLUTION_PATH"
                                                                                                                 jq \
                                                                                                                     --compact-output \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                    --arg STANDARD_INPUT "STANDARD_INPUT" \
+                                                                                                                    --arg RESOLUTION_PATH "$RESOLUTIION_PATH" \
+                                                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                     '{
                                                                                                                         "arguments" : $ARGUMENTS \
                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT \
+                                                                                                                        "resolution-path" : $RESOLUTION_PATH \
                                                                                                                         "standard-input" : $STANDARD_INPUT \
                                                                                                                     }' > "$JSON_FILE"
                                                                                                                 redis-cli PUBLISH valid-init "$JSON_FILE"
@@ -483,10 +486,10 @@
                                                                                                         mkdir --parents "${ directory }"
                                                                                                     ''
                                                                                                     ''
-                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "w${ directory }/resolve/resolve.sh" ${ resolve }
+                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "w${ directory }/resolve.sh" ${ resolve }
                                                                                                     ''
                                                                                                     ''
-                                                                                                        chmod 0500 ${ directory }/resolve/resolve.sh
+                                                                                                        chmod 0500 ${ directory }/resolve.sh
                                                                                                     ''
                                                                                                 ]
                                                                                                 resolutions
