@@ -422,13 +422,13 @@
                                                                                                                         mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        # RESOLUTIONS_PATH='${ builtins.toJSON path }'
+                                                                                                                        RESOLUTIONS_PATH='${ builtins.toJSON path }'
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        # sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        # chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
+                                                                                                                        chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
                                                                                                                     ''
                                                                                                                 ] ;
                                                                                                 list = path : list : builtins.concatLists list ;
