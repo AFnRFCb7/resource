@@ -424,7 +424,7 @@
                                                                                                                         mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#${ builtins.toJSON path }#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#${ builtins.toJSON path }#" -e "s#\SCRIPT#${ b }#" -e "w${ directory }/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -467,7 +467,7 @@
                                                                                                                 fi
                                                                                                                 JSON_SEQUENCE="$( sequence )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                                # shellcheck disable=SC2269
+                                                                                                                # shellcheck disable=SC2269,SC2153
                                                                                                                 RESOLUTION_PATH_1="$RESOLUTION_PATH"
                                                                                                                 jq \
                                                                                                                     --compact-output \
