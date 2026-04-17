@@ -467,11 +467,13 @@
                                                                                                                 fi
                                                                                                                 JSON_SEQUENCE="$( sequence )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                                RESOLUTION_PATH="$RESOLUTION_PATH"
+                                                                                                                # shellcheck disable=SC2269
+                                                                                                                RESOLUTION_PATH_1="$RESOLUTION_PATH"
                                                                                                                 jq \
                                                                                                                     --compact-output \
+                                                                                                                    --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                    --arg RESOLUTION_PATH "$RESOLUTIION_PATH" \
+                                                                                                                    --arg RESOLUTION_PATH "$RESOLUTION_PATH_1" \
                                                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                     '{
                                                                                                                         "arguments" : $ARGUMENTS \
