@@ -402,11 +402,11 @@
                                                                                                     path : value :
                                                                                                         if value then
                                                                                                             ''
-                                                                                                                "${ resources-directory }/invalid-init/$INDEX"
+                                                                                                                ${ resources-directory }/invalid-init/$INDEX
                                                                                                             ''
                                                                                                         else
                                                                                                             ''
-                                                                                                                "${ resources-directory }/invalid-release/$INDEX"
+                                                                                                                ${ resources-directory }/invalid-release/$INDEX
                                                                                                             '' ;
                                                                                             }
                                                                                             source ;
@@ -503,7 +503,7 @@
                                                                                                         sed -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "w${ directory }/resolve.sh" ${ resolve }
                                                                                                     ''
                                                                                                     ''
-                                                                                                        chmod 0500 ${ directory }/resolve.sh
+                                                                                                        chmod 0500 "${ directory }/resolve.sh"
                                                                                                     ''
                                                                                                 ]
                                                                                                 resolutions
