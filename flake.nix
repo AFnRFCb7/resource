@@ -460,14 +460,36 @@
                                                                                                         runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.redis ] ;
                                                                                                         text =
                                                                                                             ''
+                                                                                                                STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
+                                                                                                                STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
+                                                                                                                STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 8384911191384463
+                                                                                                                STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
+                                                                                                                STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                 ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
                                                                                                                 if [[ -t 0 ]]
                                                                                                                 then
                                                                                                                     HAS_STANDARD_INPUT=false
-                                                                                                                    STANDARD_INPUT=
+                                                                                                                    if [[ -n "$SCRIPT" ]]
+                                                                                                                    then
+                                                                                                                        if "$SCRIPT" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                        then
+                                                                                                                            STATUS="$?"
+                                                                                                                        else
+                                                                                                                            STATUS="$?"
+                                                                                                                        fi
+                                                                                                                    fi
                                                                                                                 else
                                                                                                                     HAS_STANDARD_INPUT=true
-                                                                                                                    STANDARD_INPUT="$( cat )" || failure 7836856270790388
+                                                                                                                    cat "$STANDARD_INPUT_FILE"
+                                                                                                                    if [[ -n "$SCRIPT" ]]
+                                                                                                                    then
+                                                                                                                        if "$SCRIPT" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                        then
+                                                                                                                            STATUS="$?"
+                                                                                                                        else
+                                                                                                                            STATUS="$?"
+                                                                                                                        fi
+                                                                                                                    fi
                                                                                                                 fi
                                                                                                                 JSON_SEQUENCE="$( sequence )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
@@ -476,12 +498,18 @@
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                     --arg _RESOLUTION_PATH "$RESOLUTION_PATH" \
+                                                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                                                    --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                                                                    --arg STATUS "$STATUS" \
                                                                                                                     '{
-                                                                                                                        "arguments" : $ARGUMENTS \
-                                                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT \
-                                                                                                                        "resolution-path" : $_RESOLUTION_PATH \
-                                                                                                                        "standard-input" : $STANDARD_INPUT \
+                                                                                                                        "arguments" : $ARGUMENTS ,
+                                                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                        "resolution-path" : $_RESOLUTION_PATH ,
+                                                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                                                        "standard-input" : $STANDARD_INPUT ,
+                                                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                        "status" : $STATUS
                                                                                                                     }' > "$JSON_FILE"
                                                                                                                 redis-cli PUBLISH valid-init "$JSON_FILE"
                                                                                                                 rm --recursive --force "${ directory }"
