@@ -460,6 +460,7 @@
                                                                                                         runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequential ] ;
                                                                                                         text =
                                                                                                             ''
+                                                                                                                # shellcheck disable=SC2153
                                                                                                                 _RESOLUTION_PATH="$RESOLUTION_PATH"
                                                                                                                 STATUS=0
                                                                                                                 STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
