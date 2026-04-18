@@ -511,6 +511,7 @@
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                     --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                                                     --arg STATUS "$STATUS" \
                                                                                                                     '{
                                                                                                                         "arguments" : $ARGUMENTS ,
@@ -530,6 +531,7 @@
                                                                                                                 else
                                                                                                                     redis-cli PUBLISH invalid-init "$JSON_FILE"
                                                                                                                 fi
+                                                                                                                exit "$STATUS"
                                                                                                             '' ;
                                                                                                     } ;
                                                                                             in "${ application }/bin/resolve" ;
