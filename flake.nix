@@ -457,7 +457,7 @@
                                                                                                 pkgs.writeShellApplication
                                                                                                     {
                                                                                                         name = "resolve" ;
-                                                                                                        runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequence ] ;
+                                                                                                        runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequential ] ;
                                                                                                         text =
                                                                                                             ''
                                                                                                                 STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
@@ -496,7 +496,7 @@
                                                                                                                         fi
                                                                                                                     fi
                                                                                                                 fi
-                                                                                                                JSON_SEQUENCE="$( sequence )" || failure 8452556526050122
+                                                                                                                JSON_SEQUENCE="$( sequential )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                                                 jq \
                                                                                                                     --compact-output \
