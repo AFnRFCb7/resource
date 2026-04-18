@@ -638,7 +638,7 @@
                                                                                                                         trace 29114 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
-                                                                                                                        echo 8833757779749638 "$0" >&2
+                                                                                                                        echo 8833757779749638 "$0"
                                                                                                                         ${ builtins.concatStringsSep "\n" ( resolutions true ) }
                                                                                                                         jq \
                                                                                                                             --compact-output \
