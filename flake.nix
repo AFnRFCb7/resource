@@ -519,7 +519,7 @@
                                                                                                                         "resolution-path" : $_RESOLUTION_PATH ,
                                                                                                                         "script-file" : $_SCRIPT_FILE ,
                                                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                                                        "standard-input" : $STANDARD_INPUT ,
+                                                                                                                        "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                         "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                         "status" : $STATUS
                                                                                                                     }' > "$JSON_FILE"
