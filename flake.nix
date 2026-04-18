@@ -467,7 +467,7 @@
                                                                                                                 STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
                                                                                                                 STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                 ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
-                                                                                                                # shellcheck disable-SC2153
+                                                                                                                # shellcheck disable=SC2153
                                                                                                                 _HAS_SCRIPT=$HAS_SCRIPT
                                                                                                                 if [[ -t 0 ]]
                                                                                                                 then
