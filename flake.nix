@@ -509,8 +509,8 @@
                                                                                                                     --arg _RESOLUTION_PATH "$_RESOLUTION_PATH" \
                                                                                                                     --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                                                    --arg STANDARD_ERROR "$STANDARD_ERROR" \
+                                                                                                                    --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                     --arg STATUS "$STATUS" \
                                                                                                                     '{
                                                                                                                         "arguments" : $ARGUMENTS ,
