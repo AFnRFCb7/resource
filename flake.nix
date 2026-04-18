@@ -468,13 +468,14 @@
                                                                                                                 STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                 ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
                                                                                                                 # shellcheck disable=SC2153
-                                                                                                                _HAS_SCRIPT=$HAS_SCRIPT
+                                                                                                                _HAS_SCRIPT="$HAS_SCRIPT"
+                                                                                                                _SCRIPT_FILE="$SCRIPT_FILE"
                                                                                                                 if [[ -t 0 ]]
                                                                                                                 then
                                                                                                                     HAS_STANDARD_INPUT=false
                                                                                                                     if "$_HAS_SCRIPT"
                                                                                                                     then
-                                                                                                                        if "$SCRIPT" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                        if "$_SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                         then
                                                                                                                             STATUS="$?"
                                                                                                                         else
@@ -486,7 +487,7 @@
                                                                                                                     cat "$STANDARD_INPUT_FILE"
                                                                                                                     if "$_HAS_SCRIPT"
                                                                                                                     then
-                                                                                                                        if "$SCRIPT" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                        if "$_SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                         then
                                                                                                                             STATUS="$?"
                                                                                                                         else
@@ -502,6 +503,7 @@
                                                                                                                     --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                     --arg _RESOLUTION_PATH "$RESOLUTION_PATH" \
+                                                                                                                    --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                     --arg STANDARD_ERROR "$STANDARD_ERROR" \
@@ -511,6 +513,7 @@
                                                                                                                         "has-script" : $_HAS_SCRIPT ,
                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                         "resolution-path" : $_RESOLUTION_PATH ,
+                                                                                                                        "script-file" : $_SCRIPT_FILE ,
                                                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                                                         "standard-output-file" : $STANDARD_OUTPUT_FILE ,
