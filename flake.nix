@@ -460,6 +460,8 @@
                                                                                                         runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequential ] ;
                                                                                                         text =
                                                                                                             ''
+                                                                                                                _RESOLUTION_PATH="$RESOLUTION_PATH"
+                                                                                                                STATUS=0
                                                                                                                 STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
                                                                                                                 STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                 STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 8384911191384463
@@ -503,7 +505,7 @@
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                    --arg _RESOLUTION_PATH "$RESOLUTION_PATH" \
+                                                                                                                    --arg _RESOLUTION_PATH "$_RESOLUTION_PATH" \
                                                                                                                     --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
@@ -520,8 +522,13 @@
                                                                                                                         "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                         "status" : $STATUS
                                                                                                                     }' > "$JSON_FILE"
-                                                                                                                redis-cli PUBLISH valid-init "$JSON_FILE"
-                                                                                                                rm --recursive --force "${ directory }"
+                                                                                                                if [[ "$STATUS" -eq 0 ]]
+                                                                                                                then
+                                                                                                                    rm --recursive --force "${ directory }"
+                                                                                                                    redis-cli PUBLISH valid-init "$JSON_FILE"
+                                                                                                                else
+                                                                                                                    redis-cli PUBLISH invalid-init "$JSON_FILE"
+                                                                                                                fi
                                                                                                             '' ;
                                                                                                     } ;
                                                                                             in "${ application }/bin/resolve" ;
