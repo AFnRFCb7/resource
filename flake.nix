@@ -502,6 +502,7 @@
                                                                                                                 JSON_SEQUENCE="$( sequential )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                                                 jq \
+                                                                                                                    --null-input \
                                                                                                                     --compact-output \
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
