@@ -469,6 +469,7 @@
                                                                                                                 ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
                                                                                                                 # shellcheck disable=SC2153
                                                                                                                 _HAS_SCRIPT="$HAS_SCRIPT"
+                                                                                                                # shellcheck disable=SC2153
                                                                                                                 _SCRIPT_FILE="$SCRIPT_FILE"
                                                                                                                 if [[ -t 0 ]]
                                                                                                                 then
