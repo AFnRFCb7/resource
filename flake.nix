@@ -507,7 +507,7 @@
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                    --arg _RESOLUTION_PATH "$_RESOLUTION_PATH" \
+                                                                                                                    --argjson _RESOLUTION_PATH "$_RESOLUTION_PATH" \
                                                                                                                     --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                     --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
