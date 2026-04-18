@@ -152,3 +152,16 @@ The message will be recorded.
 One or more resolution scripts will be generated.
 Invoking one of the resolution scripts will put the resource back in flow.
 But the next step is success and that is terminal.
+
+# Diagram 
+<pre> ```mermaid graph TD
+  A[Start] --> B{init}
+  B -->|invalid-init| C{invalid-init}
+  B -->|stale-init| D{release}
+  B -->|valid-init| D
+  C -->|valid| D
+  C -->|invalid| C
+  D -->|invalid-release| E{invalid-release}
+  E -->|valid| F{End}
+  E -->|invalid| E
+  D -->|valid-release| F ``` </pre>
