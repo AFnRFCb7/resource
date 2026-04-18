@@ -461,7 +461,7 @@
                                                                                                         text =
                                                                                                             ''
                                                                                                                 # shellcheck disable=SC2153
-                                                                                                                _RESOLUTION_PATH="$RESOLUTION_PATH"
+                                                                                                                _RESOLUTION_PATH='$RESOLUTION_PATH'
                                                                                                                 STATUS=0
                                                                                                                 STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
                                                                                                                 STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
