@@ -425,7 +425,7 @@
                                                                                                                         RESOLUTIONS_PATH='${ builtins.toJSON path }'
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "s#\$SCRIPT#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -442,7 +442,7 @@
                                                                                                                 RESOLUTIONS_PATH='${ builtins.toJSON path }'
                                                                                                             ''
                                                                                                             ''
-                                                                                                                sed -e "s#\HAS_SCRIPT#false#" "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                sed -e "s#\HAS_SCRIPT#false#" "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH#$RESOLUTIONS_PATH#" -e "s#\$SCRIPT##" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                             ''
                                                                                                             ''
                                                                                                                 chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -538,7 +538,7 @@
                                                                                                         mkdir --parents "${ directory }"
                                                                                                     ''
                                                                                                     ''
-                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "w${ directory }/resolve.sh" ${ resolve }
+                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTIONS_PATH##" -e "s#\$SCRIPT##" -e "w${ directory }/resolve.sh" ${ resolve }
                                                                                                     ''
                                                                                                     ''
                                                                                                         chmod 0500 "${ directory }/resolve.sh"
