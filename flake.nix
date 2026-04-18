@@ -457,7 +457,7 @@
                                                                                                 pkgs.writeShellApplication
                                                                                                     {
                                                                                                         name = "resolve" ;
-                                                                                                        runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.redis ] ;
+                                                                                                        runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequence ] ;
                                                                                                         text =
                                                                                                             ''
                                                                                                                 STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
