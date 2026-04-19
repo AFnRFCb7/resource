@@ -504,9 +504,9 @@
                                                                                                                 fi
                                                                                                                 JSON_SEQUENCE="$( sequential )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                                # spellcheck disable=SC2153
+                                                                                                                # shellcheck disable=SC2153
                                                                                                                 _HASH="$HASH"
-                                                                                                                # spellcheck disable=SC2153
+                                                                                                                # shellcheck disable=SC2153
                                                                                                                 _INDEX="$INDEX"
                                                                                                                 RELEASE_FILE="${ resources-directory }/release/$INDEX"
                                                                                                                 if [[ -e "$RELEASE_FILE" ]]
