@@ -578,7 +578,6 @@
                                                                                                                     export INDEX
                                                                                                                     exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                     flock -x 204
-                                                                                                                    pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
                                                                                                                     mkdir --parents ${ resources-directory }/marks
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
@@ -606,6 +605,7 @@
                                                                                                                     chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                                                                     then
+                                                                                                                        pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
                                                                                                                         RELEASE_FILE="${ resources-directory }/release/$INDEX"
                                                                                                                         if [[ -e "$RELEASE_FILE" ]]
                                                                                                                         then
