@@ -460,6 +460,9 @@
                                                                                                         runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequential ] ;
                                                                                                         text =
                                                                                                             ''
+
+                                                                                                                # shellcheck disable=SC2153,SC2016
+                                                                                                                _RELEASE_FILE="$RELEASE_FILE"
                                                                                                                 # shellcheck disable=SC2153,SC2016
                                                                                                                 _RESOLUTION_PATH='$RESOLUTION_PATH'
                                                                                                                 STATUS=0
@@ -507,7 +510,7 @@
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                    --arg _RELEASE_FILE "$RELEASE_FILE" \
+                                                                                                                    --arg _RELEASE_FILE "$_RELEASE_FILE" \
                                                                                                                     --argjson _RESOLUTION_PATH "$_RESOLUTION_PATH" \
                                                                                                                     --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
