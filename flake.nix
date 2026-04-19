@@ -523,7 +523,7 @@
                                                                                                                         "has-script" : $_HAS_SCRIPT ,
                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                         "resolution-path" : $_RESOLUTION_PATH ,
-                                                                                                                        "release-file" : , $_RELEASE_FILE ,
+                                                                                                                        "release-file" : $_RELEASE_FILE ,
                                                                                                                         "script-file" : $_SCRIPT_FILE ,
                                                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
