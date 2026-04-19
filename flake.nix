@@ -425,7 +425,7 @@
                                                                                                                         RESOLUTION_PATH='${ builtins.toJSON path }'
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$HASH#HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -442,7 +442,7 @@
                                                                                                                 RESOLUTION_PATH='${ builtins.toJSON path }'
                                                                                                             ''
                                                                                                             ''
-                                                                                                                sed -e "s#\HAS_SCRIPT#false#" "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                sed -e "s#\HAS_SCRIPT#false#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                             ''
                                                                                                             ''
                                                                                                                 chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -504,12 +504,23 @@
                                                                                                                 fi
                                                                                                                 JSON_SEQUENCE="$( sequential )" || failure 8452556526050122
                                                                                                                 JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                _HASH="$HASH"
+                                                                                                                _INDEX="$INDEX"
+                                                                                                                RELEASE_FILE="${ resources-directory }/release/$INDEX"
+                                                                                                                if [[ -e "$RELEASE_FILE" ]]
+                                                                                                                then
+                                                                                                                    failure 9339682764537318
+                                                                                                                fi
+                                                                                                                sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                chmod 0500 "$RELEASE_FILE"
                                                                                                                 jq \
                                                                                                                     --null-input \
                                                                                                                     --compact-output \
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                    --arg HASH "$HASH" \
+                                                                                                                    --arg INDEX "$INDEX" \
                                                                                                                     --arg _RELEASE_FILE "$_RELEASE_FILE" \
                                                                                                                     --argjson _RESOLUTION_PATH "$_RESOLUTION_PATH" \
                                                                                                                     --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
@@ -522,6 +533,8 @@
                                                                                                                         "arguments" : $ARGUMENTS ,
                                                                                                                         "has-script" : $_HAS_SCRIPT ,
                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                        "hash" : $_HASH ,
+                                                                                                                        "index" : $_INDEX ,
                                                                                                                         "release-file" : $_RELEASE_FILE ,
                                                                                                                         "resolution-path" : $_RESOLUTION_PATH ,
                                                                                                                         "script-file" : $_SCRIPT_FILE ,
@@ -555,7 +568,7 @@
                                                                                                         mkdir --parents "${ directory }"
                                                                                                     ''
                                                                                                     ''
-                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH##" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve.sh" ${ resolve }
+                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH##" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve.sh" ${ resolve }
                                                                                                     ''
                                                                                                     ''
                                                                                                         chmod 0500 "${ directory }/resolve.sh"
@@ -588,14 +601,6 @@
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
                                                                                                                     ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
-                                                                                                                    RELEASE_FILE="${ resources-directory }/release/$INDEX"
-                                                                                                                    if [[ -e "$RELEASE_FILE" ]]
-                                                                                                                    then
-                                                                                                                        failure 16697
-                                                                                                                    fi
-                                                                                                                    sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                                    trace 9430791611083079
-                                                                                                                    chmod 0500 "$RELEASE_FILE"
                                                                                                                     # shellcheck disable=SC2016
                                                                                                                     SCRIPT_FILE="$( ${ script-file init a } )"
                                                                                                                     SEED='${ builtins.toJSON seed }'
@@ -619,6 +624,14 @@
                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                                                                     then
                                                                                                                         pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
+                                                                                                                        RELEASE_FILE="${ resources-directory }/release/$INDEX"
+                                                                                                                        if [[ -e "$RELEASE_FILE" ]]
+                                                                                                                        then
+                                                                                                                            failure 16697
+                                                                                                                        fi
+                                                                                                                        sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                        trace 9430791611083079
+                                                                                                                        chmod 0500 "$RELEASE_FILE"
                                                                                                                         jq \
                                                                                                                             --compact-output \
                                                                                                                             --null-input \
