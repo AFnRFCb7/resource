@@ -425,7 +425,7 @@
                                                                                                                         RESOLUTION_PATH='${ builtins.toJSON path }'
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -442,7 +442,7 @@
                                                                                                                 RESOLUTION_PATH='${ builtins.toJSON path }'
                                                                                                             ''
                                                                                                             ''
-                                                                                                                sed -e "s#\HAS_SCRIPT#false#" "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                sed -e "s#\HAS_SCRIPT#false#" "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
                                                                                                             ''
                                                                                                             ''
                                                                                                                 chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -507,6 +507,7 @@
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
                                                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                    --arg _RELEASE_FILE "$RELEASE_FILE" \
                                                                                                                     --argjson _RESOLUTION_PATH "$_RESOLUTION_PATH" \
                                                                                                                     --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
@@ -519,6 +520,7 @@
                                                                                                                         "has-script" : $_HAS_SCRIPT ,
                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                         "resolution-path" : $_RESOLUTION_PATH ,
+                                                                                                                        "release-file" : , $_RELEASE_FILE ,
                                                                                                                         "script-file" : $_SCRIPT_FILE ,
                                                                                                                         "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
@@ -550,7 +552,7 @@
                                                                                                         mkdir --parents "${ directory }"
                                                                                                     ''
                                                                                                     ''
-                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$INDEX#$INDEX#" -e "s#\$RESOLUTION_PATH##" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve.sh" ${ resolve }
+                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH##" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve.sh" ${ resolve }
                                                                                                     ''
                                                                                                     ''
                                                                                                         chmod 0500 "${ directory }/resolve.sh"
