@@ -858,7 +858,7 @@
                                                                 then
                                                                     log "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
                                                                 else
-                                                                    log  "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
+                                                                    log "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
                                                                 fi
                                                             ' "$0" "$@"
                                                         '' ;
@@ -906,20 +906,24 @@
                                                                                         failure 7798771265337885
                                                                                     fi
                                                                                     JSON="$(
-                                                                                        jq \
+                                                                                        jq \ERROR
                                                                                         --compact-output \
+                                                                                        --arg SCRIPT_FILE_PATH "$SCRIPT_FILE" \
+                                                                                        --arg STANDARD_ERROR_FILE_PATH "$STANDARD_ERROR_FILE" \
+                                                                                        --arg STANDARD_INPUT_FILE_PATH "$STANDARD_INPUT_FILE" \
+                                                                                        --arg STANDARD_OUTPUT_FILE_PATH "$STANDARD_OUTPUT_FILE" \
                                                                                         --rawfile SCRIPT "${ builtins.concatStringsSep "" [ "$" "{" "SCRIPT_FILE:-/dev/null" "}" ] }" \
                                                                                         --rawfile STANDARD_ERROR "${ builtins.concatStringsSep "" [ "$" "{" "STANDARD_ERROR_FILE:-/dev/null" "}" ] }" \
                                                                                         --rawfile STANDARD_INPUT "${ builtins.concatStringsSep "" [ "$" "{" "STANDARD_INPUT_FILE:-/dev/null" "}" ] }" \
                                                                                         --rawfile STANDARD_OUTPUT "${ builtins.concatStringsSep "" [ "$" "{" "STANDARD_OUTPUT_FILE:-/dev/null" "}" ] }" \
                                                                                         '
-                                                                                            (if has("script-file") then del(."script-file") | .["script"] = $SCRIPT else . end)
+                                                                                            ( if has("script-file") and ( "$SCRIPT_FILE_PATH" != "/dev/null" ) then del(."script-file") | .["script"] = $SCRIPT else . end )
                                                                                             |
-                                                                                            (if has("standard-error-file") then del(."standard-error-file") | .["standard-error"] = $STANDARD_ERROR else . end)
+                                                                                            ( if has("standard-error-file") and ( "$STANDARD_ERROR_FILE_PATH" != "/dev/null" ) then del(."standard-error-file") | .["standard-error"] = $STANDARD_ERROR else . end )
                                                                                             |
-                                                                                            (if has("standard-input-file") then del(."standard-input-file") | .["standard-input"] = $STANDARD_INPUT else . end)
+                                                                                            ( if has("standard-input-file") and ( "$STANDARD_INPUT_FILE_PATH" != "/dev/null" ) then del(."standard-input-file") | .["standard-input"] = $STANDARD_INPUT else . end )
                                                                                             |
-                                                                                            (if has("standard-output-file") then del(."standard-output-file") | .["standard-output"] = $STANDARD_OUTPUT else . end)
+                                                                                            ( if has("standard-output-file") and ( "$STANDARD_OUTPUT_FILE_PATH" != "/dev/null" ) then del(."standard-output-file") | .["standard-output"] = $STANDARD_OUTPUT else . end )
                                                                                             ' \
                                                                                         )" || failure 7456186835451742
                                                                                     redis PUBLISH "$CHANNEL" "$JSON" > /dev/null 2>&1 || true
