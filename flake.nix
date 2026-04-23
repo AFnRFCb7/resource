@@ -592,7 +592,6 @@
                                                                                                             a = arguments.init pkgs ;
                                                                                                             in
                                                                                                                 ''
-                                                                                                                    trace 5542 "$*"
                                                                                                                     mkdir --parents ${ resources-directory }/logs
                                                                                                                     INDEX="$( sequential )" || failure 5607
                                                                                                                     export INDEX
