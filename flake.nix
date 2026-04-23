@@ -858,7 +858,7 @@
                                                                 then
                                                                     log "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
                                                                 else
-                                                                    log "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
+                                                                    log  "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
                                                                 fi
                                                             ' "$0" "$@"
                                                         '' ;
