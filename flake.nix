@@ -853,6 +853,14 @@
                                                     name = "log" ;
                                                     runScript =
                                                         ''
+                                                            bash -c '
+                                                                if [[ -t 0 ]]
+                                                                then
+                                                                    log "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
+                                                                else
+                                                                    log "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <&0
+                                                                fi
+                                                            ' "$0" "$@"
                                                         '' ;
                                                     targetPkgs =
                                                         pkgs :
