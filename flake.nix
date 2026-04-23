@@ -669,7 +669,7 @@
                                                                                                                         chmod 0400 "$JSON_FILE"
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
-                                                                                                                        redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
+                                                                                                                        nohup log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
                                                                                                                         trace 29114 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
@@ -842,6 +842,79 @@
                                                                                     mkdir --parents "${ gc-root-directory }/$INDEX/$SEQUENCE/$DIRECTORY"
                                                                                     ln --symbolic "$TARGET" "${ gc-root-directory }/$INDEX/$SEQUENCE$DIRECTORY"
                                                                                     echo Rooted "TARGET=$TARGET" at "DESTINATION=${ gc-root-directory }/$INDEX/$SEQUENCE$DIRECTORY"
+                                                                                '' ;
+                                                                        }
+                                                                )
+                                                            ] ;
+                                                } ;
+                                        log =
+                                            buildFHSUserEnv
+                                                {
+                                                    name = "log" ;
+                                                    runScript =
+                                                        ''
+                                                        '' ;
+                                                    targetPkgs =
+                                                        pkgs :
+                                                            [
+                                                                (
+                                                                    pkgs.writeShellApplication
+                                                                        {
+                                                                            name = "log" ;
+                                                                            runtimeInputs = [ failure pkgs.jq pkgs.redis ] ;
+                                                                            text =
+                                                                                ''
+                                                                                    SCRIPT_FILE=
+                                                                                    STANDARD_ERROR_FILE=
+                                                                                    STANDARD_INPUT_FILE=
+                                                                                    STANDARD_OUTPUT_FILE=
+                                                                                    while [[ "$#" -gt 0 ]]
+                                                                                    do
+                                                                                        case "$1" in
+                                                                                            --channel)
+                                                                                                CHANNEL="$2"
+                                                                                                shift 2
+                                                                                                ;;
+                                                                                            --script-file)
+                                                                                                SCRIPT_FILE="$2"
+                                                                                                shift 2
+                                                                                                ;;
+                                                                                            --standard-error-file)
+                                                                                                STANDARD_ERROR_FILE="$2"
+                                                                                                shift 2
+                                                                                                ;;
+                                                                                            --standard-input-file)
+                                                                                                STANDARD_INPUT_FILE="$2"
+                                                                                                shift 2
+                                                                                                ;;
+                                                                                            --standard-output-file)
+                                                                                                STANDARD_OUTPUT_FILE="$2"
+                                                                                                shift 2
+                                                                                                ;;
+                                                                                        esac
+                                                                                    done
+                                                                                    if [[ -z "$CHANNEL" ]]
+                                                                                    then
+                                                                                        failure 7798771265337885
+                                                                                    fi
+                                                                                    JSON="$(
+                                                                                        jq \
+                                                                                        --compact-output \
+                                                                                        --rawfile SCRIPT "${ builtins.concatStringsSep "" [ "$" "{" "SCRIPT_FILE:-/dev/null" "}" ] }" \
+                                                                                        --rawfile STANDARD_ERROR "${ builtins.concatStringsSep "" [ "$" "{" "STANDARD_ERROR_FILE:-/dev/null" "}" ] }" \
+                                                                                        --rawfile STANDARD_INPUT "${ builtins.concatStringsSep "" [ "$" "{" "STANDARD_INPUT_FILE:-/dev/null" "}" ] }" \
+                                                                                        --rawfile STANDARD_OUTPUT "${ builtins.concatStringsSep "" [ "$" "{" "STANDARD_OUTPUT_FILE:-/dev/null" "}" ] }" \
+                                                                                        '
+                                                                                            (if has("script-file") then del(."script-file") | .["script"] = $SCRIPT else . end)
+                                                                                            |
+                                                                                            (if has("standard-error-file") then del(."standard-error-file") | .["standard-error"] = $STANDARD_ERROR else . end)
+                                                                                            |
+                                                                                            (if has("standard-input-file") then del(."standard-input-file") | .["standard-input"] = $STANDARD_INPUT else . end)
+                                                                                            |
+                                                                                            (if has("standard-output-file") then del(."standard-output-file") | .["standard-output"] = $STANDARD_OUTPUT else . end)
+                                                                                            ' \
+                                                                                        )" || failure 7456186835451742
+                                                                                    redis PUBLISH "$CHANNEL" "$JSON" > /dev/null 2>&1 || true
                                                                                 '' ;
                                                                         }
                                                                 )
