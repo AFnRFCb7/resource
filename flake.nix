@@ -582,7 +582,7 @@
                                                                             pkgs.writeShellApplication
                                                                                 {
                                                                                     name = "create" ;
-                                                                                    runtimeInputs = [ applications.init failure pid pkgs.coreutils pkgs.flock pkgs.gnused pkgs.jq sequential trace ] ;
+                                                                                    runtimeInputs = [ applications.init failure log pid pkgs.coreutils pkgs.flock pkgs.gnused pkgs.jq sequential trace ] ;
                                                                                     text =
                                                                                         visitor
                                                                                             {
@@ -670,7 +670,6 @@
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         nohup log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
-                                                                                                                        trace 29114 "INDEX=$INDEX"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
                                                                                                                         ${ builtins.concatStringsSep "\n" ( resolutions true ) }
