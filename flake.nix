@@ -613,8 +613,6 @@
                                                                                                                     trace 21750 "INDEX=$INDEX" "$@"
                                                                                                                     init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                     TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | jq --raw-input . | jq --compact-output --slurp . )" || failure 28445
-                                                                                                                    JSON_SEQUENCE="$( sequential )" || failure 32761
-                                                                                                                    JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
                                                                                                                     while [[ ! -e "$SIGNAL/signal" ]]
                                                                                                                     do
                                                                                                                         sleep 0
@@ -665,11 +663,9 @@
                                                                                                                                 "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
-                                                                                                                            }' > "$JSON_FILE"
-                                                                                                                        chmod 0400 "$JSON_FILE"
+                                                                                                                            }' | nohup log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
-                                                                                                                        nohup log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
                                                                                                                         ${ builtins.concatStringsSep "\n" ( resolutions true ) }
