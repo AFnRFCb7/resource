@@ -905,7 +905,7 @@
                                                                                         failure 7798771265337885
                                                                                     fi
                                                                                     JSON="$(
-                                                                                        jq \ERROR
+                                                                                        jq \
                                                                                         --compact-output \
                                                                                         --arg SCRIPT_FILE_PATH "$SCRIPT_FILE" \
                                                                                         --arg STANDARD_ERROR_FILE_PATH "$STANDARD_ERROR_FILE" \
