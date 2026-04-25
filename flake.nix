@@ -601,7 +601,7 @@
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
-                                                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 14587
+                                                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8826156374172617
                                                                                                                     # shellcheck disable=SC2016
                                                                                                                     SCRIPT_FILE="$( ${ script-file init a } )"
                                                                                                                     SEED='${ builtins.toJSON seed }'
