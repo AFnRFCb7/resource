@@ -697,10 +697,7 @@
                                                                                                                                 "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
-                                                                                                                            }' > "$JSON_FILE"
-                                                                                                                        chmod 0400 "$JSON_FILE"
-                                                                                                                        redis-cli PUBLISH ${ invalid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                                                                        trace 32730 "INDEX=$INDEX"
+                                                                                                                            }' >  | nohup log --channel ${ invalid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
