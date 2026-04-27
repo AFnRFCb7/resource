@@ -1424,6 +1424,7 @@
                                                                                 trace 5908
                                                                                 jq \
                                                                                     --null-input \
+                                                                                    --arg NUMBER "$#" \
                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                     --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg HASH "$HASH" \
@@ -1434,6 +1435,7 @@
                                                                                     --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                     --arg TRANSIENT "$TRANSIENT" \
                                                                                     '{
+                                                                                        "number" : $NUMBER ,
                                                                                         "arguments" : $ARGUMENTS ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "hash" : $HASH ,
