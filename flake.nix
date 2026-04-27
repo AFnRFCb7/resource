@@ -636,11 +636,9 @@
                                                                                                                             --null-input \
                                                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                             --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                            --arg HASH "$HASH" \
                                                                                                                             --arg INDEX "$INDEX" \
                                                                                                                             --arg RELEASE_FILE "$RELEASE_FILE" \
                                                                                                                             --arg SCRIPT_FILE "$SCRIPT_FILE" \
-                                                                                                                            --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                             --argjson SEED "$SEED" \
                                                                                                                             --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                             --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
@@ -651,10 +649,8 @@
                                                                                                                             '{
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                                "hash" : $HASH ,
                                                                                                                                 "index" : $INDEX ,
                                                                                                                                 "script-file" : $SCRIPT_FILE ,
-                                                                                                                                "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                                 "seed" : $SEED ,
                                                                                                                                 "standard-error-file" : $STANDARD_ERROR_FILE ,
                                                                                                                                 "standard-input-file" : $STANDARD_INPUT_FILE ,
