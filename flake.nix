@@ -71,9 +71,9 @@
                                                                 trace 2256 "$*"
                                                                 if "$HAS_STANDARD_INPUT"
                                                                 then
-                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }"
+                                                                    create ${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }
                                                                 else
-                                                                    create "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" < "$STANDARD_INPUT_FILE"
+                                                                    create ${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] } < "$STANDARD_INPUT_FILE"
                                                                 fi
                                                                 trace 5487 "$*"
                                                             ' "$0" "$@"
