@@ -601,7 +601,12 @@
                                                                                                                     touch "${ resources-directory }/marks/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/mounts/$INDEX"
                                                                                                                     mkdir --parents "${ resources-directory }/release"
-                                                                                                                    ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8826156374172617
+                                                                                                                    if [[ "$#" == 0 ]]
+                                                                                                                    then
+                                                                                                                        ARGUMENTS=[]
+                                                                                                                    else
+                                                                                                                        ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8826156374172617
+                                                                                                                    fi
                                                                                                                     # shellcheck disable=SC2016
                                                                                                                     SCRIPT_FILE="$( ${ script-file init a } )"
                                                                                                                     SEED='${ builtins.toJSON seed }'
