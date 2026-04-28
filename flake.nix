@@ -279,7 +279,7 @@
                                                                                                                                                                         --argjson SEED "$SEED" \
                                                                                                                                                                         --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                                                                         --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                                                                                                        --arg STATUS "$STATUS" \
+                                                                                                                                                                        --argjson STATUS "$STATUS" \
                                                                                                                                                                         '{
                                                                                                                                                                             "hash" : $HASH ,
                                                                                                                                                                             "index" : $INDEX ,
@@ -530,7 +530,7 @@
                                                                                                                     --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                     --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                     --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                                                    --arg STATUS "$STATUS" \
+                                                                                                                    --argjson STATUS "$STATUS" \
                                                                                                                     '{
                                                                                                                         "arguments" : $ARGUMENTS ,
                                                                                                                         "has-script" : $_HAS_SCRIPT ,
@@ -648,7 +648,7 @@
                                                                                                                             --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                             --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                             --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                                                            --arg STATUS "$STATUS" \
+                                                                                                                            --argjson STATUS "$STATUS" \
                                                                                                                             --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                                                                             '{
@@ -681,7 +681,7 @@
                                                                                                                             --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                             --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                             --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                                                            --arg STATUS "$STATUS" \
+                                                                                                                            --argjson STATUS "$STATUS" \
                                                                                                                             --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                                                                             '{
@@ -732,7 +732,7 @@
                                                                                                                 --arg INDEX "$INDEX" \
                                                                                                                 --arg RELEASE_FILE "$RELEASE_FILE" \
                                                                                                                 --arg SEED "$SEED" \
-                                                                                                                --arg STATUS "$STATUS" \
+                                                                                                                --argjson STATUS "$STATUS" \
                                                                                                                 '{
                                                                                                                     "arguments" : $ARGUMENTS ,
                                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
