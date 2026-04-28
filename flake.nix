@@ -661,7 +661,7 @@
                                                                                                                                 "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                                 "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                 "status" : $STATUS ,
-                                                                                                                                "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
+                                                                                                                                "targets" : $TARGETS_EXPECTED
                                                                                                                             }' | nohup log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
