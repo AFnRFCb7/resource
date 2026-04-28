@@ -520,7 +520,7 @@
                                                                                                                     --compact-output \
                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                     --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
-                                                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                    --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                     --arg HASH "$HASH" \
                                                                                                                     --arg INDEX "$INDEX" \
                                                                                                                     --arg _RELEASE_FILE "$_RELEASE_FILE" \
@@ -640,7 +640,7 @@
                                                                                                                             --compact-output \
                                                                                                                             --null-input \
                                                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                            --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                             --arg INDEX "$INDEX" \
                                                                                                                             --arg RELEASE_FILE "$RELEASE_FILE" \
                                                                                                                             --arg SCRIPT_FILE "$SCRIPT_FILE" \
@@ -672,7 +672,7 @@
                                                                                                                             --compact-output \
                                                                                                                             --null-input \
                                                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                                                            --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                            --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                             --arg HASH "$HASH" \
                                                                                                                             --arg INDEX "$INDEX" \
                                                                                                                             --arg SCRIPT_FILE "$SCRIPT_FILE" \
@@ -727,7 +727,7 @@
                                                                                                                 --compact-output \
                                                                                                                 --null-input \
                                                                                                                 --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                 --arg HASH "$HASH" \
                                                                                                                 --arg INDEX "$INDEX" \
                                                                                                                 --arg RELEASE_FILE "$RELEASE_FILE" \
@@ -1431,7 +1431,7 @@
                                                                                     --null-input \
                                                                                     --arg NUMBER "$#" \
                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                    --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                    --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                     --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
                                                                                     --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
