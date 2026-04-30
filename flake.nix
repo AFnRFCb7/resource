@@ -1423,37 +1423,24 @@
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                 pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
                                                                                 SEED='${ builtins.toJSON seed }'
-                                                                                trace 31071
-                                                                                JSON_SEQUENCE="$( sequential )" || failure 30634
-                                                                                JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                trace 5908
                                                                                 jq \
                                                                                     --null-input \
-                                                                                    --arg NUMBER "$#" \
                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                     --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                    --arg HASH "$HASH" \
                                                                                     --arg INDEX "$INDEX" \
-                                                                                    --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                     --argjson SEED "$SEED" \
                                                                                     --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                     --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
-                                                                                    --arg TRANSIENT "$TRANSIENT" \
+                                                                                    --argjson TRANSIENT "$TRANSIENT" \
                                                                                     '{
-                                                                                        "number" : $NUMBER ,
                                                                                         "arguments" : $ARGUMENTS ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                        "hash" : $HASH ,
                                                                                         "index" : $INDEX ,
-                                                                                        "scripts-hash" : $SCRIPTS_HASH ,
                                                                                         "seed" : $SEED ,
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                         "targets" : $TARGETS_EXPECTED ,
                                                                                         "transient" : $TRANSIENT
-                                                                                    }' > "$JSON_FILE"
-                                                                                trace 22019 "INDEX=$INDEX"
-                                                                                redis-cli PUBLISH "${ stale-init-channel }" "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                                trace 21948 "INDEX=$INDEX"
+                                                                                    }' | nohup log > /dev/null 2>&1 &
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
