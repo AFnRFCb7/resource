@@ -68,14 +68,12 @@
                                                     runScript =
                                                         ''
                                                             bash -c '
-                                                                trace 2256 "$*"
                                                                 if "$HAS_STANDARD_INPUT"
                                                                 then
                                                                     create ${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }
                                                                 else
                                                                     create ${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] } < "$STANDARD_INPUT_FILE"
                                                                 fi
-                                                                trace 5487 "$*"
                                                             ' "$0" "$@"
                                                         '' ;
                                                     targetPkgs =
@@ -119,7 +117,6 @@
                                                                                                                                 echo "$?" > /signal/signal
                                                                                                                             fi
                                                                                                                         fi
-                                                                                                                        trace 8094 "$*"
                                                                                                                     ' "$0" "$@"
                                                                                                                 '' ;
                                                                                                             targetPkgs =
@@ -210,13 +207,10 @@
                                                                                                                                                                 echo 2089324406 "INDEX=$INDEX"
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 echo 5006
-                                                                                                                                                                trace 29874
                                                                                                                                                                 find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
                                                                                                                                                                 do
-                                                                                                                                                                    trace 15412 "PID=$PID"
                                                                                                                                                                     tail --follow /dev/null --pid "$PID"
                                                                                                                                                                 done
-                                                                                                                                                                trace 19784
                                                                                                                                                                 mkdir --parents "${ gc-root-directory }"
                                                                                                                                                                 echo 24208
                                                                                                                                                                 find ${ gc-root-directory } -mindepth 1 -type l | while read -r LINK
@@ -1420,7 +1414,6 @@
                                                                             flock -x 203
                                                                             if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                             then
-                                                                                trace 1981
                                                                                 LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 3789
                                                                                 INDEX="$( basename "$LINK" )" || failure 13919
                                                                                 exec 204> "${ resources-directory }/locks/$INDEX"
@@ -1455,12 +1448,10 @@
                                                                                 # shellcheck disable=SC2090
                                                                                 export TARGETS_EXPECTED
                                                                                 export ULTIMATE_PID
-                                                                                trace 17539 "$*"
                                                                                 SIGNAL_SEQUENCE="$( sequential )" || failure 28752
                                                                                 export SIGNAL="${ resources-directory }/logs/$SIGNAL_SEQUENCE"
                                                                                 mkdir --parents "$SIGNAL"
                                                                                 create "$@"
-                                                                                trace "$*"
                                                                                 STATUS="$( cat "$SIGNAL/signal" )" || failure 13801
                                                                                 exit "$STATUS"
                                                                             fi
