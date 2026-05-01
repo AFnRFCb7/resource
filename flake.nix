@@ -224,23 +224,16 @@
                                                                                                                                                                         echo 8287 "LINK=$LINK" "FILE=$FILE" "TARGET=${ resources-directory }/mounts/$INDEX"
                                                                                                                                                                     fi
                                                                                                                                                                 done
-                                                                                                                                                                echo 7264
-                                                                                                                                                                trace 23482
                                                                                                                                                                 exec 203> "${ resources-directory }/locks/$HASH"
                                                                                                                                                                 flock -x 203
-                                                                                                                                                                trace 24754
                                                                                                                                                                 exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                                                                                                 flock -x 204
-                                                                                                                                                                trace 30327
                                                                                                                                                                 if [[ -e "${ resources-directory }/marks/$INDEX" ]]
                                                                                                                                                                 then
-                                                                                                                                                                    trace 12340
                                                                                                                                                                     flock -u 203
                                                                                                                                                                     flock -u 204
                                                                                                                                                                     nohup "$0" &
                                                                                                                                                                 else
-                                                                                                                                                                    trace 15683
-                                                                                                                                                                    echo 17328
                                                                                                                                                                     rm "${ resources-directory }/canonical/$HASH"
                                                                                                                                                                     flock -u 203 echo 10200
                                                                                                                                                                     mkdir --parents ${ resources-directory }/logs
@@ -263,7 +256,6 @@
                                                                                                                                                                     echo 31757
                                                                                                                                                                     JSON_SEQUENCE="$( sequential )" || failure 4228
                                                                                                                                                                     JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                                                                                    trace 12595 "$0"
                                                                                                                                                                     jq \
                                                                                                                                                                         --compact-output \
                                                                                                                                                                         --null-input \
@@ -283,17 +275,6 @@
                                                                                                                                                                             "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                                                             "status" : $STATUS ,
                                                                                                                                                                         }' > "$JSON_FILE"
-                                                                                                                                                                    trace 4083 "$0" "JSON_FILE=$JSON_FILE" "STATUS=$STATUS"
-                                                                                                                                                                    if [[ "$STATUS" == 0 ]]
-                                                                                                                                                                    then
-                                                                                                                                                                        trace 15336 "STATUS=$STATUS"
-                                                                                                                                                                    fi
-                                                                                                                                                                    if [[ ! -s "$STANDARD_ERROR_FILE" ]]
-                                                                                                                                                                    then
-                                                                                                                                                                        trace 2865
-                                                                                                                                                                        sha512sum "$STANDARD_ERROR_FILE"
-                                                                                                                                                                    fi
-                                                                                                                                                                    trace 6873009505197619
                                                                                                                                                                     chmod 0400 "$JSON_FILE" "$STANDARD_ERROR_FILE" "$STANDARD_OUTPUT_FILE"
                                                                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                                                                     then
@@ -608,13 +589,11 @@
                                                                                                                     STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
                                                                                                                     STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 21462
                                                                                                                     STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
-                                                                                                                    trace 21750 "INDEX=$INDEX" "$@"
                                                                                                                     init "$@" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                     TARGETS_OBSERVED="$( find "${resources-directory}/mounts/$INDEX" -mindepth 1 -maxdepth 1 -exec basename {} \; | LC_ALL=C sort | jq --raw-input . | jq --compact-output --slurp . )" || failure 28445
                                                                                                                     while [[ ! -e "$SIGNAL/signal" ]]
                                                                                                                     do
                                                                                                                         sleep 0
-                                                                                                                        trace 13550 "SIGNAL=$SIGNAL"
                                                                                                                     done
                                                                                                                     STATUS="$( cat "$SIGNAL/signal" )" || failure 11902
                                                                                                                     trace 8840339113720601
