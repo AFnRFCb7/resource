@@ -596,7 +596,6 @@
                                                                                                                         sleep 0
                                                                                                                     done
                                                                                                                     STATUS="$( cat "$SIGNAL/signal" )" || failure 11902
-                                                                                                                    trace 8840339113720601
                                                                                                                     chmod 0400 "$STANDARD_OUTPUT_FILE" "$STANDARD_ERROR_FILE"
                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]] && [[ "$TARGETS_EXPECTED" == "$TARGETS_OBSERVED" ]]
                                                                                                                     then
@@ -607,7 +606,6 @@
                                                                                                                             failure 16697
                                                                                                                         fi
                                                                                                                         sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                                        trace 9430791611083079
                                                                                                                         chmod 0500 "$RELEASE_FILE"
                                                                                                                         jq \
                                                                                                                             --compact-output \
@@ -695,7 +693,6 @@
                                                                                                                 failure 15975
                                                                                                             fi
                                                                                                             sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                            trace 0638579692201947
                                                                                                             chmod 0500 "$RELEASE_FILE"
                                                                                                             SEED='${ builtins.toJSON seed }'
                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 32761
@@ -719,11 +716,9 @@
                                                                                                                     "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                     "transient" : $TRANSIENT
                                                                                                                 }' > "$JSON_FILE"
-                                                                                                            trace 8480947026314719
                                                                                                             chmod 0400 "$JSON_FILE"
                                                                                                             ln --symbolic "${ resources-directory }/mounts/$INDEX" "/canonical/$HASH"
                                                                                                             redis-cli PUBLISH ${ valid-init-channel } "$JSON_FILE" > /dev/null 2>&1 || true
-                                                                                                            trace 18406 "INDEX=$INDEX"
                                                                                                             echo "${ resources-directory }/mounts/$INDEX"
                                                                                                         '' ;
                                                                                             }
@@ -931,7 +926,6 @@
                                                                                     INDEX="$3"
                                                                                     mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                     touch "${ resources-directory }/pids/$INDEX/$CHILD"
-                                                                                    trace 8420057022299860
                                                                                     chmod 0400 "${ resources-directory }/pids/$INDEX/$CHILD"
                                                                                     if [[ "$DEPTH" -gt "0" ]] && [[ "$CHILD" -gt "1" ]]
                                                                                     then
@@ -1280,7 +1274,6 @@
                                                                                         failure 31558 "Unresolved placeholders in input file: ${ builtins.concatStringsSep "" [ "$" "{" "UNRESOLVED[*]" "}" ] }" "INPUT=$INPUT" "OUTPUT=$OUTPUT" "ALLOWED_PLACEHOLDERS=${ builtins.concatStringsSep "" [ "$" "{" "ALLOWED_PLACEHOLDERS[*]" "}" ] }" "UUID=$UUID"
                                                                                     fi
                                                                                     sed "${ builtins.concatStringsSep "" [ "$" "{" "COMMANDS[@]" "}" ] }" -e "w/mount/$OUTPUT" "$INPUT"
-                                                                                    trace 2475009820804236
                                                                                     chmod "$PERMISSIONS" "/mount/$OUTPUT"
                                                                                 '' ;
                                                                         }
@@ -1356,7 +1349,6 @@
                                                                             # SO THE EASIEST THING TO DO IS DISABLE IT
                                                                             HAS_STANDARD_INPUT=false
                                                                             touch "$STANDARD_INPUT_FILE"
-                                                                            trace 5082941719643698
                                                                             chmod 0400 "$STANDARD_INPUT_FILE"
                                                                             ULTIMATE_PID="$( ps -o ppid= -p "$PPID" | tr -d '[:space:]' )" || failure 22859
 #                                                                            if [[ -t 0 ]]
