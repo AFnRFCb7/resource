@@ -1383,6 +1383,7 @@
                                                                             mkdir --parents "${ resources-directory }/locks"
                                                                             exec 203> "${ resources-directory }/locks/$HASH"
                                                                             flock -x 203
+                                                                            trace 4196961124742927 PRE_HASH "$PRE_HASH" HASH "$HASH"
                                                                             if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                             then
                                                                                 LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 3789
