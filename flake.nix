@@ -651,6 +651,7 @@
                                                                                                                             --argjson STATUS "$STATUS" \
                                                                                                                             --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
+                                                                                                                            --argjson TRANSIENT "$TRANSIENT" \
                                                                                                                             '{
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -661,9 +662,9 @@
                                                                                                                                 "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                                 "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                 "status" : $STATUS ,
-                                                                                                                                "targets" : $TARGETS_EXPECTED
-                                                                                                                            }' |
-                                                                                                                             --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
+                                                                                                                                "targets" : $TARGETS_EXPECTED ,
+                                                                                                                                "transient" : $TRANSIENT
+                                                                                                                            }' | nohup log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
@@ -685,6 +686,7 @@
                                                                                                                             --argjson STATUS "$STATUS" \
                                                                                                                             --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
+                                                                                                                            --argjson TRANSIENT "$TRANSIENT" \
                                                                                                                             '{
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -697,7 +699,8 @@
                                                                                                                                 "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                                                                 "standard-output-file" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                 "status" : $STATUS ,
-                                                                                                                                "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED }
+                                                                                                                                "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED } ,
+                                                                                                                                "transient" : $TRANSIENT
                                                                                                                             }' | nohup log --channel ${ invalid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
@@ -729,17 +732,19 @@
                                                                                                                 --null-input \
                                                                                                                 --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                 --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                --arg HASH "$HASH" \
                                                                                                                 --arg INDEX "$INDEX" \
                                                                                                                 --arg RELEASE_FILE "$RELEASE_FILE" \
                                                                                                                 --arg SEED "$SEED" \
+                                                                                                                --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                                                 --argjson STATUS "$STATUS" \
+                                                                                                                --argjson TRANSIENT "$TRANSIENT" \
                                                                                                                 '{
                                                                                                                     "arguments" : $ARGUMENTS ,
                                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                    "hash" : $HASH ,
-                                                                                                                    "seed" : $SEED ,
                                                                                                                     "index" : $INDEX ,
+                                                                                                                    "seed" : $SEED ,
+                                                                                                                    "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                                                    "transient" : $TRANSIENT
                                                                                                                 }' > "$JSON_FILE"
                                                                                                             trace 8480947026314719
                                                                                                             chmod 0400 "$JSON_FILE"
@@ -1408,6 +1413,7 @@
                                                                             # shellcheck disable=SC2089
                                                                             TARGETS_EXPECTED='${ builtins.toJSON ( builtins.sort ( a : b : a < b ) targets ) }'
                                                                             TRANSIENT=${ transient_ }
+                                                                            export TRANSIENT
                                                                             HASH="$( echo "$ARGUMENTS" "$HAS_STANDARD_INPUT" "$PRE_HASH" "$SCRIPTS_HASH" "$STANDARD_INPUT_HASH" "$TRANSIENT" | sha512sum | cut --characters 1-128 )" || failure 21086
                                                                             mkdir --parents "${ resources-directory }/locks"
                                                                             exec 203> "${ resources-directory }/locks/$HASH"
@@ -1432,15 +1438,13 @@
                                                                                     --argjson SEED "$SEED" \
                                                                                     --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
                                                                                     --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
-                                                                                    --argjson TRANSIENT "$TRANSIENT" \
                                                                                     '{
                                                                                         "arguments" : $ARGUMENTS ,
                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                         "index" : $INDEX ,
                                                                                         "seed" : $SEED ,
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                        "targets" : $TARGETS_EXPECTED ,
-                                                                                        "transient" : $TRANSIENT
+                                                                                        "targets" : $TARGETS_EXPECTED
                                                                                     }' | nohup log > /dev/null 2>&1 &
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
