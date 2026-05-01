@@ -1410,7 +1410,7 @@
                                                                                         "seed" : $SEED ,
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                         "targets" : $TARGETS_EXPECTED
-                                                                                    }' | nohup log > /dev/null 2>&1 &
+                                                                                    }' | nohup log --channel ${ stale-init-channel } > /dev/null 2>&1 &
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
