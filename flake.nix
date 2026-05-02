@@ -635,7 +635,7 @@
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : $TARGETS_EXPECTED ,
                                                                                                                                 "transient" : $TRANSIENT
-                                                                                                                            }' | log --channel ${ valid-init-channel } > /dev/null 2>&1
+                                                                                                                            }' | log ${ valid-init-channel }
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
@@ -672,7 +672,7 @@
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED } ,
                                                                                                                                 "transient" : $TRANSIENT
-                                                                                                                            }' | log --channel ${ invalid-init-channel } > /dev/null 2>&1
+                                                                                                                            }' | log ${ invalid-init-channel }
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
@@ -836,39 +836,7 @@
                                                                             runtimeInputs = [ failure pkgs.jq pkgs.redis ] ;
                                                                             text =
                                                                                 ''
-                                                                                    SCRIPT_FILE=
-                                                                                    STANDARD_ERROR_FILE=
-                                                                                    STANDARD_INPUT_FILE=
-                                                                                    STANDARD_OUTPUT_FILE=
-                                                                                    while [[ "$#" -gt 0 ]]
-                                                                                    do
-                                                                                        case "$1" in
-                                                                                            --channel)
-                                                                                                CHANNEL="$2"
-                                                                                                shift 2
-                                                                                                ;;
-                                                                                            --script-file)
-                                                                                                SCRIPT_FILE="$2"
-                                                                                                shift 2
-                                                                                                ;;
-                                                                                            --standard-error-file)
-                                                                                                STANDARD_ERROR_FILE="$2"
-                                                                                                shift 2
-                                                                                                ;;
-                                                                                            --standard-input-file)
-                                                                                                STANDARD_INPUT_FILE="$2"
-                                                                                                shift 2
-                                                                                                ;;
-                                                                                            --standard-output-file)
-                                                                                                STANDARD_OUTPUT_FILE="$2"
-                                                                                                shift 2
-                                                                                                ;;
-                                                                                        esac
-                                                                                    done
-                                                                                    if [[ -z "$CHANNEL" ]]
-                                                                                    then
-                                                                                        failure 7798771265337885
-                                                                                    fi
+                                                                                    CHANNEL="$1"
                                                                                     JSON="$(
                                                                                         jq \
                                                                                         --compact-output \
