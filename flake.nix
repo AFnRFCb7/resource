@@ -1400,6 +1400,7 @@
                                                                                 SEED='${ builtins.toJSON seed }'
                                                                                 trace 4557384477613445
                                                                                 jq \
+                                                                                    --compact-output \
                                                                                     --null-input \
                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                     --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
@@ -1414,7 +1415,7 @@
                                                                                         "seed" : $SEED ,
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                         "targets" : $TARGETS_EXPECTED
-                                                                                    }' | log --channel ${ stale-init-channel } > /dev/null 2>&1
+                                                                                    }' | log --channel ${ stale-init-channel } --standard-input-file "$STANDARD_INPUT_FILE > /dev/null 2>&1
                                                                                 trace 3712568266647324
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
