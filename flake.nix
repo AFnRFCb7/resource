@@ -1396,27 +1396,6 @@
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
                                                                                 trace 2813431713896884
                                                                                 pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
-                                                                                trace 9757357975448681
-                                                                                SEED='${ builtins.toJSON seed }'
-                                                                                trace 4557384477613445
-                                                                                jq \
-                                                                                    --compact-output \
-                                                                                    --null-input \
-                                                                                    --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                    --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                    --arg INDEX "$INDEX" \
-                                                                                    --argjson SEED "$SEED" \
-                                                                                    --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                    --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
-                                                                                    '{
-                                                                                        "arguments" : $ARGUMENTS ,
-                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                        "index" : $INDEX ,
-                                                                                        "seed" : $SEED ,
-                                                                                        "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                        "targets" : $TARGETS_EXPECTED
-                                                                                    }' | log --channel ${ stale-init-channel } --standard-input-file "$STANDARD_INPUT_FILE" > /dev/null 2>&1
-                                                                                trace 3712568266647324
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
