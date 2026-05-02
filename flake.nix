@@ -1415,7 +1415,7 @@
                                                                                         "seed" : $SEED ,
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                         "targets" : $TARGETS_EXPECTED
-                                                                                    }' | log --channel ${ stale-init-channel } --standard-input-file "$STANDARD_INPUT_FILE > /dev/null 2>&1
+                                                                                    }' | log --channel ${ stale-init-channel } --standard-input-file "$STANDARD_INPUT_FILE" > /dev/null 2>&1
                                                                                 trace 3712568266647324
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
