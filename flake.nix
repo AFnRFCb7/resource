@@ -635,7 +635,7 @@
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : $TARGETS_EXPECTED ,
                                                                                                                                 "transient" : $TRANSIENT
-                                                                                                                            }' | nohup log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
+                                                                                                                            }' | log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
@@ -672,7 +672,7 @@
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED } ,
                                                                                                                                 "transient" : $TRANSIENT
-                                                                                                                            }' | nohup log --channel ${ invalid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1 &
+                                                                                                                            }' | log --channel ${ invalid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
@@ -1410,7 +1410,7 @@
                                                                                         "seed" : $SEED ,
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                         "targets" : $TARGETS_EXPECTED
-                                                                                    }' | nohup log --channel ${ stale-init-channel } > /dev/null 2>&1 &
+                                                                                    }' | log --channel ${ stale-init-channel } > /dev/null 2>&1
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
