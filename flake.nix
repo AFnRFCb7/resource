@@ -614,11 +614,11 @@
                                                                                                                             --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                             --arg INDEX "$INDEX" \
                                                                                                                             --arg RELEASE_FILE "$RELEASE_FILE" \
-                                                                                                                            --arg SCRIPT_FILE "$SCRIPT_FILE" \
+                                                                                                                            --rawfile SCRIPT "$SCRIPT_FILE" \
                                                                                                                             --argjson SEED "$SEED" \
-                                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                                                            --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                                                            --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                                                            --rawfile STANDARD_ERROR "$STANDARD_ERROR_FILE" \
+                                                                                                                            --rawfile STANDARD_INPUT "$STANDARD_INPUT_FILE" \
+                                                                                                                            --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
                                                                                                                             --argjson STATUS "$STATUS" \
                                                                                                                             --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
@@ -627,15 +627,15 @@
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "index" : $INDEX ,
-                                                                                                                                "script-file" : $SCRIPT_FILE ,
+                                                                                                                                "script" : $SCRIPT ,
                                                                                                                                 "seed" : $SEED ,
-                                                                                                                                "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                                                                "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                                                                "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                                "standard-error" : $STANDARD_ERROR ,
+                                                                                                                                "standard-input" : $STANDARD_INPUT ,
+                                                                                                                                "standard-output" : $STANDARD_OUTPUT ,
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : $TARGETS_EXPECTED ,
                                                                                                                                 "transient" : $TRANSIENT
-                                                                                                                            }' | log --channel ${ valid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1
+                                                                                                                            }' | log --channel ${ valid-init-channel } > /dev/null 2>&1
                                                                                                                         mkdir --parents ${ resources-directory }/canonical
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
