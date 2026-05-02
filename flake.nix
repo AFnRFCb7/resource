@@ -648,12 +648,12 @@
                                                                                                                             --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                             --arg HASH "$HASH" \
                                                                                                                             --arg INDEX "$INDEX" \
-                                                                                                                            --arg SCRIPT_FILE "$SCRIPT_FILE" \
+                                                                                                                            --rawfile SCRIPT "$SCRIPT_FILE" \
                                                                                                                             --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                             --argjson SEED "$SEED" \
-                                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                                                            --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                                                            --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                                                            --rawfile STANDARD_ERROR "$STANDARD_ERROR_FILE" \
+                                                                                                                            --rawfile STANDARD_INPUT "$STANDARD_INPUT_FILE" \
+                                                                                                                            --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
                                                                                                                             --argjson STATUS "$STATUS" \
                                                                                                                             --argjson TARGETS_EXPECTED "$TARGETS_EXPECTED" \
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
@@ -663,16 +663,16 @@
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "hash" : $HASH ,
                                                                                                                                 "index" : $INDEX ,
-                                                                                                                                "script-file" : $SCRIPT_FILE ,
+                                                                                                                                "script" : $SCRIPT_FILE ,
                                                                                                                                 "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                                 "seed" : $SEED ,
-                                                                                                                                "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                                                                "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                                                                "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                                "standard-error" : $STANDARD_ERROR_FILE ,
+                                                                                                                                "standard-input" : $STANDARD_INPUT_FILE ,
+                                                                                                                                "standard-output" : $STANDARD_OUTPUT_FILE ,
                                                                                                                                 "status" : $STATUS ,
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED } ,
                                                                                                                                 "transient" : $TRANSIENT
-                                                                                                                            }' | log --channel ${ invalid-init-channel } --script-file "$SCRIPT_FILE" --standard-error-file "$STANDARD_ERROR_FILE" --standard-input-file "$STANDARD_INPUT_FILE" --standard-output-file "$STANDARD_OUTPUT_FILE" > /dev/null 2>&1
+                                                                                                                            }' | log --channel ${ invalid-init-channel } > /dev/null 2>&1
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
