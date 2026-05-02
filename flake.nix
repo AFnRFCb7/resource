@@ -1386,15 +1386,19 @@
                                                                             trace 4196961124742927 PRE_HASH "$PRE_HASH" HASH "$HASH"
                                                                             if [[ -L "${ resources-directory }/canonical/$HASH" ]]
                                                                             then
-                                                                                LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 3789
-                                                                                INDEX="$( basename "$LINK" )" || failure 13919
+                                                                                trace 8133813695985282
+                                                                                LINK="$( readlink --canonicalize "${ resources-directory }/canonical/$HASH" )" || failure 6882155195748272
+                                                                                INDEX="$( basename "$LINK" )" || failure 5382672217914679
                                                                                 exec 204> "${ resources-directory }/locks/$INDEX"
                                                                                 flock -s 204
                                                                                 mkdir --parents ${ resources-directory }/marks
                                                                                 touch "${ resources-directory }/marks/$INDEX"
                                                                                 mkdir --parents "${ resources-directory }/pids/$INDEX"
+                                                                                trace 2813431713896884
                                                                                 pid "$ULTIMATE_PID" ${ builtins.toString depth } "$INDEX"
+                                                                                trace 9757357975448681
                                                                                 SEED='${ builtins.toJSON seed }'
+                                                                                trace 4557384477613445
                                                                                 jq \
                                                                                     --null-input \
                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
@@ -1411,6 +1415,7 @@
                                                                                         "standard-input-file" : $STANDARD_INPUT_FILE ,
                                                                                         "targets" : $TARGETS_EXPECTED
                                                                                     }' | log --channel ${ stale-init-channel } > /dev/null 2>&1
+                                                                                trace 3712568266647324
                                                                                 echo "${ resources-directory }/mounts/$INDEX"
                                                                             else
                                                                                 export HAS_STANDARD_INPUT
