@@ -689,7 +689,7 @@
                                                                                                                         chmod 0500 "${ resources-directory }/invalid-init/$INDEX/log.sh"
                                                                                                                         ${ builtins.concatStringsSep "\n" ( resolutions true ) }
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
-                                                                                                                        failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
+                                                                                                                        failure 3247386799252451 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
                                                                                                                 '' ;
                                                                                                 null =
