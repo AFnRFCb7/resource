@@ -565,6 +565,19 @@
                                                                                                     path : value :
                                                                                                         let
                                                                                                             a = arguments.init pkgs ;
+                                                                                                            log =
+                                                                                                                let
+                                                                                                                    application =
+                                                                                                                        pkgs.writeShellApplication
+                                                                                                                            {
+                                                                                                                                name = "log" ;
+                                                                                                                                runtimeInputs = [ pkgs.yq-go ] ;
+                                                                                                                                text =
+                                                                                                                                    ''
+                                                                                                                                        yq '. | select ( .index = $INDEX )' ${ resources-directory }/logs/log.yaml
+                                                                                                                                    '' ;
+                                                                                                                            } ;
+                                                                                                                    in "${ application }/bin/log" ;
                                                                                                             in
                                                                                                                 ''
                                                                                                                     mkdir --parents ${ resources-directory }/logs
@@ -670,6 +683,9 @@
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED } ,
                                                                                                                                 "transient" : $TRANSIENT
                                                                                                                             }' | log ${ invalid-init-channel }
+                                                                                                                        mkdir --parents "${ resources-directory }/invalid-init/$INDEX"
+                                                                                                                        sed -e "s#\$INDEX\#$INDEX#" -e "w${ resources-directory }/invalid-init/$INDEX/log.sh" ${ log } > /dev/null 2>&1
+                                                                                                                        chmod 0500 "${ resources-directory }/invalid-init/$INDEX/log.sh"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
