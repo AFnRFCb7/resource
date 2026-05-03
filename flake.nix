@@ -437,7 +437,6 @@
                                                                                                                 runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequential ] ;
                                                                                                                 text =
                                                                                                                     ''
-
                                                                                                                         # shellcheck disable=SC2153,SC2016
                                                                                                                         _RELEASE_FILE="$RELEASE_FILE"
                                                                                                                         # shellcheck disable=SC2153,SC2016
