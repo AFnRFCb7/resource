@@ -406,7 +406,7 @@
                                                                                                             in
                                                                                                                 [
                                                                                                                     ''
-                                                                                                                        mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
+                                                                                                                        mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/7657496736235334"
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         RESOLUTION_PATH='${ builtins.toJSON path }'
