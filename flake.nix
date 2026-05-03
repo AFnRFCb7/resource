@@ -687,9 +687,7 @@
                                                                                                                         mkdir --parents "${ resources-directory }/invalid-init/$INDEX"
                                                                                                                         sed -e "s#\$INDEX#$INDEX#" -e "w${ resources-directory }/invalid-init/$INDEX/log.sh" ${ log } > /dev/null 2>&1
                                                                                                                         chmod 0500 "${ resources-directory }/invalid-init/$INDEX/log.sh"
-                                                                                                                        echo 6855762583461558 "$0"
                                                                                                                         ${ builtins.concatStringsSep "\n" ( resolutions true ) }
-                                                                                                                        echo 3768874449335783 "$0"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 3247386799252451 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
