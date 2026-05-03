@@ -640,18 +640,15 @@
                                                                                                                         ln --symbolic "${ resources-directory }/mounts/$INDEX" "${ resources-directory }/canonical/$HASH"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                     else
-                                                                                                                        trace 2385347811474261 "$0"
+
                                                                                                                         ${ builtins.concatStringsSep "\n" ( resolutions true ) }
-                                                                                                                        trace 3634767793776866 "$0"
                                                                                                                         jq \
                                                                                                                             --compact-output \
                                                                                                                             --null-input \
                                                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                             --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                            --arg HASH "$HASH" \
                                                                                                                             --arg INDEX "$INDEX" \
                                                                                                                             --rawfile SCRIPT "$SCRIPT_FILE" \
-                                                                                                                            --arg SCRIPTS_HASH "$SCRIPTS_HASH" \
                                                                                                                             --argjson SEED "$SEED" \
                                                                                                                             --rawfile STANDARD_ERROR "$STANDARD_ERROR_FILE" \
                                                                                                                             --rawfile STANDARD_INPUT "$STANDARD_INPUT_FILE" \
@@ -663,10 +660,8 @@
                                                                                                                             '{
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                                "hash" : $HASH ,
                                                                                                                                 "index" : $INDEX ,
                                                                                                                                 "script" : $SCRIPT ,
-                                                                                                                                "scripts-hash" : $SCRIPTS_HASH ,
                                                                                                                                 "seed" : $SEED ,
                                                                                                                                 "standard-error" : $STANDARD_ERROR ,
                                                                                                                                 "standard-input" : $STANDARD_INPUT ,
@@ -675,7 +670,6 @@
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED } ,
                                                                                                                                 "transient" : $TRANSIENT
                                                                                                                             }' | log ${ invalid-init-channel }
-                                                                                                                        trace 8192467632226359 "$0"
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 30398 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
