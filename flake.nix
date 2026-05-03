@@ -651,7 +651,7 @@
                                                                                             {
                                                                                                 bool = path : value : if value then init-resolutions else release-resolutions ;
                                                                                             }
-                                                                                            source ;
+                                                                                            direction ;
                                                                                     in
                                                                                         builtins.concatLists
                                                                                             [
