@@ -400,7 +400,7 @@
                                                                                                 lambda =
                                                                                                     path : value :
                                                                                                         let
-                                                                                                            a = arguments.release pkgs path ;
+                                                                                                            a = arguments.resolve pkgs path ;
                                                                                                             b = value a ;
                                                                                                             in
                                                                                                                 [
