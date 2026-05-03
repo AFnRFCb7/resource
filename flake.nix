@@ -685,6 +685,7 @@
                                                                                                                                 "transient" : $TRANSIENT
                                                                                                                             }' | log ${ invalid-init-channel }
                                                                                                                         mkdir --parents "${ resources-directory }/invalid-init/$INDEX"
+                                                                                                                        echo "$0" >&2
                                                                                                                         sed -e "s#\$INDEX\#$INDEX#" -e "w${ resources-directory }/invalid-init/$INDEX/log.sh" ${ log } # > /dev/null 2>&1
                                                                                                                         chmod 0500 "${ resources-directory }/invalid-init/$INDEX/log.sh"
                                                                                                                         ${ builtins.concatStringsSep "\n" ( resolutions true ) }
