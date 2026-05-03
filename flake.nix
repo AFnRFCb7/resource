@@ -61,8 +61,9 @@
                                                             trace = trace ;
                                                         } ;
                                                 resolve =
-                                                    pkgs : resolve-path :
+                                                    pkgs : resolve-path : direction :
                                                         {
+                                                            direction = direction ;
                                                             failure = failure ;
                                                             pkgs = pkgs ;
                                                             resolve-path = resolve-path ;
