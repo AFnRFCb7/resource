@@ -393,7 +393,7 @@
                                                                                                             ''
                                                                                                                 ${ resources-directory }/invalid-release/$INDEX'' ;
                                                                                             }
-                                                                                            source ;
+                                                                                            direction ;
                                                                                     resolutions =
                                                                                         visitor
                                                                                             {
