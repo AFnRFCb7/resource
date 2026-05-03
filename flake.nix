@@ -574,7 +574,7 @@
                                                                                                                                 runtimeInputs = [ pkgs.yq-go ] ;
                                                                                                                                 text =
                                                                                                                                     ''
-                                                                                                                                        yq '. | select ( .index = $INDEX )' ${ resources-directory }/logs/log.yaml
+                                                                                                                                        yq ". | select ( .index = $INDEX )" ${ resources-directory }/logs/log.yaml
                                                                                                                                     '' ;
                                                                                                                             } ;
                                                                                                                     in "${ application }/bin/log" ;
