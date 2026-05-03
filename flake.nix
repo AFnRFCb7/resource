@@ -423,7 +423,7 @@
                                                                                                     path : value :
                                                                                                         [
                                                                                                             ''
-                                                                                                                mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
+                                                                                                                mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/7946433181278621"
                                                                                                             ''
                                                                                                             ''
                                                                                                                 RESOLUTION_PATH='${ builtins.toJSON path }'
