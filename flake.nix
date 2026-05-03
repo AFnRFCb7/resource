@@ -1066,7 +1066,7 @@
                                                                                                                     let
                                                                                                                         a =
                                                                                                                             if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "init" then arguments.init pkgs
-                                                                                                                            elif builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "release" then arguments.release pkgs
+                                                                                                                            else if builtins.typeOf path == "list" && builtins.length path == 1 && builtins.typeOf ( builtins.elemAt path 0 ) == "string" && builtins.elemAt path 0 == "release" then arguments.release pkgs
                                                                                                                             else arguments.resolve pkgs path ;
                                                                                                                         in builtins.hashString "sha512" ( builtins.concatStringsSep "" ( builtins.concatLists [ path [ ( builtins.toString ( value a ) ) ] ] ) ) ;
                                                                                                             } ;
