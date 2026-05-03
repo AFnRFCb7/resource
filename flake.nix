@@ -103,14 +103,14 @@
                                                                                                                     bash -c '
                                                                                                                         if "$HAS_STANDARD_INPUT"
                                                                                                                         then
-                                                                                                                            if init "$@"
+                                                                                                                            if init "$@" > /signal/standard-output 2> /signal/standard-error
                                                                                                                             then
                                                                                                                                 echo "$?" > /signal/signal
                                                                                                                             else
                                                                                                                                 echo "$?" > /signal/signal
                                                                                                                             fi
                                                                                                                         else
-                                                                                                                            if init "$@" < "$STANDARD_INPUT_FILE"
+                                                                                                                            if init "$@"  > /signal/standard-output 2> /signal/standard-error < "$STANDARD_INPUT_FILE"
                                                                                                                             then
                                                                                                                                 echo "$?" > /signal/signal
                                                                                                                             else
@@ -1374,6 +1374,8 @@
                                                                                 export SIGNAL="${ resources-directory }/logs/$SIGNAL_SEQUENCE"
                                                                                 mkdir --parents "$SIGNAL"
                                                                                 create "$@"
+                                                                                cat "$SIGNAL/standard-output"
+                                                                                cat "$SIGNAL/standard-error" >&2
                                                                                 STATUS="$( cat "$SIGNAL/signal" )" || failure 13801
                                                                                 exit "$STATUS"
                                                                             fi
