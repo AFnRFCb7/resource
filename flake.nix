@@ -400,7 +400,7 @@
                                                                                                                         RESOLUTION_PATH='${ builtins.toJSON path }'
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$HASH#HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve }
+                                                                                                                        sed -e "s#\$HAS_SCRIPT#true#" -e "s#\$HASH#HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve.lambda }
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -427,110 +427,114 @@
                                                                                             }
                                                                                             source-resolutions ;
                                                                                     resolve =
-                                                                                        let
-                                                                                            application =
-                                                                                                pkgs.writeShellApplication
-                                                                                                    {
-                                                                                                        name = "resolve" ;
-                                                                                                        runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequential ] ;
-                                                                                                        text =
-                                                                                                            ''
+                                                                                        {
+                                                                                            lambda =
+                                                                                                let
+                                                                                                    application =
+                                                                                                        pkgs.writeShellApplication
+                                                                                                            {
+                                                                                                                name = "resolve" ;
+                                                                                                                runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequential ] ;
+                                                                                                                text =
+                                                                                                                    ''
 
-                                                                                                                # shellcheck disable=SC2153,SC2016
-                                                                                                                _RELEASE_FILE="$RELEASE_FILE"
-                                                                                                                # shellcheck disable=SC2153,SC2016
-                                                                                                                _RESOLUTION_PATH='$RESOLUTION_PATH'
-                                                                                                                STATUS=0
-                                                                                                                STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
-                                                                                                                STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
-                                                                                                                STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 8384911191384463
-                                                                                                                STANDARD_INPUT_FILE="${ resources-directory }/logs/$STANDARD_INPUT_SEQUENCE"
-                                                                                                                STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
-                                                                                                                STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
-                                                                                                                ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
-                                                                                                                # shellcheck disable=SC2153
-                                                                                                                _HAS_SCRIPT="$HAS_SCRIPT"
-                                                                                                                # shellcheck disable=SC2153
-                                                                                                                _SCRIPT_FILE="$SCRIPT_FILE"
-                                                                                                                if [[ -t 0 ]]
-                                                                                                                then
-                                                                                                                    HAS_STANDARD_INPUT=false
-                                                                                                                    if "$_HAS_SCRIPT"
-                                                                                                                    then
-                                                                                                                        if "$_SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                        # shellcheck disable=SC2153,SC2016
+                                                                                                                        _RELEASE_FILE="$RELEASE_FILE"
+                                                                                                                        # shellcheck disable=SC2153,SC2016
+                                                                                                                        _RESOLUTION_PATH='$RESOLUTION_PATH'
+                                                                                                                        STATUS=0
+                                                                                                                        STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
+                                                                                                                        STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
+                                                                                                                        STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 8384911191384463
+                                                                                                                        STANDARD_INPUT_FILE="${ resources-directory }/logs/$STANDARD_INPUT_SEQUENCE"
+                                                                                                                        STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
+                                                                                                                        STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
+                                                                                                                        ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
+                                                                                                                        # shellcheck disable=SC2153
+                                                                                                                        _HAS_SCRIPT="$HAS_SCRIPT"
+                                                                                                                        # shellcheck disable=SC2153
+                                                                                                                        _SCRIPT_FILE="$SCRIPT_FILE"
+                                                                                                                        if [[ -t 0 ]]
                                                                                                                         then
-                                                                                                                            STATUS="$?"
+                                                                                                                            HAS_STANDARD_INPUT=false
+                                                                                                                            if "$_HAS_SCRIPT"
+                                                                                                                            then
+                                                                                                                                if "$_SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                then
+                                                                                                                                    STATUS="$?"
+                                                                                                                                else
+                                                                                                                                    STATUS="$?"
+                                                                                                                                fi
+                                                                                                                            fi
                                                                                                                         else
-                                                                                                                            STATUS="$?"
+                                                                                                                            HAS_STANDARD_INPUT=true
+                                                                                                                            cat "$STANDARD_INPUT_FILE"
+                                                                                                                            if "$_HAS_SCRIPT"
+                                                                                                                            then
+                                                                                                                                if "$_SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                then
+                                                                                                                                    STATUS="$?"
+                                                                                                                                else
+                                                                                                                                    STATUS="$?"
+                                                                                                                                fi
+                                                                                                                            fi
                                                                                                                         fi
-                                                                                                                    fi
-                                                                                                                else
-                                                                                                                    HAS_STANDARD_INPUT=true
-                                                                                                                    cat "$STANDARD_INPUT_FILE"
-                                                                                                                    if "$_HAS_SCRIPT"
-                                                                                                                    then
-                                                                                                                        if "$_SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                        JSON_SEQUENCE="$( sequential )" || failure 8452556526050122
+                                                                                                                        JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
+                                                                                                                        # shellcheck disable=SC2153
+                                                                                                                        _HASH="$HASH"
+                                                                                                                        # shellcheck disable=SC2153
+                                                                                                                        _INDEX="$INDEX"
+                                                                                                                        RELEASE_FILE="${ resources-directory }/release/$INDEX"
+                                                                                                                        if [[ -e "$RELEASE_FILE" ]]
                                                                                                                         then
-                                                                                                                            STATUS="$?"
-                                                                                                                        else
-                                                                                                                            STATUS="$?"
+                                                                                                                            failure 9339682764537318
                                                                                                                         fi
-                                                                                                                    fi
-                                                                                                                fi
-                                                                                                                JSON_SEQUENCE="$( sequential )" || failure 8452556526050122
-                                                                                                                JSON_FILE="${ resources-directory }/logs/$JSON_SEQUENCE"
-                                                                                                                # shellcheck disable=SC2153
-                                                                                                                _HASH="$HASH"
-                                                                                                                # shellcheck disable=SC2153
-                                                                                                                _INDEX="$INDEX"
-                                                                                                                RELEASE_FILE="${ resources-directory }/release/$INDEX"
-                                                                                                                if [[ -e "$RELEASE_FILE" ]]
-                                                                                                                then
-                                                                                                                    failure 9339682764537318
-                                                                                                                fi
-                                                                                                                sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                                chmod 0500 "$RELEASE_FILE"
-                                                                                                                jq \
-                                                                                                                    --null-input \
-                                                                                                                    --compact-output \
-                                                                                                                    --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                                                    --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
-                                                                                                                    --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                    --arg HASH "$HASH" \
-                                                                                                                    --arg INDEX "$INDEX" \
-                                                                                                                    --arg _RELEASE_FILE "$_RELEASE_FILE" \
-                                                                                                                    --argjson _RESOLUTION_PATH "$_RESOLUTION_PATH" \
-                                                                                                                    --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
-                                                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                                                    --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                                                    --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
-                                                                                                                    --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
-                                                                                                                    --argjson STATUS "$STATUS" \
-                                                                                                                    '{
-                                                                                                                        "arguments" : $ARGUMENTS ,
-                                                                                                                        "has-script" : $_HAS_SCRIPT ,
-                                                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                        "hash" : $_HASH ,
-                                                                                                                        "index" : $_INDEX ,
-                                                                                                                        "release-file" : $_RELEASE_FILE ,
-                                                                                                                        "resolution-path" : $_RESOLUTION_PATH ,
-                                                                                                                        "script-file" : $_SCRIPT_FILE ,
-                                                                                                                        "standard-error-file" : $STANDARD_ERROR_FILE ,
-                                                                                                                        "standard-input-file" : $STANDARD_INPUT_FILE ,
-                                                                                                                        "standard-output-file" : $STANDARD_OUTPUT_FILE ,
-                                                                                                                        "status" : $STATUS
-                                                                                                                    }' > "$JSON_FILE"
-                                                                                                                if [[ "$STATUS" -eq 0 ]]
-                                                                                                                then
-                                                                                                                    rm --recursive --force "${ directory }"
-                                                                                                                    redis-cli PUBLISH valid-init "$JSON_FILE"
-                                                                                                                else
-                                                                                                                    redis-cli PUBLISH invalid-init "$JSON_FILE"
-                                                                                                                fi
-                                                                                                                exit "$STATUS"
-                                                                                                            '' ;
-                                                                                                    } ;
-                                                                                            in "${ application }/bin/resolve" ;
+                                                                                                                        sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                        chmod 0500 "$RELEASE_FILE"
+                                                                                                                        jq \
+                                                                                                                            --null-input \
+                                                                                                                            --compact-output \
+                                                                                                                            --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                                                            --arg _HAS_SCRIPT "$_HAS_SCRIPT" \
+                                                                                                                            --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                            --arg HASH "$HASH" \
+                                                                                                                            --arg INDEX "$INDEX" \
+                                                                                                                            --arg _RELEASE_FILE "$_RELEASE_FILE" \
+                                                                                                                            --argjson _RESOLUTION_PATH "$_RESOLUTION_PATH" \
+                                                                                                                            --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
+                                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                                                            --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
+                                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
+                                                                                                                            --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
+                                                                                                                            --argjson STATUS "$STATUS" \
+                                                                                                                            '{
+                                                                                                                                "arguments" : $ARGUMENTS ,
+                                                                                                                                "has-script" : $_HAS_SCRIPT ,
+                                                                                                                                "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                                "hash" : $_HASH ,
+                                                                                                                                "index" : $_INDEX ,
+                                                                                                                                "release-file" : $_RELEASE_FILE ,
+                                                                                                                                "resolution-path" : $_RESOLUTION_PATH ,
+                                                                                                                                "script-file" : $_SCRIPT_FILE ,
+                                                                                                                                "standard-error-file" : $STANDARD_ERROR_FILE ,
+                                                                                                                                "standard-input-file" : $STANDARD_INPUT_FILE ,
+                                                                                                                                "standard-output-file" : $STANDARD_OUTPUT_FILE ,
+                                                                                                                                "status" : $STATUS
+                                                                                                                            }' > "$JSON_FILE"
+                                                                                                                        if [[ "$STATUS" -eq 0 ]]
+                                                                                                                        then
+                                                                                                                            rm --recursive --force "${ directory }"
+                                                                                                                            redis-cli PUBLISH valid-init "$JSON_FILE"
+                                                                                                                        else
+                                                                                                                            redis-cli PUBLISH invalid-init "$JSON_FILE"
+                                                                                                                        fi
+                                                                                                                        exit "$STATUS"
+                                                                                                                    '' ;
+                                                                                                            } ;
+                                                                                                    in "${ application }/bin/resolve" ;
+                                                                                            null = null ;
+                                                                                        } ;
                                                                                     source-resolutions =
                                                                                         visitor
                                                                                             {
@@ -545,7 +549,7 @@
                                                                                                         mkdir --parents "${ directory }"
                                                                                                     ''
                                                                                                     ''
-                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH##" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve.sh" ${ resolve }
+                                                                                                        sed -e "s#\$HAS_SCRIPT#false#" -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH##" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve.sh" ${ resolve.lambda }
                                                                                                     ''
                                                                                                     ''
                                                                                                         chmod 0500 "${ directory }/resolve.sh"
