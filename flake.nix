@@ -504,6 +504,7 @@
                                                                                                                                     --arg INDEX "$INDEX" \
                                                                                                                                     --argjson RESOLVE_PATH '${ builtins.toJSON path }' \
                                                                                                                                     --rawfile SCRIPT "$SCRIPT_FILE" \
+                                                                                                                                    --rawfile STANDARD_ERROR "$STANDARD_ERROR_FILE" \
                                                                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                                     --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
                                                                                                                                     '{
@@ -512,6 +513,7 @@
                                                                                                                                         "index" : $INDEX ,
                                                                                                                                         "resolve-path" : $RESOLVE_PATH ,
                                                                                                                                         "script" : $SCRIPT ,
+                                                                                                                                        "standard-error" : $STANDARD_ERROR ,
                                                                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                                                                         "standard-output" : $STANDARD_OUTPUT
                                                                                                                                     }' | log ${ invalid-init-channel }
