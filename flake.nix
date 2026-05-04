@@ -598,7 +598,6 @@
                                                                                                                             --arg _SCRIPT_FILE "$_SCRIPT_FILE" \
                                                                                                                             --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                             --arg STANDARD_INPUT_FILE "$STANDARD_INPUT_FILE" \
-                                                                                                                            --arg STANDARD_ERROR_FILE "$STANDARD_ERROR_FILE" \
                                                                                                                             --arg STANDARD_OUTPUT_FILE "$STANDARD_OUTPUT_FILE" \
                                                                                                                             --argjson STATUS "$STATUS" \
                                                                                                                             '{
