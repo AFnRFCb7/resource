@@ -507,6 +507,7 @@
                                                                                                                                     --rawfile STANDARD_ERROR "$STANDARD_ERROR_FILE" \
                                                                                                                                     --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                                     --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
+                                                                                                                                    --argjson STATUS "$STATUS" \
                                                                                                                                     '{
                                                                                                                                         "arguments" : $ARGUMENTS ,
                                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
@@ -515,7 +516,8 @@
                                                                                                                                         "script" : $SCRIPT ,
                                                                                                                                         "standard-error" : $STANDARD_ERROR ,
                                                                                                                                         "standard-input" : $STANDARD_INPUT ,
-                                                                                                                                        "standard-output" : $STANDARD_OUTPUT
+                                                                                                                                        "standard-output" : $STANDARD_OUTPUT ,
+                                                                                                                                        "status" : $STATUS
                                                                                                                                     }' | log ${ invalid-init-channel }
                                                                                                                                 exit 64
                                                                                                                             fi
