@@ -713,7 +713,7 @@
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                                                                             --argjson TRANSIENT "$TRANSIENT" \
                                                                                                                             '{
-                                                                                                                                "kludge" : "pass" ,
+                                                                                                                                "kludge" : "pass6" ,
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "index" : $INDEX ,
