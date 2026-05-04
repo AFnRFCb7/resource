@@ -757,7 +757,7 @@
                                                                                                                                 "targets" : { "expected" : $TARGETS_EXPECTED , "observed" : $TARGETS_OBSERVED } ,
                                                                                                                                 "transient" : $TRANSIENT
                                                                                                                             }' | log ${ invalid-init-channel }
-                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.trace ( builtins.typeOf init-resolutions ) ( resolutions true ) ) }
+                                                                                                                        ${ builtins.concatStringsSep "\n" ( resolutions true ) }
                                                                                                                         echo "${ resources-directory }/mounts/$INDEX"
                                                                                                                         failure 3247386799252451 "INDEX=$INDEX" "STATUS=$STATUS" "STANDARD_ERROR_FILE=$STANDARD_ERROR_FILE" "TARGETS_EXPECTED=$TARGETS_EXPECTED" "TARGETS_OBSERVED=$TARGETS_OBSERVED"
                                                                                                                     fi
