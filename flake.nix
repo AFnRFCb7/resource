@@ -499,9 +499,11 @@
                                                                                                                             jq \
                                                                                                                                 --null-input \
                                                                                                                                 --compact-output \
-                                                                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT \
+                                                                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                                 '{
-                                                                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT
+                                                                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                                    "standard-input" : $STANDARD_INPUT
                                                                                                                                 }' | log ${ invalid-init-channel }
                                                                                                                                 exit 64
                                                                                                                         fi
