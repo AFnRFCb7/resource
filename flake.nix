@@ -409,7 +409,7 @@
                                                                                                                         mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/7657496736235334"
                                                                                                                     ''
                                                                                                                     ''
-                                                                                                                        sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "s#\$_SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve.lambda } > /dev/null 2>&1
+                                                                                                                        sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "s#\$_SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve.lambda path } > /dev/null 2>&1
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
@@ -438,87 +438,88 @@
                                                                                     resolve =
                                                                                         {
                                                                                             lambda =
-                                                                                                let
-                                                                                                    application =
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "resolve" ;
-                                                                                                                runtimeInputs = [ failure log pkgs.coreutils pkgs.gnused pkgs.jq pkgs.redis sequential ] ;
-                                                                                                                text =
-                                                                                                                    ''
-                                                                                                                        # shellcheck disable=SC2153
-                                                                                                                        HASH="$_HASH"
-                                                                                                                        # shellcheck disable=SC2153
-                                                                                                                        INDEX="$_INDEX"
-                                                                                                                        # shellcheck disable=SC2153
-                                                                                                                        SCRIPT_FILE="$_SCRIPT_FILE"
-                                                                                                                        STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
-                                                                                                                        STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
-                                                                                                                        STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
-                                                                                                                        STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
-                                                                                                                        if [[ "$#" -gt 0 ]]
-                                                                                                                        then
-                                                                                                                            ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
-                                                                                                                        else
-                                                                                                                            ARGUMENTS="[]"
-                                                                                                                        fi
-                                                                                                                        if [[ -t 0 ]]
-                                                                                                                        then
-                                                                                                                            HAS_STANDARD_INPUT=false
-                                                                                                                            STANDARD_INPUT=
-                                                                                                                            if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                path :
+                                                                                                    let
+                                                                                                        application =
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                    name = "resolve" ;
+                                                                                                                    runtimeInputs = [ failure log pkgs.coreutils pkgs.gnused pkgs.jq pkgs.redis sequential ] ;
+                                                                                                                    text =
+                                                                                                                        ''
+                                                                                                                            # shellcheck disable=SC2153
+                                                                                                                            HASH="$_HASH"
+                                                                                                                            # shellcheck disable=SC2153
+                                                                                                                            INDEX="$_INDEX"
+                                                                                                                            # shellcheck disable=SC2153
+                                                                                                                            SCRIPT_FILE="$_SCRIPT_FILE"
+                                                                                                                            STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
+                                                                                                                            STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
+                                                                                                                            STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
+                                                                                                                            STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
+                                                                                                                            if [[ "$#" -gt 0 ]]
                                                                                                                             then
-                                                                                                                                STATUS="$?"
+                                                                                                                                ARGUMENTS="$( printf '%s\n' "$@" | jq --raw-input . | jq --slurp . )" || failure 8734692413302431
                                                                                                                             else
-                                                                                                                                STATUS="$?"
+                                                                                                                                ARGUMENTS="[]"
                                                                                                                             fi
-                                                                                                                        else
-                                                                                                                            HAS_STANDARD_INPUT=true
-                                                                                                                            STANDARD_INPUT="$( cat )" || failure 5689582774767916
-                                                                                                                            if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                            if [[ -t 0 ]]
                                                                                                                             then
-                                                                                                                                STATUS="$?"
+                                                                                                                                HAS_STANDARD_INPUT=false
+                                                                                                                                STANDARD_INPUT=
+                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                then
+                                                                                                                                    STATUS="$?"
+                                                                                                                                else
+                                                                                                                                    STATUS="$?"
+                                                                                                                                fi
                                                                                                                             else
-                                                                                                                                STATUS="$?"
+                                                                                                                                HAS_STANDARD_INPUT=true
+                                                                                                                                STANDARD_INPUT="$( cat )" || failure 5689582774767916
+                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                then
+                                                                                                                                    STATUS="$?"
+                                                                                                                                else
+                                                                                                                                    STATUS="$?"
+                                                                                                                                fi
                                                                                                                             fi
-                                                                                                                        fi
-                                                                                                                        if [[ "$STATUS" -eq 0 ]] && [[ -s "$STANDARD_ERROR_FILE" ]]
-                                                                                                                        then
-                                                                                                                            jq \
-                                                                                                                                --null-input \
-                                                                                                                                --compact-output \
-                                                                                                                                '{
-                                                                                                                                }' | log ${ valid-init-channel }
-                                                                                                                            RELEASE_FILE="${ resources-directory }/release/$_INDEX"
-                                                                                                                            sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                                            chmod 0500 "$RELEASE_FILE"
-                                                                                                                            rm --recursive --force "${ directory }"
-                                                                                                                        else
-                                                                                                                            # shellcheck disable=SC2016
-                                                                                                                            jq \
-                                                                                                                                --null-input \
-                                                                                                                                --compact-output \
-                                                                                                                                --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                                                                --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
-                                                                                                                                --arg INDEX "$INDEX" \
-                                                                                                                                --argjson RESOLVE_PATH '${ builtins.toJSON path }' \
-                                                                                                                                --rawfile SCRIPT "$SCRIPT_FILE" \
-                                                                                                                                --arg STANDARD_INPUT "$STANDARD_INPUT" \
-                                                                                                                                --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
-                                                                                                                                '{
-                                                                                                                                    "arguments" : $ARGUMENTS ,
-                                                                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                                    "index" : $INDEX ,
-                                                                                                                                    "resolve-path" : $RESOLVE_PATH ,
-                                                                                                                                    "script" : $SCRIPT ,
-                                                                                                                                    "standard-input" : $STANDARD_INPUT ,
-                                                                                                                                    "standard-output" : $STANDARD_OUTPUT
-                                                                                                                                }' | log ${ invalid-init-channel }
-                                                                                                                                exit 64
-                                                                                                                        fi
-                                                                                                                    '' ;
-                                                                                                            } ;
-                                                                                                    in "${ application }/bin/resolve" ;
+                                                                                                                            if [[ "$STATUS" -eq 0 ]] && [[ -s "$STANDARD_ERROR_FILE" ]]
+                                                                                                                            then
+                                                                                                                                jq \
+                                                                                                                                    --null-input \
+                                                                                                                                    --compact-output \
+                                                                                                                                    '{
+                                                                                                                                    }' | log ${ valid-init-channel }
+                                                                                                                                RELEASE_FILE="${ resources-directory }/release/$_INDEX"
+                                                                                                                                sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                                chmod 0500 "$RELEASE_FILE"
+                                                                                                                                rm --recursive --force "${ directory }"
+                                                                                                                            else
+                                                                                                                                # shellcheck disable=SC2016
+                                                                                                                                jq \
+                                                                                                                                    --null-input \
+                                                                                                                                    --compact-output \
+                                                                                                                                    --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                                                                    --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                                    --arg INDEX "$INDEX" \
+                                                                                                                                    --argjson RESOLVE_PATH '${ builtins.toJSON path }' \
+                                                                                                                                    --rawfile SCRIPT "$SCRIPT_FILE" \
+                                                                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                                                                    --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
+                                                                                                                                    '{
+                                                                                                                                        "arguments" : $ARGUMENTS ,
+                                                                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                                        "index" : $INDEX ,
+                                                                                                                                        "resolve-path" : $RESOLVE_PATH ,
+                                                                                                                                        "script" : $SCRIPT ,
+                                                                                                                                        "standard-input" : $STANDARD_INPUT ,
+                                                                                                                                        "standard-output" : $STANDARD_OUTPUT
+                                                                                                                                    }' | log ${ invalid-init-channel }
+                                                                                                                                    exit 64
+                                                                                                                            fi
+                                                                                                                        '' ;
+                                                                                                                } ;
+                                                                                                        in "${ application }/bin/resolve" ;
                                                                                             null =
                                                                                                 let
                                                                                                     application =
