@@ -494,6 +494,7 @@
                                                                                                                             chmod 0500 "$RELEASE_FILE"
                                                                                                                             rm --recursive --force "${ directory }"
                                                                                                                         else
+                                                                                                                            # shellcheck disable=SC2016
                                                                                                                             jq \
                                                                                                                                 --null-input \
                                                                                                                                 --compact-output \
