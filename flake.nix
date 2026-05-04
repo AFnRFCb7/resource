@@ -467,7 +467,7 @@
                                                                                                                             then
                                                                                                                                 HAS_STANDARD_INPUT=false
                                                                                                                                 STANDARD_INPUT=
-                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                                 then
                                                                                                                                     STATUS="$?"
                                                                                                                                 else
@@ -476,7 +476,7 @@
                                                                                                                             else
                                                                                                                                 HAS_STANDARD_INPUT=true
                                                                                                                                 STANDARD_INPUT="$( cat )" || failure 5689582774767916
-                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                                 then
                                                                                                                                     STATUS="$?"
                                                                                                                                 else
@@ -894,7 +894,6 @@
                                                                                     TARGET="$1"
                                                                                     DIRECTORY="$( dirname "$TARGET" )" || failure 30095
                                                                                     SEQUENCE="$( sequential )" || failure 18737
-                                                                                    mkdir --parents "${ gc-root-directory }/$INDEX/$SEQUENCE/$DIRECTORY"
                                                                                     ln --symbolic "$TARGET" "${ gc-root-directory }/$INDEX/$SEQUENCE$DIRECTORY"
                                                                                     echo Rooted "TARGET=$TARGET" at "DESTINATION=${ gc-root-directory }/$INDEX/$SEQUENCE$DIRECTORY"
                                                                                 '' ;
