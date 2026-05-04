@@ -516,6 +516,7 @@
                                                                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                                                                         "standard-output" : $STANDARD_OUTPUT
                                                                                                                                     }' | log ${ invalid-init-channel }
+                                                                                                                                exit 64
                                                                                                                             fi
                                                                                                                         '' ;
                                                                                                                 } ;
