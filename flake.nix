@@ -738,7 +738,6 @@
                                                                                                                             --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                             --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                             --arg INDEX "$INDEX" \
-                                                                                                                            --argjson RESOLVE_PATH '${ builtins.toJSON path }' \
                                                                                                                             --rawfile SCRIPT "$SCRIPT_FILE" \
                                                                                                                             --argjson SEED "$SEED" \
                                                                                                                             --rawfile STANDARD_ERROR "$STANDARD_ERROR_FILE" \
@@ -752,7 +751,6 @@
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "index" : $INDEX ,
-                                                                                                                                "resolve-path" : $RESOLVE_PATH ,
                                                                                                                                 "script" : $SCRIPT ,
                                                                                                                                 "seed" : $SEED ,
                                                                                                                                 "standard-error" : $STANDARD_ERROR ,
