@@ -494,12 +494,14 @@
                                                                                                                             RELEASE_FILE="${ resources-directory }/release/$_INDEX"
                                                                                                                             sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                             chmod 0500 "$RELEASE_FILE"
-                                                                                                                            rm --recursive --roce "${ directory }"
+                                                                                                                            rm --recursive --force "${ directory }"
                                                                                                                         else
                                                                                                                             jq \
                                                                                                                                 --null-input \
                                                                                                                                 --compact-output \
+                                                                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT \
                                                                                                                                 '{
+                                                                                                                                    "has-standard-input" : $HAS_STANDARD_INPUT
                                                                                                                                 }' | log ${ invalid-init-channel }
                                                                                                                                 exit 64
                                                                                                                         fi
