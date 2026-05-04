@@ -443,7 +443,7 @@
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
                                                                                                                 name = "resolve" ;
-                                                                                                                runtimeInputs = [ failure pkgs.coreutils pkgs.jq pkgs.redis sequential ] ;
+                                                                                                                runtimeInputs = [ failure log pkgs.coreutils pkgs.gnused pkgs.jq pkgs.redis sequential ] ;
                                                                                                                 text =
                                                                                                                     ''
                                                                                                                         # shellcheck disable=SC2153
