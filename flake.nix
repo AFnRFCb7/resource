@@ -497,14 +497,19 @@
                                                                                                                             jq \
                                                                                                                                 --null-input \
                                                                                                                                 --compact-output \
-                                                                                                                                --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                                                                --argjson ARGUMENTS "$ARGUMENTS"
                                                                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                                 --arg INDEX "$INDEX" \
+                                                                                                                                --rawfile SCRIPT "$SCRIPT_FILE" \
                                                                                                                                 --arg STANDARD_INPUT "$STANDARD_INPUT" \
+                                                                                                                                --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
                                                                                                                                 '{
                                                                                                                                     "arguments" : $ARGUMENTS ,
                                                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                                    "standard-input" : $STANDARD_INPUT
+                                                                                                                                    "index" : $INDEX ,
+                                                                                                                                    "script" : $SCRIPT ,
+                                                                                                                                    "standard-input" : $STANDARD_INPUT ,
+                                                                                                                                    "standard-output" : $STANDARD_OUTPUT
                                                                                                                                 }' | log ${ invalid-init-channel }
                                                                                                                                 exit 64
                                                                                                                         fi
