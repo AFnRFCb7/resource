@@ -511,6 +511,7 @@
                                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                         "index" : $INDEX ,
                                                                                                                                         "resolve-path" : $RESOLVE_PATH ,
+                                                                                                                                        "seed" : "6974578711782619" ,
                                                                                                                                         "script" : $SCRIPT ,
                                                                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                                                                         "standard-output" : $STANDARD_OUTPUT
