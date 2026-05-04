@@ -499,8 +499,9 @@
                                                                                                                                 --null-input \
                                                                                                                                 --compact-output \
                                                                                                                                 --argjson ARGUMENTS "$ARGUMENTS" \
-                                                                                                                                --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                                --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                                 --arg INDEX "$INDEX" \
+                                                                                                                                --argjson RESOLVE_PATH '${ builtins.toJSON path }' \
                                                                                                                                 --rawfile SCRIPT "$SCRIPT_FILE" \
                                                                                                                                 --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                                 --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
@@ -508,6 +509,7 @@
                                                                                                                                     "arguments" : $ARGUMENTS ,
                                                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                     "index" : $INDEX ,
+                                                                                                                                    "resolve-path" : $RESOLVE_PATH ,
                                                                                                                                     "script" : $SCRIPT ,
                                                                                                                                     "standard-input" : $STANDARD_INPUT ,
                                                                                                                                     "standard-output" : $STANDARD_OUTPUT
@@ -713,7 +715,6 @@
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                                                                             --argjson TRANSIENT "$TRANSIENT" \
                                                                                                                             '{
-                                                                                                                                "kludge" : "pass6" ,
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "index" : $INDEX ,
@@ -747,7 +748,6 @@
                                                                                                                             --argjson TARGETS_OBSERVED "$TARGETS_OBSERVED" \
                                                                                                                             --argjson TRANSIENT "$TRANSIENT" \
                                                                                                                             '{
-                                                                                                                                "kludge" : "fail" ,
                                                                                                                                 "arguments" : $ARGUMENTS ,
                                                                                                                                 "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                 "index" : $INDEX ,
@@ -798,7 +798,6 @@
                                                                                                                 --argjson STATUS "$STATUS" \
                                                                                                                 --argjson TRANSIENT "$TRANSIENT" \
                                                                                                                 '{
-                                                                                                                    "kludge" : "null" ,
                                                                                                                     "arguments" : $ARGUMENTS ,
                                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                     "index" : $INDEX ,
