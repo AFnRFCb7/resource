@@ -449,13 +449,11 @@
                                                                                                                         # shellcheck disable=SC2153
                                                                                                                         HASH="$_HASH"
                                                                                                                         # shellcheck disable=SC2153
-                                                                                                                        INPUT="$_INPUT"
+                                                                                                                        INDEX="$_INDEX"
                                                                                                                         # shellcheck disable=SC2153
                                                                                                                         SCRIPT_FILE="$_SCRIPT_FILE"
                                                                                                                         STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
                                                                                                                         STANDARD_ERROR_FILE="${ resources-directory }/logs/$STANDARD_ERROR_SEQUENCE"
-                                                                                                                        STANDARD_INPUT_SEQUENCE="$( sequential )" || failure 8384911191384463
-                                                                                                                        STANDARD_INPUT_FILE="${ resources-directory }/logs/$STANDARD_INPUT_SEQUENCE"
                                                                                                                         STANDARD_OUTPUT_SEQUENCE="$( sequential )" || failure 2986933649455245
                                                                                                                         STANDARD_OUTPUT_FILE="${ resources-directory }/logs/$STANDARD_OUTPUT_SEQUENCE"
                                                                                                                         if [[ "$#" -gt 0 ]]
@@ -499,9 +497,12 @@
                                                                                                                             jq \
                                                                                                                                 --null-input \
                                                                                                                                 --compact-output \
+                                                                                                                                --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                                 --arg HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
+                                                                                                                                --arg INDEX "$INDEX" \
                                                                                                                                 --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                                 '{
+                                                                                                                                    "arguments" : $ARGUMENTS ,
                                                                                                                                     "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                     "standard-input" : $STANDARD_INPUT
                                                                                                                                 }' | log ${ invalid-init-channel }
