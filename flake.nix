@@ -500,7 +500,7 @@
                                                                                                                                 --null-input \
                                                                                                                                 --compact-output \
                                                                                                                                 '{
-                                                                                                                                '} | log ${ invalid-init-channel }
+                                                                                                                                }' | log ${ invalid-init-channel }
                                                                                                                                 exit 64
                                                                                                                         fi
                                                                                                                     '' ;
