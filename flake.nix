@@ -564,7 +564,7 @@
                                                                                                                             cat "$STANDARD_INPUT_FILE"
                                                                                                                             if "$_HAS_SCRIPT"
                                                                                                                             then
-                                                                                                                                if "$_SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[*]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                if "$_SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                                 then
                                                                                                                                     STATUS="$?"
                                                                                                                                 else
