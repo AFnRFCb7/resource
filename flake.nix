@@ -369,10 +369,10 @@
                                                                                         ] ;
                                                                                     text =
                                                                                         ''
-                                                                                            mkdir --parents "${ gc-root-directory }/$INDEX"
-                                                                                            export HASH=$HASH
                                                                                             # shellcheck disable=SC2153
                                                                                             export INDEX=$_INDEX
+                                                                                            mkdir --parents "${ gc-root-directory }/$INDEX"
+                                                                                            export HASH=$_HASH
                                                                                             destroy
                                                                                         '' ;
                                                                                 } ;
@@ -429,7 +429,7 @@
                                                                                                                 RESOLUTION_PATH='${ builtins.toJSON path }'
                                                                                                             ''
                                                                                                             ''
-                                                                                                                sed -e "s#\HAS_SCRIPT#false#" -e "s#\$HASH#$HASH#" -e "s#\$_INDEX#$INDEX" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve.null } > /dev/null 2>&1
+                                                                                                                sed -e "s#\HAS_SCRIPT#false#" -e "s#\$HASH#$HASH#" -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX" -e "s#\$INDEX#$INDEX#" -e "s#\$RELEASE_FILE#${ resources-directory }/release/$INDEX#" -e "s#\$RESOLUTION_PATH#$RESOLUTION_PATH#" -e "s#\$SCRIPT_FILE##" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve.null } > /dev/null 2>&1
                                                                                                             ''
                                                                                                             ''
                                                                                                                 chmod 0500 "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh"
