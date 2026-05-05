@@ -406,7 +406,7 @@
                                                                                                             in
                                                                                                                 [
                                                                                                                     ''
-                                                                                                                        mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/7657496736235334"
+                                                                                                                        mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
                                                                                                                     ''
                                                                                                                     ''
                                                                                                                         sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "s#\$_SCRIPT_FILE#${ b }#" -e "w${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/resolve.sh" ${ resolve.lambda path } > /dev/null 2>&1
@@ -420,7 +420,7 @@
                                                                                                     path : value :
                                                                                                         [
                                                                                                             ''
-                                                                                                                mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }/7946433181278621"
+                                                                                                                mkdir --parents "${ directory }/resolve/${ builtins.concatStringsSep "/" ( builtins.map builtins.toString path ) }"
                                                                                                             ''
                                                                                                             ''
                                                                                                                 RESOLUTION_PATH='${ builtins.toJSON path }'
