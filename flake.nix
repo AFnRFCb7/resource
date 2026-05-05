@@ -493,6 +493,7 @@
                                                                                                                                     --arg INDEX "$INDEX" \
                                                                                                                                     --argjson RESOLVE_PATH '${ path }' \
                                                                                                                                     --rawfile SCRIPT "$SCRIPT_FILE" \
+                                                                                                                                    --rawfile STANDARD_ERROR "$STANDARD_ERROR_FILE" \
                                                                                                                                     '{
                                                                                                                                         "arguments" : $ARGUMENTS ,
                                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
