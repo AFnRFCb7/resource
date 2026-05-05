@@ -476,7 +476,7 @@
                                                                                                                             else
                                                                                                                                 HAS_STANDARD_INPUT=true
                                                                                                                                 STANDARD_INPUT="$( cat )" || failure 5689582774767916
-                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" <<< "$STANDARD_INPUT" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                                 then
                                                                                                                                     STATUS="$?"
                                                                                                                                 else
@@ -510,12 +510,12 @@
                                                                                                                                     --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
                                                                                                                                     --argjson STATUS "$STATUS" \
                                                                                                                                     '{
-                                                                                                                                        "kludge" : $KLUDGE ,
                                                                                                                                         "arguments" : $ARGUMENTS ,
                                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                         "index" : $INDEX ,
                                                                                                                                         "resolve-path" : $RESOLVE_PATH ,
                                                                                                                                         "script" : $SCRIPT ,
+                                                                                                                                        "standard-error" : $STANDARD_ERROR ,
                                                                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                                                                         "standard-output" : $STANDARD_OUTPUT ,
                                                                                                                                         "status" : $STATUS
