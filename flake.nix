@@ -499,6 +499,7 @@
                                                                                                                                 jq \
                                                                                                                                     --null-input \
                                                                                                                                     --compact-output \
+                                                                                                                                    --arg kludge "$SCRIPT_FILE" \
                                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                                     --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                                     --arg INDEX "$INDEX" \
@@ -509,6 +510,7 @@
                                                                                                                                     --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
                                                                                                                                     --argjson STATUS "$STATUS" \
                                                                                                                                     '{
+                                                                                                                                        "kludge" : $KLUDGE ,
                                                                                                                                         "arguments" : $ARGUMENTS ,
                                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                         "index" : $INDEX ,
