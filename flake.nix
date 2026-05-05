@@ -372,6 +372,7 @@
                                                                                             # shellcheck disable=SC2153
                                                                                             export INDEX=$_INDEX
                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
+                                                                                            # shellcheck disable=SC2153
                                                                                             export HASH=$_HASH
                                                                                             destroy
                                                                                         '' ;
