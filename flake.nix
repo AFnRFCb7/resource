@@ -216,6 +216,7 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
+                                                                                                                                                                INDEX="$_INDEX"
                                                                                                                                                                 echo 2089324406 "INDEX=$INDEX"
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 echo 5006
