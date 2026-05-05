@@ -483,7 +483,7 @@
                                                                                                                                     STATUS="$?"
                                                                                                                                 fi
                                                                                                                             fi
-                                                                                                                            if [[ "$STATUS" -eq 0 ]] && [[ -s "$STANDARD_ERROR_FILE" ]]
+                                                                                                                            if [[ "$STATUS" -eq 0 ]] && [[ ! -s "$STANDARD_ERROR_FILE" ]]
                                                                                                                             then
                                                                                                                                 jq \
                                                                                                                                     --null-input \
