@@ -493,13 +493,16 @@
                                                                                                                                     --arg INDEX "$INDEX" \
                                                                                                                                     --argjson RESOLVE_PATH '${ path }' \
                                                                                                                                     --rawfile SCRIPT "$SCRIPT_FILE" \
-                                                                                                                                    --rawfile STANDARD_ERROR "$STANDARD_ERROR_FILE" \
+                                                                                                                                    --rawfile STANDARD_INPUT "$STANDARD_INPUT_FILE" \
+                                                                                                                                    --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
                                                                                                                                     '{
                                                                                                                                         "arguments" : $ARGUMENTS ,
                                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
                                                                                                                                         "resolve-path" : $RESOLVE_PATH ,
                                                                                                                                         "index" : $INDEX ,
-                                                                                                                                        "script" : $SCRIPT
+                                                                                                                                        "script" : $SCRIPT  ,
+                                                                                                                                        "standard-input" : $STANDARD_INPUT ,
+                                                                                                                                        "standard-output" : $STANDARD_OUTPUT
                                                                                                                                     }' | log ${ valid-init-channel }
                                                                                                                                 RELEASE_FILE="${ resources-directory }/release/$_INDEX"
                                                                                                                                 sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
