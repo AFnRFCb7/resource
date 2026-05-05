@@ -488,7 +488,9 @@
                                                                                                                                 jq \
                                                                                                                                     --null-input \
                                                                                                                                     --compact-output \
+                                                                                                                                    --arg INDEX "$INDEX" \
                                                                                                                                     '{
+                                                                                                                                        "index" : $INDEX
                                                                                                                                     }' | log ${ valid-init-channel }
                                                                                                                                 RELEASE_FILE="${ resources-directory }/release/$_INDEX"
                                                                                                                                 sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
