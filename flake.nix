@@ -493,7 +493,7 @@
                                                                                                                                     --arg INDEX "$INDEX" \
                                                                                                                                     --argjson RESOLVE_PATH '${ builtins.toJSON path }' \
                                                                                                                                     --rawfile SCRIPT "$SCRIPT_FILE" \
-                                                                                                                                    --rawfile STANDARD_INPUT "$STANDARD_INPUT_FILE" \
+                                                                                                                                    --arg STANDARD_INPUT "$STANDARD_INPUT" \
                                                                                                                                     --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
                                                                                                                                     '{
                                                                                                                                         "arguments" : $ARGUMENTS ,
