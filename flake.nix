@@ -488,9 +488,17 @@
                                                                                                                                 jq \
                                                                                                                                     --null-input \
                                                                                                                                     --compact-output \
+                                                                                                                                    --argjson ARGUMENTS "$ARGUMENTS" \
+                                                                                                                                    --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                                     --arg INDEX "$INDEX" \
+                                                                                                                                    --argjson RESOLVE_PATH '${ path }' \
+                                                                                                                                    --rawfile SCRIPT "$SCRIPT_FILE" \
                                                                                                                                     '{
-                                                                                                                                        "index" : $INDEX
+                                                                                                                                        "arguments" : $ARGUMENTS ,
+                                                                                                                                        "has-standard-input" : $HAS_STANDARD_INPUT ,
+                                                                                                                                        "resolve-path" : $RESOLVE_PATH ,
+                                                                                                                                        "index" : $INDEX ,
+                                                                                                                                        "script" : $SCRIPT
                                                                                                                                     }' | log ${ valid-init-channel }
                                                                                                                                 RELEASE_FILE="${ resources-directory }/release/$_INDEX"
                                                                                                                                 sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
