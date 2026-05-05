@@ -467,7 +467,7 @@
                                                                                                                             then
                                                                                                                                 HAS_STANDARD_INPUT=false
                                                                                                                                 STANDARD_INPUT=
-                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "ARGUMENTS[@]" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
+                                                                                                                                if "$SCRIPT_FILE" "${ builtins.concatStringsSep "" [ "$" "{" "@:-" "}" ] }" > "$STANDARD_OUTPUT_FILE" 2> "$STANDARD_ERROR_FILE"
                                                                                                                                 then
                                                                                                                                     STATUS="$?"
                                                                                                                                 else
