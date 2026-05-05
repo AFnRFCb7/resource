@@ -718,7 +718,7 @@
                                                                                                                         then
                                                                                                                             failure 16697
                                                                                                                         fi
-                                                                                                                        sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                        sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                         chmod 0500 "$RELEASE_FILE"
                                                                                                                         jq \
                                                                                                                             --compact-output \
@@ -801,7 +801,7 @@
                                                                                                             then
                                                                                                                 failure 15975
                                                                                                             fi
-                                                                                                            sed -e "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                            sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                             chmod 0500 "$RELEASE_FILE"
                                                                                                             SEED='${ builtins.toJSON seed }'
                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 32761
