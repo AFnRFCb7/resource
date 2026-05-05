@@ -491,7 +491,7 @@
                                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                                     --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                                     --arg INDEX "$INDEX" \
-                                                                                                                                    --argjson RESOLVE_PATH '${ path }' \
+                                                                                                                                    --argjson RESOLVE_PATH '${ builtins.toJSON path }' \
                                                                                                                                     --rawfile SCRIPT "$SCRIPT_FILE" \
                                                                                                                                     --rawfile STANDARD_INPUT "$STANDARD_INPUT_FILE" \
                                                                                                                                     --rawfile STANDARD_OUTPUT "$STANDARD_OUTPUT_FILE" \
