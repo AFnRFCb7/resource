@@ -216,8 +216,7 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
-                                                                                                                                                                @
-
+                                                                                                                                                                # shellcheck disable=SC2153
                                                                                                                                                                 INDEX="$_INDEX"
                                                                                                                                                                 echo 2089324406 "INDEX=$INDEX"
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
