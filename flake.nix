@@ -371,7 +371,7 @@
                                                                                         ''
                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
                                                                                             export HASH=$HASH
-                                                                                            export INDEX=$INDEX
+                                                                                            export INDEX=$_INDEX
                                                                                             destroy
                                                                                         '' ;
                                                                                 } ;
