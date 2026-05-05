@@ -499,7 +499,6 @@
                                                                                                                                 jq \
                                                                                                                                     --null-input \
                                                                                                                                     --compact-output \
-                                                                                                                                    --arg KLUDGE "$SCRIPT_FILE" \
                                                                                                                                     --argjson ARGUMENTS "$ARGUMENTS" \
                                                                                                                                     --argjson HAS_STANDARD_INPUT "$HAS_STANDARD_INPUT" \
                                                                                                                                     --arg INDEX "$INDEX" \
