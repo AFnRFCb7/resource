@@ -498,8 +498,8 @@
                                                                                                                                     '{
                                                                                                                                         "arguments" : $ARGUMENTS ,
                                                                                                                                         "has-standard-input" : $HAS_STANDARD_INPUT ,
-                                                                                                                                        "resolve-path" : $RESOLVE_PATH ,
                                                                                                                                         "index" : $INDEX ,
+                                                                                                                                        "resolve-path" : $RESOLVE_PATH ,
                                                                                                                                         "script" : $SCRIPT  ,
                                                                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                                                                         "standard-output" : $STANDARD_OUTPUT
