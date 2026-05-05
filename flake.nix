@@ -371,6 +371,7 @@
                                                                                         ''
                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
                                                                                             export HASH=$HASH
+                                                                                            # shellcheck disable=SC2153
                                                                                             export INDEX=$_INDEX
                                                                                             destroy
                                                                                         '' ;
