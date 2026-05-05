@@ -514,7 +514,6 @@
                                                                                                                                         "index" : $INDEX ,
                                                                                                                                         "resolve-path" : $RESOLVE_PATH ,
                                                                                                                                         "script" : $SCRIPT ,
-                                                                                                                                        "standard-error" : $STANDARD_ERROR ,
                                                                                                                                         "standard-input" : $STANDARD_INPUT ,
                                                                                                                                         "standard-output" : $STANDARD_OUTPUT ,
                                                                                                                                         "status" : $STATUS
