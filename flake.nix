@@ -805,7 +805,7 @@
                                                                                                                 failure 15975
                                                                                                             fi
                                                                                                             sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
-                                                                                                            echo "# 2388987726537657" >> "$RELEASE_FILE"
+                                                                                                            echo "# 3421794956336178" >> "$RELEASE_FILE"
                                                                                                             chmod 0500 "$RELEASE_FILE"
                                                                                                             SEED='${ builtins.toJSON seed }'
                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 32761
