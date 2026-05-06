@@ -510,6 +510,7 @@
                                                                                                                                     }' | log ${ valid-init-channel }
                                                                                                                                 RELEASE_FILE="${ resources-directory }/release/$_INDEX"
                                                                                                                                 sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                                echo "# 2149289563989828" >> "$RELEASE_FILE"
                                                                                                                                 chmod 0500 "$RELEASE_FILE"
                                                                                                                                 rm --recursive --force "${ directory }"
                                                                                                                             else
@@ -602,6 +603,7 @@
                                                                                                                             failure 9339682764537318
                                                                                                                         fi
                                                                                                                         sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                        echo "# 6848967577446656" >> "$RELEASE_FILE"
                                                                                                                         chmod 0500 "$RELEASE_FILE"
                                                                                                                         jq \
                                                                                                                             --null-input \
@@ -719,6 +721,7 @@
                                                                                                                             failure 16697
                                                                                                                         fi
                                                                                                                         sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                        echo "# 1593884543916188" >> "$RELEASE_FILE"
                                                                                                                         chmod 0500 "$RELEASE_FILE"
                                                                                                                         jq \
                                                                                                                             --compact-output \
@@ -802,6 +805,7 @@
                                                                                                                 failure 15975
                                                                                                             fi
                                                                                                             sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" "s#\$HASH#$HASH#" -e "s#\$INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                            echo "# 2388987726537657" >> "$RELEASE_FILE"
                                                                                                             chmod 0500 "$RELEASE_FILE"
                                                                                                             SEED='${ builtins.toJSON seed }'
                                                                                                             JSON_SEQUENCE="$( sequential )" || failure 32761
