@@ -512,7 +512,7 @@
                                                                                                                                 sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                                 echo "# 2149289563989828" >> "$RELEASE_FILE"
                                                                                                                                 echo "# ${ destroy }/bin/destroy" >> "$RELEASE_FILE"
-                                                                                                                                cat >> "$RELEASE_FILE <<EOF
+                                                                                                                                cat >> "$RELEASE_FILE" <<EOF
                                                                                                                             sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                             EOF
                                                                                                                                 chmod 0500 "$RELEASE_FILE"
