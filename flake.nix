@@ -509,7 +509,7 @@
                                                                                                                                         "standard-output" : $STANDARD_OUTPUT
                                                                                                                                     }' | log ${ valid-init-channel }
                                                                                                                                 RELEASE_FILE="${ resources-directory }/release/$_INDEX"
-                                                                                                                                sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                                sed -e "s#\$_HASH#$HASH#" -e s#'$_INDEX'#$INDEX# -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                                 # shellcheck disable=SC2129
                                                                                                                                 echo "# 2149289563989828" >> "$RELEASE_FILE"
                                                                                                                                 # shellcheck disable=SC2129
