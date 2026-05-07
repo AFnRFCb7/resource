@@ -221,10 +221,13 @@
                                                                                                                                                                 INDEX="$_INDEX"
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 echo 5006
-                                                                                                                                                                find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
-                                                                                                                                                                do
-                                                                                                                                                                    tail --follow /dev/null --pid "$PID"
-                                                                                                                                                                done
+                                                                                                                                                                if [[ -d "${ resources-directory }/pids/$INDEX" ]]
+                                                                                                                                                                then
+                                                                                                                                                                    find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
+                                                                                                                                                                    do
+                                                                                                                                                                        tail --follow /dev/null --pid "$PID"
+                                                                                                                                                                    done
+                                                                                                                                                                fi
                                                                                                                                                                 mkdir --parents "${ gc-root-directory }"
                                                                                                                                                                 echo 24208
                                                                                                                                                                 find ${ gc-root-directory } -mindepth 1 -type l | while read -r LINK
