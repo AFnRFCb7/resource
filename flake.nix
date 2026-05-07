@@ -510,14 +510,14 @@
                                                                                                                                     }' | log ${ valid-init-channel }
                                                                                                                                 RELEASE_FILE="${ resources-directory }/release/$_INDEX"
                                                                                                                                 # shellcheck disable=SC2016,SC2086
-                                                                                                                                sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                                sed -e "s#\$_HASH#$HASH#" -e s#'$'_INDEX#$INDEX# -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                                 # shellcheck disable=SC2129
                                                                                                                                 echo "# 2149289563989828" >> "$RELEASE_FILE"
                                                                                                                                 # shellcheck disable=SC2129
                                                                                                                                 echo "# ${ destroy }/bin/destroy" >> "$RELEASE_FILE"
                                                                                                                                 # shellcheck disable=SC2129
                                                                                                                                 cat >> "$RELEASE_FILE" <<EOF
-                                                                                                                            # sed -e "s#\$_HASH#$HASH#" -e s#'\\\$_INDEX'#$INDEX# -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                            # sed -e "s#\$_HASH#$HASH#" -e s#'$'_INDEX#$INDEX# -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                             EOF
                                                                                                                                 chmod 0500 "$RELEASE_FILE"
                                                                                                                                 rm --recursive --force "${ directory }"
