@@ -455,6 +455,8 @@
                                                                                                                             HASH="$_HASH"
                                                                                                                             # shellcheck disable=SC2153
                                                                                                                             INDEX="$_INDEX"
+                                                                                                                            _HASH="$_HASH"
+                                                                                                                            _INDEX="$_INDEX"
                                                                                                                             # shellcheck disable=SC2153
                                                                                                                             SCRIPT_FILE="$_SCRIPT_FILE"
                                                                                                                             STANDARD_ERROR_SEQUENCE="$( sequential )" || failure 9691798625321771
