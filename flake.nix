@@ -251,7 +251,7 @@
                                                                                                                                                                     flock -u 204
                                                                                                                                                                     nohup "$0" &
                                                                                                                                                                 else
-                                                                                                                                                                    rm "${ resources-directory }/canonical/$HASH"
+                                                                                                                                                                    rm --force "${ resources-directory }/canonical/$HASH"
                                                                                                                                                                     flock -u 203 echo 10200
                                                                                                                                                                     mkdir --parents ${ resources-directory }/logs
                                                                                                                                                                     SCRIPT_FILE="$( ${ script-file release a } )" || failure 17419
