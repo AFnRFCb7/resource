@@ -216,10 +216,6 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
-                                                                                                                                                                # shellcheck disable=SC2269
-                                                                                                                                                                _HASH="$_HASH"
-                                                                                                                                                                # shellcheck disable=SC2269
-                                                                                                                                                                _INDEX="$_INDEX"
                                                                                                                                                                 echo 7971555133787853
                                                                                                                                                                 # shellcheck disable=SC2153
                                                                                                                                                                 INDEX="$_INDEX"
