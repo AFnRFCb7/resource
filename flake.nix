@@ -370,9 +370,9 @@
                                                                                     text =
                                                                                         ''
                                                                                             # shellcheck disable=SC2269
-                                                                                            _HASH="$_HASH"
+                                                                                            export _HASH="$_HASH"
                                                                                             # shellcheck disable=SC2269
-                                                                                            _INDEX="$_INDEX"
+                                                                                            export _INDEX="$_INDEX"
                                                                                             # shellcheck disable=SC2153
                                                                                             export INDEX=$_INDEX
                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
