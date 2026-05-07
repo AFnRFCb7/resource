@@ -216,9 +216,9 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
+                                                                                                                                                                echo 7971555133787853
                                                                                                                                                                 # shellcheck disable=SC2153
                                                                                                                                                                 INDEX="$_INDEX"
-                                                                                                                                                                echo 2089324406 "INDEX=$INDEX"
                                                                                                                                                                 rm --force "${ resources-directory }/marks/$INDEX"
                                                                                                                                                                 echo 5006
                                                                                                                                                                 find "${ resources-directory }/pids/$INDEX" -mindepth 1 -maxdepth 1 -type f -exec basename {} \; | while read -r PID
