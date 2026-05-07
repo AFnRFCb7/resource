@@ -517,7 +517,7 @@
                                                                                                                                 echo "# ${ destroy }/bin/destroy" >> "$RELEASE_FILE"
                                                                                                                                 # shellcheck disable=SC2129
                                                                                                                                 cat >> "$RELEASE_FILE" <<EOF
-                                                                                                                            # sed -e "s#\$_HASH#$HASH#" -e "s#\$_INDEX#$INDEX#" -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
+                                                                                                                            # sed -e "s#\$_HASH#$HASH#" -e s#'\$_INDEX'#$INDEX# -e "w$RELEASE_FILE" ${ destroy }/bin/destroy > /dev/null 2>&1
                                                                                                                             EOF
                                                                                                                                 chmod 0500 "$RELEASE_FILE"
                                                                                                                                 rm --recursive --force "${ directory }"
