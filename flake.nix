@@ -216,6 +216,10 @@
                                                                                                                                                         a = arguments.release pkgs ;
                                                                                                                                                         in
                                                                                                                                                             ''
+                                                                                                                                                                # shellcheck disable=SC2269
+                                                                                                                                                                _HASH="$_HASH"
+                                                                                                                                                                # shellcheck disable=SC2269
+                                                                                                                                                                _INDEX="$_INDEX"
                                                                                                                                                                 echo 7971555133787853
                                                                                                                                                                 # shellcheck disable=SC2153
                                                                                                                                                                 INDEX="$_INDEX"
@@ -369,6 +373,10 @@
                                                                                         ] ;
                                                                                     text =
                                                                                         ''
+                                                                                            # shellcheck disable=SC2269
+                                                                                            _HASH="$_HASH"
+                                                                                            # shellcheck disable=SC2269
+                                                                                            _INDEX="$_INDEX"
                                                                                             # shellcheck disable=SC2153
                                                                                             export INDEX=$_INDEX
                                                                                             mkdir --parents "${ gc-root-directory }/$INDEX"
@@ -455,7 +463,9 @@
                                                                                                                             HASH="$_HASH"
                                                                                                                             # shellcheck disable=SC2153
                                                                                                                             INDEX="$_INDEX"
+                                                                                                                            # shellcheck disable=SC2269
                                                                                                                             _HASH="$_HASH"
+                                                                                                                            # shellcheck disable=SC2269
                                                                                                                             _INDEX="$_INDEX"
                                                                                                                             # shellcheck disable=SC2153
                                                                                                                             SCRIPT_FILE="$_SCRIPT_FILE"
