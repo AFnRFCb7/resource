@@ -1596,6 +1596,34 @@
                                                                                                                                                                 (
                                                                                                                                                                     pkgs.writeShellApplication
                                                                                                                                                                         {
+                                                                                                                                                                            name = "force-dialog" ;
+                                                                                                                                                                            runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                                                                                            text =
+                                                                                                                                                                                ''
+                                                                                                                                                                                    TEXT=( )
+                                                                                                                                                                                    UUID=( )
+                                                                                                                                                                                    while [[ "$#" -gt 0 ]]
+                                                                                                                                                                                    do
+                                                                                                                                                                                        case "$1" in
+                                                                                                                                                                                            --text)
+                                                                                                                                                                                                TEXT+="$( "$2" )"
+                                                                                                                                                                                                shift 2
+                                                                                                                                                                                            --uuid)
+                                                                                                                                                                                                UUID+="$( "$2" )"
+                                                                                                                                                                                                shift 2
+                                                                                                                                                                                            *)
+                                                                                                                                                                                                exit 142
+                                                                                                                                                                                                ;;
+                                                                                                                                                                                        esac
+                                                                                                                                                                                    done
+                                                                                                                                                                                    true echo -n "${ builtins.concatStringsSep "" [ "$" "{" "TEXT[@]" "}" ] }"
+                                                                                                                                                                                    echo -n "${ builtins.concatStringsSep "" [ "$" "{" "UUID[@]" "}" ] }" >&2
+                                                                                                                                                                                '' ;
+                                                                                                                                                                        }
+                                                                                                                                                                )
+                                                                                                                                                                (
+                                                                                                                                                                    pkgs.writeShellApplication
+                                                                                                                                                                        {
                                                                                                                                                                             name = "force-sync" ;
                                                                                                                                                                             runtimeInputs = [ pkgs.coreutils ] ;
                                                                                                                                                                             text =
