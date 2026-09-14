@@ -1600,17 +1600,17 @@
                                                                                                                                                                             runtimeInputs = [ pkgs.coreutils ] ;
                                                                                                                                                                             text =
                                                                                                                                                                                 ''
-                                                                                                                                                                                    TEXT=( )
-                                                                                                                                                                                    UUID=( )
+                                                                                                                                                                                    TEXT=()
+                                                                                                                                                                                    UUID=()
                                                                                                                                                                                     while [[ "$#" -gt 0 ]]
                                                                                                                                                                                     do
                                                                                                                                                                                         case "$1" in
                                                                                                                                                                                             --text)
-                                                                                                                                                                                                TEXT+=$( "$2" )
+                                                                                                                                                                                                TEXT+=( "$2" )
                                                                                                                                                                                                 shift 2
                                                                                                                                                                                                 ;;
                                                                                                                                                                                             --uuid)
-                                                                                                                                                                                                UUID+=$( "$2" )
+                                                                                                                                                                                                UUID+=( "$2" )
                                                                                                                                                                                                 shift 2
                                                                                                                                                                                                 ;;
                                                                                                                                                                                             *)
