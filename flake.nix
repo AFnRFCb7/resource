@@ -1606,11 +1606,11 @@
                                                                                                                                                                                     do
                                                                                                                                                                                         case "$1" in
                                                                                                                                                                                             --text)
-                                                                                                                                                                                                TEXT+="$( "$2" )"
+                                                                                                                                                                                                TEXT+=$( "$2" )
                                                                                                                                                                                                 shift 2
                                                                                                                                                                                                 ;;
                                                                                                                                                                                             --uuid)
-                                                                                                                                                                                                UUID+="$( "$2" )"
+                                                                                                                                                                                                UUID+=$( "$2" )
                                                                                                                                                                                                 shift 2
                                                                                                                                                                                                 ;;
                                                                                                                                                                                             *)
