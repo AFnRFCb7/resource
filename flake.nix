@@ -1608,9 +1608,11 @@
                                                                                                                                                                                             --text)
                                                                                                                                                                                                 TEXT+="$( "$2" )"
                                                                                                                                                                                                 shift 2
+                                                                                                                                                                                                ;;
                                                                                                                                                                                             --uuid)
                                                                                                                                                                                                 UUID+="$( "$2" )"
                                                                                                                                                                                                 shift 2
+                                                                                                                                                                                                ;;
                                                                                                                                                                                             *)
                                                                                                                                                                                                 exit 142
                                                                                                                                                                                                 ;;
