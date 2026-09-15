@@ -1009,6 +1009,7 @@
                                                                                                                                                                                     recovery = value null ;
                                                                                                                                                                                     in
                                                                                                                                                                                         [
+                                                                                                                                                                                            log
                                                                                                                                                                                             (
                                                                                                                                                                                                 pkgs.writeShellApplication
                                                                                                                                                                                                     {
