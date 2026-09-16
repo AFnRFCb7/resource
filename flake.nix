@@ -1009,7 +1009,7 @@
                                                                                                                                                                                     recovery = value null ;
                                                                                                                                                                                     in
                                                                                                                                                                                         [
-                                                                                                                                                                                            log
+                                                                                                                                                                                            ( builtins.trace ( builtins.typeOf log )  log )
                                                                                                                                                                                             (
                                                                                                                                                                                                 pkgs.writeShellApplication
                                                                                                                                                                                                     {
