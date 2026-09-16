@@ -1017,6 +1017,7 @@
                                                                                                                                                                                             pkgs.findutils
                                                                                                                                                                                             pkgs.gnutar
                                                                                                                                                                                             pkgs.jq
+                                                                                                                                                                                            pkgs.xz
                                                                                                                                                                                             log
                                                                                                                                                                                             (
                                                                                                                                                                                                 pkgs.writeShellApplication
