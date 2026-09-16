@@ -984,6 +984,7 @@
                                                                                                                 "--bind" resources-directory "/resources"
                                                                                                                 "--bind" "/invalid-release" "/invalid-release"
                                                                                                                 "--tmpfs" "/private"
+                                                                                                                "--bindfs" "$TEMPORARY" "/temporary"
                                                                                                             ] ;
                                                                                                         name = "recovery" ;
                                                                                                         runScript = "recovery" ;
@@ -1014,6 +1015,8 @@
                                                                                                                                                                                         [
                                                                                                                                                                                             pkgs.coreutils
                                                                                                                                                                                             pkgs.findutils
+                                                                                                                                                                                            pkgs.gnutar
+                                                                                                                                                                                            pkgs.jq
                                                                                                                                                                                             log
                                                                                                                                                                                             (
                                                                                                                                                                                                 pkgs.writeShellApplication
@@ -1076,7 +1079,14 @@
                                                                                                     }
                                                                                             )
                                                                                         ] ;
-                                                                                    text = "recovery" ;
+                                                                                    text =
+                                                                                        ''
+                                                                                            mkdir --parents ${ gc-roots-directory }
+                                                                                            mkdir --parents ${ resources-directory }
+                                                                                            TEMPORARY="$( mktemp --directory )" || exit 186
+                                                                                            export TEMPORARY
+                                                                                            recovery
+                                                                                        '' ;
                                                                                 } ;
                                                                         valid-channel = root-parameters.valid-release-channel ;
                                                                     } ;
