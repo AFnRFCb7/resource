@@ -785,6 +785,7 @@
                                                                                                                                                         runtimeInputs = [ pkgs.findutils pkgs.gnutar pkgs.jq pkgs.xz log resource-parameters.release.recovery ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
+                                                                                                                                                                ### FINDME A
                                                                                                                                                                 IS_RELEASABLE="$1"
                                                                                                                                                                 if [[ "$IS_RELEASABLE" == "true" ]]
                                                                                                                                                                 then
@@ -979,6 +980,8 @@
                                                                                                     {
                                                                                                         extraBwrapArgs =
                                                                                                             [
+                                                                                                                "--bind" gc-roots-directory "/gc-roots"
+                                                                                                                "--bind" resources-directory "/resources"
                                                                                                                 "--bind" "/invalid-release" "/invalid-release"
                                                                                                                 "--tmpfs" "/private"
                                                                                                             ] ;
@@ -1009,7 +1012,9 @@
                                                                                                                                                                                     recovery = value null ;
                                                                                                                                                                                     in
                                                                                                                                                                                         [
-                                                                                                                                                                                            ( builtins.trace ( builtins.typeOf log )  log )
+                                                                                                                                                                                            pkgs.coreutils
+                                                                                                                                                                                            pkgs.findutils
+                                                                                                                                                                                            log
                                                                                                                                                                                             (
                                                                                                                                                                                                 pkgs.writeShellApplication
                                                                                                                                                                                                     {
@@ -1029,11 +1034,23 @@
                                                                                                                                                                                     fi
                                                                                                                                                                                     if [[ "$STATUS" == 0 ]]
                                                                                                                                                                                     then
+                                                                                                                                                                                        rm --recursive --force "/gc-roots/$INDEX"
+                                                                                                                                                                                        find /resources/canonical -mindepth 1 -maxdepth 1 -type l | while read -r LINK
+                                                                                                                                                                                        do
+                                                                                                                                                                                            TARGET="$( readlink "$LINK" )" || exit 129
+                                                                                                                                                                                            if [[ "$TARGET" == "${ resources-directory }/mounts/$INDEX" ]]
+                                                                                                                                                                                            then
+                                                                                                                                                                                                rm "$LINK"
+                                                                                                                                                                                            fi
+                                                                                                                                                                                        done
+                                                                                                                                                                                        find /resources -mindepth 2 -maxdepth 2 -name "$INDEX" -print0 | tar --null --files-from - --create --file /temporary/resources.tar.xz
+                                                                                                                                                                                        find /resources -mindepth 2 -maxdepth 2 -name "$INDEX" -print0 -exec rm --recursive --force {} \;
                                                                                                                                                                                         export CHANNEL=${ root-parameters.valid-release-channel }
                                                                                                                                                                                         jq \
                                                                                                                                                                                             --null-input \
                                                                                                                                                                                             '{
                                                                                                                                                                                             }' | log
+                                                                                                                                                                                        ### FINDME B
                                                                                                                                                                                     else
                                                                                                                                                                                         exit ${ root-parameters.error-code }
                                                                                                                                                                                     fi
