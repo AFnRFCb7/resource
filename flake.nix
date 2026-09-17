@@ -1038,6 +1038,8 @@
                                                                                                                                                                                     fi
                                                                                                                                                                                     if [[ "$STATUS" == 0 ]]
                                                                                                                                                                                     then
+                                                                                                                                                                                        INDEX_0="$( dirname "$0" )" || exit 176
+                                                                                                                                                                                        INDEX="$( basename "$INDEX_0" )" || exit 169
                                                                                                                                                                                         rm --recursive --force "/${ gc-roots-directory }/$INDEX"
                                                                                                                                                                                         find ${ resources-directory }/canonical -mindepth 1 -maxdepth 1 -type l | while read -r LINK
                                                                                                                                                                                         do
