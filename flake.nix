@@ -1055,7 +1055,13 @@
                                                                                                                                                                                         export CHANNEL=${ root-parameters.valid-release-channel }
                                                                                                                                                                                         jq \
                                                                                                                                                                                             --null-input \
+                                                                                                                                                                                            --arg INDEX "$INDEX" \
+                                                                                                                                                                                            --arg STANDARD_OUTPUT "" \
+                                                                                                                                                                                            --argjson STATUS 0 \
                                                                                                                                                                                             '{
+                                                                                                                                                                                                index : $INDEX
+                                                                                                                                                                                                standard-output : $STANDARD_OUTPUT ,
+                                                                                                                                                                                                status : $STATUS
                                                                                                                                                                                             }' | log
                                                                                                                                                                                         ### FINDME B
                                                                                                                                                                                     else
