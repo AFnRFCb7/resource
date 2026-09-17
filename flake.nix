@@ -1063,7 +1063,7 @@
                                                                                                                                                                                                 "standard-output" : $STANDARD_OUTPUT ,
                                                                                                                                                                                                 "status" : $STATUS
                                                                                                                                                                                             }' | log
-                                                                                                                                                                                        ### FINDME B
+                                                                                                                                                                                        rm --recursive --force "${ resources-directory }/invalid-release/$INDEX/*"
                                                                                                                                                                                     else
                                                                                                                                                                                         exit ${ root-parameters.error-code }
                                                                                                                                                                                     fi
