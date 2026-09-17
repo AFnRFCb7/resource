@@ -1059,7 +1059,7 @@
                                                                                                                                                                                             --arg STANDARD_OUTPUT "" \
                                                                                                                                                                                             --argjson STATUS 0 \
                                                                                                                                                                                             '{
-                                                                                                                                                                                                "index" : $INDEX
+                                                                                                                                                                                                "index" : $INDEX ,
                                                                                                                                                                                                 "standard-output" : $STANDARD_OUTPUT ,
                                                                                                                                                                                                 "status" : $STATUS
                                                                                                                                                                                             }' | log
