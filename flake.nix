@@ -1059,9 +1059,9 @@
                                                                                                                                                                                             --arg STANDARD_OUTPUT "" \
                                                                                                                                                                                             --argjson STATUS 0 \
                                                                                                                                                                                             '{
-                                                                                                                                                                                                index : $INDEX
-                                                                                                                                                                                                standard-output : $STANDARD_OUTPUT ,
-                                                                                                                                                                                                status : $STATUS
+                                                                                                                                                                                                "index" : $INDEX
+                                                                                                                                                                                                "standard-output" : $STANDARD_OUTPUT ,
+                                                                                                                                                                                                "status" : $STATUS
                                                                                                                                                                                             }' | log
                                                                                                                                                                                         ### FINDME B
                                                                                                                                                                                     else
