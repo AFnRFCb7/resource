@@ -984,7 +984,7 @@
                                                                                                                 "--bind" resources-directory "/resources"
                                                                                                                 "--bind" "/invalid-release" "/invalid-release"
                                                                                                                 "--tmpfs" "/private"
-                                                                                                                "--bindfs" "$TEMPORARY" "/temporary"
+                                                                                                                "--bind" "$TEMPORARY" "/temporary"
                                                                                                             ] ;
                                                                                                         name = "recovery" ;
                                                                                                         runScript = "recovery" ;
