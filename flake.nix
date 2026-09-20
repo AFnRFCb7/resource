@@ -1383,7 +1383,7 @@
                                                                                                                                                                                     jq \
                                                                                                                                                                                         --null-input \
                                                                                                                                                                                         --arg NAME "$NAME" \
-                                                                                                                                                                                        --argjson CAT "CAT" \
+                                                                                                                                                                                        --argjson CAT "$CAT" \
                                                                                                                                                                                         --arg STAT "$STAT" \
                                                                                                                                                                                         --arg TYPE "sequential file" \
                                                                                                                                                                                         '{
