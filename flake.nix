@@ -1377,6 +1377,21 @@
                                                                                                                                                                                     then
                                                                                                                                                                                         echo > ${ resources-directory }/log.yaml
                                                                                                                                                                                     fi
+                                                                                                                                                                                elif [[ "$NAME" == "${ resources-directory }/sequential" ]]
+                                                                                                                                                                                then
+                                                                                                                                                                                    CAT="$( cat "$NAME" )" || exit 166
+                                                                                                                                                                                    jq \
+                                                                                                                                                                                        --null-input \
+                                                                                                                                                                                        --arg NAME "$NAME" \
+                                                                                                                                                                                        --argjson CAT "CAT" \
+                                                                                                                                                                                        --arg STAT "$STAT" \
+                                                                                                                                                                                        --arg TYPE "sequential file" \
+                                                                                                                                                                                        '{
+                                                                                                                                                                                            "cat" : $CAT ,
+                                                                                                                                                                                            "name" : $NAME ,
+                                                                                                                                                                                            "stat" : $STAT ,
+                                                                                                                                                                                            "type" : $TYPE
+                                                                                                                                                                                        }'
                                                                                                                                                                                 elif [[ -L "$NAME" ]]
                                                                                                                                                                                 then
                                                                                                                                                                                     TARGET="$( readlink "$NAME" )" || exit 182
