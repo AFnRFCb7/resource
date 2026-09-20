@@ -1379,11 +1379,10 @@
                                                                                                                                                                                     fi
                                                                                                                                                                                 elif [[ "$NAME" == "${ resources-directory }/sequential" ]]
                                                                                                                                                                                 then
-                                                                                                                                                                                    CAT="$( cat "$NAME" )" || exit 166
                                                                                                                                                                                     jq \
                                                                                                                                                                                         --null-input \
                                                                                                                                                                                         --arg NAME "$NAME" \
-                                                                                                                                                                                        --argjson CAT "$CAT" \
+                                                                                                                                                                                        --rawfile CAT "$NAME" \
                                                                                                                                                                                         --arg STAT "$STAT" \
                                                                                                                                                                                         --arg TYPE "sequential file" \
                                                                                                                                                                                         '{
