@@ -1149,7 +1149,7 @@
                                                                                                                 ''
                                                                                                                     CURRENT="$( cat /sequential )" || exit 109
                                                                                                                     NEXT=$(( CURRENT + 1 ))
-                                                                                                                    echo "$NEXT" > /sequential
+                                                                                                                    echo -n "$NEXT" > /sequential
                                                                                                                     echo "$CURRENT"
                                                                                                                 '' ;
                                                                                                         }
