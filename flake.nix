@@ -21,7 +21,6 @@
 		                redis ,
 		                valid-init-channel ,
 		                valid-release-channel ,
-		                visitor ,
 		                writeShellApplication
                     } :
                         let
@@ -501,7 +500,7 @@
                                                         resource-parameters =
                                                             {
                                                                 error =
-                                                                    visitor
+                                                                    config.visitor
                                                                         {
                                                                             int = path : value : builtins.toString value ;
                                                                         }
@@ -510,7 +509,7 @@
                                                                     {
                                                                         action =
                                                                             let
-                                                                                action = visitor { lambda = path : value : value null ; } resource-parameters.init.init.action ;
+                                                                                action = config.visitor { lambda = path : value : value null ; } resource-parameters.init.init.action ;
                                                                                 in
                                                                                     {
                                                                                         script =
@@ -670,10 +669,10 @@
                                                                                                             init
                                                                                                         '' ;
                                                                                                 } ;
-                                                                                        text = visitor { string = path : value : value ; } action.text ;
-                                                                                        targetPkgs = visitor { lambda = path : value : value ; } action.targetPkgs ;
+                                                                                        text = config.visitor { string = path : value : value ; } action.text ;
+                                                                                        targetPkgs = config.visitor { lambda = path : value : value ; } action.targetPkgs ;
                                                                                     } ;
-                                                                        init = visitor { lambda = path : value : value null ; } init ;
+                                                                        init = config.visitor { lambda = path : value : value null ; } init ;
                                                                         invalid-channel = root-parameters.invalid-init-channel ;
                                                                         recovery = null ;
                                                                         valid-channel = root-parameters.valid-init-channel ;
@@ -682,7 +681,7 @@
                                                                     {
                                                                         action =
                                                                             let
-                                                                                action = visitor { lambda = path : value : value null ; } resource-parameters.release.release.action ;
+                                                                                action = config.visitor { lambda = path : value : value null ; } resource-parameters.release.release.action ;
                                                                                 in
                                                                                     {
                                                                                         script =
@@ -964,11 +963,11 @@
                                                                                                                 '' ;
                                                                                                         } ;
                                                                                                 in "${ application }/bin/release" ;
-                                                                                        text = visitor { string = path : value : value ; } action.text ;
-                                                                                        targetPkgs = visitor { lambda = path : value : value ; } action.targetPkgs ;
+                                                                                        text = config.visitor { string = path : value : value ; } action.text ;
+                                                                                        targetPkgs = config.visitor { lambda = path : value : value ; } action.targetPkgs ;
                                                                                     } ;
                                                                         invalid-channel = root-parameters.invalid-release-channel ;
-                                                                        release = visitor { lambda = path : value : value null ; } release ;
+                                                                        release = config.visitor { lambda = path : value : value null ; } release ;
                                                                         recovery =
                                                                             writeShellApplication
                                                                                 {
@@ -999,7 +998,7 @@
                                                                                                                                 text =
                                                                                                                                     let
                                                                                                                                         recovery =
-                                                                                                                                            visitor
+                                                                                                                                            config.visitor
                                                                                                                                                 {
                                                                                                                                                     lambda =
                                                                                                                                                         path : value :
@@ -1101,7 +1100,7 @@
                                                                         valid-channel = root-parameters.valid-release-channel ;
                                                                     } ;
                                                                 seed =
-                                                                    visitor
+                                                                    config.visitor
                                                                         {
                                                                             bool = stringify ;
                                                                             float = stringify ;
@@ -1115,13 +1114,13 @@
                                                                         }
                                                                         seed ;
                                                                 targets =
-                                                                    visitor
+                                                                    config.visitor
                                                                         {
                                                                             list = path : value : builtins.sort builtins.lessThan value ;
                                                                             string = path : value : value ;
                                                                         }
                                                                         targets ;
-                                                                temporary = visitor { bool = path : value : value ; } temporary ;
+                                                                temporary = config.visitor { bool = path : value : value ; } temporary ;
                                                             } ;
                                                     sequential =
                                                         writeShellApplication
@@ -1189,7 +1188,7 @@
                                                                                             ln --symbolic ${ resource-parameters.init.action.script } "$OUT/init/action"
                                                                                             mkdir --parents "$OUT/release"
                                                                                             ln --symbolic '${ builtins.toFile "error.json" ( builtins.toJSON resource-parameters.error ) }' "$OUT/error.json"
-                                                                                            ln --symbolic '${ builtins.toFile "seed.json" ( builtins.toJSON ( visitor { bool = stringify ; float = stringify ; int = stringify ; lambda = stringify ; list = stringify ; null = stringify ; path = stringify ; set = stringify ; string = stringify ; } resource-parameters seed ) ) }' "$OUT/seed.json"
+                                                                                            ln --symbolic '${ builtins.toFile "seed.json" ( builtins.toJSON ( config.visitor { bool = stringify ; float = stringify ; int = stringify ; lambda = stringify ; list = stringify ; null = stringify ; path = stringify ; set = stringify ; string = stringify ; } resource-parameters seed ) ) }' "$OUT/seed.json"
                                                                                             ln --symbolic '${ builtins.toFile "targets.json" ( builtins.toJSON resource-parameters.targets ) }' "$OUT/targets.json"
                                                                                             ln --symbolic '${ builtins.toFile "temporary.json" ( builtins.toJSON resource-parameters.temporary ) }' "$OUT/temporary.json"
                                                                                         '' ;
@@ -1203,20 +1202,20 @@
                             root-parameters =
                                 let
                                     to-string =
-                                        visitor
+                                        config.visitor
                                             {
                                                 string = path : value : value ;
                                             } ;
                                     in
                                         {
-                                            coreutils = visitor { string = path : value : value ;} coreutils ;
-                                            error-code = visitor { int = path : value : builtins.toString value ; } error-code ;
+                                            coreutils = config.visitor { string = path : value : value ;} coreutils ;
+                                            error-code = config.visitor { int = path : value : builtins.toString value ; } error-code ;
                                             invalid-init-channel = to-string invalid-init-channel ;
                                             invalid-release-channel = to-string invalid-release-channel ;
-                                            mkDerivation = visitor { lambda = path : value : value ; } mkDerivation ;
+                                            mkDerivation = config.visitor { lambda = path : value : value ; } mkDerivation ;
                                             valid-init-channel = to-string valid-init-channel ;
                                             valid-release-channel = to-string valid-release-channel ;
-                                            writeShellApplication = visitor { lambda = path : value : value ; } writeShellApplication ;
+                                            writeShellApplication = config.visitor { lambda = path : value : value ; } writeShellApplication ;
                                         } ;
                             stringify =
                                 path : value :
@@ -1923,12 +1922,12 @@
                                                                                                                 } :
                                                                                                                     {
                                                                                                                         command-index = builtins.toString index ;
-                                                                                                                        fix = visitor { null = path : value : value ; string = path : value : writeShellApplication { name = "fix" ; runtimeInputs = [ coreutils ] ; text = value ; } ; } fix ;
-                                                                                                                        kludge = visitor { bool = path : value : builtins.toJSON value ; } kludge ;
+                                                                                                                        fix = config.visitor { null = path : value : value ; string = path : value : writeShellApplication { name = "fix" ; runtimeInputs = [ coreutils ] ; text = value ; } ; } fix ;
+                                                                                                                        kludge = config.visitor { bool = path : value : builtins.toJSON value ; } kludge ;
                                                                                                                         process =
                                                                                                                             let
                                                                                                                                 path =
-                                                                                                                                    visitor
+                                                                                                                                    config.visitor
                                                                                                                                         {
                                                                                                                                             string = path : value : builtins.toFile "process" value ;
                                                                                                                                             path = path : value : value ;
@@ -1940,24 +1939,24 @@
                                                                                                                                         path = path ;
                                                                                                                                         string = string ;
                                                                                                                                     } ;
-                                                                                                                        reads = visitor { bool = path : value : value ; } reads ;
+                                                                                                                        reads = config.visitor { bool = path : value : value ; } reads ;
                                                                                                                         standard-error =
-                                                                                                                            visitor
+                                                                                                                            config.visitor
                                                                                                                                 {
                                                                                                                                     string = path : value : builtins.toFile "process" value ;
                                                                                                                                     path = path : value : value ;
                                                                                                                                 }
                                                                                                                                 standard-error ;
                                                                                                                         standard-output =
-                                                                                                                            visitor
+                                                                                                                            config.visitor
                                                                                                                                 {
                                                                                                                                     string = path : value : builtins.toFile "process" value ;
                                                                                                                                     path = path : value : value ;
                                                                                                                                 }
                                                                                                                                 standard-output ;
-                                                                                                                        status = visitor { int = path : value : builtins.toString value ; } status ;
-                                                                                                                        text = visitor { string = path : value : value ; } text ;
-                                                                                                                        timeout = visitor { int = path : value : builtins.toString value ; } timeout ;
+                                                                                                                        status = config.visitor { int = path : value : builtins.toString value ; } status ;
+                                                                                                                        text = config.visitor { string = path : value : value ; } text ;
+                                                                                                                        timeout = config.visitor { int = path : value : builtins.toString value ; } timeout ;
                                                                                                                     } ;
                                                                                                             in identity input ;
                                                                                                 inputs_ = inputs ;
