@@ -1924,41 +1924,15 @@
                                                                                                                 } :
                                                                                                                     {
                                                                                                                         command-index = builtins.toString index ;
-                                                                                                                        fix = config.visitor { null = path : value : value ; string = path : value : writeShellApplication { name = "fix" ; runtimeInputs = [ coreutils ] ; text = value ; } ; } fix ;
-                                                                                                                        kludge = config.visitor { bool = path : value : builtins.toJSON value ; } kludge ;
-                                                                                                                        process =
-                                                                                                                            let
-                                                                                                                                path =
-                                                                                                                                    config.visitor
-                                                                                                                                        {
-                                                                                                                                            string = path : value : builtins.toFile "process" value ;
-                                                                                                                                            path = path : value : value ;
-                                                                                                                                        }
-                                                                                                                                        process ;
-                                                                                                                                string = toString path ;
-                                                                                                                                in
-                                                                                                                                    {
-                                                                                                                                        path = path ;
-                                                                                                                                        string = string ;
-                                                                                                                                    } ;
-                                                                                                                        reads = config.visitor { bool = path : value : value ; } reads ;
-                                                                                                                        standard-error =
-                                                                                                                            config.visitor
-                                                                                                                                {
-                                                                                                                                    string = path : value : builtins.toFile "process" value ;
-                                                                                                                                    path = path : value : value ;
-                                                                                                                                }
-                                                                                                                                standard-error ;
-                                                                                                                        standard-output =
-                                                                                                                            config.visitor
-                                                                                                                                {
-                                                                                                                                    string = path : value : builtins.toFile "process" value ;
-                                                                                                                                    path = path : value : value ;
-                                                                                                                                }
-                                                                                                                                standard-output ;
-                                                                                                                        status = config.visitor { int = path : value : builtins.toString value ; } status ;
-                                                                                                                        text = config.visitor { string = path : value : value ; } text ;
-                                                                                                                        timeout = config.visitor { int = path : value : builtins.toString value ; } timeout ;
+                                                                                                                        fix = writeShellApplication { name = "fix" ; runtimeInputs = [ coreutils ] ; text = fix ; } ;
+                                                                                                                        kludge = builtins.toJSON value kludge ;
+                                                                                                                        process = process ;
+                                                                                                                        reads = reads ;
+                                                                                                                        standard-error = builtins.toFile "standard-error" standard-error ;
+                                                                                                                        standard-output = builtins.toFile "standard-output" standard-output ;
+                                                                                                                        status = status ;
+                                                                                                                        text = text ;
+                                                                                                                        timeout = builtins.toString timeout ;
                                                                                                                     } ;
                                                                                                             in identity input ;
                                                                                                 inputs_ = inputs ;
