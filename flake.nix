@@ -1200,24 +1200,25 @@
                                                             } ;
                                                     in "${ resource }/bin/resource" ;
                                     } ;
-                            root-parameters =
-                                let
-                                    to-string =
-                                        config.visitor
-                                            {
-                                                string = path : value : value ;
-                                            } ;
-                                    in
-                                        {
-                                            coreutils = config.visitor { string = path : value : value ;} coreutils ;
-                                            error-code = config.visitor { int = path : value : builtins.toString value ; } error-code ;
-                                            invalid-init-channel = to-string invalid-init-channel ;
-                                            invalid-release-channel = to-string invalid-release-channel ;
-                                            mkDerivation = config.visitor { lambda = path : value : value ; } mkDerivation ;
-                                            valid-init-channel = to-string valid-init-channel ;
-                                            valid-release-channel = to-string valid-release-channel ;
-                                            writeShellApplication = config.visitor { lambda = path : value : value ; } writeShellApplication ;
-                                        } ;
+                            root-parameters = "" ;
+#                                let
+#                                    to-string =
+#
+#                                        config.visitor
+#                                            {
+#                                                string = path : value : value ;
+#                                            } ;
+#                                    in
+#                                        {
+#                                            coreutils = config.visitor { string = path : value : value ;} coreutils ;
+#                                            error-code = config.visitor { int = path : value : builtins.toString value ; } error-code ;
+#                                            invalid-init-channel = to-string invalid-init-channel ;
+#                                            invalid-release-channel = to-string invalid-release-channel ;
+#                                            mkDerivation = config.visitor { lambda = path : value : value ; } mkDerivation ;
+#                                            valid-init-channel = to-string valid-init-channel ;
+#                                            valid-release-channel = to-string valid-release-channel ;
+#                                            writeShellApplication = config.visitor { lambda = path : value : value ; } writeShellApplication ;
+#                                        } ;
                             stringify =
                                 path : value :
                                     let
