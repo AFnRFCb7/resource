@@ -1925,7 +1925,7 @@
                                                                                                                     {
                                                                                                                         command-index = builtins.toString index ;
                                                                                                                         fix = writeShellApplication { name = "fix" ; runtimeInputs = [ coreutils ] ; text = fix ; } ;
-                                                                                                                        kludge = builtins.toJSON value kludge ;
+                                                                                                                        kludge = builtins.toJSON kludge ;
                                                                                                                         process = process ;
                                                                                                                         reads = reads ;
                                                                                                                         standard-error = builtins.toFile "standard-error" standard-error ;
