@@ -26,6 +26,7 @@
                         let
                             implementation =
                                 {
+                                    config ,
                                     gc-roots-directory ,
                                     resources-directory
                                 } :
@@ -967,7 +968,7 @@
                                                                                         targetPkgs = config.visitor { lambda = path : value : value ; } action.targetPkgs ;
                                                                                     } ;
                                                                         invalid-channel = root-parameters.invalid-release-channel ;
-                                                                        release = release ;
+                                                                        release = config.visitor { lambda = path : value : value null ; } release ;
                                                                         recovery =
                                                                             writeShellApplication
                                                                                 {
