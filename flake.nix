@@ -967,7 +967,7 @@
                                                                                         targetPkgs = config.visitor { lambda = path : value : value ; } action.targetPkgs ;
                                                                                     } ;
                                                                         invalid-channel = root-parameters.invalid-release-channel ;
-                                                                        release = config.visitor { lambda = path : value : value null ; } release ;
+                                                                        release = release ;
                                                                         recovery =
                                                                             writeShellApplication
                                                                                 {
