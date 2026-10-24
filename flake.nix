@@ -7,6 +7,7 @@
                     {
                         config-identity ? x : x ,
                         implementation-identity ? x : x ,
+                        lib-identity ? x : x ,
                         pkgs-identity ? x : x
                     } :
                         let
