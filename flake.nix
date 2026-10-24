@@ -36,7 +36,14 @@
                                                                                 } ;
                                                                             name = "init" ;
                                                                             post = null ;
-                                                                            runtime-inputs = pkgs : [ ( _config.failure { } ) ( _config.sequential { } ) pkgs.coreutils pkgs.flock ] ;
+                                                                            runtime-inputs =
+                                                                                pkgs :
+                                                                                    [
+                                                                                        ( _config.failure { } )
+                                                                                        ( _config.sequential { } )
+                                                                                        pkgs.coreutils
+                                                                                        pkgs.flock
+                                                                                    ] ;
                                                                             text =
                                                                                 ''
                                                                                     PID="$( sequential )" || failure 3708670955636569
@@ -45,14 +52,15 @@
                                                                                     flock -x 169
                                                                                     if [[ -L "/mounts/resources/canonical/$HASH" ]]
                                                                                     then
-                                                                                        LINK="$( readlink "/mounts/resources/canonical/$HASH" )" || failure 9157868575302544
-                                                                                        mkdir --parents "/mounts/resources/pids/$LINK"
-                                                                                        echo "$PID" > "/mounts/resources/pids/$LINK/$PID"
-                                                                                        chmod 0400 "/mounts/resources/pids/$LINK/$PID"
-                                                                                        echo "$LINK"
+                                                                                        MOUNT="$( readlink "/mounts/resources/canonical/$HASH" )" || failure 9157868575302544
+                                                                                        INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
+                                                                                        mkdir --parents "/mounts/resources/pids/$INDEX"
+                                                                                        echo "$PID" > "/mounts/resources/pids/$INDEX/$PID"
+                                                                                        chmod 0400 "/mounts/resources/pids/$INDEX/$PID"
+                                                                                        echo "$INDEX"
                                                                                     else
-                                                                                        SEQUENCE="$( sequential )" || failure 6590902953585183
-                                                                                        MOUNT=/mounts/resources/mounts/$SEQUENCE
+                                                                                        INDEX="$( sequential )" || failure 6590902953585183
+                                                                                        MOUNT="/mounts/resources/mounts/$INDEX"
                                                                                         mkdir --parents "$MOUNT"
                                                                                     fi
                                                                                 '' ;
