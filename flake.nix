@@ -36,15 +36,21 @@
                                                                                 } ;
                                                                             name = "init" ;
                                                                             post = null ;
-                                                                            runtime-inputs = pkgs : [ ( _config.failure { } ) pkgs.coreutils ] ;
+                                                                            runtime-inputs = pkgs : [ ( _config.failure { } ) pkgs.coreutils pkgs.flock ] ;
                                                                             text =
                                                                                 ''
                                                                                     HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
+                                                                                    exec 169> "/mounts/resources/$HASH.lock"
+                                                                                    flock -x 169
                                                                                     if [[ -d "/mounts/resources/canonical/$HASH" ]]
                                                                                     then
                                                                                         :
                                                                                     else
-                                                                                        :
+                                                                                        LINK="$( readlink "/mounts/resources/canonical/$HASH" )" || failure 9157868575302544
+                                                                                        mkdir --parents "/mounts/resources/pids/$LINK"
+                                                                                        echo "$PID" > "/mounts/resources/pids/$LINK/$PID"
+                                                                                        chmod 0400 "/mounts/resources/pids/$LINK/$PID"
+                                                                                        echo "$LINK"
                                                                                     fi
                                                                                 '' ;
                                                                         } ;
