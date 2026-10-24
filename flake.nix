@@ -22,15 +22,30 @@
                                                     _lib.mkOption
                                                         {
                                                             default =
-                                                                { } :
+                                                                {
+                                                                    gc-root-directory ,
+                                                                    resources-directory
+                                                                } :
                                                                     _config.lazy-shell-application
                                                                         {
-                                                                            mounts = null ;
+                                                                            mounts =
+                                                                                {
+                                                                                    input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
+                                                                                    gc-root = { is-directory = true ; source = gc-root-directory ; type = "bind" ; } ;
+                                                                                    resources = { is-directory = true ; source = resources-directory ; type = "bind" ; } ;
+                                                                                } ;
                                                                             name = "init" ;
                                                                             post = null ;
-                                                                            runtime-inputs = pkgs : [ ] ;
+                                                                            runtime-inputs = pkgs : [ ( _config.failure { } ) pkgs.coreutils ] ;
                                                                             text =
                                                                                 ''
+                                                                                    HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
+                                                                                    if [[ -d "/mounts/resources/canonical/$HASH" ]]
+                                                                                    then
+                                                                                        :
+                                                                                    else
+                                                                                        :
+                                                                                    fi
                                                                                 '' ;
                                                                         } ;
                                                             type = _lib.types.functionTo _lib.types.package ;
