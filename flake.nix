@@ -39,6 +39,7 @@
                                                                             runtime-inputs = pkgs : [ ( _config.failure { } ) ( _config.sequential { } ) pkgs.coreutils pkgs.flock ] ;
                                                                             text =
                                                                                 ''
+                                                                                    PID="$( sequential )" || failure
                                                                                     HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
                                                                                     exec 169> "/mounts/resources/$HASH.lock"
                                                                                     flock -x 169
