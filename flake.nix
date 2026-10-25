@@ -63,7 +63,34 @@
                                                                                                     } :
                                                                                                         {
                                                                                                             action = action ;
-                                                                                                            recovery = recovery ;
+                                                                                                            recovery =
+                                                                                                                _config.visitor
+                                                                                                                    { }
+                                                                                                                    {
+                                                                                                                        lambda =
+                                                                                                                            path : value :
+                                                                                                                                let
+                                                                                                                                    identity =
+                                                                                                                                        {
+                                                                                                                                            runtime-inputs ? null ,
+                                                                                                                                            text ? null
+                                                                                                                                        } :
+                                                                                                                                            {
+                                                                                                                                                runtime-inputs = runtime-inputs ;
+                                                                                                                                                text = text ;
+                                                                                                                                            } ;
+                                                                                                                                    in
+                                                                                                                                        _config.lazy-shell-application
+                                                                                                                                            {
+                                                                                                                                                name = "invalid-init" ;
+                                                                                                                                                runtime-inputs = builtins.getAttr "runtime-inputs" ( identity ( value null  ) ) ;
+                                                                                                                                                text = text ;
+                                                                                                                                            }
+                                                                                                                        null =
+                                                                                                                            path : value :
+                                                                                                                                _config.
+                                                                                                                    }
+                                                                                                                    recovery ;
                                                                                                             targets = targets ;
                                                                                                         } ;
                                                                                                 release =
@@ -119,6 +146,19 @@
                                                                                                                                                             text = builtins.getAttr "text" ( identity ( value null ) ) ;
                                                                                                                                                         }
                                                                                                                                         )
+                                                                                                                                        (
+                                                                                                                                            _config.lazy-shell-application
+                                                                                                                                                {
+                                                                                                                                                    mounts = { invalid-init = { source = "/mounts/invalid-init" ; type = "bind" ; } ; } ;
+                                                                                                                                                    name = "invalid-init" ;
+                                                                                                                                                    post = null ;
+                                                                                                                                                    runtime-inputs = pkgs : [ ( _config.failure { } ) ] ;
+                                                                                                                                                    text =
+                                                                                                                                                        ''
+                                                                                                                                                            failure "$@"
+                                                                                                                                                        '' ;
+                                                                                                                                                }
+                                                                                                                                        )
                                                                                                                                     ] ;
                                                                                                                             text =
                                                                                                                                 ''
@@ -150,12 +190,12 @@
                                                                                                                                         failure 9853943334807469
                                                                                                                                     elif [[ ! -s /mounts/standard-error ]]
                                                                                                                                     then
-                                                                                                                                        failure 7230516165710518
+                                                                                                                                        invalid-init 7230516165710518
                                                                                                                                     elif [[ '${ expected-targets }' != "$OBSERVED_TARGETS" ]]
                                                                                                                                     then
-                                                                                                                                        failure 3004874158363809
+                                                                                                                                        invalid-init 3004874158363809
                                                                                                                                     else
-                                                                                                                                        failure 1309415748011104
+                                                                                                                                        invalid-init 1309415748011104
                                                                                                                                     fi
                                                                                                                                 '' ;
                                                                                                                         } ;
