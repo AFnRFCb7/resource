@@ -65,6 +65,7 @@
                                                                                         INDEX="$( sequential )" || failure 6590902953585183
                                                                                         MOUNT="/mounts/mounts/$INDEX"
                                                                                         mkdir --parents "$MOUNT"
+
                                                                                         ln --symbolic "$MOUNT" /mounts/canonical/$HASH"
                                                                                         echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                     fi
