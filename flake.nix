@@ -69,7 +69,7 @@
                                                                                                 release =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
-                                                                                                            mounts = { input = { is-directory = false ; source = "/mount/input" ; type = "bind" ; } } ;
+                                                                                                            mounts = { input = { is-directory = false ; source = "/mount/input" ; type = "bind" ; } ; } ;
                                                                                                             name = "release" ;
                                                                                                             post = null ;
                                                                                                             runtime-inputs = pkgs : [ ] ;
