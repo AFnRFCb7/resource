@@ -60,12 +60,13 @@
                                                                                         mkdir --parents "/mounts/pids/$INDEX"
                                                                                         echo "$PID" > "/mounts/pids/$INDEX/$PID"
                                                                                         chmod 0400 "/mounts/pids/$INDEX/$PID"
-                                                                                        echo "$INDEX"
+                                                                                        echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                     else
                                                                                         INDEX="$( sequential )" || failure 6590902953585183
                                                                                         MOUNT="/mounts/mounts/$INDEX"
                                                                                         mkdir --parents "$MOUNT"
                                                                                         ln --symbolic "$MOUNT" /mounts/canonical/$HASH"
+                                                                                        echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                     fi
                                                                                 '' ;
                                                                         } ;
