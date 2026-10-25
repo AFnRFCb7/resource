@@ -33,6 +33,7 @@
                                                                                     canonical = { is-directory = true ; source = "${ resources-directory }/canonical" ; type = "bind" ; } ;
                                                                                     input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
                                                                                     gc-root = { is-directory = true ; source = gc-root-directory ; type = "bind" ; } ;
+                                                                                    locks = { is-directory = true ; source = "${ resources-directory }/locks" ; type = "bind" ; } ;
                                                                                     mounts = { is-directory = true ; source = "${ resources-directory }/mounts" ; type = "bind" ; } ;
                                                                                     resources = { is-directory = true ; source = resources-directory ; type = "bind" ; } ;
                                                                                 } ;
@@ -50,7 +51,7 @@
                                                                                 ''
                                                                                     PID="$( sequential )" || failure 3708670955636569
                                                                                     HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
-                                                                                    exec 169> "/mounts/resources/$HASH.lock"
+                                                                                    exec 169> "/mounts/locks/$HASH"
                                                                                     flock -x 169
                                                                                     if [[ -L "/mounts/resources/canonical/$HASH" ]]
                                                                                     then
