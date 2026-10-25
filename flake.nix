@@ -66,6 +66,18 @@
                                                                                                             recovery = recovery ;
                                                                                                             targets = targets ;
                                                                                                         } ;
+                                                                                                release =
+                                                                                                    _config.lazy-shell-application
+                                                                                                        {
+                                                                                                            mounts = { input = { is-directory = false ; source = "/mount/input" ; type = "bind" ; } } ;
+                                                                                                            name = "release" ;
+                                                                                                            post = null ;
+                                                                                                            runtime-inputs = pkgs : [ ] ;
+                                                                                                            text =
+                                                                                                                ''
+                                                                                                                
+                                                                                                                '' ;
+                                                                                                        } ;
                                                                                                 in
                                                                                                     _config.visitor
                                                                                                         { }
