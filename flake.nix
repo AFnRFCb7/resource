@@ -80,15 +80,17 @@
                                                                                                                         runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
                                                                                                                         text = builtins.getAttr "text" ( identity ( value null ) ) ;
                                                                                                                         in
-                                                                                                                            _config.lazy-shell-application
+                                                                                                                            pkgs.writeShellApplication
                                                                                                                                 {
                                                                                                                                     name = "init" ;
-                                                                                                                                    post = null ;
-                                                                                                                                    runtime-inputs =
+                                                                                                                                    runtimeInputs = [ ] ;
+                                                                                                                                    text =
+                                                                                                                                        ''
+                                                                                                                                        '' ;
                                                                                                                                 } ;
                                                                                                             null =
                                                                                                                 path : value :
-                                                                                                                    _pkgs.writeShellApplication
+                                                                                                                    pkgs.writeShellApplication
                                                                                                                         {
                                                                                                                             name = "init" ;
                                                                                                                             runtimeInputs = [ ] ;
