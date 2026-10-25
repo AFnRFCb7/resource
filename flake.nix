@@ -23,11 +23,12 @@
                                                         {
                                                             default =
                                                                 {
+                                                                    error ,
                                                                     init ,
                                                                     gc-root-directory ,
                                                                     release ,
                                                                     resources-directory
-                                                                } :
+                                                                } @primary :
                                                                     _config.lazy-shell-application
                                                                         {
                                                                             mounts =
@@ -51,6 +52,17 @@
                                                                                         ( _config.sequential { } )
                                                                                         pkgs.coreutils
                                                                                         pkgs.flock
+                                                                                        (
+                                                                                            _config.lazy-shell-application
+                                                                                                {
+                                                                                                    name = "valid-init" ;
+                                                                                                    post = null ;
+                                                                                                    runtime-inputs = pkgs : [ ] ;
+                                                                                                    text =
+                                                                                                        ''
+                                                                                                        '' ;
+                                                                                                }
+                                                                                        )
                                                                                         (
                                                                                             let
                                                                                                 action = builtins.attrValue "action" ( identity init ) ;
@@ -298,14 +310,23 @@
                                                                                         echo "$PID" > "/mounts/pids/$INDEX/$PID"
                                                                                         chmod 0400 "/mounts/pids/$INDEX/$PID"
                                                                                         echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                        rm "/mounts/locks/$HASH"
                                                                                     else
                                                                                         INDEX="$( sequential )" || failure 6590902953585183
                                                                                         export INDEX
                                                                                         MOUNT="/mounts/mounts/$INDEX"
                                                                                         mkdir --parents "$MOUNT"
-                                                                                        init
-                                                                                        ln --symbolic "$MOUNT" /mounts/canonical/$HASH"
-                                                                                        echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                        if init
+                                                                                        then
+                                                                                            valid-init
+                                                                                            echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                            rm "/mounts/locks/$HASH"
+                                                                                        else
+                                                                                            invalid-init
+                                                                                            echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                            rm "/mounts/locks/$HASH"
+                                                                                            exit ${ builtins.toString error }
+                                                                                        fi
                                                                                     fi
                                                                                 '' ;
                                                                         } ;
