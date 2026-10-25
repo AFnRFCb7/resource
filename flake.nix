@@ -51,43 +51,96 @@
                                                                                         (
                                                                                             let
                                                                                                 action = builtins.attrValue "action" ( identity init ) ;
+                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( identity ( value null ) ) ) ;
                                                                                                 identity =
                                                                                                     {
                                                                                                         action ? null ,
-                                                                                                        recovery ? [ ]
+                                                                                                        recovery ? null ,
+                                                                                                        targets ? null
                                                                                                     } :
                                                                                                         {
                                                                                                             action = action ;
                                                                                                             recovery = recovery ;
+                                                                                                            targets = targets ;
                                                                                                         } ;
-                                                                                                recovery = builtins.attrValue "recovery" ( identity action ) ;
                                                                                                 in
                                                                                                     _config.visitor
                                                                                                         { }
                                                                                                         {
                                                                                                             lambda =
                                                                                                                 path : value :
-                                                                                                                    let
-                                                                                                                        identity =
-                                                                                                                            {
-                                                                                                                                runtime-inputs ? pkgs : [ ] ,
-                                                                                                                                text ? ""
-                                                                                                                            } :
+                                                                                                                    _config.lazy-shell-application
+                                                                                                                        {
+                                                                                                                            mounts =
                                                                                                                                 {
-                                                                                                                                    runtime-inputs = runtime-inputs ;
-                                                                                                                                    text = text ;
+                                                                                                                                    mount = { source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
+                                                                                                                                    standard-error = { is-directory = false ; type = "temporary" ; } ;
+                                                                                                                                    standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                 } ;
-                                                                                                                        runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
-                                                                                                                        text = builtins.getAttr "text" ( identity ( value null ) ) ;
-                                                                                                                        in
-                                                                                                                            pkgs.writeShellApplication
-                                                                                                                                {
-                                                                                                                                    name = "init" ;
-                                                                                                                                    runtimeInputs = [ ] ;
-                                                                                                                                    text =
-                                                                                                                                        ''
-                                                                                                                                        '' ;
-                                                                                                                                } ;
+                                                                                                                            name = "init" ;
+                                                                                                                            runtime-inputs =
+                                                                                                                                pkgs :
+                                                                                                                                    [
+                                                                                                                                        pkgs.coreutils
+                                                                                                                                        pkgs.jq
+                                                                                                                                        (
+                                                                                                                                            let
+                                                                                                                                                identity =
+                                                                                                                                                    {
+                                                                                                                                                        runtime-inputs ? pkgs : [ ] ,
+                                                                                                                                                        text ? ""
+                                                                                                                                                    } :
+                                                                                                                                                        {
+                                                                                                                                                            runtime-inputs = runtime-inputs ;
+                                                                                                                                                            text = text ;
+                                                                                                                                                        } ;
+                                                                                                                                                in
+                                                                                                                                                    _config.lazy-shell-application
+                                                                                                                                                        {
+                                                                                                                                                            mounts =
+                                                                                                                                                                {
+
+                                                                                                                                                                } ;
+                                                                                                                                                            name = "init" ;
+                                                                                                                                                            post = null ;
+                                                                                                                                                            runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
+                                                                                                                                                            text = builtins.getAttr "text" ( identity ( value null ) ) ;
+                                                                                                                                                        }
+                                                                                                                                        )
+                                                                                                                                    ] ;
+                                                                                                                            text =
+                                                                                                                                ''
+                                                                                                                                    mapfile -t ARGUMENTS < <( jq -r '.arguments[]' /mounts/input )
+                                                                                                                                    if jq --exit-status 'has("inputs") and (.inputs | has("standard"))' /mounts/input
+                                                                                                                                    then
+                                                                                                                                        if jq ".inputs.standard" | init "${ "$" }{ARGUMENTS[@]}" /mounts/input > /mounts/standard-input 2> /mounts/standard-error
+                                                                                                                                        then
+                                                                                                                                            STATUS="$?"
+                                                                                                                                        else
+                                                                                                                                            STATUS="$?"
+                                                                                                                                        fi
+                                                                                                                                    else
+                                                                                                                                        if init "${ "$" }{ARGUMENTS[@]}" > /mounts/standard-input 2> /mounts/standard-error
+                                                                                                                                        then
+                                                                                                                                            STATUS="$?"
+                                                                                                                                        else
+                                                                                                                                            STATUS="$?"
+                                                                                                                                        fi
+                                                                                                                                    fi
+                                                                                                                                    OBSERVED_TARGETS="$( find /mounts/mount -mindepth 1 -maxdepth 1 | LC_ALL=C sort )" || failure 5101453011608943
+                                                                                                                                    if [[ "$STATUS" == 0 ]] && [[ -s /mounts/standard-error ]] && [[ '${ expected-targets }' == "$OBSERVED_TARGETS" ]]
+                                                                                                                                    then
+
+                                                                                                                                    elif [[ "$STATUS" != 0 ]]
+                                                                                                                                    then
+                                                                                                                                    elif [[ ! -s /mounts/standard-error ]]
+                                                                                                                                    then
+                                                                                                                                    elif
+                                                                                                                                    else
+                                                                                                                                        failure 1309415748011104
+                                                                                                                                    fi
+                                                                                                                                '' ;
+                                                                                                                        } ;
                                                                                                             null =
                                                                                                                 path : value :
                                                                                                                     pkgs.writeShellApplication
@@ -99,15 +152,6 @@
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                         }
-                                                                                            _config.lazy-shell-application
-                                                                                                {
-                                                                                                    mounts =
-                                                                                                        {
-
-                                                                                                        } ;
-                                                                                                    name = "init" ;
-
-                                                                                                }
                                                                                         )
                                                                                     ] ;
                                                                             text =
@@ -126,6 +170,7 @@
                                                                                         echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                     else
                                                                                         INDEX="$( sequential )" || failure 6590902953585183
+                                                                                        export INDEX
                                                                                         MOUNT="/mounts/mounts/$INDEX"
                                                                                         mkdir --parents "$MOUNT"
                                                                                         init
