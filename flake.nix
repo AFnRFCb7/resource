@@ -51,7 +51,7 @@
                                                                                         (
                                                                                             let
                                                                                                 action = builtins.attrValue "action" ( identity init ) ;
-                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( identity ( value null ) ) ) ;
+                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( identity init ) ) ;
                                                                                                 identity =
                                                                                                     {
                                                                                                         action ? null ,
