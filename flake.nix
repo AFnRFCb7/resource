@@ -30,8 +30,10 @@
                                                                         {
                                                                             mounts =
                                                                                 {
+                                                                                    canonical = { is-directory = true ; source = "${ resources-directory }/canonical" ; type = "bind" ; } ;
                                                                                     input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
                                                                                     gc-root = { is-directory = true ; source = gc-root-directory ; type = "bind" ; } ;
+                                                                                    mounts = { is-directory = true ; source = "${ resources-directory }/mounts" ; type = "bind" ; } ;
                                                                                     resources = { is-directory = true ; source = resources-directory ; type = "bind" ; } ;
                                                                                 } ;
                                                                             name = "init" ;
