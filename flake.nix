@@ -84,7 +84,7 @@
                                                                                                                                             {
                                                                                                                                                 mounts =
                                                                                                                                                     {
-                                                                                                                                                        input = { is-directory = true ; read-only = true ; source = "/mounts/input" ; type = "bind" ; }
+                                                                                                                                                        input = { is-directory = true ; read-only = true ; source = "/mounts/input" ; type = "bind" ; } ;
                                                                                                                                                         invalid-init = { is-directory = true ; source = "/mounts/invalid-init" ; type = "bind" ; } ;
                                                                                                                                                         release = { is-directory = true ; source = "/mounts/release" ; type = "bind" ; } ;
                                                                                                                                                         standard-error = { is-directory = false ; type = "temporary" ; } ;
