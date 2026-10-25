@@ -35,7 +35,7 @@
                                                                                     resources = { is-directory = true ; source = resources-directory ; type = "bind" ; } ;
                                                                                 } ;
                                                                             name = "init" ;
-                                                                            post = null ;
+                                                                            post = ''rm "$PID"'' ;
                                                                             runtime-inputs =
                                                                                 pkgs :
                                                                                     [
