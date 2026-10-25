@@ -33,11 +33,14 @@
                                                                             mounts =
                                                                                 {
                                                                                     canonical = { is-directory = true ; source = "${ resources-directory }/canonical" ; type = "bind" ; } ;
+                                                                                    invalid-init = { is-directory = true ; source = "${ resources-directory }/invalid-init" ; type = "bind" ; } ;
+                                                                                    invalid-release = { is-directory = true ; source = "${ resources-directory }/invalid-release" ; type = "bind" ; } ;
                                                                                     input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
                                                                                     gc-root = { is-directory = true ; source = gc-root-directory ; type = "bind" ; } ;
                                                                                     locks = { is-directory = true ; source = "${ resources-directory }/locks" ; type = "bind" ; } ;
                                                                                     mounts = { is-directory = true ; source = "${ resources-directory }/mounts" ; type = "bind" ; } ;
                                                                                     pids = { is-directory = true ; source = "${ resources-directory }/pids" ; type = "bind" ; } ;
+                                                                                    release = { source = "${ resources-directory }/release" ; type = "bind" ; } ;
                                                                                 } ;
                                                                             name = "init" ;
                                                                             post = ''rm "${ resources-directory }/pids/$PID"'' ;
@@ -97,10 +100,7 @@
                                                                                                                                                 in
                                                                                                                                                     _config.lazy-shell-application
                                                                                                                                                         {
-                                                                                                                                                            mounts =
-                                                                                                                                                                {
-
-                                                                                                                                                                } ;
+                                                                                                                                                            mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                                                             name = "init" ;
                                                                                                                                                             post = null ;
                                                                                                                                                             runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
@@ -127,15 +127,21 @@
                                                                                                                                             STATUS="$?"
                                                                                                                                         fi
                                                                                                                                     fi
+                                                                                                                                    cat /mounts/standard-output
+                                                                                                                                    cat /mounts/standard-error >&2
                                                                                                                                     OBSERVED_TARGETS="$( find /mounts/mount -mindepth 1 -maxdepth 1 | LC_ALL=C sort )" || failure 5101453011608943
                                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ -s /mounts/standard-error ]] && [[ '${ expected-targets }' == "$OBSERVED_TARGETS" ]]
                                                                                                                                     then
-
+                                                                                                                                        ln --symbolic ${ release }/bin/release /mounts/release/$INDEX
                                                                                                                                     elif [[ "$STATUS" != 0 ]]
                                                                                                                                     then
+                                                                                                                                        failure 9853943334807469
                                                                                                                                     elif [[ ! -s /mounts/standard-error ]]
                                                                                                                                     then
-                                                                                                                                    elif
+                                                                                                                                        failure 7230516165710518
+                                                                                                                                    elif [[ '${ expected-targets }' != "$OBSERVED_TARGETS" ]]
+                                                                                                                                    then
+                                                                                                                                        failure 3004874158363809
                                                                                                                                     else
                                                                                                                                         failure 1309415748011104
                                                                                                                                     fi
@@ -143,12 +149,14 @@
                                                                                                                         } ;
                                                                                                             null =
                                                                                                                 path : value :
-                                                                                                                    pkgs.writeShellApplication
+                                                                                                                    _config.lazy-shell-application
                                                                                                                         {
+                                                                                                                            mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                             name = "init" ;
                                                                                                                             runtimeInputs = [ ] ;
                                                                                                                             text =
                                                                                                                                 ''
+                                                                                                                                    ln --symbolic ${ release }/bin/release /mounts/release/$INDEX
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                         }
