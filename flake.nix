@@ -23,7 +23,9 @@
                                                         {
                                                             default =
                                                                 {
+                                                                    init ,
                                                                     gc-root-directory ,
+                                                                    release ,
                                                                     resources-directory
                                                                 } :
                                                                     _config.lazy-shell-application
@@ -46,6 +48,16 @@
                                                                                         ( _config.sequential { } )
                                                                                         pkgs.coreutils
                                                                                         pkgs.flock
+                                                                                        (
+                                                                                            pkgs.writeShellApplication
+                                                                                                {
+                                                                                                    name = "init" ;
+                                                                                                    runtimeInputs = [ ] ;
+                                                                                                    text =
+                                                                                                        ''
+                                                                                                        '' ;
+                                                                                                }
+                                                                                        )
                                                                                     ] ;
                                                                             text =
                                                                                 ''
@@ -65,7 +77,7 @@
                                                                                         INDEX="$( sequential )" || failure 6590902953585183
                                                                                         MOUNT="/mounts/mounts/$INDEX"
                                                                                         mkdir --parents "$MOUNT"
-
+                                                                                        init
                                                                                         ln --symbolic "$MOUNT" /mounts/canonical/$HASH"
                                                                                         echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                     fi
