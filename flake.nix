@@ -35,10 +35,10 @@
                                                                                     gc-root = { is-directory = true ; source = gc-root-directory ; type = "bind" ; } ;
                                                                                     locks = { is-directory = true ; source = "${ resources-directory }/locks" ; type = "bind" ; } ;
                                                                                     mounts = { is-directory = true ; source = "${ resources-directory }/mounts" ; type = "bind" ; } ;
-                                                                                    resources = { is-directory = true ; source = resources-directory ; type = "bind" ; } ;
+                                                                                    pids = { is-directory = true ; source = "${ resources-directory }/pids" ; type = "bind" ; } ;
                                                                                 } ;
                                                                             name = "init" ;
-                                                                            post = ''rm "$PID"'' ;
+                                                                            post = ''rm "${ resources-directory }/pids/$PID"'' ;
                                                                             runtime-inputs =
                                                                                 pkgs :
                                                                                     [
@@ -53,18 +53,19 @@
                                                                                     HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
                                                                                     exec 169> "/mounts/locks/$HASH"
                                                                                     flock -x 169
-                                                                                    if [[ -L "/mounts/resources/canonical/$HASH" ]]
+                                                                                    if [[ -L "/mounts/canonical/$HASH" ]]
                                                                                     then
-                                                                                        MOUNT="$( readlink "/mounts/resources/canonical/$HASH" )" || failure 9157868575302544
+                                                                                        MOUNT="$( readlink "/mounts/canonical/$HASH" )" || failure 9157868575302544
                                                                                         INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
-                                                                                        mkdir --parents "/mounts/resources/pids/$INDEX"
-                                                                                        echo "$PID" > "/mounts/resources/pids/$INDEX/$PID"
-                                                                                        chmod 0400 "/mounts/resources/pids/$INDEX/$PID"
+                                                                                        mkdir --parents "/mounts/pids/$INDEX"
+                                                                                        echo "$PID" > "/mounts/pids/$INDEX/$PID"
+                                                                                        chmod 0400 "/mounts/pids/$INDEX/$PID"
                                                                                         echo "$INDEX"
                                                                                     else
                                                                                         INDEX="$( sequential )" || failure 6590902953585183
-                                                                                        MOUNT="/mounts/resources/mounts/$INDEX"
+                                                                                        MOUNT="/mounts/mounts/$INDEX"
                                                                                         mkdir --parents "$MOUNT"
+                                                                                        ln --symbolic "$MOUNT" /mounts/canonical/$HASH"
                                                                                     fi
                                                                                 '' ;
                                                                         } ;
