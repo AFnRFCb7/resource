@@ -54,8 +54,19 @@
                                                                                                     name = "init" ;
                                                                                                     runtimeInputs = [ ] ;
                                                                                                     text =
-                                                                                                        ''
-                                                                                                        '' ;
+                                                                                                        let
+                                                                                                            identity =
+                                                                                                                {
+                                                                                                                    init ? null ,
+                                                                                                                    recovery
+                                                                                                                } :
+                                                                                                                    {
+                                                                                                                        init = init ;
+                                                                                                                        recovery = recovery ;
+                                                                                                                    } ;
+                                                                                                            in
+                                                                                                                ''
+                                                                                                                '' ;
                                                                                                 }
                                                                                         )
                                                                                     ] ;
