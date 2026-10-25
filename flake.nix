@@ -49,24 +49,62 @@
                                                                                         pkgs.coreutils
                                                                                         pkgs.flock
                                                                                         (
-                                                                                            pkgs.writeShellApplication
+                                                                                            let
+                                                                                                action = builtins.attrValue "action" ( identity init ) ;
+                                                                                                identity =
+                                                                                                    {
+                                                                                                        action ? null ,
+                                                                                                        recovery ? [ ]
+                                                                                                    } :
+                                                                                                        {
+                                                                                                            action = action ;
+                                                                                                            recovery = recovery ;
+                                                                                                        } ;
+                                                                                                recovery = builtins.attrValue "recovery" ( identity action ) ;
+                                                                                                in
+                                                                                                    _config.visitor
+                                                                                                        { }
+                                                                                                        {
+                                                                                                            lambda =
+                                                                                                                path : value :
+                                                                                                                    let
+                                                                                                                        identity =
+                                                                                                                            {
+                                                                                                                                runtime-inputs ? pkgs : [ ] ,
+                                                                                                                                text ? ""
+                                                                                                                            } :
+                                                                                                                                {
+                                                                                                                                    runtime-inputs = runtime-inputs ;
+                                                                                                                                    text = text ;
+                                                                                                                                } ;
+                                                                                                                        runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
+                                                                                                                        text = builtins.getAttr "text" ( identity ( value null ) ) ;
+                                                                                                                        in
+                                                                                                                            _config.lazy-shell-application
+                                                                                                                                {
+                                                                                                                                    name = "init" ;
+                                                                                                                                    post = null ;
+                                                                                                                                    runtime-inputs =
+                                                                                                                                } ;
+                                                                                                            null =
+                                                                                                                path : value :
+                                                                                                                    _pkgs.writeShellApplication
+                                                                                                                        {
+                                                                                                                            name = "init" ;
+                                                                                                                            runtimeInputs = [ ] ;
+                                                                                                                            text =
+                                                                                                                                ''
+                                                                                                                                '' ;
+                                                                                                                        } ;
+                                                                                                        }
+                                                                                            _config.lazy-shell-application
                                                                                                 {
+                                                                                                    mounts =
+                                                                                                        {
+
+                                                                                                        } ;
                                                                                                     name = "init" ;
-                                                                                                    runtimeInputs = [ ] ;
-                                                                                                    text =
-                                                                                                        let
-                                                                                                            identity =
-                                                                                                                {
-                                                                                                                    init ? null ,
-                                                                                                                    recovery
-                                                                                                                } :
-                                                                                                                    {
-                                                                                                                        init = init ;
-                                                                                                                        recovery = recovery ;
-                                                                                                                    } ;
-                                                                                                            in
-                                                                                                                ''
-                                                                                                                '' ;
+
                                                                                                 }
                                                                                         )
                                                                                     ] ;
