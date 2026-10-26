@@ -180,6 +180,7 @@
                                                                                                                             ${ builtins.concatStringsSep "\n" ( _config.visitor { } { lambda = path : value : let x = value null ; in ''wrap ${ x } /mounts/invalid-init/${ builtins.toJSON path }/recovery.sh 0500 --replace INDEX "$INDEX"'' ; } recovery ) }
                                                                                                                             failure "$@"
                                                                                                                         '' ;
+                                                                                                            variables = { } ;
                                                                                                         } ;
                                                                                                 identity =
                                                                                                     {
@@ -278,6 +279,7 @@
                                                                                                                         ''
                                                                                                                             wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
                                                                                                                         '' ;
+                                                                                                            variables = { } ;
                                                                                                         } ;
                                                                                                 in
                                                                                                     _config.visitor
@@ -319,6 +321,7 @@
                                                                                                                                                             post = null ;
                                                                                                                                                             runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
                                                                                                                                                             text = builtins.getAttr "text" ( identity ( value null ) ) ;
+                                                                                                                                                            variables = { } ;
                                                                                                                                                         }
                                                                                                                                         )
                                                                                                                                         invalid-init
@@ -362,6 +365,7 @@
                                                                                                                                         invalid-init 1309415748011104
                                                                                                                                     fi
                                                                                                                                 '' ;
+                                                                                                                            variables = { } ;
                                                                                                                         } ;
                                                                                                             null =
                                                                                                                 path : value :
@@ -374,6 +378,7 @@
                                                                                                                                 ''
                                                                                                                                     valid-init
                                                                                                                                 '' ;
+                                                                                                                            variables = { } ;
                                                                                                                         } ;
                                                                                                         }
                                                                                         )
