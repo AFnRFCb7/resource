@@ -190,28 +190,6 @@
                                                                                                             action = action ;
                                                                                                             targets = targets ;
                                                                                                         } ;
-                                                                                                release =
-                                                                                                    let
-                                                                                                        identity =
-                                                                                                            {
-                                                                                                                action ? null ,
-                                                                                                                recovery ? null
-                                                                                                            } :
-                                                                                                                {
-                                                                                                                    action = action ;
-                                                                                                                    recovery = recovery ;
-                                                                                                                } ;
-                                                                                                        in
-                                                                                                            _config.lazy-shell-application
-                                                                                                                {
-                                                                                                                    mounts = { } ;
-                                                                                                                    name = "release" ;
-                                                                                                                    post = null ;
-                                                                                                                    runtime-inputs = pkgs : [ ] ;
-                                                                                                                    text =
-                                                                                                                        ''
-                                                                                                                        '' ;
-                                                                                                                } ;
                                                                                                 valid-init =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
@@ -220,9 +198,33 @@
                                                                                                             post = null ;
                                                                                                             runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
                                                                                                             text =
-                                                                                                                ''
-                                                                                                                    wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
-                                                                                                                '' ;
+                                                                                                                let
+                                                                                                                    release =
+                                                                                                                        let
+                                                                                                                            identity =
+                                                                                                                                {
+                                                                                                                                    action ? null ,
+                                                                                                                                    recovery ? null
+                                                                                                                                } :
+                                                                                                                                    {
+                                                                                                                                        action = action ;
+                                                                                                                                        recovery = recovery ;
+                                                                                                                                    } ;
+                                                                                                                            in
+                                                                                                                                _config.lazy-shell-application
+                                                                                                                                    {
+                                                                                                                                        mounts = { } ;
+                                                                                                                                        name = "release" ;
+                                                                                                                                        post = null ;
+                                                                                                                                        runtime-inputs = pkgs : [ ] ;
+                                                                                                                                        text =
+                                                                                                                                            ''
+                                                                                                                                            '' ;
+                                                                                                                                    } ;
+                                                                                                                    in
+                                                                                                                        ''
+                                                                                                                            wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
+                                                                                                                        '' ;
                                                                                                         } ;
                                                                                                 in
                                                                                                     _config.visitor
@@ -239,6 +241,7 @@
                                                                                                                                     standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                 } ;
                                                                                                                             name = "init" ;
+                                                                                                                            post = "${ post }/bin/post" ;
                                                                                                                             runtime-inputs =
                                                                                                                                 pkgs :
                                                                                                                                     [
