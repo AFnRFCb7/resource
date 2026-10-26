@@ -34,6 +34,7 @@
                                                                             mounts =
                                                                                 {
                                                                                     canonical = { is-directory = true ; source = "${ resources-directory }/canonical" ; type = "bind" ; } ;
+                                                                                    diagnostic = { source = "${ resources-directory }/diagnostic" ; } ;
                                                                                     flag = { is-directory = true ; source = "${ resources-directory }/flag" ; type = "bind" ; } ;
                                                                                     invalid-init = { is-directory = true ; source = "${ resources-directory }/invalid-init" ; type = "bind" ; } ;
                                                                                     invalid-release = { is-directory = true ; source = "${ resources-directory }/invalid-release" ; type = "bind" ; } ;
@@ -45,7 +46,7 @@
                                                                                     release = { source = "${ resources-directory }/release" ; type = "bind" ; } ;
                                                                                 } ;
                                                                             name = "init" ;
-                                                                            post = ''rm "${ resources-directory }/pids/$PID"'' ;
+                                                                            post = null ;
                                                                             runtime-inputs =
                                                                                 pkgs :
                                                                                     [
@@ -53,18 +54,6 @@
                                                                                         ( _config.sequential { } )
                                                                                         pkgs.coreutils
                                                                                         pkgs.flock
-                                                                                        (
-                                                                                            _config.lazy-shell-application
-                                                                                                {
-                                                                                                    name = "valid-init" ;
-                                                                                                    post = null ;
-                                                                                                    runtime-inputs = pkgs : [ ] ;
-                                                                                                    text =
-                                                                                                        ''
-                                                                                                        '' ;
-                                                                                                    variables = { } ;
-                                                                                                }
-                                                                                        )
                                                                                         (
                                                                                             let
                                                                                                 action = builtins.attrValue "action" ( identity init ) ;
@@ -203,7 +192,11 @@
                                                                                                 valid-init =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
-                                                                                                            mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
+                                                                                                            mounts =
+                                                                                                                {
+                                                                                                                    diagnostic = { source = "/mounts/diagnostic" ; type = "bind" ; } ;
+                                                                                                                    release = { source = "/mounts/release" ; type = "bind" ; } ;
+                                                                                                                } ;
                                                                                                             name = "valid-init" ;
                                                                                                             post =
                                                                                                                 let
@@ -213,11 +206,16 @@
                                                                                                                                 mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
                                                                                                                                 name = "post" ;
                                                                                                                                 post = null ;
-                                                                                                                                pkgs = pkgs : [ ] ;
+                                                                                                                                pkgs =
+                                                                                                                                    pkgs :
+                                                                                                                                        [
+
+                                                                                                                                        ] ;
                                                                                                                                 text =
                                                                                                                                     ''
                                                                                                                                         "/release/$INDEX" ;
                                                                                                                                     '' ;
+                                                                                                                                variables = { } ;
                                                                                                                             } ;
                                                                                                                     in "${ application }/bin/post" ;
                                                                                                             runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
@@ -440,7 +438,7 @@
                                             obviated-by
                                         } :
                                         {
-                                            invocation
+                                            commands
                                         } :
                                             {
                                                 obviated-by = obviated-by ;
