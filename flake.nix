@@ -197,7 +197,7 @@
                                                                                                             text =
                                                                                                                 ''
                                                                                                                 '' ;
-                                                                                                        }
+                                                                                                        } ;
                                                                                                 in
                                                                                                     _config.visitor
                                                                                                         { }
