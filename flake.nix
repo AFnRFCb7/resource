@@ -37,7 +37,7 @@
                                                                             mounts =
                                                                                 {
                                                                                     canonical = { is-directory = true ; source = "${ resources-directory }/canonical" ; type = "bind" ; } ;
-                                                                                    diagnostic = { source = "${ resources-directory }/diagnostic" ; } ;
+                                                                                    diagnostic = { source = "${ resources-directory }/diagnostic" ; type = "bind" ; } ;
                                                                                     flag = { is-directory = true ; source = "${ resources-directory }/flag" ; type = "bind" ; } ;
                                                                                     invalid-init = { is-directory = true ; source = "${ resources-directory }/invalid-init" ; type = "bind" ; } ;
                                                                                     invalid-release = { is-directory = true ; source = "${ resources-directory }/invalid-release" ; type = "bind" ; } ;
