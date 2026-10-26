@@ -187,6 +187,17 @@
                                                                                                                 
                                                                                                                 '' ;
                                                                                                         } ;
+                                                                                                valid-init =
+                                                                                                    _config.lazy-shell-application
+                                                                                                        {
+                                                                                                            mounts = { } ;
+                                                                                                            name = "valid-init" ;
+                                                                                                            post = null ;
+                                                                                                            runtime-inputs = pkgs : [ pkgs.coreutils ] ;
+                                                                                                            text =
+                                                                                                                ''
+                                                                                                                '' ;
+                                                                                                        }
                                                                                                 in
                                                                                                     _config.visitor
                                                                                                         { }
