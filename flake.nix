@@ -190,6 +190,28 @@
                                                                                                             action = action ;
                                                                                                             targets = targets ;
                                                                                                         } ;
+                                                                                                release =
+                                                                                                    let
+                                                                                                        identity =
+                                                                                                            {
+                                                                                                                action ? null ,
+                                                                                                                recovery ? null
+                                                                                                            } :
+                                                                                                                {
+                                                                                                                    action = action ;
+                                                                                                                    recovery = recovery ;
+                                                                                                                } ;
+                                                                                                        in
+                                                                                                            _config.lazy-shell-application
+                                                                                                                {
+                                                                                                                    mounts = { } ;
+                                                                                                                    name = "release" ;
+                                                                                                                    post = null ;
+                                                                                                                    runtime-inputs = pkgs : [ ] ;
+                                                                                                                    text =
+                                                                                                                        ''
+                                                                                                                        '' ;
+                                                                                                                } ;
                                                                                                 valid-init =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
@@ -198,23 +220,7 @@
                                                                                                             post = null ;
                                                                                                             runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
                                                                                                             text =
-                                                                                                                let
-                                                                                                                    release =
-                                                                                                                        _config.lazy-shell-application
-                                                                                                                            {
-                                                                                                                                mounts = { input = { is-directory = false ; source = "/mount/input" ; type = "bind" ; } ; } ;
-                                                                                                                                name = "release" ;
-                                                                                                                                post = null ;
-                                                                                                                                runtime-inputs = pkgs : [ ] ;
-                                                                                                                                text =
-                                                                                                                                    ''
 
-                                                                                                                                    '' ;
-                                                                                                                            } ;
-                                                                                                                    in
-                                                                                                                        ''
-                                                                                                                            wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
-                                                                                                                        '' ;
                                                                                                         } ;
                                                                                                 in
                                                                                                     _config.visitor
