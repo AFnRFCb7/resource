@@ -566,21 +566,21 @@
                                                                     (
                                                                         builtins.concatLists
                                                                             [
-                                                                                [
-                                                                                    ''
-                                                                                        client.wait_for_unit("multi-user.target")
-                                                                                    ''
-                                                                                ]
-                                                                                (
-                                                                                    let
-                                                                                        mapper = { name , ... } : ''client.succeed("${ name }")'' ;
-                                                                                        in builtins.map mapper commands
-                                                                                )
-                                                                                [
-                                                                                    ''
-                                                                                        client.succeed("terminal")
-                                                                                    ''
-                                                                                ]
+#                                                                                [
+#                                                                                    ''
+#                                                                                        client.wait_for_unit("multi-user.target")
+#                                                                                    ''
+#                                                                                ]
+#                                                                                (
+#                                                                                    let
+#                                                                                        mapper = { name , ... } : ''client.succeed("${ name }")'' ;
+#                                                                                        in builtins.map mapper commands
+#                                                                                )
+#                                                                                [
+#                                                                                    ''
+#                                                                                        client.succeed("terminal")
+#                                                                                    ''
+#                                                                                ]
                                                                             ]
                                                                     ) ;
                                                         } ;
