@@ -424,7 +424,29 @@
                                             } ;
                             in
                                 {
-                                    check = null ;
+                                    check =
+                                        {
+                                            nixosTest ,
+                                            obviated-by
+                                        } :
+                                            {
+                                                obviated-by = obviated-by ;
+                                                test =
+                                                    nixosTest
+                                                        {
+                                                            name = "nixos-test" ;
+                                                            node.client =
+                                                                {
+                                                                    config.environment.systemPackages =
+                                                                        [
+                                                                        ] ;
+                                                                } ;
+                                                            testScript =
+                                                                ''
+                                                                '' ;
+                                                        } ;
+                                                type = "lazy-shell-resource" ;
+                                            } ;
                                     implementation = implementation-identity implementation ;
                                 } ;
             } ;
