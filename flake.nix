@@ -549,7 +549,7 @@
                                                                                                         )
                                                                                                     ]
                                                                                                 ] ;
-                                                                                imports = [ failure lazy-shell-application trip visitor ] ;
+                                                                                imports = [ failure implementation lazy-shell-application trip visitor ] ;
                                                                             } ;
                                                             testScript =
                                                                 builtins.concatStringsSep
