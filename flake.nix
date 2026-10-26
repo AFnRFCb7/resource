@@ -72,7 +72,11 @@
                                                                                                 invalid-init =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
-                                                                                                            mounts = { invalid-init = { source = "/mounts/invalid-init" ; type = "bind" ; } ; } ;
+                                                                                                            mounts =
+                                                                                                                {
+                                                                                                                    interim = { source = "/mounts/interim" ; type = "bind" ; } ;
+                                                                                                                    invalid-init = { source = "/mounts/invalid-init" ; type = "bind" ; } ;
+                                                                                                                } ;
                                                                                                             name = "invalid-init" ;
                                                                                                             post = null ;
                                                                                                             runtime-inputs = pkgs : [ ( _config.failure { } ) _config.wrap pkgs.coreutils ] ;
@@ -100,6 +104,7 @@
                                                                                                                                                         mounts =
                                                                                                                                                             {
                                                                                                                                                                 input = { is-directory = true ; read-only = true ; source = "/mounts/input" ; type = "bind" ; } ;
+                                                                                                                                                                interim = { source = "/mounts/interim" ; type = "bind" ; } ;
                                                                                                                                                                 invalid-init = { is-directory = true ; source = "/mounts/invalid-init" ; type = "bind" ; } ;
                                                                                                                                                                 release = { is-directory = true ; source = "/mounts/release" ; type = "bind" ; } ;
                                                                                                                                                                 standard-error = { is-directory = false ; type = "temporary" ; } ;
