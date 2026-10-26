@@ -241,7 +241,7 @@
                                                                                                                                     standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                 } ;
                                                                                                                             name = "init" ;
-                                                                                                                            post = "${ post }/bin/post" ;
+                                                                                                                            post = null ;
                                                                                                                             runtime-inputs =
                                                                                                                                 pkgs :
                                                                                                                                     [
