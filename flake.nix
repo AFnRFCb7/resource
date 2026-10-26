@@ -444,7 +444,7 @@
                                                         {
                                                             name = "nixos-test" ;
                                                             node.client =
-                                                                { ... } :
+                                                                { pkgs , ... } :
                                                                     let
                                                                         _pkgs = pkgs-identity pkgs ;
                                                                         in
