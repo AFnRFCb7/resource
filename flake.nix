@@ -81,122 +81,114 @@
                                                                                                                         mounts = { invalid-init = { source = "/mounts/invalid-init" ; type = "bind" ; } ; } ;
                                                                                                                         name = "invalid-init" ;
                                                                                                                         post = null ;
-                                                                                                                        runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
+                                                                                                                        runtime-inputs = pkgs : [ ( _config.failure { } ) _config.wrap pkgs.coreutils ] ;
                                                                                                                         text =
-                                                                                                                            ''
-                                                                                                                            '' ;
-                                                                                                                    } ;
-                                                                                                            recovery =
-                                                                                                                _config.visitor
-                                                                                                                    { }
-                                                                                                                    {
-                                                                                                                        lambda =
-                                                                                                                            path : value :
-                                                                                                                                let
-                                                                                                                                    identity =
+                                                                                                                            let
+                                                                                                                                recovery =
+                                                                                                                                    _config.visitor
+                                                                                                                                        { }
                                                                                                                                         {
-                                                                                                                                            runtime-inputs ? null ,
-                                                                                                                                            text ? null
-                                                                                                                                        } :
-                                                                                                                                            {
-                                                                                                                                                runtime-inputs = runtime-inputs ;
-                                                                                                                                                text = text ;
-                                                                                                                                            } ;
-                                                                                                                                    in
-                                                                                                                                        _config.lazy-shell-application
-                                                                                                                                            {
-                                                                                                                                                mounts =
-                                                                                                                                                    {
-                                                                                                                                                        input = { is-directory = true ; read-only = true ; source = "/mounts/input" ; type = "bind" ; } ;
-                                                                                                                                                        invalid-init = { is-directory = true ; source = "/mounts/invalid-init" ; type = "bind" ; } ;
-                                                                                                                                                        release = { is-directory = true ; source = "/mounts/release" ; type = "bind" ; } ;
-                                                                                                                                                        standard-error = { is-directory = false ; type = "temporary" ; } ;
-                                                                                                                                                        standard-output = { is-directory = false ; type = "temporary" ; } ;
-                                                                                                                                                    } ;
-                                                                                                                                                name = "invalid-init" ;
-                                                                                                                                                runtime-inputs =
-                                                                                                                                                    pkgs :
-                                                                                                                                                        [
-                                                                                                                                                            pkgs.coreutils
-                                                                                                                                                            pkgs.jq
-                                                                                                                                                            (
-                                                                                                                                                                _config.lazy-shell-application
-                                                                                                                                                                    {
-                                                                                                                                                                        mounts = { } ;
-                                                                                                                                                                        name = "recover" ;
-                                                                                                                                                                        post = null ;
-                                                                                                                                                                        runtime-inputs = builtins.getAttrs "runtime-inputs" ( identity ( value null ) ) ;
-                                                                                                                                                                        text = builtins.getAttrs "text" ( identity ( value null ) ) ;
-                                                                                                                                                                    }
-                                                                                                                                                            )
-                                                                                                                                                        ] ;
-                                                                                                                                                text =
-                                                                                                                                                    ''
-                                                                                                                                                        mapfile -t ARGUMENTS < <( jq -r '.arguments[]' /mounts/input )
-                                                                                                                                                        if jq --exit-status 'has("inputs") and (.inputs | has("standard"))' /mounts/input
-                                                                                                                                                        then
-                                                                                                                                                            if jq ".inputs.standard" | recovery "${ "$" }{ARGUMENTS[@]}" /mounts/input > /mounts/standard-input 2> /mounts/standard-error
-                                                                                                                                                            then
-                                                                                                                                                                STATUS="$?"
-                                                                                                                                                            else
-                                                                                                                                                                STATUS="$?"
-                                                                                                                                                            fi
-                                                                                                                                                        else
-                                                                                                                                                            if recovery "${ "$" }{ARGUMENTS[@]}" > /mounts/standard-input 2> /mounts/standard-error
-                                                                                                                                                            then
-                                                                                                                                                                STATUS="$?"
-                                                                                                                                                            else
-                                                                                                                                                                STATUS="$?"
-                                                                                                                                                            fi
-                                                                                                                                                        fi
-                                                                                                                                                        if [[ "$STATUS" == 0 ]] && [[ -n /mounts/standard-error ]]
-                                                                                                                                                        then
-                                                                                                                                                            rm --recursive --force /mounts/invalid-init/$INDEX
-                                                                                                                                                            ln --symbolic ${ release }/bin/release /mounts/release
-                                                                                                                                                        elif [[ "$STATUS" != 0 ]]
-                                                                                                                                                        then
-                                                                                                                                                            failure 1047459860543198 "$STATUS"
-                                                                                                                                                        elif [[ ! -n /mounts/standard-error ]]
-                                                                                                                                                        then
-                                                                                                                                                            failure 7398286386269768
-                                                                                                                                                        else
-                                                                                                                                                            failure 7006188970373349
-                                                                                                                                                        fi
-                                                                                                                                                    '' ;
-                                                                                                                                            } ;
-                                                                                                                        null =
-                                                                                                                            path : value :
-                                                                                                                                _config.lazy-shell-application
-                                                                                                                                    {
-                                                                                                                                        mounts =
-                                                                                                                                            {
-                                                                                                                                                invalid-init = { is-directory = true ; source = "/mounts/invalid-init" ; type = "bind" ; } ;
-                                                                                                                                                release = { is-directory = true ; source = "/mounts/release" ; type = "bind" ; } ;
-                                                                                                                                            } ;
-                                                                                                                                        name = "invalid-init" ;
-                                                                                                                                        post = null ;
-                                                                                                                                        runtime-inputs = pkgs : [ pkgs.coreutils ] ;
-                                                                                                                                        text =
-                                                                                                                                            ''
-                                                                                                                                                rm --recursive --force /mounts/invalid-init/$INDEX
-                                                                                                                                                ln --symbolic ${ release }/bin/release /mounts/release
-                                                                                                                                            '' ;
-                                                                                                                                    } ;
-                                                                                                                    }
-                                                                                                                    { default = null ; specified = recovery ; } ;
+                                                                                                                                            lambda =
+                                                                                                                                                path : value : ignore :
+                                                                                                                                                    let
+                                                                                                                                                        identity =
+                                                                                                                                                            {
+                                                                                                                                                                runtime-inputs ? null ,
+                                                                                                                                                                text ? null
+                                                                                                                                                            } :
+                                                                                                                                                                {
+                                                                                                                                                                    runtime-inputs = runtime-inputs ;
+                                                                                                                                                                    text = text ;
+                                                                                                                                                                } ;
+                                                                                                                                                        in
+                                                                                                                                                            _config.lazy-shell-application
+                                                                                                                                                                {
+                                                                                                                                                                    mounts =
+                                                                                                                                                                        {
+                                                                                                                                                                            input = { is-directory = true ; read-only = true ; source = "/mounts/input" ; type = "bind" ; } ;
+                                                                                                                                                                            invalid-init = { is-directory = true ; source = "/mounts/invalid-init" ; type = "bind" ; } ;
+                                                                                                                                                                            release = { is-directory = true ; source = "/mounts/release" ; type = "bind" ; } ;
+                                                                                                                                                                            standard-error = { is-directory = false ; type = "temporary" ; } ;
+                                                                                                                                                                            standard-output = { is-directory = false ; type = "temporary" ; } ;
+                                                                                                                                                                        } ;
+                                                                                                                                                                    name = "invalid-init" ;
+                                                                                                                                                                    runtime-inputs =
+                                                                                                                                                                        pkgs :
+                                                                                                                                                                            [
+                                                                                                                                                                                pkgs.coreutils
+                                                                                                                                                                                pkgs.jq
+                                                                                                                                                                                (
+                                                                                                                                                                                    _config.lazy-shell-application
+                                                                                                                                                                                        {
+                                                                                                                                                                                            mounts = { } ;
+                                                                                                                                                                                            name = "recover" ;
+                                                                                                                                                                                            post = null ;
+                                                                                                                                                                                            runtime-inputs = builtins.getAttrs "runtime-inputs" ( identity ( value null ) ) ;
+                                                                                                                                                                                            text = builtins.getAttrs "text" ( identity ( value null ) ) ;
+                                                                                                                                                                                        }
+                                                                                                                                                                                )
+                                                                                                                                                                            ] ;
+                                                                                                                                                                    text =
+                                                                                                                                                                        ''
+                                                                                                                                                                            mapfile -t ARGUMENTS < <( jq -r '.arguments[]' /mounts/input )
+                                                                                                                                                                            if jq --exit-status 'has("inputs") and (.inputs | has("standard"))' /mounts/input
+                                                                                                                                                                            then
+                                                                                                                                                                                if jq ".inputs.standard" | recovery "${ "$" }{ARGUMENTS[@]}" /mounts/input > /mounts/standard-input 2> /mounts/standard-error
+                                                                                                                                                                                then
+                                                                                                                                                                                    STATUS="$?"
+                                                                                                                                                                                else
+                                                                                                                                                                                    STATUS="$?"
+                                                                                                                                                                                fi
+                                                                                                                                                                            else
+                                                                                                                                                                                if recovery "${ "$" }{ARGUMENTS[@]}" > /mounts/standard-input 2> /mounts/standard-error
+                                                                                                                                                                                then
+                                                                                                                                                                                    STATUS="$?"
+                                                                                                                                                                                else
+                                                                                                                                                                                    STATUS="$?"
+                                                                                                                                                                                fi
+                                                                                                                                                                            fi
+                                                                                                                                                                            if [[ "$STATUS" == 0 ]] && [[ -n /mounts/standard-error ]]
+                                                                                                                                                                            then
+                                                                                                                                                                                rm --recursive --force /mounts/invalid-init/$INDEX
+                                                                                                                                                                                ln --symbolic ${ release }/bin/release /mounts/release
+                                                                                                                                                                            elif [[ "$STATUS" != 0 ]]
+                                                                                                                                                                            then
+                                                                                                                                                                                failure 1047459860543198 "$STATUS"
+                                                                                                                                                                            elif [[ ! -n /mounts/standard-error ]]
+                                                                                                                                                                            then
+                                                                                                                                                                                failure 7398286386269768
+                                                                                                                                                                            else
+                                                                                                                                                                                failure 7006188970373349
+                                                                                                                                                                            fi
+                                                                                                                                                                        '' ;
+                                                                                                                                                                } ;
+                                                                                                                                            null =
+                                                                                                                                                path : value :
+                                                                                                                                                    _config.lazy-shell-application
+                                                                                                                                                        {
+                                                                                                                                                            mounts =
+                                                                                                                                                                {
+                                                                                                                                                                    invalid-init = { is-directory = true ; source = "/mounts/invalid-init" ; type = "bind" ; } ;
+                                                                                                                                                                    release = { is-directory = true ; source = "/mounts/release" ; type = "bind" ; } ;
+                                                                                                                                                                } ;
+                                                                                                                                                            name = "invalid-init" ;
+                                                                                                                                                            post = null ;
+                                                                                                                                                            runtime-inputs = pkgs : [ pkgs.coreutils ] ;
+                                                                                                                                                            text =
+                                                                                                                                                                ''
+                                                                                                                                                                    rm --recursive --force /mounts/invalid-init/$INDEX
+                                                                                                                                                                    ln --symbolic ${ release }/bin/release /mounts/release
+                                                                                                                                                                '' ;
+                                                                                                                                                        } ;
+                                                                                                                                        }
+                                                                                                                                        { default = null ; specified = recovery ; } ;
+                                                                                                                                in
+                                                                                                                                    ''
+                                                                                                                                        ${ builtins.concatStringsSep "\n" ( _config.visitor { } { lambda = path : value : let x = value null ; in ''wrap ${ x } /mounts/invalid-init/${ builtins.toJSON path }/recovery.sh 0500 --replace INDEX "$INDEX"'' ; } recovery ) }
+                                                                                                                                        failure "$@"
+                                                                                                                                    '' ;
+                                                                                                                    } ;
                                                                                                             targets = targets ;
-                                                                                                        } ;
-                                                                                                release =
-                                                                                                    _config.lazy-shell-application
-                                                                                                        {
-                                                                                                            mounts = { input = { is-directory = false ; source = "/mount/input" ; type = "bind" ; } ; } ;
-                                                                                                            name = "release" ;
-                                                                                                            post = null ;
-                                                                                                            runtime-inputs = pkgs : [ ] ;
-                                                                                                            text =
-                                                                                                                ''
-                                                                                                                
-                                                                                                                '' ;
                                                                                                         } ;
                                                                                                 valid-init =
                                                                                                     _config.lazy-shell-application
@@ -206,9 +198,23 @@
                                                                                                             post = null ;
                                                                                                             runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
                                                                                                             text =
-                                                                                                                ''
-                                                                                                                    wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
-                                                                                                                '' ;
+                                                                                                                let
+                                                                                                                    release =
+                                                                                                                        _config.lazy-shell-application
+                                                                                                                            {
+                                                                                                                                mounts = { input = { is-directory = false ; source = "/mount/input" ; type = "bind" ; } ; } ;
+                                                                                                                                name = "release" ;
+                                                                                                                                post = null ;
+                                                                                                                                runtime-inputs = pkgs : [ ] ;
+                                                                                                                                text =
+                                                                                                                                    ''
+
+                                                                                                                                    '' ;
+                                                                                                                            } ;
+                                                                                                                    in
+                                                                                                                        ''
+                                                                                                                            wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
+                                                                                                                        '' ;
                                                                                                         } ;
                                                                                                 in
                                                                                                     _config.visitor
@@ -251,19 +257,8 @@
                                                                                                                                                             text = builtins.getAttr "text" ( identity ( value null ) ) ;
                                                                                                                                                         }
                                                                                                                                         )
-                                                                                                                                        (
-                                                                                                                                            _config.lazy-shell-application
-                                                                                                                                                {
-                                                                                                                                                    mounts = { invalid-init = { source = "/mounts/invalid-init" ; type = "bind" ; } ; } ;
-                                                                                                                                                    name = "invalid-init" ;
-                                                                                                                                                    post = null ;
-                                                                                                                                                    runtime-inputs = pkgs : [ ( _config.failure { } ) ] ;
-                                                                                                                                                    text =
-                                                                                                                                                        ''
-                                                                                                                                                            failure "$@"
-                                                                                                                                                        '' ;
-                                                                                                                                                }
-                                                                                                                                        )
+                                                                                                                                        invalid-init
+                                                                                                                                        valid-init
                                                                                                                                     ] ;
                                                                                                                             text =
                                                                                                                                 ''
@@ -289,10 +284,10 @@
                                                                                                                                     OBSERVED_TARGETS="$( find /mounts/mount -mindepth 1 -maxdepth 1 | LC_ALL=C sort )" || failure 5101453011608943
                                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ -s /mounts/standard-error ]] && [[ '${ expected-targets }' == "$OBSERVED_TARGETS" ]]
                                                                                                                                     then
-                                                                                                                                        ln --symbolic ${ release }/bin/release /mounts/release/$INDEX
+                                                                                                                                        valid-init
                                                                                                                                     elif [[ "$STATUS" != 0 ]]
                                                                                                                                     then
-                                                                                                                                        failure 9853943334807469
+                                                                                                                                        invalid-init 9853943334807469
                                                                                                                                     elif [[ ! -s /mounts/standard-error ]]
                                                                                                                                     then
                                                                                                                                         invalid-init 7230516165710518
