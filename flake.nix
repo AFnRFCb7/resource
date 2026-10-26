@@ -54,7 +54,7 @@
                                                                                 pkgs :
                                                                                     [
                                                                                         ( _config.failure { } )
-                                                                                        ( _config.sequential { } )
+                                                                                        ( _config.sequential { sequential-file = "${ resources-directory }/sequential.asc" ; sequential-lock = "${ resources-directory }/sequential.lock" ; } )
                                                                                         pkgs.coreutils
                                                                                         pkgs.flock
                                                                                         (
