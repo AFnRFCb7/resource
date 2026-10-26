@@ -503,10 +503,11 @@
                                                                                                                 command = builtins.elemAt commands index ;
                                                                                                                 transform =
                                                                                                                     {
-                                                                                                                        command ,
+                                                                                                                        runtimeInputs ,
                                                                                                                         standard-error ,
                                                                                                                         standard-output ,
-                                                                                                                        status
+                                                                                                                        status ,
+                                                                                                                        text
                                                                                                                     } :
                                                                                                                         _pkgs.writeShellApplication
                                                                                                                             {
@@ -515,16 +516,11 @@
                                                                                                                                     [
                                                                                                                                         ( _config.failure { } )
                                                                                                                                         (
-                                                                                                                                            _config.lazy-shell-resource
+                                                                                                                                            _pkgs.writeShellApplication
                                                                                                                                                 {
-                                                                                                                                                    init = init ;
-                                                                                                                                                    gc-roots-directory = gc-roots-directory ;
-                                                                                                                                                    release = release ;
-                                                                                                                                                    resources-directory = resources-directory ;
-                                                                                                                                                }
-                                                                                                                                                {
-                                                                                                                                                    error = error ;
-                                                                                                                                                    name = name ;
+                                                                                                                                                    name = "command" ;
+                                                                                                                                                    runtimeInputs = runtimeInputs ;
+                                                                                                                                                    text = text ;
                                                                                                                                                 }
                                                                                                                                         )
                                                                                                                                     ] ;
@@ -535,7 +531,7 @@
                                                                                                                                         echo -e "${ standard-output }" > "$EXPECTED/standard-output"
                                                                                                                                         echo -e "${ builtins.toString status }" > "$EXPECTED/status"
                                                                                                                                         OBSERVED="$( mktemp --directory )" || failure 9132197145496489
-                                                                                                                                        if ${ command } > "$OBSERVED/standard-output" 2> "$OBSERVED/standard-error"
+                                                                                                                                        if command > "$OBSERVED/standard-output" 2> "$OBSERVED/standard-error"
                                                                                                                                         then
                                                                                                                                             echo -e "$OBSERVED/status"
                                                                                                                                         else
