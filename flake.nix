@@ -287,10 +287,10 @@
                                                                                                                         {
                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                             name = "init" ;
-                                                                                                                            runtimeInputs = [ ] ;
+                                                                                                                            runtimeInputs = [ valid-init ] ;
                                                                                                                             text =
                                                                                                                                 ''
-                                                                                                                                    ln --symbolic ${ release }/bin/release /mounts/release/$INDEX
+                                                                                                                                    valid-init
                                                                                                                                 '' ;
                                                                                                                         } ;
                                                                                                         }
