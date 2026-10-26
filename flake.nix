@@ -453,6 +453,13 @@
                                             trip ,
                                             visitor
                                         } :
+                                        {
+                                            error ,
+                                            init ,
+                                            gc-root-directory ,
+                                            release ,
+                                            resources-directory
+                                        } :
                                         commands :
                                             {
                                                 obviated-by = obviated-by ;
@@ -483,7 +490,20 @@
                                                                                                             pkgs.writeShellApplication
                                                                                                                 {
                                                                                                                     name = "command-${ builtins.toString index }" ;
-                                                                                                                    runtimeInputs = [ ( _config.failure { } )] ;
+                                                                                                                    runtimeInputs =
+                                                                                                                        [
+                                                                                                                            ( _config.failure { } )
+                                                                                                                            (
+                                                                                                                                _config.lazy-shell-resource
+                                                                                                                                    {
+                                                                                                                                        error = error ;
+                                                                                                                                        init = init ;
+                                                                                                                                        gc-root-directory = gc-root-directory ;
+                                                                                                                                        release = release ;
+                                                                                                                                        resources-directory = resources-directory ;
+                                                                                                                                    }
+                                                                                                                            )
+                                                                                                                        ] ;
                                                                                                                     text =
                                                                                                                         ''
                                                                                                                             EXPECTED="$( mktemp --directory )" || failure 0528168347966815
