@@ -34,6 +34,7 @@
                                                                             mounts =
                                                                                 {
                                                                                     canonical = { is-directory = true ; source = "${ resources-directory }/canonical" ; type = "bind" ; } ;
+                                                                                    flag = { is-directory = true ; source = "${ resources-directory }/flag" ; type = "bind" ; } ;
                                                                                     invalid-init = { is-directory = true ; source = "${ resources-directory }/invalid-init" ; type = "bind" ; } ;
                                                                                     invalid-release = { is-directory = true ; source = "${ resources-directory }/invalid-release" ; type = "bind" ; } ;
                                                                                     input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
@@ -195,7 +196,21 @@
                                                                                                         {
                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                             name = "valid-init" ;
-                                                                                                            post = null ;
+                                                                                                            post =
+                                                                                                                let
+                                                                                                                    application =
+                                                                                                                        _config.lazy-shell-application
+                                                                                                                            {
+                                                                                                                                mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
+                                                                                                                                name = "post" ;
+                                                                                                                                post = null ;
+                                                                                                                                pkgs = pkgs : [ ] ;
+                                                                                                                                text =
+                                                                                                                                    ''
+                                                                                                                                        "/release/$INDEX" ;
+                                                                                                                                    '' ;
+                                                                                                                            } ;
+                                                                                                                    in "${ application }/bin/post" ;
                                                                                                             runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
                                                                                                             text =
                                                                                                                 let
@@ -213,12 +228,23 @@
                                                                                                                             in
                                                                                                                                 _config.lazy-shell-application
                                                                                                                                     {
-                                                                                                                                        mounts = { } ;
+                                                                                                                                        mounts =
+                                                                                                                                            {
+                                                                                                                                                flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
+                                                                                                                                            } ;
                                                                                                                                         name = "release" ;
                                                                                                                                         post = null ;
-                                                                                                                                        runtime-inputs = pkgs : [ ] ;
+                                                                                                                                        runtime-inputs = pkgs : [ pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                                         text =
                                                                                                                                             ''
+                                                                                                                                                rm /mounts/flag/$INDEX
+                                                                                                                                                find /mounts/pids/$INDEX -mindepth 1 -maxdepth 1 | while read -r PID_FILE
+                                                                                                                                                do
+                                                                                                                                                    while [[ -f "$PID_FILE" ]]
+                                                                                                                                                    do
+                                                                                                                                                        sleep 1
+                                                                                                                                                    done
+                                                                                                                                                done
                                                                                                                                             '' ;
                                                                                                                                     } ;
                                                                                                                     in
@@ -335,6 +361,7 @@
                                                                                     then
                                                                                         MOUNT="$( readlink "/mounts/canonical/$HASH" )" || failure 9157868575302544
                                                                                         INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
+                                                                                        touch "/mounts/flag/$INDEX"
                                                                                         mkdir --parents "/mounts/pids/$INDEX"
                                                                                         echo "$PID" > "/mounts/pids/$INDEX/$PID"
                                                                                         chmod 0400 "/mounts/pids/$INDEX/$PID"
@@ -343,6 +370,7 @@
                                                                                     else
                                                                                         INDEX="$( sequential )" || failure 6590902953585183
                                                                                         export INDEX
+                                                                                        touch "/mounts/flag/$INDEX"
                                                                                         MOUNT="/mounts/mounts/$INDEX"
                                                                                         mkdir --parents "$MOUNT"
                                                                                         if init
