@@ -457,39 +457,10 @@
                                                                                         (
                                                                                             pkgs.writeShellApplication
                                                                                                 {
-                                                                                                    name = "pre-test" ;
+                                                                                                    name = "test-script" ;
                                                                                                     runtimeInput = [ ] ;
                                                                                                     text =
                                                                                                         ''
-                                                                                                        '' ;
-                                                                                                }
-                                                                                        )
-                                                                                        (
-                                                                                            pkgs.writeShellApplication
-                                                                                                {
-                                                                                                    name = "pre-test" ;
-                                                                                                    runtimeInputs = [ implementation pkgs.coreutils ] ;
-                                                                                                    text =
-                                                                                                        ''
-                                                                                                            mkdir --parents /build/expected
-                                                                                                            mkdir --parents /build/observed
-                                                                                                            if ${ invocation } > /build/observed/standard-output 2> /build/observed/standard-error
-                                                                                                            then
-                                                                                                                echo "$?" > /build/observed/status
-                                                                                                            else
-                                                                                                                echo "$?" > /build/observed/status
-                                                                                                            fi
-                                                                                                        '' ;
-                                                                                                }
-                                                                                        )
-                                                                                        (
-                                                                                            pkgs.writeShellApplication
-                                                                                                {
-                                                                                                    name = "test-script" ;
-                                                                                                    runtimeInputs = [ pkgs.coreutils ] ;
-                                                                                                    text =
-                                                                                                        ''
-
                                                                                                         '' ;
                                                                                                 }
                                                                                         )
