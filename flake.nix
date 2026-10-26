@@ -487,7 +487,7 @@
                                                                                                                     gc-roots-directory = gc-roots-directory ;
                                                                                                                     init = init ;
                                                                                                                     resources-directory = resources-directory ;
-                                                                                                                    release = releas ;
+                                                                                                                    release = release ;
                                                                                                                 }
                                                                                                                 {
                                                                                                                     error = error ;
