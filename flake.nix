@@ -24,7 +24,7 @@
                                                             default =
                                                                 {
                                                                     init ,
-                                                                    gc-root-directory ,
+                                                                    gc-roots-directory ,
                                                                     release ,
                                                                     resources-directory
                                                                 } @primary :
@@ -42,7 +42,7 @@
                                                                                     invalid-init = { is-directory = true ; source = "${ resources-directory }/invalid-init" ; type = "bind" ; } ;
                                                                                     invalid-release = { is-directory = true ; source = "${ resources-directory }/invalid-release" ; type = "bind" ; } ;
                                                                                     input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
-                                                                                    gc-root = { is-directory = true ; source = gc-root-directory ; type = "bind" ; } ;
+                                                                                    gc-root = { is-directory = true ; source = gc-roots-directory ; type = "bind" ; } ;
                                                                                     locks = { is-directory = true ; source = "${ resources-directory }/locks" ; type = "bind" ; } ;
                                                                                     mounts = { is-directory = true ; source = "${ resources-directory }/mounts" ; type = "bind" ; } ;
                                                                                     pids = { is-directory = true ; source = "${ resources-directory }/pids" ; type = "bind" ; } ;
