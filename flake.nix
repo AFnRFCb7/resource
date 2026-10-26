@@ -457,15 +457,10 @@
                                             visitor
                                         } :
                                         {
-                                            init ,
                                             gc-roots-directory ,
-                                            release ,
                                             resources-directory
                                         } :
-                                        {
-                                            error ,
-                                            name
-                                        } :
+                                        resources :
                                         commands :
                                             {
                                                 obviated-by = obviated-by ;
@@ -483,6 +478,23 @@
                                                                                 config.environment.systemPackages =
                                                                                     builtins.concatLists
                                                                                         [
+                                                                                            (
+                                                                                                let
+                                                                                                    mapper =
+                                                                                                        name : { error , init , release } :
+                                                                                                            _config.lazy-shell-resource
+                                                                                                                {
+                                                                                                                    gc-roots-directory = gc-roots-directory ;
+                                                                                                                    init = init ;
+                                                                                                                    resources-directory = resources-directory ;
+                                                                                                                    release = releas ;
+                                                                                                                }
+                                                                                                                {
+                                                                                                                    error = error ;
+                                                                                                                    name = name ;
+                                                                                                                } ;
+                                                                                                    in builtins.attrValues ( builtins.mapAttrs mapper resources )
+                                                                                            )
                                                                                             (
                                                                                                 let
                                                                                                     generator =
