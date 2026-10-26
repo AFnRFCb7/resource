@@ -458,7 +458,7 @@
                                                     nixosTest
                                                         {
                                                             name = "nixos-test" ;
-                                                            node.client =
+                                                            nodes.client =
                                                                 { config , pkgs , ... } :
                                                                     let
                                                                         _config = config-identity config ;
