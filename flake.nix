@@ -434,6 +434,9 @@
                                             nixosTest ,
                                             obviated-by
                                         } :
+                                        {
+                                            invocation
+                                        } :
                                             {
                                                 obviated-by = obviated-by ;
                                                 test =
@@ -441,11 +444,54 @@
                                                         {
                                                             name = "nixos-test" ;
                                                             node.client =
-                                                                {
-                                                                    config.environment.systemPackages =
-                                                                        [
-                                                                        ] ;
-                                                                } ;
+                                                                { ... } :
+                                                                    let
+                                                                        _pkgs = pkgs-identity pkgs ;
+                                                                        in
+                                                                            {
+                                                                                config.environment.systemPackages =
+                                                                                    [
+                                                                                        (
+                                                                                            pkgs.writeShellApplication
+                                                                                                {
+                                                                                                    name = "pre-test" ;
+                                                                                                    runtimeInput = [ ] ;
+                                                                                                    text =
+                                                                                                        ''
+                                                                                                        '' ;
+                                                                                                }
+                                                                                        )
+                                                                                        (
+                                                                                            pkgs.writeShellApplication
+                                                                                                {
+                                                                                                    name = "pre-test" ;
+                                                                                                    runtimeInputs = [ implementation pkgs.coreutils ] ;
+                                                                                                    text =
+                                                                                                        ''
+                                                                                                            mkdir --parents /build/expected
+                                                                                                            mkdir --parents /build/observed
+                                                                                                            if ${ invocation } > /build/observed/standard-output 2> /build/observed/standard-error
+                                                                                                            then
+                                                                                                                echo "$?" > /build/observed/status
+                                                                                                            else
+                                                                                                                echo "$?" > /build/observed/status
+                                                                                                            fi
+                                                                                                        '' ;
+                                                                                                }
+                                                                                        )
+                                                                                        (
+                                                                                            pkgs.writeShellApplication
+                                                                                                {
+                                                                                                    name = "test-script" ;
+                                                                                                    runtimeInputs = [ pkgs.coreutils ] ;
+                                                                                                    text =
+                                                                                                        ''
+
+                                                                                                        '' ;
+                                                                                                }
+                                                                                        )
+                                                                                    ] ;
+                                                                            } ;
                                                             testScript =
                                                                 ''
                                                                 '' ;
