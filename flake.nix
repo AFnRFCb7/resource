@@ -62,6 +62,7 @@
                                                                                                     text =
                                                                                                         ''
                                                                                                         '' ;
+                                                                                                    variables = { } ;
                                                                                                 }
                                                                                         )
                                                                                         (
@@ -154,6 +155,7 @@
                                                                                                                                                                     failure 7006188970373349
                                                                                                                                                                 fi
                                                                                                                                                             '' ;
+                                                                                                                                                        variables = { } ;
                                                                                                                                                     } ;
                                                                                                                                 null =
                                                                                                                                     path : value :
@@ -172,6 +174,7 @@
                                                                                                                                                         rm --recursive --force /mounts/invalid-init/$INDEX
                                                                                                                                                         ln --symbolic ${ release }/bin/release /mounts/release
                                                                                                                                                     '' ;
+                                                                                                                                                variables = { } ;
                                                                                                                                             } ;
                                                                                                                             }
                                                                                                                             { default = null ; specified = recovery ; } ;
@@ -274,6 +277,7 @@
                                                                                                                                                     fi
                                                                                                                                                 done
                                                                                                                                             '' ;
+                                                                                                                                        variables = { } ;
                                                                                                                                     } ;
                                                                                                                     in
                                                                                                                         ''
