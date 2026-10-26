@@ -418,6 +418,7 @@
                                                                                         fi
                                                                                     fi
                                                                                 '' ;
+                                                                            variables = { } ;
                                                                         } ;
                                                             type = _lib.types.functionTo _lib.types.package ;
                                                         } ;
