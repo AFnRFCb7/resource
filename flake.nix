@@ -527,6 +527,10 @@
                                                                                                                                 echo -e "$OBSERVED/status"
                                                                                                                             fi
                                                                                                                             diff --unified "$EXPECTED" "$OBSERVED"
+                                                                                                                            if [[ ! -d "$OBSERVED" ]]
+                                                                                                                            then
+                                                                                                                                failure 9115583286236609
+                                                                                                                            fi
                                                                                                                         '' ;
                                                                                                                 } ;
                                                                                                     in transform command ;
