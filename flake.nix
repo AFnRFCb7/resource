@@ -481,7 +481,7 @@
                                                                                             (
                                                                                                 let
                                                                                                     mapper =
-                                                                                                        name : { init , gc-roots-directory , release , error } :
+                                                                                                        name : { init , release , error } :
                                                                                                             _config.lazy-shell-resource
                                                                                                                 {
                                                                                                                     init = init ;
