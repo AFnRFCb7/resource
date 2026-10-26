@@ -220,7 +220,9 @@
                                                                                                             post = null ;
                                                                                                             runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
                                                                                                             text =
-
+                                                                                                                ''
+                                                                                                                    wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
+                                                                                                                '' ;
                                                                                                         } ;
                                                                                                 in
                                                                                                     _config.visitor
