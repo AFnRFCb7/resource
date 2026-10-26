@@ -546,8 +546,15 @@
                                                                                                                     runtimeInputs = [ pkgs.findutils ] ;
                                                                                                                     text =
                                                                                                                         ''
-                                                                                                                            find ${ gc-roots-directory } -mindepth 1 -exec failure 5361527405190707 {} \;
-                                                                                                                            find ${ resources-directory } -mindepth 1 -exec failure 9768190112280464 {} \;
+                                                                                                                            if [[ -d ${ gc-roots-directory } ]]
+                                                                                                                            then
+                                                                                                                                find ${ gc-roots-directory } -mindepth 1 -exec failure 5361527405190707 {} \;
+                                                                                                                            fi
+                                                                                                                            if [[ -d ${ resources-directory } ]]
+                                                                                                                            then
+                                                                                                                                find ${ resources-directory } -mindepth 1 -exec failure 9768190112280464 {} \;
+                                                                                                                            fi
+
                                                                                                                         '' ;
                                                                                                                 }
                                                                                                         )
