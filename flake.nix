@@ -525,8 +525,19 @@
                                                                                 imports = [ failure lazy-shell-application trip visitor ] ;
                                                                             } ;
                                                             testScript =
-                                                                ''
-                                                                '' ;
+                                                                builtins.concatLists
+                                                                    [
+                                                                        [
+                                                                            ''
+                                                                                client.wait_for_unit("multi-user.target")
+                                                                            ''
+                                                                        ]
+                                                                        (
+                                                                            let
+                                                                                generator = index : ''client.succeed("command-${ builtins.toString index }")'' ;
+                                                                                in builtins.genList generator ( builtins.length commands )
+                                                                        )
+                                                                    ] ;
                                                         } ;
                                                 type = "lazy-shell-resource" ;
                                             } ;
