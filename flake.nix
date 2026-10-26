@@ -75,6 +75,17 @@
                                                                                                     } :
                                                                                                         {
                                                                                                             action = action ;
+                                                                                                            invalid-init =
+                                                                                                                _config.lazy-shell-application
+                                                                                                                    {
+                                                                                                                        mounts = { invalid-init = { source = "/mounts/invalid-init" ; type = "bind" ; } ; } ;
+                                                                                                                        name = "invalid-init" ;
+                                                                                                                        post = null ;
+                                                                                                                        runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
+                                                                                                                        text =
+                                                                                                                            ''
+                                                                                                                            '' ;
+                                                                                                                    } ;
                                                                                                             recovery =
                                                                                                                 _config.visitor
                                                                                                                     { }
@@ -190,7 +201,7 @@
                                                                                                 valid-init =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
-                                                                                                            mounts = { } ;
+                                                                                                            mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                             name = "valid-init" ;
                                                                                                             post = null ;
                                                                                                             runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
