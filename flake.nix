@@ -537,7 +537,7 @@
                                                                                         in
                                                                                             builtins.concatLists
                                                                                                 [
-                                                                                                    ( builtins.genList generator ( builtins.length commands ) )
+                                                                                                    # ( builtins.genList generator ( builtins.length commands ) )
                                                                                                     [
                                                                                                         (
                                                                                                             _pkgs.writeShellApplication
