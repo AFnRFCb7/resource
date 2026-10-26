@@ -231,19 +231,46 @@
                                                                                                                                         mounts =
                                                                                                                                             {
                                                                                                                                                 flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
+                                                                                                                                                pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                                                                             } ;
                                                                                                                                         name = "release" ;
                                                                                                                                         post = null ;
-                                                                                                                                        runtime-inputs = pkgs : [ pkgs.coreutils pkgs.findutils pkgs.flock ] ;
+                                                                                                                                        runtime-inputs = pkgs : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.xz ] ;
                                                                                                                                         text =
                                                                                                                                             ''
-                                                                                                                                                rm /mounts/flag/$INDEX
-                                                                                                                                                find /mounts/pids/$INDEX -mindepth 1 -maxdepth 1 | while read -r PID_FILE
+                                                                                                                                                while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                 do
-                                                                                                                                                    while [[ -f "$PID_FILE" ]]
+                                                                                                                                                    rm "/mounts/flag/$INDEX"
+                                                                                                                                                    find /mounts/pids/$INDEX -mindepth 1 -maxdepth 1 | while read -r PID_FILE
                                                                                                                                                     do
-                                                                                                                                                        sleep 1
+                                                                                                                                                        while [[ -f "$PID_FILE" ]]
+                                                                                                                                                        do
+                                                                                                                                                            sleep 1
+                                                                                                                                                        done
                                                                                                                                                     done
+                                                                                                                                                    EXPECTED="${ resources-directory }/mounts/$INDEX"
+                                                                                                                                                    find /mounts/gc-roots -type L | while read -r CANDIDATE
+                                                                                                                                                    do
+                                                                                                                                                        OBSERVED="$( readlink "$CANDIDATE" )" || failure 6653347034509208
+                                                                                                                                                        if [[ "$EXPECTED" == "$OBSERVED" ]]
+                                                                                                                                                        then
+                                                                                                                                                            while [[ -L "$CANDIDATE" ]]
+                                                                                                                                                            do
+                                                                                                                                                                sleep 1
+                                                                                                                                                            done
+                                                                                                                                                        fi
+                                                                                                                                                    done
+                                                                                                                                                    exec 196> "/mounts/lock/$INDEX"
+                                                                                                                                                    flock -x 196
+                                                                                                                                                    if [[ -f "/mounts/flag/$INDEX" ]]
+                                                                                                                                                    then
+                                                                                                                                                        flock -u 196
+                                                                                                                                                    else
+                                                                                                                                                        FILES=( "/mounts/flag/$INDEX" "/mounts/mounts/$INDEX" "/mounts/pid/$INDEX" )
+                                                                                                                                                        ARCHIVE_FILE="$( mktemp --suffix ".tar.xz" --dry-run /mounts/temporary/XXXXXXXX )" || failure 9874147964151582
+                                                                                                                                                        tar --create --xz --file "$ARCHIVE_FILE" "${ "$" }{FILES[@]}"
+                                                                                                                                                        rm --recursive --force "${ "$" }{FILES[@]}"
+                                                                                                                                                    fi
                                                                                                                                                 done
                                                                                                                                             '' ;
                                                                                                                                     } ;
