@@ -503,7 +503,7 @@
                                                                                                                                 _config.lazy-shell-resource
                                                                                                                                     {
                                                                                                                                         init = init ;
-                                                                                                                                        gc-root-directory = gc-root-directory ;
+                                                                                                                                        gc-roots-directory = gc-roots-directory ;
                                                                                                                                         release = release ;
                                                                                                                                         resources-directory = resources-directory ;
                                                                                                                                     }
