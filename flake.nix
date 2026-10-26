@@ -449,7 +449,9 @@
                                             failure ,
                                             lazy-shell-application ,
                                             nixosTest ,
-                                            obviated-by
+                                            obviated-by ,
+                                            trip ,
+                                            visitor
                                         } :
                                         commands :
                                             {
@@ -500,7 +502,7 @@
                                                                                                                 } ;
                                                                                                     in transform command ;
                                                                                         in builtins.genList ( builtins.length commands ) ;
-                                                                                imports = [ failure lazy-shell-application ] ;
+                                                                                imports = [ failure lazy-shell-application trip visitor ] ;
                                                                             } ;
                                                             testScript =
                                                                 ''
