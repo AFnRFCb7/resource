@@ -446,12 +446,12 @@
                                 {
                                     check =
                                         {
+                                            failure ,
+                                            lazy-shell-application ,
                                             nixosTest ,
                                             obviated-by
                                         } :
-                                        {
-                                            commands
-                                        } :
+                                        commands :
                                             {
                                                 obviated-by = obviated-by ;
                                                 test =
@@ -459,7 +459,7 @@
                                                         {
                                                             name = "nixos-test" ;
                                                             node.client =
-                                                                { pkgs , ... } :
+                                                                { config , pkgs , ... } :
                                                                     let
                                                                         _config = config-identity config ;
                                                                         _pkgs = pkgs-identity pkgs ;
@@ -500,6 +500,7 @@
                                                                                                                 } ;
                                                                                                     in transform command ;
                                                                                         in builtins.genList ( builtins.length commands ) ;
+                                                                                imports = [ failure lazy-shell-application ] ;
                                                                             } ;
                                                             testScript =
                                                                 ''
