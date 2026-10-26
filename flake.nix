@@ -23,12 +23,15 @@
                                                         {
                                                             default =
                                                                 {
-                                                                    error ,
                                                                     init ,
                                                                     gc-root-directory ,
                                                                     release ,
                                                                     resources-directory
                                                                 } @primary :
+                                                                {
+                                                                    error ,
+                                                                    name
+                                                                } :
                                                                     _config.lazy-shell-application
                                                                         {
                                                                             mounts =
@@ -45,7 +48,7 @@
                                                                                     pids = { is-directory = true ; source = "${ resources-directory }/pids" ; type = "bind" ; } ;
                                                                                     release = { source = "${ resources-directory }/release" ; type = "bind" ; } ;
                                                                                 } ;
-                                                                            name = "init" ;
+                                                                            name = name ;
                                                                             post = null ;
                                                                             runtime-inputs =
                                                                                 pkgs :
@@ -454,11 +457,14 @@
                                             visitor
                                         } :
                                         {
-                                            error ,
                                             init ,
                                             gc-root-directory ,
                                             release ,
                                             resources-directory
+                                        } :
+                                        {
+                                            error ,
+                                            name
                                         } :
                                         commands :
                                             {
@@ -487,7 +493,7 @@
                                                                                                             standard-output ,
                                                                                                             status
                                                                                                         } :
-                                                                                                            pkgs.writeShellApplication
+                                                                                                            _pkgs.writeShellApplication
                                                                                                                 {
                                                                                                                     name = "command-${ builtins.toString index }" ;
                                                                                                                     runtimeInputs =
@@ -496,11 +502,14 @@
                                                                                                                             (
                                                                                                                                 _config.lazy-shell-resource
                                                                                                                                     {
-                                                                                                                                        error = error ;
                                                                                                                                         init = init ;
                                                                                                                                         gc-root-directory = gc-root-directory ;
                                                                                                                                         release = release ;
                                                                                                                                         resources-directory = resources-directory ;
+                                                                                                                                    }
+                                                                                                                                    {
+                                                                                                                                        error = error ;
+                                                                                                                                        name = name ;
                                                                                                                                     }
                                                                                                                             )
                                                                                                                         ] ;
@@ -521,7 +530,25 @@
                                                                                                                         '' ;
                                                                                                                 } ;
                                                                                                     in transform command ;
-                                                                                        in builtins.genList generator ( builtins.length commands ) ;
+                                                                                        in
+                                                                                            builtins.concatLists
+                                                                                                [
+                                                                                                    ( builtins.genList generator ( builtins.length commands ) )
+                                                                                                    [
+                                                                                                        (
+                                                                                                            _pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                    name = "terminal" ;
+                                                                                                                    runtimeInputs = [ pkgs.findutils ] ;
+                                                                                                                    text =
+                                                                                                                        ''
+                                                                                                                            find ${ gc-roots-directory } -mindepth 1 -exec failure 5361527405190707 {} \;
+                                                                                                                            find ${ resources-directory } -mindepth 1 -exec failure 9768190112280464 {} \;
+                                                                                                                        '' ;
+                                                                                                                }
+                                                                                                        )
+                                                                                                    ]
+                                                                                                ] ;
                                                                                 imports = [ failure lazy-shell-application trip visitor ] ;
                                                                             } ;
                                                             testScript =
@@ -540,6 +567,11 @@
                                                                                         generator = index : ''client.succeed("command-${ builtins.toString index }")'' ;
                                                                                         in builtins.genList generator ( builtins.length commands )
                                                                                 )
+                                                                                [
+                                                                                    ''
+                                                                                        client.succeed("terminal")
+                                                                                    ''
+                                                                                ]
                                                                             ]
                                                                     ) ;
                                                         } ;
