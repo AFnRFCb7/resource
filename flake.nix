@@ -501,7 +501,7 @@
                                                                                                                         '' ;
                                                                                                                 } ;
                                                                                                     in transform command ;
-                                                                                        in builtins.genList ( builtins.length commands ) ;
+                                                                                        in [] ;
                                                                                 imports = [ failure lazy-shell-application trip visitor ] ;
                                                                             } ;
                                                             testScript =
