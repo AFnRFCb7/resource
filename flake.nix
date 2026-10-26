@@ -481,85 +481,86 @@
                                                                         in
                                                                             {
                                                                                 config.environment.systemPackages =
-                                                                                    let
-                                                                                        generator =
-                                                                                            index :
+                                                                                    builtins.concatLists
+                                                                                        [
+                                                                                            (
                                                                                                 let
-                                                                                                    command = builtins.elemAt commands index ;
-                                                                                                    transform =
+                                                                                                    generator =
+                                                                                                        index :
+                                                                                                            let
+                                                                                                                command = builtins.elemAt commands index ;
+                                                                                                                transform =
+                                                                                                                    {
+                                                                                                                        command ,
+                                                                                                                        standard-error ,
+                                                                                                                        standard-output ,
+                                                                                                                        status
+                                                                                                                    } :
+                                                                                                                        _pkgs.writeShellApplication
+                                                                                                                            {
+                                                                                                                                name = "command-${ builtins.toString index }" ;
+                                                                                                                                runtimeInputs =
+                                                                                                                                    [
+                                                                                                                                        ( _config.failure { } )
+                                                                                                                                        (
+                                                                                                                                            _config.lazy-shell-resource
+                                                                                                                                                {
+                                                                                                                                                    init = init ;
+                                                                                                                                                    gc-roots-directory = gc-roots-directory ;
+                                                                                                                                                    release = release ;
+                                                                                                                                                    resources-directory = resources-directory ;
+                                                                                                                                                }
+                                                                                                                                                {
+                                                                                                                                                    error = error ;
+                                                                                                                                                    name = name ;
+                                                                                                                                                }
+                                                                                                                                        )
+                                                                                                                                    ] ;
+                                                                                                                                text =
+                                                                                                                                    ''
+                                                                                                                                        EXPECTED="$( mktemp --directory )" || failure 0528168347966815
+                                                                                                                                        echo -e "${ standard-error }" > "$EXPECTED/standard-error"
+                                                                                                                                        echo -e "${ standard-output }" > "$EXPECTED/standard-output"
+                                                                                                                                        echo -e "${ builtins.toString status }" > "$EXPECTED/status"
+                                                                                                                                        OBSERVED="$( mktemp --directory )" || failure 9132197145496489
+                                                                                                                                        if ${ command } > "$OBSERVED/standard-output" 2> "$OBSERVED/standard-error"
+                                                                                                                                        then
+                                                                                                                                            echo -e "$OBSERVED/status"
+                                                                                                                                        else
+                                                                                                                                            echo -e "$OBSERVED/status"
+                                                                                                                                        fi
+                                                                                                                                        diff --unified "$EXPECTED" "$OBSERVED"
+                                                                                                                                        if [[ ! -d "$OBSERVED" ]]
+                                                                                                                                        then
+                                                                                                                                            failure 9115583286236609
+                                                                                                                                        fi
+                                                                                                                                    '' ;
+                                                                                                                            } ;
+                                                                                                                in transform command ;
+                                                                                                in builtins.genList generator ( builtins.length commands )
+                                                                                            )
+                                                                                            [
+                                                                                                (
+                                                                                                    _pkgs.writeShellApplication
                                                                                                         {
-                                                                                                            command ,
-                                                                                                            standard-error ,
-                                                                                                            standard-output ,
-                                                                                                            status
-                                                                                                        } :
-                                                                                                            _pkgs.writeShellApplication
-                                                                                                                {
-                                                                                                                    name = "command-${ builtins.toString index }" ;
-                                                                                                                    runtimeInputs =
-                                                                                                                        [
-                                                                                                                            ( _config.failure { } )
-                                                                                                                            (
-                                                                                                                                _config.lazy-shell-resource
-                                                                                                                                    {
-                                                                                                                                        init = init ;
-                                                                                                                                        gc-roots-directory = gc-roots-directory ;
-                                                                                                                                        release = release ;
-                                                                                                                                        resources-directory = resources-directory ;
-                                                                                                                                    }
-                                                                                                                                    {
-                                                                                                                                        error = error ;
-                                                                                                                                        name = name ;
-                                                                                                                                    }
-                                                                                                                            )
-                                                                                                                        ] ;
-                                                                                                                    text =
-                                                                                                                        ''
-                                                                                                                            EXPECTED="$( mktemp --directory )" || failure 0528168347966815
-                                                                                                                            echo -e "${ standard-error }" > "$EXPECTED/standard-error"
-                                                                                                                            echo -e "${ standard-output }" > "$EXPECTED/standard-output"
-                                                                                                                            echo -e "${ builtins.toString status }" > "$EXPECTED/status"
-                                                                                                                            OBSERVED="$( mktemp --directory )" || failure 9132197145496489
-                                                                                                                            if ${ command } > "$OBSERVED/standard-output" 2> "$OBSERVED/standard-error"
-                                                                                                                            then
-                                                                                                                                echo -e "$OBSERVED/status"
-                                                                                                                            else
-                                                                                                                                echo -e "$OBSERVED/status"
-                                                                                                                            fi
-                                                                                                                            diff --unified "$EXPECTED" "$OBSERVED"
-                                                                                                                            if [[ ! -d "$OBSERVED" ]]
-                                                                                                                            then
-                                                                                                                                failure 9115583286236609
-                                                                                                                            fi
-                                                                                                                        '' ;
-                                                                                                                } ;
-                                                                                                    in transform command ;
-                                                                                        in
-                                                                                            builtins.concatLists
-                                                                                                [
-                                                                                                    ( builtins.genList generator ( builtins.length commands ) )
-                                                                                                    [
-                                                                                                        (
-                                                                                                            _pkgs.writeShellApplication
-                                                                                                                {
-                                                                                                                    name = "terminal" ;
-                                                                                                                    runtimeInputs = [ pkgs.findutils ] ;
-                                                                                                                    text =
-                                                                                                                        ''
-                                                                                                                            if [[ -d ${ gc-roots-directory } ]]
-                                                                                                                            then
-                                                                                                                                find ${ gc-roots-directory } -mindepth 1 -exec failure 5361527405190707 {} \;
-                                                                                                                            fi
-                                                                                                                            if [[ -d ${ resources-directory } ]]
-                                                                                                                            then
-                                                                                                                                find ${ resources-directory } -mindepth 1 -exec failure 9768190112280464 {} \;
-                                                                                                                            fi
+                                                                                                            name = "terminal" ;
+                                                                                                            runtimeInputs = [ pkgs.findutils ] ;
+                                                                                                            text =
+                                                                                                                ''
+                                                                                                                    if [[ -d ${ gc-roots-directory } ]]
+                                                                                                                    then
+                                                                                                                        find ${ gc-roots-directory } -mindepth 1 -exec failure 5361527405190707 {} \;
+                                                                                                                    fi
+                                                                                                                    if [[ -d ${ resources-directory } ]]
+                                                                                                                    then
+                                                                                                                        find ${ resources-directory } -mindepth 1 -exec failure 9768190112280464 {} \;
+                                                                                                                    fi
 
-                                                                                                                        '' ;
-                                                                                                                }
-                                                                                                        )
-                                                                                                    ]
-                                                                                                ] ;
+                                                                                                                '' ;
+                                                                                                        }
+                                                                                                )
+                                                                                            ]
+                                                                                        ] ;
                                                                                 imports = [ failure implementation lazy-shell-application trip visitor ] ;
                                                                             } ;
                                                             testScript =
