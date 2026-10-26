@@ -454,6 +454,7 @@
                                             nixosTest ,
                                             obviated-by ,
                                             trip ,
+                                            sequential ,
                                             visitor
                                         } :
                                         {
@@ -569,7 +570,7 @@
                                                                                                 )
                                                                                             ]
                                                                                         ] ;
-                                                                                imports = [ failure implementation lazy-shell-application trip visitor ] ;
+                                                                                imports = [ failure implementation lazy-shell-application sequential trip visitor ] ;
                                                                             } ;
                                                             testScript =
                                                                 builtins.concatStringsSep
