@@ -458,7 +458,7 @@
                                         } :
                                         {
                                             init ,
-                                            gc-root-directory ,
+                                            gc-roots-directory ,
                                             release ,
                                             resources-directory
                                         } :
