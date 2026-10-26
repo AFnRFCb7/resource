@@ -63,7 +63,6 @@
                                                                                                         {
                                                                                                             mounts =
                                                                                                                 {
-                                                                                                                    interim = { source = "/mounts/interim" ; type = "bind" ; } ;
                                                                                                                     invalid-init = { source = "/mounts/invalid-init" ; type = "bind" ; } ;
                                                                                                                 } ;
                                                                                                             name = "invalid-init" ;
@@ -92,10 +91,10 @@
                                                                                                                                                     {
                                                                                                                                                         mounts =
                                                                                                                                                             {
+                                                                                                                                                                diagnostic = { source = "${ resources-directory }/diagnostic/$INDEX" ; type = "bind" ; } ;
                                                                                                                                                                 input = { is-directory = true ; read-only = true ; source = "/mounts/input" ; type = "bind" ; } ;
-                                                                                                                                                                interim = { source = "/mounts/interim" ; type = "bind" ; } ;
-                                                                                                                                                                invalid-init = { is-directory = true ; source = "/mounts/invalid-init" ; type = "bind" ; } ;
-                                                                                                                                                                release = { is-directory = true ; source = "/mounts/release" ; type = "bind" ; } ;
+                                                                                                                                                                invalid-init = { is-directory = true ; source = "${ resources-directory }/mounts/invalid-init" ; type = "bind" ; } ;
+                                                                                                                                                                release = { is-directory = true ; source = "${ resources-directory }/mounts/release" ; type = "bind" ; } ;
                                                                                                                                                                 standard-error = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                                                 standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                                             } ;
@@ -103,6 +102,7 @@
                                                                                                                                                         runtime-inputs =
                                                                                                                                                             pkgs :
                                                                                                                                                                 [
+                                                                                                                                                                    invalid-init
                                                                                                                                                                     pkgs.coreutils
                                                                                                                                                                     pkgs.jq
                                                                                                                                                                     (
@@ -115,6 +115,7 @@
                                                                                                                                                                                 text = builtins.getAttrs "text" ( identity ( value null ) ) ;
                                                                                                                                                                             }
                                                                                                                                                                     )
+                                                                                                                                                                    valid-init
                                                                                                                                                                 ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
@@ -137,16 +138,15 @@
                                                                                                                                                                 fi
                                                                                                                                                                 if [[ "$STATUS" == 0 ]] && [[ -n /mounts/standard-error ]]
                                                                                                                                                                 then
-                                                                                                                                                                    rm --recursive --force /mounts/invalid-init/$INDEX
-                                                                                                                                                                    ln --symbolic ${ release }/bin/release /mounts/release
+                                                                                                                                                                    valid-init
                                                                                                                                                                 elif [[ "$STATUS" != 0 ]]
                                                                                                                                                                 then
-                                                                                                                                                                    failure 1047459860543198 "$STATUS"
+                                                                                                                                                                    invalid-init old 1047459860543198 "$STATUS"
                                                                                                                                                                 elif [[ ! -n /mounts/standard-error ]]
                                                                                                                                                                 then
-                                                                                                                                                                    failure 7398286386269768
+                                                                                                                                                                    invalid-init old 7398286386269768
                                                                                                                                                                 else
-                                                                                                                                                                    failure 7006188970373349
+                                                                                                                                                                    invalid-init old 7006188970373349
                                                                                                                                                                 fi
                                                                                                                                                             '' ;
                                                                                                                                                         variables = { } ;
@@ -174,7 +174,13 @@
                                                                                                                             { default = null ; specified = recovery ; } ;
                                                                                                                     in
                                                                                                                         ''
-                                                                                                                            ${ builtins.concatStringsSep "\n" ( _config.visitor { } { lambda = path : value : let x = value null ; in ''wrap ${ x } /mounts/invalid-init/${ builtins.toJSON path }/recovery.sh 0500 --replace INDEX "$INDEX"'' ; } recovery ) }
+                                                                                                                            PROVENANCE="$1"
+                                                                                                                            if [[ "$PROVENANCE" == "new" ]]
+                                                                                                                            then
+                                                                                                                                ${ builtins.concatStringsSep "\n" ( _config.visitor { } { lambda = path : value : let x = value null ; in ''wrap ${ x } /mounts/invalid-init/${ builtins.toJSON path }/recovery.sh 0500 --replace INDEX "$INDEX"'' ; } recovery ) }
+                                                                                                                            else
+                                                                                                                                failure 4666519411676571
+                                                                                                                            fi
                                                                                                                             failure "$@"
                                                                                                                         '' ;
                                                                                                             variables = { } ;
@@ -248,7 +254,7 @@
                                                                                                                                                 while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                 do
                                                                                                                                                     rm "/mounts/flag/$INDEX"
-                                                                                                                                                    find /mounts/pids/$INDEX -mindepth 1 -maxdepth 1 | while read -r PID_FILE
+                                                                                                                                                    find /mounts/pid/$INDEX -mindepth 1 -maxdepth 1 | while read -r PID_FILE
                                                                                                                                                     do
                                                                                                                                                         while [[ -f "$PID_FILE" ]]
                                                                                                                                                         do
@@ -273,7 +279,15 @@
                                                                                                                                                     then
                                                                                                                                                         flock -u 196
                                                                                                                                                     else
-                                                                                                                                                        FILES=( "/mounts/flag/$INDEX" "/mounts/mounts/$INDEX" "/mounts/pid/$INDEX" )
+                                                                                                                                                        FILES=(
+                                                                                                                                                            "/mounts/gc-roots/$INDEX"
+                                                                                                                                                            "/mounts/diagnostic/$INDEX"
+                                                                                                                                                            "/mounts/flag/$INDEX"
+                                                                                                                                                            "/mounts/lock/$INDEX"
+                                                                                                                                                            "/mounts/mounts/$INDEX"
+                                                                                                                                                            "/mounts/pid/$INDEX"
+                                                                                                                                                            "/mounts/release/$INDEX"
+                                                                                                                                                        )
                                                                                                                                                         ARCHIVE_FILE="$( mktemp --suffix ".tar.xz" --dry-run /mounts/temporary/XXXXXXXX )" || failure 9874147964151582
                                                                                                                                                         tar --create --xz --file "$ARCHIVE_FILE" "${ "$" }{FILES[@]}"
                                                                                                                                                         rm --recursive --force "${ "$" }{FILES[@]}"
@@ -361,15 +375,15 @@
                                                                                                                                         valid-init
                                                                                                                                     elif [[ "$STATUS" != 0 ]]
                                                                                                                                     then
-                                                                                                                                        invalid-init 9853943334807469
+                                                                                                                                        invalid-init new 9853943334807469 "$STATUS"
                                                                                                                                     elif [[ ! -s /mounts/standard-error ]]
                                                                                                                                     then
-                                                                                                                                        invalid-init 7230516165710518
+                                                                                                                                        invalid-init new 7230516165710518
                                                                                                                                     elif [[ '${ expected-targets }' != "$OBSERVED_TARGETS" ]]
                                                                                                                                     then
-                                                                                                                                        invalid-init 3004874158363809
+                                                                                                                                        invalid-init new 3004874158363809
                                                                                                                                     else
-                                                                                                                                        invalid-init 1309415748011104
+                                                                                                                                        invalid-init new 1309415748011104
                                                                                                                                     fi
                                                                                                                                 '' ;
                                                                                                                             variables = { } ;
@@ -394,18 +408,18 @@
                                                                                 ''
                                                                                     PID="$( sequential )" || failure 3708670955636569
                                                                                     HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
-                                                                                    exec 169> "/mounts/locks/$HASH"
+                                                                                    exec 169> "/mounts/lock/$HASH"
                                                                                     flock -x 169
                                                                                     if [[ -L "/mounts/canonical/$HASH" ]]
                                                                                     then
                                                                                         MOUNT="$( readlink "/mounts/canonical/$HASH" )" || failure 9157868575302544
                                                                                         INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
                                                                                         touch "/mounts/flag/$INDEX"
-                                                                                        mkdir --parents "/mounts/pids/$INDEX"
-                                                                                        echo "$PID" > "/mounts/pids/$INDEX/$PID"
-                                                                                        chmod 0400 "/mounts/pids/$INDEX/$PID"
+                                                                                        mkdir --parents "/mounts/pid/$INDEX"
+                                                                                        echo "$PID" > "/mounts/pid/$INDEX/$PID"
+                                                                                        chmod 0400 "/mounts/pid/$INDEX/$PID"
                                                                                         echo -n "${ resources-directory }/mounts/$INDEX"
-                                                                                        rm "/mounts/locks/$HASH"
+                                                                                        rm "/mounts/lock/$HASH"
                                                                                     else
                                                                                         INDEX="$( sequential )" || failure 6590902953585183
                                                                                         export INDEX
@@ -414,13 +428,11 @@
                                                                                         mkdir --parents "$MOUNT"
                                                                                         if init
                                                                                         then
-                                                                                            valid-init
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
-                                                                                            rm "/mounts/locks/$HASH"
+                                                                                            rm "/mounts/lock/$HASH"
                                                                                         else
-                                                                                            invalid-init
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
-                                                                                            rm "/mounts/locks/$HASH"
+                                                                                            rm "/mounts/lock/$HASH"
                                                                                             exit ${ builtins.toString error }
                                                                                         fi
                                                                                     fi
@@ -449,22 +461,45 @@
                                                             node.client =
                                                                 { pkgs , ... } :
                                                                     let
+                                                                        _config = config-identity config ;
                                                                         _pkgs = pkgs-identity pkgs ;
                                                                         in
                                                                             {
                                                                                 config.environment.systemPackages =
-                                                                                    [
-                                                                                        (
-                                                                                            pkgs.writeShellApplication
-                                                                                                {
-                                                                                                    name = "test-script" ;
-                                                                                                    runtimeInput = [ ] ;
-                                                                                                    text =
-                                                                                                        ''
-                                                                                                        '' ;
-                                                                                                }
-                                                                                        )
-                                                                                    ] ;
+                                                                                    let
+                                                                                        generator =
+                                                                                            index :
+                                                                                                let
+                                                                                                    command = builtins.elemAt commands index ;
+                                                                                                    transform =
+                                                                                                        {
+                                                                                                            command ,
+                                                                                                            standard-error ,
+                                                                                                            standard-output ,
+                                                                                                            status
+                                                                                                        } :
+                                                                                                            pkgs.writeShellApplication
+                                                                                                                {
+                                                                                                                    name = "command-${ builtins.toString index }" ;
+                                                                                                                    runtimeInputs = [ ( _config.failure { } )] ;
+                                                                                                                    text =
+                                                                                                                        ''
+                                                                                                                            EXPECTED="$( mktemp --directory )" || failure 0528168347966815
+                                                                                                                            echo -e "${ standard-error }" > "$EXPECTED/standard-error"
+                                                                                                                            echo -e "${ standard-output }" > "$EXPECTED/standard-output"
+                                                                                                                            echo -e "${ builtins.toString status }" > "$EXPECTED/status"
+                                                                                                                            OBSERVED="$( mktemp --directory )" || failure 9132197145496489
+                                                                                                                            if ${ command } > "$OBSERVED/standard-output" 2> "$OBSERVED/standard-error"
+                                                                                                                            then
+                                                                                                                                echo -e "$OBSERVED/status"
+                                                                                                                            else
+                                                                                                                                echo -e "$OBSERVED/status"
+                                                                                                                            fi
+                                                                                                                            diff --unified "$EXPECTED" "$OBSERVED"
+                                                                                                                        '' ;
+                                                                                                                } ;
+                                                                                                    in transform command ;
+                                                                                        in builtins.genList ( builtins.length commands ) ;
                                                                             } ;
                                                             testScript =
                                                                 ''
