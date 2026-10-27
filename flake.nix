@@ -226,14 +226,21 @@
                                                                                                                                                 {
                                                                                                                                                     mounts =
                                                                                                                                                         {
-                                                                                                                                                            release = { source = "${ resources-directory }/release" ; type = bind ; } ;
+                                                                                                                                                            "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
+                                                                                                                                                            "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
+                                                                                                                                                            release = { source = "${ resources-directory }/release" ; type = "bind"; } ;
                                                                                                                                                         } ;
                                                                                                                                                     name = "post" ;
                                                                                                                                                     post = null ;
-                                                                                                                                                    runtime-inputs = pkgs : [ pkgs.flock pkgs.jq ] ;
+                                                                                                                                                    runtime-inputs = pkgs : [ pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                                                     text =
                                                                                                                                                         ''
-
+                                                                                                                                                            exec 103> /mounts/log.lock
+                                                                                                                                                            flock -x 103
+                                                                                                                                                            jq \
+                                                                                                                                                                --null-input \
+                                                                                                                                                                '{
+                                                                                                                                                                }' > | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                             /mounts/release/$INDEX
                                                                                                                                                         '' ;
                                                                                                                                                 } ;
