@@ -311,9 +311,9 @@
                                                                                                                         {
                                                                                                                             mounts =
                                                                                                                                 {
-                                                                                                                                    mount = { source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
-                                                                                                                                    standard-error = { is-directory = false ; type = "temporary" ; } ;
-                                                                                                                                    standard-output = { is-directory = false ; type = "temporary" ; } ;
+#                                                                                                                                    mount = { source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
+#                                                                                                                                    standard-error = { is-directory = false ; type = "temporary" ; } ;
+#                                                                                                                                    standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                 } ;
                                                                                                                             name = "init" ;
                                                                                                                             post = null ;
@@ -356,7 +356,8 @@
                                                                                                                         {
                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                             name = "init" ;
-                                                                                                                            runtimeInputs = [ valid-init ] ;
+                                                                                                                            # runtimeInputs = [ valid-init ] ;
+                                                                                                                            runtimeInputs = [ ] ;
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     valid-init
