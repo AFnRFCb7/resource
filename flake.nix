@@ -405,7 +405,7 @@
                                                                                                                             variables = { } ;
                                                                                                                         } ;
                                                                                                         }
-                                                                                                        action ;
+                                                                                                        action
                                                                                         )
                                                                                     ] ;
                                                                             text =
