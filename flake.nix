@@ -554,7 +554,7 @@
                                                                                                     _pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "check-log" ;
-                                                                                                            runtimeInputs = [ ( failure { } ) _pkgs.coreutils _pkgs.jq _pkgs.yq-go ] ;
+                                                                                                            runtimeInputs = [ ( _config.failure { } ) _pkgs.coreutils _pkgs.jq _pkgs.yq-go ] ;
                                                                                                             text =
                                                                                                                 ''
                                                                                                                     ORIGINAL="$( mktemp )" || failure 4940461114226167
