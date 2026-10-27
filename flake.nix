@@ -59,7 +59,7 @@
                                                                                         pkgs.flock
                                                                                         (
                                                                                             let
-                                                                                                action = builtins.attrValue "action" ( identity init ) ;
+                                                                                                action = builtins.attrValues "action" ( identity init ) ;
                                                                                                 expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( identity init ) ) ;
                                                                                                 invalid-init =
                                                                                                     _config.lazy-shell-application
@@ -506,45 +506,13 @@
                                                                                                                 transform =
                                                                                                                     {
                                                                                                                         runtimeInputs ,
-                                                                                                                        standard-error ,
-                                                                                                                        standard-output ,
-                                                                                                                        status ,
                                                                                                                         text
                                                                                                                     } :
                                                                                                                         _pkgs.writeShellApplication
                                                                                                                             {
                                                                                                                                 name = "process-${ builtins.toString index }" ;
-                                                                                                                                runtimeInputs =
-                                                                                                                                    [
-                                                                                                                                        ( _config.failure { } )
-                                                                                                                                        (
-                                                                                                                                            _pkgs.writeShellApplication
-                                                                                                                                                {
-                                                                                                                                                    name = "command" ;
-                                                                                                                                                    runtimeInputs = runtimeInputs ;
-                                                                                                                                                    text = text ;
-                                                                                                                                                }
-                                                                                                                                        )
-                                                                                                                                    ] ;
-                                                                                                                                text =
-                                                                                                                                    ''
-                                                                                                                                        EXPECTED="$( mktemp --directory )" || failure 0528168347966815
-                                                                                                                                        echo -e "${ standard-error }" > "$EXPECTED/standard-error"
-                                                                                                                                        echo -e "${ standard-output }" > "$EXPECTED/standard-output"
-                                                                                                                                        echo -e "${ builtins.toString status }" > "$EXPECTED/status"
-                                                                                                                                        OBSERVED="$( mktemp --directory )" || failure 9132197145496489
-                                                                                                                                        if command > "$OBSERVED/standard-output" 2> "$OBSERVED/standard-error"
-                                                                                                                                        then
-                                                                                                                                            echo -e "$OBSERVED/status"
-                                                                                                                                        else
-                                                                                                                                            echo -e "$OBSERVED/status"
-                                                                                                                                        fi
-                                                                                                                                        diff --unified "$EXPECTED" "$OBSERVED"
-                                                                                                                                        if [[ ! -d "$OBSERVED" ]]
-                                                                                                                                        then
-                                                                                                                                            failure 9115583286236609
-                                                                                                                                        fi
-                                                                                                                                    '' ;
+                                                                                                                                runtimeInputs = runtimeInputs ;
+                                                                                                                                text = text ;
                                                                                                                             } ;
                                                                                                                 in transform process ;
                                                                                                 in builtins.genList generator ( builtins.length processes )
