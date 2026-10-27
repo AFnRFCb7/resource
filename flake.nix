@@ -372,39 +372,38 @@
                                                                                         )
                                                                                     ] ;
                                                                             text =
-                                                                                "" ;
-#                                                                                ''
-#                                                                                    PID="$( sequential )" || failure 3708670955636569
-#                                                                                    HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
-#                                                                                    exec 169> "/mounts/lock/$HASH"
-#                                                                                    flock -x 169
-#                                                                                    if [[ -L "/mounts/canonical/$HASH" ]]
-#                                                                                    then
-#                                                                                        MOUNT="$( readlink "/mounts/canonical/$HASH" )" || failure 9157868575302544
-#                                                                                        INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
-#                                                                                        touch "/mounts/flag/$INDEX"
-#                                                                                        mkdir --parents "/mounts/pid/$INDEX"
-#                                                                                        echo "$PID" > "/mounts/pid/$INDEX/$PID"
-#                                                                                        chmod 0400 "/mounts/pid/$INDEX/$PID"
-#                                                                                        echo -n "${ resources-directory }/mounts/$INDEX"
-#                                                                                        rm "/mounts/lock/$HASH"
-#                                                                                    else
-#                                                                                        INDEX="$( sequential )" || failure 6590902953585183
-#                                                                                        export INDEX
-#                                                                                        touch "/mounts/flag/$INDEX"
-#                                                                                        MOUNT="/mounts/mounts/$INDEX"
-#                                                                                        mkdir --parents "$MOUNT"
-#                                                                                        if init
-#                                                                                        then
-#                                                                                            echo -n "${ resources-directory }/mounts/$INDEX"
-#                                                                                            rm "/mounts/lock/$HASH"
-#                                                                                        else
-#                                                                                            echo -n "${ resources-directory }/mounts/$INDEX"
-#                                                                                            rm "/mounts/lock/$HASH"
-#                                                                                            exit ${ builtins.toString error }
-#                                                                                        fi
-#                                                                                    fi
-#                                                                                '' ;
+                                                                                ''
+                                                                                    PID="$( sequential )" || failure 3708670955636569
+                                                                                    HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
+                                                                                    exec 169> "/mounts/lock/$HASH"
+                                                                                    flock -x 169
+                                                                                    if [[ -L "/mounts/canonical/$HASH" ]]
+                                                                                    then
+                                                                                        MOUNT="$( readlink "/mounts/canonical/$HASH" )" || failure 9157868575302544
+                                                                                        INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
+                                                                                        touch "/mounts/flag/$INDEX"
+                                                                                        mkdir --parents "/mounts/pid/$INDEX"
+                                                                                        echo "$PID" > "/mounts/pid/$INDEX/$PID"
+                                                                                        chmod 0400 "/mounts/pid/$INDEX/$PID"
+                                                                                        echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                        rm "/mounts/lock/$HASH"
+                                                                                    else
+                                                                                        INDEX="$( sequential )" || failure 6590902953585183
+                                                                                        export INDEX
+                                                                                        touch "/mounts/flag/$INDEX"
+                                                                                        MOUNT="/mounts/mounts/$INDEX"
+                                                                                        mkdir --parents "$MOUNT"
+                                                                                        if init
+                                                                                        then
+                                                                                            echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                            rm "/mounts/lock/$HASH"
+                                                                                        else
+                                                                                            echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                            rm "/mounts/lock/$HASH"
+                                                                                            exit ${ builtins.toString error }
+                                                                                        fi
+                                                                                    fi
+                                                                                '' ;
                                                                             variables = { } ;
                                                                         } ;
                                                             type = _lib.types.functionTo ( _lib.types.functionTo _lib.types.package ) ;
