@@ -466,7 +466,7 @@
                                                                                                     generator =
                                                                                                         index :
                                                                                                             let
-                                                                                                                command = builtins.elemAt process index ;
+                                                                                                                process = builtins.elemAt processes index ;
                                                                                                                 transform =
                                                                                                                     {
                                                                                                                         runtimeInputs ,
@@ -478,7 +478,7 @@
                                                                                                                         _pkgs.writeShellApplication
                                                                                                                             {
                                                                                                                                 name = "process-${ builtins.toString index }" ;
-                                                                                                                                runtimeInputs = runtimeInputs ;
+                                                                                                                                runtimeInputs = runtime-inputs { config = _config ; pkgs = _pkgs ; } ;
                                                                                                                                 text = text ;
                                                                                                                             } ;
                                                                                                                 in transform process ;
