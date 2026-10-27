@@ -442,7 +442,7 @@
                                                                             text =
                                                                                 ''
                                                                                     PID="$( sequential )" || failure 3708670955636569
-                                                                                    HASH=$( cat /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
+                                                                                    HASH=$( sha512sum < /mounts/input | cut --bytes 1-128 ) || failure 9501307898608371
                                                                                     exec 169> "/mounts/lock/$HASH"
                                                                                     flock -x 169
                                                                                     if [[ -L "/mounts/canonical/$HASH" ]]
