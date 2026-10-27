@@ -60,7 +60,7 @@
                                                                                         (
                                                                                             let
                                                                                                 action = builtins.attrValue ( identity init ) ;
-                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( identity init ) ) ;
+                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( builtins.attrValue "targets" ( identity init ) ) ) ;
                                                                                                 invalid-init =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
