@@ -566,7 +566,7 @@
                                                                                                                         case "$1" in
                                                                                                                             --order)
                                                                                                                                 COPY="$( mktemp )" || failure 1772410810339790
-                                                                                                                                ORDER_JSON="$( printf '%s\n' "${ORDER[@]}" | jq -R 'tonumber' | jq -s '.') " || failure 0312903319846095
+                                                                                                                                ORDER_JSON="$( printf '%s\n' "${ "$" }{ORDER[@]}" | jq -R 'tonumber' | jq -s '.') " || failure 0312903319846095
                                                                                                                                 jq --argjson order "$ORDER_JSON" '. as $original | [$order[] | $original[.-1]]' | yq eval --prettyPrint > "$COPY"
                                                                                                                                 if diff "$COPY" ${ resources-directory }/log.yaml
                                                                                                                                 then
