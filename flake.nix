@@ -502,7 +502,7 @@
                                                                                                     generator =
                                                                                                         index :
                                                                                                             let
-                                                                                                                command = builtins.elemAt commands index ;
+                                                                                                                process = builtins.elemAt processes index ;
                                                                                                                 transform =
                                                                                                                     {
                                                                                                                         runtimeInputs ,
