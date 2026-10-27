@@ -301,7 +301,7 @@
 #                                                                                                                            wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
 #                                                                                                                        '' ;
 #                                                                                                            variables = { } ;
-                                                                                                        } ;
+#                                                                                                        } ;
                                                                                                 zzz =
                                                                                                     _config.visitor
                                                                                                         { }
