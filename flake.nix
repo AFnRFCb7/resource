@@ -61,6 +61,16 @@
                                                                                             let
                                                                                                 action = builtins.getAttr "action" ( identity init ) ;
                                                                                                 expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( builtins.attrValue "targets" ( identity init ) ) ) ;
+                                                                                                identity =
+                                                                                                    {
+                                                                                                        action ? null ,
+                                                                                                        recovery ? null ,
+                                                                                                        targets ? null
+                                                                                                    } :
+                                                                                                        {
+                                                                                                            action = action ;
+                                                                                                            targets = targets ;
+                                                                                                        } ;
                                                                                                 invalid-init =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
@@ -184,16 +194,6 @@
                                                                                                                         '' ;
                                                                                                             variables = { } ;
                                                                                                         } ;
-                                                                                                identity =
-                                                                                                    {
-                                                                                                        action ? null ,
-                                                                                                        recovery ? null ,
-                                                                                                        targets ? null
-                                                                                                    } :
-                                                                                                        {
-                                                                                                            action = action ;
-                                                                                                            targets = targets ;
-                                                                                                        } ;
                                                                                                 valid-init =
                                                                                                     _config.lazy-shell-application
                                                                                                         {
@@ -301,7 +301,7 @@
                                                                                                                         '' ;
                                                                                                             variables = { } ;
                                                                                                         } ;
-                                                                                                in
+                                                                                                zzz =
                                                                                                     _config.visitor
                                                                                                         { }
                                                                                                         {
@@ -365,7 +365,8 @@
                                                                                                                             variables = { } ;
                                                                                                                         } ;
                                                                                                         }
-                                                                                                        action
+                                                                                                        action ;
+                                                                                                in pkgs.coreutils
                                                                                         )
                                                                                     ] ;
                                                                             text =
