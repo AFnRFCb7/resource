@@ -218,7 +218,7 @@
                                                                                                                                         ] ;
                                                                                                                                 text =
                                                                                                                                     ''
-                                                                                                                                        "/release/$INDEX" ;
+                                                                                                                                        "${ resources-directory }/release/$INDEX" ;
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
