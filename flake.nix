@@ -586,7 +586,7 @@
                                                                                 ]
                                                                                 (
                                                                                     let
-                                                                                        generator = index : ''client.succeed("command-${ builtins.toString index }")'' ;
+                                                                                        generator = index : ''client.succeed("command-${ builtins.toString index } &")'' ;
                                                                                         in builtins.genList generator ( builtins.length commands )
                                                                                 )
                                                                                 [
