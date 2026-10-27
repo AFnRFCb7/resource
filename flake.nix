@@ -419,7 +419,8 @@
                                             obviated-by ,
                                             trip ,
                                             sequential ,
-                                            visitor
+                                            visitor ,
+                                            wrap
                                         } :
                                         {
                                             gc-roots-directory ,
@@ -517,12 +518,20 @@
                                                                                                     _pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "terminal" ;
-                                                                                                            runtimeInputs = [ pkgs.findutils ] ;
+                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.findutils ] ;
                                                                                                             text =
                                                                                                                 ''
                                                                                                                     if [[ -f ${ resources-directory }/log.yaml ]]
                                                                                                                     then
                                                                                                                         rm ${ resources-directory }/log.yaml
+                                                                                                                    fi
+                                                                                                                    if [[ -f ${ resources-directory }/sequential.asc ]]
+                                                                                                                    then
+                                                                                                                        rm ${ resources-directory }/sequential.asc
+                                                                                                                    fi
+                                                                                                                    if [[ -d ${ resources-directory }/temporary ]]
+                                                                                                                    then
+                                                                                                                        rm --recursive --force ${ resources-directory }/temporary
                                                                                                                     fi
                                                                                                                     if [[ -d ${ gc-roots-directory } ]]
                                                                                                                     then
@@ -538,7 +547,7 @@
                                                                                                 )
                                                                                             ]
                                                                                         ] ;
-                                                                                imports = [ failure implementation lazy-shell-application sequential trip visitor ] ;
+                                                                                imports = [ failure implementation lazy-shell-application sequential trip visitor wrap ] ;
                                                                             } ;
                                                             testScript =
                                                                 builtins.concatStringsSep
