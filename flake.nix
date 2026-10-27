@@ -428,10 +428,14 @@
                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                             name = "init" ;
                                                                                                                             post = null ;
-                                                                                                                            runtime-inputs = pkgs : [ valid-init ] ;
+                                                                                                                            runtime-inputs = pkgs : [ pkgs.jq valid-init ] ;
                                                                                                                             text =
                                                                                                                                 ''
-                                                                                                                                    valid-init
+                                                                                                                                    jq \
+                                                                                                                                        --null-input \
+                                                                                                                                        '{
+                                                                                                                                            "WTF" : 7998456199654908
+                                                                                                                                        }' | valid-init
                                                                                                                                 '' ;
                                                                                                                             variables = { } ;
                                                                                                                         } ;
