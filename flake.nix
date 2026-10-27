@@ -226,13 +226,14 @@
                                                                                                                                                 {
                                                                                                                                                     mounts =
                                                                                                                                                         {
-                                                                                                                                                            release = { source = "${ resources-directory }/release" ; type = bind ; }
+                                                                                                                                                            release = { source = "${ resources-directory }/release" ; type = bind ; } ;
                                                                                                                                                         } ;
                                                                                                                                                     name = "post" ;
                                                                                                                                                     post = null ;
-                                                                                                                                                    runtime-inputs = pkgs : [ ] ;
+                                                                                                                                                    runtime-inputs = pkgs : [ pkgs.flock pkgs.jq ] ;
                                                                                                                                                     text =
                                                                                                                                                         ''
+
                                                                                                                                                             /mounts/release/$INDEX
                                                                                                                                                         '' ;
                                                                                                                                                 } ;
