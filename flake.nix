@@ -232,13 +232,14 @@
                                                                                                                                                         } ;
                                                                                                                                                     name = "post" ;
                                                                                                                                                     post = null ;
-                                                                                                                                                    runtime-inputs = pkgs : [ pkgs.flock pkgs.yq-go ] ;
+                                                                                                                                                    runtime-inputs = pkgs : [ ( _config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                     text =
                                                                                                                                                         ''
                                                                                                                                                             "/mounts/release/$INDEX"
+                                                                                                                                                            TIMESTAMP="$( date +%s )" || failure 3615837188445696
                                                                                                                                                             exec 103> /mounts/log.lock
                                                                                                                                                             flock -x 103
-                                                                                                                                                            yq eval --prettyPrint "[.]" >> /mounts/log.yaml
+                                                                                                                                                            jq --arg TYPE "valid-init" --argjson TIMESTAMP "$TIMESTAMP" --sort-keys . + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                         '' ;
                                                                                                                                                     variables = { } ;
                                                                                                                                                 } ;
@@ -431,11 +432,7 @@
                                                                                                                             runtime-inputs = pkgs : [ pkgs.jq valid-init ] ;
                                                                                                                             text =
                                                                                                                                 ''
-                                                                                                                                    jq \
-                                                                                                                                        --null-input \
-                                                                                                                                        '{
-                                                                                                                                            "WTF" : 7998456199654908
-                                                                                                                                        }' | valid-init
+                                                                                                                                    jq --null-input '{ }' | valid-init
                                                                                                                                 '' ;
                                                                                                                             variables = { } ;
                                                                                                                         } ;
@@ -563,7 +560,7 @@
                                                                                                             text =
                                                                                                                 ''
                                                                                                                     ORIGINAL="$( mktemp )" || failure 4940461114226167
-                                                                                                                    jq "." > "$ORIGINAL"
+                                                                                                                    jq "del(.timestamp)" > "$ORIGINAL"
                                                                                                                     N="$( jq 'length' "$ORIGINAL" )" || failure 0163978703024678
                                                                                                                     CORRECT=false
                                                                                                                     while [[ "$#" -gt 0 ]]
