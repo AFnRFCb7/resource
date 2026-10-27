@@ -554,6 +554,7 @@
                                                                                                 in builtins.genList generator ( builtins.length processes )
                                                                                             )
                                                                                             [
+                                                                                                ( _config.failure { } )
                                                                                                 (
                                                                                                     _pkgs.writeShellApplication
                                                                                                         {
