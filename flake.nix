@@ -344,7 +344,7 @@
                                                                                                                                                             variables = { } ;
                                                                                                                                                         }
                                                                                                                                         )
-#                                                                                                                                        invalid-init
+                                                                                                                                        invalid-init
 #                                                                                                                                        valid-init
                                                                                                                                     ] ;
                                                                                                                             text =
