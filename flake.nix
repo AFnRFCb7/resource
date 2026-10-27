@@ -585,7 +585,8 @@
                                                                                                                     fi
                                                                                                                 '' ;
                                                                                                         }
-                                                                                                    )
+                                                                                                )
+                                                                                                (
                                                                                                     _pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "terminal" ;
@@ -612,7 +613,6 @@
                                                                                                                     then
                                                                                                                         find ${ resources-directory } -mindepth 1 -exec failure 9768190112280464 {} \;
                                                                                                                     fi
-
                                                                                                                 '' ;
                                                                                                         }
                                                                                                 )
