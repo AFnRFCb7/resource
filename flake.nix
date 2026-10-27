@@ -366,7 +366,7 @@
                                                                                                                         } ;
                                                                                                         }
                                                                                                         action ;
-                                                                                                in pkgs.coreutils
+                                                                                                in builtins.trace ( builtins.toJSON ( builtins.map builtins.typeOf [ ] ) ) pkgs.coreutils
                                                                                         )
                                                                                     ] ;
                                                                             text =
