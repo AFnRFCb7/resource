@@ -165,12 +165,8 @@
                                                                                                                                                     } ;
                                                                                                                                                 name = "invalid-init" ;
                                                                                                                                                 post = null ;
-                                                                                                                                                runtime-inputs = pkgs : [ pkgs.coreutils ] ;
-                                                                                                                                                text =
-                                                                                                                                                    ''
-                                                                                                                                                        rm --recursive --force /mounts/invalid-init/$INDEX
-                                                                                                                                                        ln --symbolic ${ release }/bin/release /mounts/release
-                                                                                                                                                    '' ;
+                                                                                                                                                runtime-inputs = pkgs : [ valid-init ] ;
+                                                                                                                                                text = "valid-init" ;
                                                                                                                                                 variables = { } ;
                                                                                                                                             } ;
                                                                                                                             }
