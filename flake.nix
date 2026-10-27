@@ -237,10 +237,7 @@
                                                                                                                                                         ''
                                                                                                                                                             exec 103> /mounts/log.lock
                                                                                                                                                             flock -x 103
-                                                                                                                                                            jq \
-                                                                                                                                                                --null-input \
-                                                                                                                                                                '{
-                                                                                                                                                                }' > | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
+                                                                                                                                                            yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                             /mounts/release/$INDEX
                                                                                                                                                         '' ;
                                                                                                                                                     variables = { } ;
@@ -337,8 +334,9 @@
                                                                                                                         {
                                                                                                                             mounts =
                                                                                                                                 {
-                                                                                                                                    input = { source = "/mounts/input" ; type = "bind" ; } ;
+                                                                                                                                    input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
                                                                                                                                     mount = { source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
+                                                                                                                                    output = { is-directory = false ; source = "/mounts/output" ; type = "bind" ; } ;
                                                                                                                                     standard-error = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                     standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                 } ;
@@ -398,7 +396,16 @@
                                                                                                                                     OBSERVED_TARGETS="$( find /mounts/mount -mindepth 1 -maxdepth 1 | LC_ALL=C sort )" || failure 5101453011608943
                                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ -s /mounts/standard-error ]] && [[ '${ expected-targets }' == "$OBSERVED_TARGETS" ]]
                                                                                                                                     then
-                                                                                                                                        jq "." /mounts/input | valid-init
+                                                                                                                                        INPUT="$( jq '{ "arguments" : .arguments , "variables" : .variables }' /mounts/input || failure 9213699588429497
+                                                                                                                                        OUTPUT="$( jq '{ "output" : .standard-output }' /mounts/output )" || failure 9223149214133109
+                                                                                                                                        jq \
+                                                                                                                                            --null-input \
+                                                                                                                                            --argjson INPUT "$INPUT" \
+                                                                                                                                            --argjson OUTPUT "$OUTPUT" \
+                                                                                                                                            '{
+                                                                                                                                                "input" : $INPUT ,
+                                                                                                                                                "output" : $OUTPUT
+                                                                                                                                             }' | valid-init
                                                                                                                                     elif [[ "$STATUS" != 0 ]]
                                                                                                                                     then
                                                                                                                                         invalid-init new 9853943334807469 "$STATUS"
