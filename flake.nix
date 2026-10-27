@@ -239,7 +239,7 @@
                                                                                                                                                             TIMESTAMP="$( date +%s )" || failure 3615837188445696
                                                                                                                                                             exec 103> /mounts/log.lock
                                                                                                                                                             flock -x 103
-                                                                                                                                                            jq --arg TYPE "valid-init" --argjson TIMESTAMP "$TIMESTAMP" --sort-keys . + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
+                                                                                                                                                            jq --arg TYPE "valid-init" --argjson TIMESTAMP "$TIMESTAMP" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                         '' ;
                                                                                                                                                     variables = { } ;
                                                                                                                                                 } ;
@@ -556,9 +556,11 @@
                                                                                                     _pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "check-log" ;
-                                                                                                            runtimeInputs = [ ( _config.failure { } ) _pkgs.coreutils _pkgs.jq _pkgs.yq-go ] ;
+                                                                                                            runtimeInputs = [ ( _config.failure { } ) _pkgs.coreutils _pkgs.flock _pkgs.jq _pkgs.yq-go ] ;
                                                                                                             text =
                                                                                                                 ''
+                                                                                                                    exec 132> ${ resources-directory }/log.lock
+                                                                                                                    flock -x 132
                                                                                                                     ORIGINAL="$( mktemp )" || failure 4940461114226167
                                                                                                                     jq "del(.timestamp)" > "$ORIGINAL"
                                                                                                                     N="$( jq 'length' "$ORIGINAL" )" || failure 0163978703024678
@@ -585,6 +587,7 @@
                                                                                                                     then
                                                                                                                         failure 4612322045996105
                                                                                                                     fi
+                                                                                                                    rm ${ resources-directory }/log.lock ${ resources-directory }/log.yaml
                                                                                                                 '' ;
                                                                                                         }
                                                                                                 )
