@@ -195,111 +195,112 @@
                                                                                                             variables = { } ;
                                                                                                         } ;
                                                                                                 valid-init =
-                                                                                                    _config.lazy-shell-application
-                                                                                                        {
-                                                                                                            mounts =
-                                                                                                                {
-                                                                                                                    diagnostic = { source = "/mounts/diagnostic" ; type = "bind" ; } ;
-                                                                                                                    release = { source = "/mounts/release" ; type = "bind" ; } ;
-                                                                                                                } ;
-                                                                                                            name = "valid-init" ;
-                                                                                                            post =
-                                                                                                                let
-                                                                                                                    application =
-                                                                                                                        _config.lazy-shell-application
-                                                                                                                            {
-                                                                                                                                mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
-                                                                                                                                name = "post" ;
-                                                                                                                                post = null ;
-                                                                                                                                pkgs =
-                                                                                                                                    pkgs :
-                                                                                                                                        [
-
-                                                                                                                                        ] ;
-                                                                                                                                text =
-                                                                                                                                    ''
-                                                                                                                                        "${ resources-directory }/release/$INDEX" ;
-                                                                                                                                    '' ;
-                                                                                                                                variables = { } ;
-                                                                                                                            } ;
-                                                                                                                    in "${ application }/bin/post" ;
-                                                                                                            runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
-                                                                                                            text =
-                                                                                                                let
-                                                                                                                    release =
-                                                                                                                        let
-                                                                                                                            identity =
-                                                                                                                                {
-                                                                                                                                    action ? null ,
-                                                                                                                                    recovery ? null
-                                                                                                                                } :
-                                                                                                                                    {
-                                                                                                                                        action = action ;
-                                                                                                                                        recovery = recovery ;
-                                                                                                                                    } ;
-                                                                                                                            in
-                                                                                                                                _config.lazy-shell-application
-                                                                                                                                    {
-                                                                                                                                        mounts =
-                                                                                                                                            {
-                                                                                                                                                flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
-                                                                                                                                                pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
-                                                                                                                                            } ;
-                                                                                                                                        name = "release" ;
-                                                                                                                                        post = null ;
-                                                                                                                                        runtime-inputs = pkgs : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.xz ] ;
-                                                                                                                                        text =
-                                                                                                                                            ''
-                                                                                                                                                while [[ -f /mounts/flag/$INDEX ]]
-                                                                                                                                                do
-                                                                                                                                                    rm "/mounts/flag/$INDEX"
-                                                                                                                                                    find /mounts/pid/$INDEX -mindepth 1 -maxdepth 1 | while read -r PID_FILE
-                                                                                                                                                    do
-                                                                                                                                                        while [[ -f "$PID_FILE" ]]
-                                                                                                                                                        do
-                                                                                                                                                            sleep 1
-                                                                                                                                                        done
-                                                                                                                                                    done
-                                                                                                                                                    EXPECTED="${ resources-directory }/mounts/$INDEX"
-                                                                                                                                                    find /mounts/gc-roots -type L | while read -r CANDIDATE
-                                                                                                                                                    do
-                                                                                                                                                        OBSERVED="$( readlink "$CANDIDATE" )" || failure 6653347034509208
-                                                                                                                                                        if [[ "$EXPECTED" == "$OBSERVED" ]]
-                                                                                                                                                        then
-                                                                                                                                                            while [[ -L "$CANDIDATE" ]]
-                                                                                                                                                            do
-                                                                                                                                                                sleep 1
-                                                                                                                                                            done
-                                                                                                                                                        fi
-                                                                                                                                                    done
-                                                                                                                                                    exec 196> "/mounts/lock/$INDEX"
-                                                                                                                                                    flock -x 196
-                                                                                                                                                    if [[ -f "/mounts/flag/$INDEX" ]]
-                                                                                                                                                    then
-                                                                                                                                                        flock -u 196
-                                                                                                                                                    else
-                                                                                                                                                        FILES=(
-                                                                                                                                                            "/mounts/gc-roots/$INDEX"
-                                                                                                                                                            "/mounts/diagnostic/$INDEX"
-                                                                                                                                                            "/mounts/flag/$INDEX"
-                                                                                                                                                            "/mounts/lock/$INDEX"
-                                                                                                                                                            "/mounts/mounts/$INDEX"
-                                                                                                                                                            "/mounts/pid/$INDEX"
-                                                                                                                                                            "/mounts/release/$INDEX"
-                                                                                                                                                        )
-                                                                                                                                                        ARCHIVE_FILE="$( mktemp --suffix ".tar.xz" --dry-run /mounts/temporary/XXXXXXXX )" || failure 9874147964151582
-                                                                                                                                                        tar --create --xz --file "$ARCHIVE_FILE" "${ "$" }{FILES[@]}"
-                                                                                                                                                        rm --recursive --force "${ "$" }{FILES[@]}"
-                                                                                                                                                    fi
-                                                                                                                                                done
-                                                                                                                                            '' ;
-                                                                                                                                        variables = { } ;
-                                                                                                                                    } ;
-                                                                                                                    in
-                                                                                                                        ''
-                                                                                                                            wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
-                                                                                                                        '' ;
-                                                                                                            variables = { } ;
+                                                                                                    pkgs.coreutils ;
+#                                                                                                    _config.lazy-shell-application
+#                                                                                                        {
+#                                                                                                            mounts =
+#                                                                                                                {
+#                                                                                                                    diagnostic = { source = "/mounts/diagnostic" ; type = "bind" ; } ;
+#                                                                                                                    release = { source = "/mounts/release" ; type = "bind" ; } ;
+#                                                                                                                } ;
+#                                                                                                            name = "valid-init" ;
+#                                                                                                            post =
+#                                                                                                                let
+#                                                                                                                    application =
+#                                                                                                                        _config.lazy-shell-application
+#                                                                                                                            {
+#                                                                                                                                mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
+#                                                                                                                                name = "post" ;
+#                                                                                                                                post = null ;
+#                                                                                                                                pkgs =
+#                                                                                                                                    pkgs :
+#                                                                                                                                        [
+#
+#                                                                                                                                        ] ;
+#                                                                                                                                text =
+#                                                                                                                                    ''
+#                                                                                                                                        "${ resources-directory }/release/$INDEX" ;
+#                                                                                                                                    '' ;
+#                                                                                                                                variables = { } ;
+#                                                                                                                            } ;
+#                                                                                                                    in "${ application }/bin/post" ;
+#                                                                                                            runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
+#                                                                                                            text =
+#                                                                                                                let
+#                                                                                                                    release =
+#                                                                                                                        let
+#                                                                                                                            identity =
+#                                                                                                                                {
+#                                                                                                                                    action ? null ,
+#                                                                                                                                    recovery ? null
+#                                                                                                                                } :
+#                                                                                                                                    {
+#                                                                                                                                        action = action ;
+#                                                                                                                                        recovery = recovery ;
+#                                                                                                                                    } ;
+#                                                                                                                            in
+#                                                                                                                                _config.lazy-shell-application
+#                                                                                                                                    {
+#                                                                                                                                        mounts =
+#                                                                                                                                            {
+#                                                                                                                                                flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
+#                                                                                                                                                pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
+#                                                                                                                                            } ;
+#                                                                                                                                        name = "release" ;
+#                                                                                                                                        post = null ;
+#                                                                                                                                        runtime-inputs = pkgs : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.xz ] ;
+#                                                                                                                                        text =
+#                                                                                                                                            ''
+#                                                                                                                                                while [[ -f /mounts/flag/$INDEX ]]
+#                                                                                                                                                do
+#                                                                                                                                                    rm "/mounts/flag/$INDEX"
+#                                                                                                                                                    find /mounts/pid/$INDEX -mindepth 1 -maxdepth 1 | while read -r PID_FILE
+#                                                                                                                                                    do
+#                                                                                                                                                        while [[ -f "$PID_FILE" ]]
+#                                                                                                                                                        do
+#                                                                                                                                                            sleep 1
+#                                                                                                                                                        done
+#                                                                                                                                                    done
+#                                                                                                                                                    EXPECTED="${ resources-directory }/mounts/$INDEX"
+#                                                                                                                                                    find /mounts/gc-roots -type L | while read -r CANDIDATE
+#                                                                                                                                                    do
+#                                                                                                                                                        OBSERVED="$( readlink "$CANDIDATE" )" || failure 6653347034509208
+#                                                                                                                                                        if [[ "$EXPECTED" == "$OBSERVED" ]]
+#                                                                                                                                                        then
+#                                                                                                                                                            while [[ -L "$CANDIDATE" ]]
+#                                                                                                                                                            do
+#                                                                                                                                                                sleep 1
+#                                                                                                                                                            done
+#                                                                                                                                                        fi
+#                                                                                                                                                    done
+#                                                                                                                                                    exec 196> "/mounts/lock/$INDEX"
+#                                                                                                                                                    flock -x 196
+#                                                                                                                                                    if [[ -f "/mounts/flag/$INDEX" ]]
+#                                                                                                                                                    then
+#                                                                                                                                                        flock -u 196
+#                                                                                                                                                    else
+#                                                                                                                                                        FILES=(
+#                                                                                                                                                            "/mounts/gc-roots/$INDEX"
+#                                                                                                                                                            "/mounts/diagnostic/$INDEX"
+#                                                                                                                                                            "/mounts/flag/$INDEX"
+#                                                                                                                                                            "/mounts/lock/$INDEX"
+#                                                                                                                                                            "/mounts/mounts/$INDEX"
+#                                                                                                                                                            "/mounts/pid/$INDEX"
+#                                                                                                                                                            "/mounts/release/$INDEX"
+#                                                                                                                                                        )
+#                                                                                                                                                        ARCHIVE_FILE="$( mktemp --suffix ".tar.xz" --dry-run /mounts/temporary/XXXXXXXX )" || failure 9874147964151582
+#                                                                                                                                                        tar --create --xz --file "$ARCHIVE_FILE" "${ "$" }{FILES[@]}"
+#                                                                                                                                                        rm --recursive --force "${ "$" }{FILES[@]}"
+#                                                                                                                                                    fi
+#                                                                                                                                                done
+#                                                                                                                                            '' ;
+#                                                                                                                                        variables = { } ;
+#                                                                                                                                    } ;
+#                                                                                                                    in
+#                                                                                                                        ''
+#                                                                                                                            wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
+#                                                                                                                        '' ;
+#                                                                                                            variables = { } ;
                                                                                                         } ;
                                                                                                 zzz =
                                                                                                     _config.visitor
