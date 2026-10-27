@@ -325,28 +325,28 @@
                                                                                                                                     [
                                                                                                                                         pkgs.coreutils
                                                                                                                                         pkgs.jq
-#                                                                                                                                        (
-#                                                                                                                                            let
-#                                                                                                                                                identity =
-#                                                                                                                                                    {
-#                                                                                                                                                        runtime-inputs ? pkgs : [ ] ,
-#                                                                                                                                                        text ? ""
-#                                                                                                                                                    } :
-#                                                                                                                                                        {
-#                                                                                                                                                            runtime-inputs = runtime-inputs ;
-#                                                                                                                                                            text = text ;
-#                                                                                                                                                        } ;
-#                                                                                                                                                in
-#                                                                                                                                                    _config.lazy-shell-application
-#                                                                                                                                                        {
-#                                                                                                                                                            mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
-#                                                                                                                                                            name = "init" ;
-#                                                                                                                                                            post = null ;
-#                                                                                                                                                            runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
-#                                                                                                                                                            text = builtins.getAttr "text" ( identity ( value null ) ) ;
-#                                                                                                                                                            variables = { } ;
-#                                                                                                                                                        }
-#                                                                                                                                        )
+                                                                                                                                        (
+                                                                                                                                            let
+                                                                                                                                                identity =
+                                                                                                                                                    {
+                                                                                                                                                        runtime-inputs ? pkgs : [ ] ,
+                                                                                                                                                        text ? ""
+                                                                                                                                                    } :
+                                                                                                                                                        {
+                                                                                                                                                            runtime-inputs = runtime-inputs ;
+                                                                                                                                                            text = text ;
+                                                                                                                                                        } ;
+                                                                                                                                                in
+                                                                                                                                                    _config.lazy-shell-application
+                                                                                                                                                        {
+                                                                                                                                                            mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
+                                                                                                                                                            name = "init" ;
+                                                                                                                                                            post = null ;
+                                                                                                                                                            runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
+                                                                                                                                                            text = builtins.getAttr "text" ( identity ( value null ) ) ;
+                                                                                                                                                            variables = { } ;
+                                                                                                                                                        }
+                                                                                                                                        )
 #                                                                                                                                        invalid-init
 #                                                                                                                                        valid-init
                                                                                                                                     ] ;
