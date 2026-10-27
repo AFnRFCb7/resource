@@ -243,6 +243,7 @@
                                                                                                                                                                 }' > | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                             /mounts/release/$INDEX
                                                                                                                                                         '' ;
+                                                                                                                                                    variables = { } ;
                                                                                                                                                 } ;
                                                                                                                                         in "${ application }/bin/post" ;
                                                                                                                                 variables = { } ;
