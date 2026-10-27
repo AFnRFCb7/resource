@@ -59,7 +59,7 @@
                                                                                         pkgs.flock
                                                                                         (
                                                                                             let
-                                                                                                action = builtins.attrValue ( identity init ) ;
+                                                                                                action = builtins.attrValues ( identity init ) ;
                                                                                                 expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( builtins.attrValue "targets" ( identity init ) ) ) ;
                                                                                                 invalid-init =
                                                                                                     _config.lazy-shell-application
