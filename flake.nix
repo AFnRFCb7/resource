@@ -463,7 +463,7 @@
                                             resources-directory
                                         } :
                                         resources :
-                                        commands :
+                                        processes :
                                             {
                                                 obviated-by = obviated-by ;
                                                 test =
@@ -513,7 +513,7 @@
                                                                                                                     } :
                                                                                                                         _pkgs.writeShellApplication
                                                                                                                             {
-                                                                                                                                name = "command-${ builtins.toString index }" ;
+                                                                                                                                name = "process-${ builtins.toString index }" ;
                                                                                                                                 runtimeInputs =
                                                                                                                                     [
                                                                                                                                         ( _config.failure { } )
@@ -547,7 +547,7 @@
                                                                                                                                     '' ;
                                                                                                                             } ;
                                                                                                                 in transform command ;
-                                                                                                in builtins.genList generator ( builtins.length commands )
+                                                                                                in builtins.genList generator ( builtins.length processes )
                                                                                             )
                                                                                             [
                                                                                                 (
@@ -586,8 +586,8 @@
                                                                                 ]
                                                                                 (
                                                                                     let
-                                                                                        generator = index : ''client.succeed("command-${ builtins.toString index } &")'' ;
-                                                                                        in builtins.genList generator ( builtins.length commands )
+                                                                                        generator = index : ''client.succeed("process-${ builtins.toString index } &")'' ;
+                                                                                        in builtins.genList generator ( builtins.length processes )
                                                                                 )
                                                                                 [
                                                                                     ''
