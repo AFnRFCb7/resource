@@ -67,7 +67,7 @@
                                                                                                             null = path : value : value ;
                                                                                                         }
                                                                                                         init ;
-                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( builtins.attrValue "targets" ( identity init ) ) ) ;
+                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( builtins.getAttr "targets" ( identity init ) ) ) ;
                                                                                                 identity =
                                                                                                     {
                                                                                                         action ? null ,
