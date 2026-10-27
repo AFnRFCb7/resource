@@ -427,7 +427,7 @@
                                             resources-directory
                                         } :
                                         resources :
-                                        commands :
+                                        processes :
                                             {
                                                 obviated-by = obviated-by ;
                                                 test =
@@ -466,7 +466,7 @@
                                                                                                     generator =
                                                                                                         index :
                                                                                                             let
-                                                                                                                command = builtins.elemAt commands index ;
+                                                                                                                command = builtins.elemAt process index ;
                                                                                                                 transform =
                                                                                                                     {
                                                                                                                         runtimeInputs ,
@@ -477,41 +477,12 @@
                                                                                                                     } :
                                                                                                                         _pkgs.writeShellApplication
                                                                                                                             {
-                                                                                                                                name = "command-${ builtins.toString index }" ;
-                                                                                                                                runtimeInputs =
-                                                                                                                                    [
-                                                                                                                                        ( _config.failure { } )
-                                                                                                                                        (
-                                                                                                                                            _pkgs.writeShellApplication
-                                                                                                                                                {
-                                                                                                                                                    name = "command" ;
-                                                                                                                                                    runtimeInputs = runtimeInputs ;
-                                                                                                                                                    text = text ;
-                                                                                                                                                }
-                                                                                                                                        )
-                                                                                                                                    ] ;
-                                                                                                                                text =
-                                                                                                                                    ''
-                                                                                                                                        EXPECTED="$( mktemp --directory )" || failure 0528168347966815
-                                                                                                                                        echo -e "${ standard-error }" > "$EXPECTED/standard-error"
-                                                                                                                                        echo -e "${ standard-output }" > "$EXPECTED/standard-output"
-                                                                                                                                        echo -e "${ builtins.toString status }" > "$EXPECTED/status"
-                                                                                                                                        OBSERVED="$( mktemp --directory )" || failure 9132197145496489
-                                                                                                                                        if command > "$OBSERVED/standard-output" 2> "$OBSERVED/standard-error"
-                                                                                                                                        then
-                                                                                                                                            echo -e "$OBSERVED/status"
-                                                                                                                                        else
-                                                                                                                                            echo -e "$OBSERVED/status"
-                                                                                                                                        fi
-                                                                                                                                        diff --unified "$EXPECTED" "$OBSERVED"
-                                                                                                                                        if [[ ! -d "$OBSERVED" ]]
-                                                                                                                                        then
-                                                                                                                                            failure 9115583286236609
-                                                                                                                                        fi
-                                                                                                                                    '' ;
+                                                                                                                                name = "process-${ builtins.toString index }" ;
+                                                                                                                                runtimeInputs = runtimeInputs ;
+                                                                                                                                text = text ;
                                                                                                                             } ;
-                                                                                                                in transform command ;
-                                                                                                in builtins.genList generator ( builtins.length commands )
+                                                                                                                in transform process ;
+                                                                                                in builtins.genList generator ( builtins.length processes )
                                                                                             )
                                                                                             [
                                                                                                 (
@@ -562,8 +533,8 @@
                                                                                 ]
                                                                                 (
                                                                                     let
-                                                                                        generator = index : ''client.succeed("command-${ builtins.toString index }")'' ;
-                                                                                        in builtins.genList generator ( builtins.length commands )
+                                                                                        generator = index : ''client.succeed("process-${ builtins.toString index } &")'' ;
+                                                                                        in builtins.genList generator ( builtins.length processes )
                                                                                 )
                                                                                 [
                                                                                     ''
