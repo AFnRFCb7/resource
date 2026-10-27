@@ -59,7 +59,14 @@
                                                                                         pkgs.flock
                                                                                         (
                                                                                             let
-                                                                                                action = builtins.getAttr "action" ( identity init ) ;
+                                                                                                action =
+                                                                                                    _config.visitor
+                                                                                                        { }
+                                                                                                        {
+                                                                                                            lambda = path : value : builtins.getAttr "action" ( identity value ) ;
+                                                                                                            null = path : value : value ;
+                                                                                                        }
+                                                                                                        init ;
                                                                                                 expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( builtins.attrValue "targets" ( identity init ) ) ) ;
                                                                                                 identity =
                                                                                                     {
