@@ -59,7 +59,7 @@
                                                                                         pkgs.flock
                                                                                         (
                                                                                             let
-                                                                                                action = builtins.attrValues ( identity init ) ;
+                                                                                                action = builtins.getAttr "action" ( identity init ) ;
                                                                                                 expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { string = path : value : value ; } ( builtins.attrValue "targets" ( identity init ) ) ) ;
                                                                                                 invalid-init =
                                                                                                     _config.lazy-shell-application
@@ -311,9 +311,9 @@
                                                                                                                         {
                                                                                                                             mounts =
                                                                                                                                 {
-                                                                                                                                    mount = { source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
-                                                                                                                                    standard-error = { is-directory = false ; type = "temporary" ; } ;
-                                                                                                                                    standard-output = { is-directory = false ; type = "temporary" ; } ;
+#                                                                                                                                    mount = { source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
+#                                                                                                                                    standard-error = { is-directory = false ; type = "temporary" ; } ;
+#                                                                                                                                    standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                 } ;
                                                                                                                             name = "init" ;
                                                                                                                             post = null ;
