@@ -396,8 +396,8 @@
                                                                                                                                     OBSERVED_TARGETS="$( find /mounts/mount -mindepth 1 -maxdepth 1 | LC_ALL=C sort )" || failure 5101453011608943
                                                                                                                                     if [[ "$STATUS" == 0 ]] && [[ -s /mounts/standard-error ]] && [[ '${ expected-targets }' == "$OBSERVED_TARGETS" ]]
                                                                                                                                     then
-                                                                                                                                        INPUT="$( jq '{ "arguments" : .arguments , "variables" : .variables }' /mounts/input || failure 9213699588429497
-                                                                                                                                        OUTPUT="$( jq '{ "output" : .standard-output }' /mounts/output )" || failure 9223149214133109
+                                                                                                                                        INPUT="$( jq '.' /mounts/input || failure 9213699588429497
+                                                                                                                                        OUTPUT="$( jq '.' /mounts/output )" || failure 9223149214133109
                                                                                                                                         jq \
                                                                                                                                             --null-input \
                                                                                                                                             --argjson INPUT "$INPUT" \
