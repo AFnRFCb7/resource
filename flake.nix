@@ -359,7 +359,7 @@
                                                                                                                         {
                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                             name = "init" ;
-                                                                                                                            runtimeInputs = [ valid-init ] ;
+                                                                                                                            runtime-inputs = pkgs : [ valid-init ] ;
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     valid-init
