@@ -195,16 +195,16 @@
                                                                                                             variables = { } ;
                                                                                                         } ;
                                                                                                 valid-init =
-                                                                                                    pkgs.coreutils ;
-#                                                                                                    _config.lazy-shell-application
-#                                                                                                        {
-#                                                                                                            mounts =
-#                                                                                                                {
+                                                                                                    _config.lazy-shell-application
+                                                                                                        {
+                                                                                                            mounts =
+                                                                                                                {
 #                                                                                                                    diagnostic = { source = "/mounts/diagnostic" ; type = "bind" ; } ;
 #                                                                                                                    release = { source = "/mounts/release" ; type = "bind" ; } ;
-#                                                                                                                } ;
-#                                                                                                            name = "valid-init" ;
-#                                                                                                            post =
+                                                                                                                } ;
+                                                                                                            name = "valid-init" ;
+                                                                                                            post =
+                                                                                                                null ;
 #                                                                                                                let
 #                                                                                                                    application =
 #                                                                                                                        _config.lazy-shell-application
@@ -224,8 +224,9 @@
 #                                                                                                                                variables = { } ;
 #                                                                                                                            } ;
 #                                                                                                                    in "${ application }/bin/post" ;
-#                                                                                                            runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
-#                                                                                                            text =
+                                                                                                            runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
+                                                                                                            text =
+                                                                                                                "" ;
 #                                                                                                                let
 #                                                                                                                    release =
 #                                                                                                                        let
@@ -300,8 +301,8 @@
 #                                                                                                                        ''
 #                                                                                                                            wrap ${ release }/bin/release /mounts/release/$INDEX --replace INDEX "$INDEX"
 #                                                                                                                        '' ;
-#                                                                                                            variables = { } ;
-#                                                                                                        } ;
+                                                                                                            variables = { } ;
+                                                                                                        } ;
                                                                                                 zzz =
                                                                                                     _config.visitor
                                                                                                         { }
