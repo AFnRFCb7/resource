@@ -366,7 +366,7 @@
                                                                                                                         } ;
                                                                                                         }
                                                                                                         action ;
-                                                                                                in builtins.trace ( builtins.toJSON ( builtins.map builtins.typeOf [ action expected-targets ] ) ) pkgs.coreutils
+                                                                                                in builtins.trace ( builtins.toJSON ( builtins.map builtins.typeOf [ action expected-targets identity invalid-init ] ) ) pkgs.coreutils
                                                                                         )
                                                                                     ] ;
                                                                             text =
