@@ -220,9 +220,23 @@
                                                                                                                                 post = null ;
                                                                                                                                 runtime-inputs = pkgs : [ ] ;
                                                                                                                                 text =
-                                                                                                                                    ''
-                                                                                                                                        "${ resources-directory }/release/$INDEX" ;
-                                                                                                                                    '' ;
+                                                                                                                                    let
+                                                                                                                                        application =
+                                                                                                                                            _config.lazy-shell-application
+                                                                                                                                                {
+                                                                                                                                                    mounts =
+                                                                                                                                                        {
+                                                                                                                                                            release = { source = "${ resources-directory }/release" ; type = bind ; }
+                                                                                                                                                        } ;
+                                                                                                                                                    name = "post" ;
+                                                                                                                                                    post = null ;
+                                                                                                                                                    runtime-inputs = pkgs : [ ] ;
+                                                                                                                                                    text =
+                                                                                                                                                        ''
+                                                                                                                                                            /mounts/release/$INDEX
+                                                                                                                                                        '' ;
+                                                                                                                                                } ;
+                                                                                                                                        in "${ application }/bin/post" ;
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
                                                                                                                     in "${ application }/bin/post" ;
@@ -256,7 +270,7 @@
                                                                                                                                                 while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                 do
                                                                                                                                                     rm "/mounts/flag/$INDEX"
-                                                                                                                                                    find /mounts/pid/$INDEX -mindepth 1 -maxdepth 1 | while read -r PID_FILE
+                                                                                                                                                    find "/mounts/pid/$INDEX" -mindepth 1 -maxdepth 1 | while read -r PID_FILE
                                                                                                                                                     do
                                                                                                                                                         while [[ -f "$PID_FILE" ]]
                                                                                                                                                         do
@@ -264,7 +278,7 @@
                                                                                                                                                         done
                                                                                                                                                     done
                                                                                                                                                     EXPECTED="${ resources-directory }/mounts/$INDEX"
-                                                                                                                                                    find /mounts/gc-roots -type L | while read -r CANDIDATE
+                                                                                                                                                    find "/mounts/gc-roots" -type L | while read -r CANDIDATE
                                                                                                                                                     do
                                                                                                                                                         OBSERVED="$( readlink "$CANDIDATE" )" || failure 6653347034509208
                                                                                                                                                         if [[ "$EXPECTED" == "$OBSERVED" ]]
