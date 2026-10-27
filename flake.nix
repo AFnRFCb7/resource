@@ -56,7 +56,7 @@
                                                                                         ( _config.failure { } )
                                                                                         ( _config.sequential { sequential-file = "${ resources-directory }/sequential.asc" ; sequential-lock = "${ resources-directory }/sequential.lock" ; } )
                                                                                         pkgs.coreutils
-#                                                                                        pkgs.flock
+                                                                                        pkgs.flock
 #                                                                                        (
 #                                                                                            let
 #                                                                                                action = builtins.attrValue "action" ( identity init ) ;
