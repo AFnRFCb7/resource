@@ -359,8 +359,7 @@
                                                                                                                         {
                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                             name = "init" ;
-                                                                                                                            # runtimeInputs = [ valid-init ] ;
-                                                                                                                            runtimeInputs = [ ] ;
+                                                                                                                            runtimeInputs = [ valid-init ] ;
                                                                                                                             text =
                                                                                                                                 ''
                                                                                                                                     valid-init
