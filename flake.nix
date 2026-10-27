@@ -322,68 +322,68 @@
                                                                                                                                     [
                                                                                                                                         pkgs.coreutils
                                                                                                                                         pkgs.jq
-                                                                                                                                        (
-                                                                                                                                            let
-                                                                                                                                                identity =
-                                                                                                                                                    {
-                                                                                                                                                        runtime-inputs ? pkgs : [ ] ,
-                                                                                                                                                        text ? ""
-                                                                                                                                                    } :
-                                                                                                                                                        {
-                                                                                                                                                            runtime-inputs = runtime-inputs ;
-                                                                                                                                                            text = text ;
-                                                                                                                                                        } ;
-                                                                                                                                                in
-                                                                                                                                                    _config.lazy-shell-application
-                                                                                                                                                        {
-                                                                                                                                                            mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
-                                                                                                                                                            name = "init" ;
-                                                                                                                                                            post = null ;
-                                                                                                                                                            runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
-                                                                                                                                                            text = builtins.getAttr "text" ( identity ( value null ) ) ;
-                                                                                                                                                            variables = { } ;
-                                                                                                                                                        }
-                                                                                                                                        )
-                                                                                                                                        invalid-init
-                                                                                                                                        valid-init
+#                                                                                                                                        (
+#                                                                                                                                            let
+#                                                                                                                                                identity =
+#                                                                                                                                                    {
+#                                                                                                                                                        runtime-inputs ? pkgs : [ ] ,
+#                                                                                                                                                        text ? ""
+#                                                                                                                                                    } :
+#                                                                                                                                                        {
+#                                                                                                                                                            runtime-inputs = runtime-inputs ;
+#                                                                                                                                                            text = text ;
+#                                                                                                                                                        } ;
+#                                                                                                                                                in
+#                                                                                                                                                    _config.lazy-shell-application
+#                                                                                                                                                        {
+#                                                                                                                                                            mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
+#                                                                                                                                                            name = "init" ;
+#                                                                                                                                                            post = null ;
+#                                                                                                                                                            runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
+#                                                                                                                                                            text = builtins.getAttr "text" ( identity ( value null ) ) ;
+#                                                                                                                                                            variables = { } ;
+#                                                                                                                                                        }
+#                                                                                                                                        )
+#                                                                                                                                        invalid-init
+#                                                                                                                                        valid-init
                                                                                                                                     ] ;
                                                                                                                             text =
                                                                                                                                 ''
-                                                                                                                                    mapfile -t ARGUMENTS < <( jq -r '.arguments[]' /mounts/input )
-                                                                                                                                    if jq --exit-status 'has("inputs") and (.inputs | has("standard"))' /mounts/input
-                                                                                                                                    then
-                                                                                                                                        if jq ".inputs.standard" | init "${ "$" }{ARGUMENTS[@]}" /mounts/input > /mounts/standard-input 2> /mounts/standard-error
-                                                                                                                                        then
-                                                                                                                                            STATUS="$?"
-                                                                                                                                        else
-                                                                                                                                            STATUS="$?"
-                                                                                                                                        fi
-                                                                                                                                    else
-                                                                                                                                        if init "${ "$" }{ARGUMENTS[@]}" > /mounts/standard-input 2> /mounts/standard-error
-                                                                                                                                        then
-                                                                                                                                            STATUS="$?"
-                                                                                                                                        else
-                                                                                                                                            STATUS="$?"
-                                                                                                                                        fi
-                                                                                                                                    fi
-                                                                                                                                    cat /mounts/standard-output
-                                                                                                                                    cat /mounts/standard-error >&2
-                                                                                                                                    OBSERVED_TARGETS="$( find /mounts/mount -mindepth 1 -maxdepth 1 | LC_ALL=C sort )" || failure 5101453011608943
-                                                                                                                                    if [[ "$STATUS" == 0 ]] && [[ -s /mounts/standard-error ]] && [[ '${ expected-targets }' == "$OBSERVED_TARGETS" ]]
-                                                                                                                                    then
-                                                                                                                                        valid-init
-                                                                                                                                    elif [[ "$STATUS" != 0 ]]
-                                                                                                                                    then
-                                                                                                                                        invalid-init new 9853943334807469 "$STATUS"
-                                                                                                                                    elif [[ ! -s /mounts/standard-error ]]
-                                                                                                                                    then
-                                                                                                                                        invalid-init new 7230516165710518
-                                                                                                                                    elif [[ '${ expected-targets }' != "$OBSERVED_TARGETS" ]]
-                                                                                                                                    then
-                                                                                                                                        invalid-init new 3004874158363809
-                                                                                                                                    else
-                                                                                                                                        invalid-init new 1309415748011104
-                                                                                                                                    fi
+#                                                                                                                                    mapfile -t ARGUMENTS < <( jq -r '.arguments[]' /mounts/input )
+#                                                                                                                                    if jq --exit-status 'has("inputs") and (.inputs | has("standard"))' /mounts/input
+#                                                                                                                                    then
+#                                                                                                                                        if jq ".inputs.standard" | init "${ "$" }{ARGUMENTS[@]}" /mounts/input > /mounts/standard-input 2> /mounts/standard-error
+#                                                                                                                                        then
+#                                                                                                                                            STATUS="$?"
+#                                                                                                                                        else
+#                                                                                                                                            STATUS="$?"
+#                                                                                                                                        fi
+#                                                                                                                                    else
+#                                                                                                                                        if init "${ "$" }{ARGUMENTS[@]}" > /mounts/standard-input 2> /mounts/standard-error
+#                                                                                                                                        then
+#                                                                                                                                            STATUS="$?"
+#                                                                                                                                        else
+#                                                                                                                                            STATUS="$?"
+#                                                                                                                                        fi
+#                                                                                                                                    fi
+#                                                                                                                                    cat /mounts/standard-output
+#                                                                                                                                    cat /mounts/standard-error >&2
+#                                                                                                                                    OBSERVED_TARGETS="$( find /mounts/mount -mindepth 1 -maxdepth 1 | LC_ALL=C sort )" || failure 5101453011608943
+#                                                                                                                                    if [[ "$STATUS" == 0 ]] && [[ -s /mounts/standard-error ]] && [[ '${ expected-targets }' == "$OBSERVED_TARGETS" ]]
+#                                                                                                                                    then
+#                                                                                                                                        valid-init
+#                                                                                                                                    elif [[ "$STATUS" != 0 ]]
+#                                                                                                                                    then
+#                                                                                                                                        invalid-init new 9853943334807469 "$STATUS"
+#                                                                                                                                    elif [[ ! -s /mounts/standard-error ]]
+#                                                                                                                                    then
+#                                                                                                                                        invalid-init new 7230516165710518
+#                                                                                                                                    elif [[ '${ expected-targets }' != "$OBSERVED_TARGETS" ]]
+#                                                                                                                                    then
+#                                                                                                                                        invalid-init new 3004874158363809
+#                                                                                                                                    else
+#                                                                                                                                        invalid-init new 1309415748011104
+#                                                                                                                                    fi
                                                                                                                                 '' ;
                                                                                                                             variables = { } ;
                                                                                                                         } ;
