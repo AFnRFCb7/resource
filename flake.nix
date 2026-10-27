@@ -348,7 +348,7 @@
                                                                                                                                                         }
                                                                                                                                         )
                                                                                                                                         invalid-init
-#                                                                                                                                        valid-init
+                                                                                                                                        valid-init
                                                                                                                                     ] ;
                                                                                                                             text = "" ;
                                                                                                                             variables = { } ;
