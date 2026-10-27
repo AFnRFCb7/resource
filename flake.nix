@@ -546,7 +546,7 @@
                                                                                                                                         fi
                                                                                                                                     '' ;
                                                                                                                             } ;
-                                                                                                                in transform command ;
+                                                                                                                in transform process ;
                                                                                                 in builtins.genList generator ( builtins.length processes )
                                                                                             )
                                                                                             [
