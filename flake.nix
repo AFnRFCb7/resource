@@ -469,10 +469,7 @@
                                                                                                                 process = builtins.elemAt processes index ;
                                                                                                                 transform =
                                                                                                                     {
-                                                                                                                        runtimeInputs ,
-                                                                                                                        standard-error ,
-                                                                                                                        standard-output ,
-                                                                                                                        status ,
+                                                                                                                        runtime-inputs ,
                                                                                                                         text
                                                                                                                     } :
                                                                                                                         _pkgs.writeShellApplication
