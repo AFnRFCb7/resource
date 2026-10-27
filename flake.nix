@@ -218,7 +218,7 @@
                                                                                                                                 mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
                                                                                                                                 name = "post" ;
                                                                                                                                 post = null ;
-                                                                                                                                pkgs = pkgs : [ ] ;
+                                                                                                                                runtime-inputs = pkgs : [ ] ;
                                                                                                                                 text =
                                                                                                                                     ''
                                                                                                                                         "${ resources-directory }/release/$INDEX" ;
@@ -520,6 +520,10 @@
                                                                                                             runtimeInputs = [ pkgs.findutils ] ;
                                                                                                             text =
                                                                                                                 ''
+                                                                                                                    if [[ -f ${ resources-directory }/log.yaml ]]
+                                                                                                                    then
+                                                                                                                        rm ${ resources-directory }/log.yaml
+                                                                                                                    fi
                                                                                                                     if [[ -d ${ gc-roots-directory } ]]
                                                                                                                     then
                                                                                                                         find ${ gc-roots-directory } -mindepth 1 -exec failure 5361527405190707 {} \;
