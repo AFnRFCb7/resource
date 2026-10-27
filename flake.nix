@@ -112,7 +112,7 @@
                                                                                                                                                                         _config.lazy-shell-application
                                                                                                                                                                             {
                                                                                                                                                                                 mounts = { } ;
-                                                                                                                                                                                name = "recover" ;
+                                                                                                                                                                                name = "recovery" ;
                                                                                                                                                                                 post = null ;
                                                                                                                                                                                 runtime-inputs = builtins.getAttrs "runtime-inputs" ( identity ( value null ) ) ;
                                                                                                                                                                                 text = builtins.getAttrs "text" ( identity ( value null ) ) ;
