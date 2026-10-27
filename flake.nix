@@ -235,7 +235,7 @@
                                                                                                                                                     runtime-inputs = pkgs : [ pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                     text =
                                                                                                                                                         ''
-                                                                                                                                                            /mounts/release/$INDEX
+                                                                                                                                                            "/mounts/release/$INDEX"
                                                                                                                                                             exec 103> /mounts/log.lock
                                                                                                                                                             flock -x 103
                                                                                                                                                             yq eval --prettyPrint "[.]" >> /mounts/log.yaml
