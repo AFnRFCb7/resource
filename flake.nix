@@ -218,11 +218,7 @@
                                                                                                                                 mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
                                                                                                                                 name = "post" ;
                                                                                                                                 post = null ;
-                                                                                                                                pkgs =
-                                                                                                                                    pkgs :
-                                                                                                                                        [
-
-                                                                                                                                        ] ;
+                                                                                                                                pkgs = pkgs : [ ] ;
                                                                                                                                 text =
                                                                                                                                     ''
                                                                                                                                         "${ resources-directory }/release/$INDEX" ;
