@@ -14,7 +14,7 @@
                                         in
                                             {
                                                 options.lazy-shell-resource =
-                                                    _lib.mkOption
+                                                    identified.lib.mkOption
                                                         {
                                                             default =
                                                                 {
@@ -470,7 +470,7 @@
                                                                                 '' ;
                                                                             variables = { } ;
                                                                         } ;
-                                                            type = _lib.types.functionTo ( _lib.types.functionTo _lib.types.package ) ;
+                                                            type = identified.lib.types.functionTo ( identified.lib.types.functionTo identified.lib.types.package ) ;
                                                         } ;
                                             } ;
                             in
