@@ -515,7 +515,6 @@
                                                                             else if builtins.typeOf input == "null" then module
                                                                             else if builtins.typeOf input == "set" then module
                                                                             else builtins.throw "7950598338383442" ;
-                                                                        _pkgs = pkgs-identity pkgs ;
                                                                         in
                                                                             {
                                                                                 config.environment.systemPackages =
@@ -549,10 +548,10 @@
                                                                                                                         runtime-inputs ,
                                                                                                                         text
                                                                                                                     } :
-                                                                                                                        _pkgs.writeShellApplication
+                                                                                                                        identified.pkgs.writeShellApplication
                                                                                                                             {
                                                                                                                                 name = "process-${ builtins.toString index }" ;
-                                                                                                                                runtimeInputs = runtime-inputs { config = identified.config ; pkgs = _pkgs ; } ;
+                                                                                                                                runtimeInputs = runtime-inputs { config = identified.config ; pkgs = identified.pkgs ; } ;
                                                                                                                                 text = text ;
                                                                                                                             } ;
                                                                                                                 in transform process ;
@@ -561,10 +560,10 @@
                                                                                             [
                                                                                                 ( identified.config.failure { } )
                                                                                                 (
-                                                                                                    _pkgs.writeShellApplication
+                                                                                                    identified.pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "check-log" ;
-                                                                                                            runtimeInputs = [ ( identified.config.failure { } ) _pkgs.coreutils _pkgs.flock _pkgs.jq _pkgs.yq-go ] ;
+                                                                                                            runtimeInputs = [ ( identified.config.failure { } ) identified.pkgs.coreutils identified.pkgs.flock identified.pkgs.jq identified.pkgs.yq-go ] ;
                                                                                                             text =
                                                                                                                 ''
                                                                                                                     exec 132> ${ resources-directory }/log.lock
@@ -600,7 +599,7 @@
                                                                                                         }
                                                                                                 )
                                                                                                 (
-                                                                                                    _pkgs.writeShellApplication
+                                                                                                    identified.pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "terminal" ;
                                                                                                             runtimeInputs = [ pkgs.coreutils pkgs.findutils ] ;
