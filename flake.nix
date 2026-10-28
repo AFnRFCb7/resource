@@ -5,12 +5,7 @@
             {
                 lib =
                     output :
-                    {
-                        config-identity ? x : x ,
-                        implementation-identity ? x : x ,
-                        lib-identity ? x : x ,
-                        pkgs-identity ? x : x
-                    } @input :
+                    input :
                         let
                             implementation =
                                 { config , lib , ... } @module :
@@ -18,7 +13,6 @@
                                         identified =
                                             if builtins.typeOf input == "lambda" then input module
                                             else if builtins.typeOf input == "null" then module
-                                            else if builtins.typeOf input == "set" then module
                                             else builtins.throw "7950598338383442" ;
                                         in
                                             {
@@ -513,7 +507,6 @@
                                                                         identified =
                                                                             if builtins.typeOf input == "lambda" then input module
                                                                             else if builtins.typeOf input == "null" then module
-                                                                            else if builtins.typeOf input == "set" then module
                                                                             else builtins.throw "7950598338383442" ;
                                                                         in
                                                                             {
