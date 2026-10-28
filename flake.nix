@@ -18,8 +18,9 @@
                                         identified =
                                             if builtins.typeOf input == "lambda" then input module
                                             else if builtins.typeOf input == "null" then module
+                                            else if builtins.typeOf input == "set" then module
                                             else builtins.throw "7950598338383442" ;
-                                        _config = config-identity config ;
+                                        _config = identified.config ;
                                         _lib = lib-identity lib ;
                                         in
                                             {
