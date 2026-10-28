@@ -594,7 +594,7 @@
                                                                                                                 ''
                                                                                                                     if [[ -f ${ resources-directory }/log.yaml ]]
                                                                                                                     then
-                                                                                                                        rm ${ resources-directory }/log.yaml
+                                                                                        v                                rm ${ resources-directory }/log.yaml
                                                                                                                     fi
                                                                                                                     if [[ -f ${ resources-directory }/sequential.asc ]]
                                                                                                                     then
