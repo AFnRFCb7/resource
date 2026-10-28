@@ -4,14 +4,10 @@
         { self } :
             {
                 lib =
-                    {
-                        config-identity ? x : x ,
-                        implementation-identity ? x : x ,
-                        lib-identity ? x : x ,
-                        pkgs-identity ? x : x
-                    } :
+                    input :
+                    output :
                         let
-                            implementation =
+                              implementation =
                                 { config , lib , ... } :
                                     let
                                         _config = config-identity config ;
