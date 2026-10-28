@@ -546,7 +546,7 @@
                                                                                                                             pkgs.writeShellApplication
                                                                                                                                 {
                                                                                                                                     name = "process-${ builtins.toString index }" ;
-                                                                                                                                    runtimeInputs = runtime-inputs { config = config ; pkgs = pkgs ; } ;
+                                                                                                                                    runtimeInputs = runtime-inputs identified ;
                                                                                                                                     text = text ;
                                                                                                                                 } ;
                                                                                                                     in transform process ;
