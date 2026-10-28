@@ -10,10 +10,7 @@
                             implementation =
                                 { config , lib , ... } @module :
                                     let
-                                        identified =
-                                            if builtins.typeOf input == "lambda" then input module
-                                            else if builtins.typeOf input == "null" then module
-                                            else builtins.throw "7950598338383442" ;
+
                                         in
                                             {
                                                 options.lazy-shell-resource =
