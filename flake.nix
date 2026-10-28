@@ -4,15 +4,16 @@
         { self } :
             {
                 lib =
+                    input :
                     {
                         config-identity ? x : x ,
                         implementation-identity ? x : x ,
                         lib-identity ? x : x ,
                         pkgs-identity ? x : x
-                    } :
+                    } @output :
                         let
                             implementation =
-                                { config , lib , ... } :
+                                { config , lib , ... } @module :
                                     let
                                         _config = config-identity config ;
                                         _lib = lib-identity lib ;
@@ -504,7 +505,7 @@
                                                         {
                                                             name = "nixos-test" ;
                                                             nodes.client =
-                                                                { config , pkgs , ... } :
+                                                                { config , pkgs , ... } @module :
                                                                     let
                                                                         _config = config-identity config ;
                                                                         _pkgs = pkgs-identity pkgs ;
