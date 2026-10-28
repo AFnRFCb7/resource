@@ -8,10 +8,9 @@
                     output :
                         let
                               implementation =
-                                { config , lib , ... } :
+                                { ... } @module :
                                     let
-                                        _config = config-identity config ;
-                                        _lib = lib-identity lib ;
+                                        identified = if builtins.typeOf input == "lambda" then input module else if builtins.typeOf input == "null" then module else builtins.throw "7010516846764409" ;
                                         in
                                             {
                                                 options.lazy-shell-resource =
@@ -28,7 +27,7 @@
                                                                     error ,
                                                                     name
                                                                 } :
-                                                                    _config.lazy-shell-application
+                                                                    identified.config.lazy-shell-application
                                                                         {
                                                                             mounts =
                                                                                 {
@@ -169,7 +168,7 @@
                                                                                                                                                     } ;
                                                                                                                                 null =
                                                                                                                                     path : value :
-                                                                                                                                        _config.lazy-shell-application
+                                                                                                                                        identified.config.lazy-shell-application
                                                                                                                                             {
                                                                                                                                                 mounts =
                                                                                                                                                     {
@@ -198,7 +197,7 @@
                                                                                                             variables = { } ;
                                                                                                         } ;
                                                                                                 valid-init =
-                                                                                                    _config.lazy-shell-application
+                                                                                                    identified.config.lazy-shell-application
                                                                                                         {
                                                                                                             mounts =
                                                                                                                 {
@@ -209,7 +208,7 @@
                                                                                                             post =
                                                                                                                 let
                                                                                                                     application =
-                                                                                                                        _config.lazy-shell-application
+                                                                                                                        identified.config.lazy-shell-application
                                                                                                                             {
                                                                                                                                 mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
                                                                                                                                 name = "post" ;
@@ -218,7 +217,7 @@
                                                                                                                                 text =
                                                                                                                                     let
                                                                                                                                         application =
-                                                                                                                                            _config.lazy-shell-application
+                                                                                                                                            identified.config.lazy-shell-application
                                                                                                                                                 {
                                                                                                                                                     mounts =
                                                                                                                                                         {
@@ -258,7 +257,7 @@
                                                                                                                                         recovery = recovery ;
                                                                                                                                     } ;
                                                                                                                             in
-                                                                                                                                _config.lazy-shell-application
+                                                                                                                                identified.config.lazy-shell-application
                                                                                                                                     {
                                                                                                                                         mounts =
                                                                                                                                             {
@@ -356,7 +355,7 @@
                                                                                                                                                             text = text ;
                                                                                                                                                         } ;
                                                                                                                                                 in
-                                                                                                                                                    _config.lazy-shell-application
+                                                                                                                                                    identified.config.lazy-shell-application
                                                                                                                                                         {
                                                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                                                             name = "init" ;
@@ -420,7 +419,7 @@
                                                                                                                         } ;
                                                                                                             null =
                                                                                                                 path : value :
-                                                                                                                    _config.lazy-shell-application
+                                                                                                                    identified.config.lazy-shell-application
                                                                                                                         {
                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                             name = "init" ;
@@ -502,8 +501,7 @@
                                                             nodes.client =
                                                                 { config , pkgs , ... } :
                                                                     let
-                                                                        _config = config-identity config ;
-                                                                        _pkgs = pkgs-identity pkgs ;
+                                                                        identified = if builtins.typeOf input == "lambda" then input module else if builtins.typeOf input == "null" then module else builtins.throw "7010516846764409" ;
                                                                         in
                                                                             {
                                                                                 config.environment.systemPackages =
@@ -513,7 +511,7 @@
                                                                                                 let
                                                                                                     mapper =
                                                                                                         name : { error , init , release } :
-                                                                                                            _config.lazy-shell-resource
+                                                                                                            identified.config.lazy-shell-resource
                                                                                                                 {
                                                                                                                     gc-roots-directory = gc-roots-directory ;
                                                                                                                     init = init ;
@@ -537,22 +535,22 @@
                                                                                                                         runtime-inputs ,
                                                                                                                         text
                                                                                                                     } :
-                                                                                                                        _pkgs.writeShellApplication
+                                                                                                                        identified.pkgs.writeShellApplication
                                                                                                                             {
                                                                                                                                 name = "process-${ builtins.toString index }" ;
-                                                                                                                                runtimeInputs = runtime-inputs { config = _config ; pkgs = _pkgs ; } ;
+                                                                                                                                runtimeInputs = runtime-inputs { config = identified.config ; pkgs = identified.pkgs ; } ;
                                                                                                                                 text = text ;
                                                                                                                             } ;
                                                                                                                 in transform process ;
                                                                                                 in builtins.genList generator ( builtins.length processes )
                                                                                             )
                                                                                             [
-                                                                                                ( _config.failure { } )
+                                                                                                ( identified.config.failure { } )
                                                                                                 (
-                                                                                                    _pkgs.writeShellApplication
+                                                                                                    identified.pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "check-log" ;
-                                                                                                            runtimeInputs = [ ( _config.failure { } ) _pkgs.coreutils _pkgs.flock _pkgs.jq _pkgs.yq-go ] ;
+                                                                                                            runtimeInputs = [ ( identified.config.failure { } ) identified.pkgs.coreutils identified.pkgs.flock identified.pkgs.jq identified.pkgs.yq-go ] ;
                                                                                                             text =
                                                                                                                 ''
                                                                                                                     exec 132> ${ resources-directory }/log.lock
@@ -588,7 +586,7 @@
                                                                                                         }
                                                                                                 )
                                                                                                 (
-                                                                                                    _pkgs.writeShellApplication
+                                                                                                    identified.pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "terminal" ;
                                                                                                             runtimeInputs = [ pkgs.coreutils pkgs.findutils ] ;
