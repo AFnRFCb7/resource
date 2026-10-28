@@ -658,7 +658,10 @@
                                                         } ;
                                                 type = "lazy-shell-resource" ;
                                             } ;
-                                    implementation = implementation-identity implementation ;
+                                    implementation =
+                                        if builtins.typeOf output == "lambda" then output implementation
+                                        else if builtins.typeOf output == "null" then implementation
+                                        else builtins.throw "3027136006405690" ;
                                 } ;
             } ;
 }
