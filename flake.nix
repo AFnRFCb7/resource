@@ -602,7 +602,7 @@
                                                                                                     identified.pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "terminal" ;
-                                                                                                            runtimeInputs = [ pkgs.coreutils pkgs.findutils ] ;
+                                                                                                            runtimeInputs = [ identified.pkgs.coreutils identified.pkgs.findutils ] ;
                                                                                                             text =
                                                                                                                 ''
                                                                                                                     if [[ -f ${ resources-directory }/log.yaml ]]
