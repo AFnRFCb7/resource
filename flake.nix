@@ -20,11 +20,10 @@
                                             else if builtins.typeOf input == "null" then module
                                             else if builtins.typeOf input == "set" then module
                                             else builtins.throw "7950598338383442" ;
-                                        _lib = identified.lib ;
                                         in
                                             {
                                                 options.lazy-shell-resource =
-                                                    _lib.mkOption
+                                                    identified.lib.mkOption
                                                         {
                                                             default =
                                                                 {
@@ -480,7 +479,7 @@
                                                                                 '' ;
                                                                             variables = { } ;
                                                                         } ;
-                                                            type = _lib.types.functionTo ( _lib.types.functionTo _lib.types.package ) ;
+                                                            type = identified.lib.types.functionTo ( identified.lib.types.functionTo identified.lib.types.package ) ;
                                                         } ;
                                             } ;
                             in
