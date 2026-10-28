@@ -51,16 +51,16 @@
                                                                             name = name ;
                                                                             post = null ;
                                                                             runtime-inputs =
-                                                                                pkgs :
+                                                                                { config , pkgs , ... }:
                                                                                     [
-                                                                                        ( _config.failure { } )
-                                                                                        ( _config.sequential { sequential-file = "${ resources-directory }/sequential.asc" ; sequential-lock = "${ resources-directory }/sequential.lock" ; } )
+                                                                                        ( config.failure { } )
+                                                                                        ( config.sequential { sequential-file = "${ resources-directory }/sequential.asc" ; sequential-lock = "${ resources-directory }/sequential.lock" ; } )
                                                                                         pkgs.coreutils
                                                                                         pkgs.flock
                                                                                         (
                                                                                             let
                                                                                                 action =
-                                                                                                    _config.visitor
+                                                                                                    config.visitor
                                                                                                         { }
                                                                                                         {
                                                                                                             lambda = path : value : builtins.getAttr "action" ( identity value ) ;
@@ -79,7 +79,7 @@
                                                                                                             targets = targets ;
                                                                                                         } ;
                                                                                                 invalid-init =
-                                                                                                    _config.lazy-shell-application
+                                                                                                    config.lazy-shell-application
                                                                                                         {
                                                                                                             mounts =
                                                                                                                 {
@@ -87,7 +87,7 @@
                                                                                                                 } ;
                                                                                                             name = "invalid-init" ;
                                                                                                             post = null ;
-                                                                                                            runtime-inputs = pkgs : [ ( _config.failure { } ) _config.wrap pkgs.coreutils ] ;
+                                                                                                            runtime-inputs = pkgs : [ ( _config.failure { } )  config.wrap pkgs.coreutils ] ;
                                                                                                             text =
                                                                                                                 let
                                                                                                                     recovery =
