@@ -20,7 +20,6 @@
                                             else if builtins.typeOf input == "null" then module
                                             else if builtins.typeOf input == "set" then module
                                             else builtins.throw "7950598338383442" ;
-                                        _config = identified.config ;
                                         _lib = lib-identity lib ;
                                         in
                                             {
@@ -38,7 +37,7 @@
                                                                     error ,
                                                                     name
                                                                 } :
-                                                                    _config.lazy-shell-application
+                                                                    identified.config.lazy-shell-application
                                                                         {
                                                                             mounts =
                                                                                 {
@@ -59,21 +58,21 @@
                                                                             runtime-inputs =
                                                                                 pkgs :
                                                                                     [
-                                                                                        ( _config.failure { } )
-                                                                                        ( _config.sequential { sequential-file = "${ resources-directory }/sequential.asc" ; sequential-lock = "${ resources-directory }/sequential.lock" ; } )
+                                                                                        ( identified.config.failure { } )
+                                                                                        ( identified.config.sequential { sequential-file = "${ resources-directory }/sequential.asc" ; sequential-lock = "${ resources-directory }/sequential.lock" ; } )
                                                                                         pkgs.coreutils
                                                                                         pkgs.flock
                                                                                         (
                                                                                             let
                                                                                                 action =
-                                                                                                    _config.visitor
+                                                                                                    identified.config.visitor
                                                                                                         { }
                                                                                                         {
                                                                                                             lambda = path : value : builtins.getAttr "action" ( identity value ) ;
                                                                                                             null = path : value : value ;
                                                                                                         }
                                                                                                         init ;
-                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( _config.visitor { } { string = path : value : value ; } ( builtins.getAttr "targets" ( identity init ) ) ) ;
+                                                                                                expected-targets = builtins.sort ( a : b : a < b ) ( identified.config.visitor { } { string = path : value : value ; } ( builtins.getAttr "targets" ( identity init ) ) ) ;
                                                                                                 identity =
                                                                                                     {
                                                                                                         action ? null ,
@@ -85,7 +84,7 @@
                                                                                                             targets = targets ;
                                                                                                         } ;
                                                                                                 invalid-init =
-                                                                                                    _config.lazy-shell-application
+                                                                                                    identified.config.lazy-shell-application
                                                                                                         {
                                                                                                             mounts =
                                                                                                                 {
@@ -93,11 +92,11 @@
                                                                                                                 } ;
                                                                                                             name = "invalid-init" ;
                                                                                                             post = null ;
-                                                                                                            runtime-inputs = pkgs : [ ( _config.failure { } ) _config.wrap pkgs.coreutils ] ;
+                                                                                                            runtime-inputs = pkgs : [ ( identified.config.failure { } ) identified.config.wrap pkgs.coreutils ] ;
                                                                                                             text =
                                                                                                                 let
                                                                                                                     recovery =
-                                                                                                                        _config.visitor
+                                                                                                                        identified.config.visitor
                                                                                                                             { }
                                                                                                                             {
                                                                                                                                 lambda =
@@ -113,7 +112,7 @@
                                                                                                                                                         text = text ;
                                                                                                                                                     } ;
                                                                                                                                             in
-                                                                                                                                                _config.lazy-shell-application
+                                                                                                                                                identified.config.lazy-shell-application
                                                                                                                                                     {
                                                                                                                                                         mounts =
                                                                                                                                                             {
@@ -132,7 +131,7 @@
                                                                                                                                                                     pkgs.coreutils
                                                                                                                                                                     pkgs.jq
                                                                                                                                                                     (
-                                                                                                                                                                        _config.lazy-shell-application
+                                                                                                                                                                        identified.config.lazy-shell-application
                                                                                                                                                                             {
                                                                                                                                                                                 mounts = { } ;
                                                                                                                                                                                 name = "recovery" ;
@@ -179,7 +178,7 @@
                                                                                                                                                     } ;
                                                                                                                                 null =
                                                                                                                                     path : value :
-                                                                                                                                        _config.lazy-shell-application
+                                                                                                                                        identified.config.lazy-shell-application
                                                                                                                                             {
                                                                                                                                                 mounts =
                                                                                                                                                     {
@@ -199,7 +198,7 @@
                                                                                                                             PROVENANCE="$1"
                                                                                                                             if [[ "$PROVENANCE" == "new" ]]
                                                                                                                             then
-                                                                                                                                ${ builtins.concatStringsSep "\n" ( _config.visitor { } { lambda = path : value : let x = value null ; in ''wrap ${ x } /mounts/invalid-init/${ builtins.toJSON path }/recovery.sh 0500 --replace INDEX "$INDEX"'' ; } recovery ) }
+                                                                                                                                ${ builtins.concatStringsSep "\n" ( identified.config.visitor { } { lambda = path : value : let x = value null ; in ''wrap ${ x } /mounts/invalid-init/${ builtins.toJSON path }/recovery.sh 0500 --replace INDEX "$INDEX"'' ; } recovery ) }
                                                                                                                             else
                                                                                                                                 failure 4666519411676571
                                                                                                                             fi
@@ -208,7 +207,7 @@
                                                                                                             variables = { } ;
                                                                                                         } ;
                                                                                                 valid-init =
-                                                                                                    _config.lazy-shell-application
+                                                                                                    identified.config.lazy-shell-application
                                                                                                         {
                                                                                                             mounts =
                                                                                                                 {
@@ -219,7 +218,7 @@
                                                                                                             post =
                                                                                                                 let
                                                                                                                     application =
-                                                                                                                        _config.lazy-shell-application
+                                                                                                                        identified.config.lazy-shell-application
                                                                                                                             {
                                                                                                                                 mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
                                                                                                                                 name = "post" ;
@@ -228,7 +227,7 @@
                                                                                                                                 text =
                                                                                                                                     let
                                                                                                                                         application =
-                                                                                                                                            _config.lazy-shell-application
+                                                                                                                                            identified.config.lazy-shell-application
                                                                                                                                                 {
                                                                                                                                                     mounts =
                                                                                                                                                         {
@@ -238,7 +237,7 @@
                                                                                                                                                         } ;
                                                                                                                                                     name = "post" ;
                                                                                                                                                     post = null ;
-                                                                                                                                                    runtime-inputs = pkgs : [ ( _config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
+                                                                                                                                                    runtime-inputs = pkgs : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                     text =
                                                                                                                                                         ''
                                                                                                                                                             "/mounts/release/$INDEX"
@@ -253,7 +252,7 @@
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
                                                                                                                     in "${ application }/bin/post" ;
-                                                                                                            runtime-inputs = pkgs : [ _config.wrap pkgs.coreutils ] ;
+                                                                                                            runtime-inputs = pkgs : [ identified.config.wrap pkgs.coreutils ] ;
                                                                                                             text =
                                                                                                                 let
                                                                                                                     release =
@@ -268,7 +267,7 @@
                                                                                                                                         recovery = recovery ;
                                                                                                                                     } ;
                                                                                                                             in
-                                                                                                                                _config.lazy-shell-application
+                                                                                                                                identified.config.lazy-shell-application
                                                                                                                                     {
                                                                                                                                         mounts =
                                                                                                                                             {
@@ -332,12 +331,12 @@
                                                                                                             variables = { } ;
                                                                                                         } ;
                                                                                                 in
-                                                                                                    _config.visitor
+                                                                                                    identified.config.visitor
                                                                                                         { }
                                                                                                         {
                                                                                                             lambda =
                                                                                                                 path : value :
-                                                                                                                    _config.lazy-shell-application
+                                                                                                                    identified.config.lazy-shell-application
                                                                                                                         {
                                                                                                                             mounts =
                                                                                                                                 {
@@ -366,7 +365,7 @@
                                                                                                                                                             text = text ;
                                                                                                                                                         } ;
                                                                                                                                                 in
-                                                                                                                                                    _config.lazy-shell-application
+                                                                                                                                                    identified.config.lazy-shell-application
                                                                                                                                                         {
                                                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                                                             name = "init" ;
@@ -430,7 +429,7 @@
                                                                                                                         } ;
                                                                                                             null =
                                                                                                                 path : value :
-                                                                                                                    _config.lazy-shell-application
+                                                                                                                    identified.config.lazy-shell-application
                                                                                                                         {
                                                                                                                             mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                             name = "init" ;
@@ -517,7 +516,6 @@
                                                                             else if builtins.typeOf input == "null" then module
                                                                             else if builtins.typeOf input == "set" then module
                                                                             else builtins.throw "7950598338383442" ;
-                                                                        _config = config-identity config ;
                                                                         _pkgs = pkgs-identity pkgs ;
                                                                         in
                                                                             {
@@ -528,7 +526,7 @@
                                                                                                 let
                                                                                                     mapper =
                                                                                                         name : { error , init , release } :
-                                                                                                            _config.lazy-shell-resource
+                                                                                                            identified.config.lazy-shell-resource
                                                                                                                 {
                                                                                                                     gc-roots-directory = gc-roots-directory ;
                                                                                                                     init = init ;
@@ -555,19 +553,19 @@
                                                                                                                         _pkgs.writeShellApplication
                                                                                                                             {
                                                                                                                                 name = "process-${ builtins.toString index }" ;
-                                                                                                                                runtimeInputs = runtime-inputs { config = _config ; pkgs = _pkgs ; } ;
+                                                                                                                                runtimeInputs = runtime-inputs { config = identified.config ; pkgs = _pkgs ; } ;
                                                                                                                                 text = text ;
                                                                                                                             } ;
                                                                                                                 in transform process ;
                                                                                                 in builtins.genList generator ( builtins.length processes )
                                                                                             )
                                                                                             [
-                                                                                                ( _config.failure { } )
+                                                                                                ( identified.config.failure { } )
                                                                                                 (
                                                                                                     _pkgs.writeShellApplication
                                                                                                         {
                                                                                                             name = "check-log" ;
-                                                                                                            runtimeInputs = [ ( _config.failure { } ) _pkgs.coreutils _pkgs.flock _pkgs.jq _pkgs.yq-go ] ;
+                                                                                                            runtimeInputs = [ ( identified.config.failure { } ) _pkgs.coreutils _pkgs.flock _pkgs.jq _pkgs.yq-go ] ;
                                                                                                             text =
                                                                                                                 ''
                                                                                                                     exec 132> ${ resources-directory }/log.lock
