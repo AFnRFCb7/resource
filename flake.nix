@@ -553,7 +553,7 @@
                                                                                                                                                 pkgs.writeShellApplication
                                                                                                                                                     {
                                                                                                                                                         name = "process" ;
-                                                                                                                                                        runtime-inputs = runtime-inputs identified ;
+                                                                                                                                                        runtimeInputs = runtime-inputs identified ;
                                                                                                                                                         text = text ;
                                                                                                                                                     }
                                                                                                                                             )
