@@ -13,7 +13,7 @@
                     } @input :
                         let
                             implementation =
-                                { config , lib , ... } @module :
+                                { config , lib , pkgs , ... } @module :
                                     let
                                         identified =
                                             if builtins.typeOf input == "lambda" then input module
@@ -632,7 +632,7 @@
                                                                                                 )
                                                                                             ]
                                                                                         ] ;
-                                                                                imports = [ failure implementation   sequential trip visitor wrap ] ;
+                                                                                imports = [ failure implementation lazy-shell-application sequential trip visitor wrap ] ;
                                                                             } ;
                                                             testScript =
                                                                 builtins.concatStringsSep
