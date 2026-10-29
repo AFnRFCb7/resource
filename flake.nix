@@ -237,7 +237,7 @@
                                                                                                                                                         } ;
                                                                                                                                                     name = "post" ;
                                                                                                                                                     post = null ;
-                                                                                                                                                    runtime-inputs = pkgs : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
+                                                                                                                                                    runtime-inputs = { pkgs , ... } : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                     text =
                                                                                                                                                         ''
                                                                                                                                                             "/mounts/release/$INDEX"
