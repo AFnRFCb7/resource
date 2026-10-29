@@ -625,6 +625,7 @@
                                                                                                                         do
                                                                                                                             FAILURE="$( cat "$FAILURE_FLAG" )" || failure 2012702184191768
                                                                                                                             failure "$FAILURE"
+                                                                                                                        done
                                                                                                                         if [[ -f ${ resources-directory }/log.yaml ]]
                                                                                                                         then
                                                                                                                             rm ${ resources-directory }/log.yaml
