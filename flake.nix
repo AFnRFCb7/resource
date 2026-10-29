@@ -485,6 +485,7 @@
                                             lazy-shell-application ,
                                             nixosTest ,
                                             obviated-by ,
+                                            process-lock ,
                                             trip ,
                                             sequential ,
                                             visitor ,
@@ -557,11 +558,15 @@
                                                                                                                                                         text = text ;
                                                                                                                                                     }
                                                                                                                                             )
+                                                                                                                                            ( config.failure { } )
+                                                                                                                                            pkgs.coreutils
                                                                                                                                             pkgs.flock
                                                                                                                                         ] ;
                                                                                                                                     text =
                                                                                                                                         ''
-                                                                                                                                            exec 107> ${ resources-directory }/process.lock
+                                                                                                                                            DIR="$( dirname ${ process-lock } )" || failure 7198350151488825
+                                                                                                                                            mkdir --parents "$DIR"
+                                                                                                                                            exec 107> ${ process-lock }
                                                                                                                                             flock -s 107
                                                                                                                                             process
                                                                                                                                         '' ;
@@ -618,9 +623,8 @@
                                                                                                                 runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                 text =
                                                                                                                     ''
-                                                                                                                        exec 120> ${ resources-directory }/process.lock
+                                                                                                                        exec 120> ${ process-lock }
                                                                                                                         flock -x 120
-                                                                                                                        rm ${ resources-directory }/process.lock
                                                                                                                         find ${ resources-directory } -name "*.failure.txt" | while read -r FAILURE_FLAG
                                                                                                                         do
                                                                                                                             FAILURE="$( cat "$FAILURE_FLAG" )" || failure 2012702184191768
