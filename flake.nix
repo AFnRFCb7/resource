@@ -13,7 +13,7 @@
                                             if builtins.typeOf input == "lambda" then input module
                                             else if builtins.typeOf input == "null" then module
                                             else if builtins.typeOf input == "set" then module
-                                            else builtins.throw "7950598338383442" ;f
+                                            else builtins.throw "7950598338383442" ;
                                         in
                                             with identified ;
                                                 {
