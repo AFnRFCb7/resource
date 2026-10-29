@@ -223,7 +223,7 @@
                                                                                                                                 mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
                                                                                                                                 name = "post" ;
                                                                                                                                 post = null ;
-                                                                                                                                runtime-inputs = pkgs : [ ] ;
+                                                                                                                                runtime-inputs = { pkgs , ... } : [ ] ;
                                                                                                                                 text =
                                                                                                                                     let
                                                                                                                                         application =
