@@ -586,7 +586,7 @@
                                                                                                                         exec 132> ${ resources-directory }/log.lock
                                                                                                                         flock -x 132
                                                                                                                         ORIGINAL="$( mktemp )" || failure 4940461114226167
-                                                                                                                        jq "del(.timestamp)" > "$ORIGINAL"
+                                                                                                                        jq --sort-keys "del(.timestamp)" > "$ORIGINAL"
                                                                                                                         N="$( jq 'length' "$ORIGINAL" )" || failure 0163978703024678
                                                                                                                         CORRECT=false
                                                                                                                         while [[ "$#" -gt 0 ]]
