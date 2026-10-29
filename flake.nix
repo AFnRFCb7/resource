@@ -588,7 +588,6 @@
                                                                                                                         done
                                                                                                                         if [[ "$CORRECT" != true ]]
                                                                                                                         then
-                                                                                                                            mkdir --parents ${ resources-directory }/FAILURE
                                                                                                                             FAILURE_FLAG="$( mktemp --directory ${ resources-directory }/XXXXXXXX --suffix ".failure.txt" )" || failure 5363760878221103
                                                                                                                             failure 4612322045996105 > "$FAILURE_FLAG"
                                                                                                                         fi
@@ -600,9 +599,11 @@
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
                                                                                                                 name = "terminal" ;
-                                                                                                                runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils ] ;
+                                                                                                                runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                 text =
                                                                                                                     ''
+                                                                                                                        exec 120> ${ resources.directory }/log.lock
+                                                                                                                        flock -x 120
                                                                                                                         find ${ resources-directory } -name "*.failure.txt" | while read -r FAILURE_FLAG
                                                                                                                         do
                                                                                                                             FAILURE="$( cat "$FAILURE_FLAG" )" || failure 2012702184191768
