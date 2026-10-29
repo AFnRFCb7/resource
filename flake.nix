@@ -547,8 +547,24 @@
                                                                                                                             pkgs.writeShellApplication
                                                                                                                                 {
                                                                                                                                     name = "process-${ builtins.toString index }" ;
-                                                                                                                                    runtimeInputs = runtime-inputs { config = identified.config ; pkgs = pkgs ; } ;
-                                                                                                                                    text = text ;
+                                                                                                                                    runtimeInputs =
+                                                                                                                                        [
+                                                                                                                                            (
+                                                                                                                                                pkgs.writeShellApplication
+                                                                                                                                                    {
+                                                                                                                                                        name = "process" ;
+                                                                                                                                                        runtime-inputs = runtime-inputs identified ;
+                                                                                                                                                        text = text ;
+                                                                                                                                                    }
+                                                                                                                                            )
+                                                                                                                                            pkgs.flock
+                                                                                                                                        ] ;
+                                                                                                                                    text =
+                                                                                                                                        ''
+                                                                                                                                            exec 107> ${ resources-directory }/process.lock
+                                                                                                                                            flock -s 107
+                                                                                                                                            process
+                                                                                                                                        '' ;
                                                                                                                                 } ;
                                                                                                                     in transform process ;
                                                                                                     in builtins.genList generator ( builtins.length processes )
@@ -602,8 +618,9 @@
                                                                                                                 runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                 text =
                                                                                                                     ''
-                                                                                                                        exec 120> ${ resources.directory }/log.lock
+                                                                                                                        exec 120> ${ resources-directory }/process.lock
                                                                                                                         flock -x 120
+                                                                                                                        rm ${ resources-directory }/process.lock
                                                                                                                         find ${ resources-directory } -name "*.failure.txt" | while read -r FAILURE_FLAG
                                                                                                                         do
                                                                                                                             FAILURE="$( cat "$FAILURE_FLAG" )" || failure 2012702184191768
