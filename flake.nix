@@ -510,14 +510,9 @@
                                                                                 type = lib.types.functionTo lib.types.package ;
                                                                             } ;
                                                                 } ,
-                                            lazy-shell-application ,
                                             nixosTest ,
                                             obviated-by ,
-                                            process-lock ,
-                                            trip ,
-                                            sequential ,
-                                            visitor ? null ,
-                                            wrap
+                                            process-lock
                                         } :
                                         {
                                             gc-roots-directory ,
