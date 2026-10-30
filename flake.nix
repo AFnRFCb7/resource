@@ -480,6 +480,7 @@
                             in
                                 {
                                     check =
+                                        { ... } @imports :
                                         {
                                             failure ?
                                                 { pkgs , ... } @module :
@@ -682,7 +683,19 @@
                                                                                                     )
                                                                                                 ]
                                                                                             ] ;
-                                                                                    imports = [ failure implementation lazy-shell-application sequential trip visitor wrap ] ;
+                                                                                    imports =
+                                                                                        builtins.attrValues
+                                                                                            (
+                                                                                                {
+                                                                                                    failure = builtins.throw "6324398841042759" ;
+                                                                                                    lazy-shell-application = builtins.throw "9137447741533815" ;
+                                                                                                    trip = builtins.throw "1879371352444677" ;
+                                                                                                    sequential = builtins.throw "6420647947895408" ;
+                                                                                                    wrap = builtins.throw "1879772138070543" ;
+                                                                                                }
+                                                                                                //
+                                                                                                imports
+                                                                                            ) ;
                                                                                 } ;
                                                             testScript =
                                                                 builtins.concatStringsSep
