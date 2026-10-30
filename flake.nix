@@ -515,7 +515,7 @@
                                             process-lock ,
                                             trip ,
                                             sequential ,
-                                            visitor ? builtins.throw "2775749122544130" ,
+                                            visitor ? null ,
                                             wrap
                                         } :
                                         {
