@@ -558,17 +558,12 @@
                                                                                                                                                         text = text ;
                                                                                                                                                     }
                                                                                                                                             )
-                                                                                                                                            ( config.failure { } )
                                                                                                                                             pkgs.coreutils
-                                                                                                                                            pkgs.flock
                                                                                                                                         ] ;
                                                                                                                                     text =
                                                                                                                                         ''
-                                                                                                                                            DIR="$( dirname ${ process-lock } )" || failure 7198350151488825
-                                                                                                                                            mkdir --parents "$DIR"
-                                                                                                                                            exec 107> ${ process-lock }
-                                                                                                                                            flock -s 107
                                                                                                                                             process
+                                                                                                                                            touch ${ resources-directory }/process.${ builtins.toString index }.txt
                                                                                                                                         '' ;
                                                                                                                                 } ;
                                                                                                                     in transform process ;
@@ -592,6 +587,10 @@
                                                                                                                         while [[ "$#" -gt 0 ]]
                                                                                                                         do
                                                                                                                             case "$1" in
+                                                                                                                                --index)
+                                                                                                                                    INDEX="$2"
+                                                                                                                                    shift 2
+                                                                                                                                    ;;
                                                                                                                                 --order)
                                                                                                                                     COPY="$( mktemp )" || failure 1772410810339790
                                                                                                                                     ORDER_JSON="$( printf '%s\n' "${ "$" }{ORDER[@]}" | jq -R 'tonumber' | jq -s '.') " || failure 0312903319846095
@@ -609,8 +608,7 @@
                                                                                                                         done
                                                                                                                         if [[ "$CORRECT" != true ]]
                                                                                                                         then
-                                                                                                                            FAILURE_FLAG="$( mktemp --directory ${ resources-directory }/XXXXXXXX --suffix ".failure.txt" )" || failure 5363760878221103
-                                                                                                                            failure 4612322045996105 > "$FAILURE_FLAG"
+                                                                                                                            failure 4612322045996105 2> "${ resources-directory }/process.$INDEX.txt"
                                                                                                                         fi
                                                                                                                         rm ${ resources-directory }/log.lock ${ resources-directory }/log.yaml
                                                                                                                     '' ;
@@ -623,13 +621,8 @@
                                                                                                                 runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                 text =
                                                                                                                     ''
-                                                                                                                        exec 120> ${ process-lock }
-                                                                                                                        flock -x 120
-                                                                                                                        find ${ resources-directory } -name "*.failure.txt" | while read -r FAILURE_FLAG
-                                                                                                                        do
-                                                                                                                            FAILURE="$( cat "$FAILURE_FLAG" )" || failure 2012702184191768
-                                                                                                                            failure "$FAILURE"
-                                                                                                                        done
+                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''while [[ ! -f ${ resources-directory }/process.${ builtins.toString index }.txt ]] ; do sleep 1 ; done'' ) ( builtins.length processes ) ) }
+                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''if [[ ! -s ${ resources-directory }/process.${ builtins.toString index }.txt ]] ; then failure 8572315807941990 ${ builtins.toString index } ; fi'' ) ( builtins.length processes ) ) }
                                                                                                                         if [[ -f ${ resources-directory }/log.yaml ]]
                                                                                                                         then
                                                                                                                             rm ${ resources-directory }/log.yaml
@@ -670,7 +663,7 @@
                                                                                 ]
                                                                                 (
                                                                                     let
-                                                                                        generator = index : ''client.succeed("process-${ builtins.toString index } &")'' ;
+                                                                                        generator = index : ''client.succeed("nohup process-${ builtins.toString index } > /dev/null 2>&1 &")'' ;
                                                                                         in builtins.genList generator ( builtins.length processes )
                                                                                 )
                                                                                 [
