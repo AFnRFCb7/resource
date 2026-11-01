@@ -563,8 +563,10 @@
                                                                                                                                         ] ;
                                                                                                                                     text =
                                                                                                                                         ''
-                                                                                                                                            exec 170> ${ resources-directory }/process.${ builtins.toString index }.lock
-                                                                                                                                            process 2> ${ resources-directory }/process.${ builtins.toString index }.failure
+                                                                                                                                            mkdir --parents ${ process-lock }
+                                                                                                                                            exec 170> ${ process-lock }/process.${ builtins.toString index }.lock
+                                                                                                                                            flock -x 170
+                                                                                                                                            process 2> ${ process-lock }/process.${ builtins.toString index }.failure
                                                                                                                                         '' ;
                                                                                                                                 } ;
                                                                                                                     in transform process ;
@@ -618,18 +620,16 @@
                                                                                                                 runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                 text =
                                                                                                                     ''
-                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''exec 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }> ${ resources-directory }/process.${ builtins.toString index }.lock'' ) ( builtins.length processes ) ) }
+                                                                                                                        mkdir --parents ${ process-lock }
+                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''exec 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }> ${ process-lock }/process.${ builtins.toString index }.lock'' ) ( builtins.length processes ) ) }
                                                                                                                         ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''flock -x 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }'' ) ( builtins.length processes ) ) }
-                                                                                                                        find ${ resources-directory } -type f -mindepth 1 -maxdepth 1 -name "process.*.failure" | sort | while read -r FAILURE
+                                                                                                                        find ${ process-lock } -type f -mindepth 1 -maxdepth 1 -name "process.*.failure" | sort | while read -r FAILURE
                                                                                                                         do
                                                                                                                             if [[ -s "$FAILURE" ]]
                                                                                                                             then
                                                                                                                                 failure 6498931208074655 < "$FAILURE"
-                                                                                                                            else
-                                                                                                                                rm "$FAILURE"
                                                                                                                             fi
                                                                                                                         done
-                                                                                                                        find ${ resources-directory } -type f -mindepth 1 -maxdepth 1 -name "process.*.lock" -delete
                                                                                                                         if [[ -f ${ resources-directory }/log.yaml ]]
                                                                                                                         then
                                                                                                                             rm ${ resources-directory }/log.yaml
