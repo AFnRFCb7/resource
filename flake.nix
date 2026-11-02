@@ -569,6 +569,7 @@
                                                                                                                                                         runtimeInputs = [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
+                                                                                                                                                                sleep 10s
                                                                                                                                                                 exec 132> ${ resources-directory }/log.lock
                                                                                                                                                                 flock -x 132
                                                                                                                                                                 EXPECTED="$( mktemp )" || failure 4940461114226167
@@ -580,10 +581,11 @@
                                                                                                                                                                     case "$1" in
                                                                                                                                                                         --order)
                                                                                                                                                                             shift 1
-
                                                                                                                                                                             ORDER_JSON="$( printf '%s\n' "${ "$" }{@:1:$N}" | jq --raw-output 'tonumber' | jq --slurp '.' )" || failure 5547985831229891
                                                                                                                                                                             OBSERVED="$( mktemp )" || failure 5660646061926270
+                                                                                                                                                                            echo 1008168024870455 >&2
                                                                                                                                                                             yq eval -o=json '.' ${ resources-directory }/log.yaml | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
+                                                                                                                                                                            echo 7634713836978739 >&2
                                                                                                                                                                             if diff "$EXPECTED" "$OBSERVED"
                                                                                                                                                                             then
                                                                                                                                                                                 CORRECT=true
