@@ -326,7 +326,8 @@
                                                                                                                                 exec 168> /mounts/log.lock
                                                                                                                                 flock -x 168
                                                                                                                                 TYPE="valid-init"
-                                                                                                                                jq --null-input --arg TYPE "$TYPE" '[ { type : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
+                                                                                                                                TIMESTAMP="$( date + %s )" || failure 7010050283879972
+                                                                                                                                jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" '[ { "timestamp" : $TIMESTAMP , "type" : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
