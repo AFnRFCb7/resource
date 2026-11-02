@@ -627,7 +627,8 @@
                                                                                                                         do
                                                                                                                             if [[ -s "$FAILURE" ]]
                                                                                                                             then
-                                                                                                                                failure 6498931208074655 < "$FAILURE"
+                                                                                                                                FAILURE_FLAG="$( cat "$FAILURE" )" || failure 4288993981752581
+                                                                                                                                failure 6498931208074655 "$FAILURE_FLAG"
                                                                                                                             fi
                                                                                                                         done
                                                                                                                         if [[ -f ${ resources-directory }/log.yaml ]]
