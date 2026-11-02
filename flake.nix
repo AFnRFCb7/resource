@@ -326,7 +326,9 @@
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
+                                                                                                                                echo 6322100276461079 >&2
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
+                                                                                                                                echo 8536341455776351 >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
