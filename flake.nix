@@ -593,7 +593,8 @@
                                                                                                                                                                 done
                                                                                                                                                                 if [[ "$CORRECT" != true ]]
                                                                                                                                                                 then
-                                                                                                                                                                    failure 4612322045996105
+                                                                                                                                                                    ORIGINAL_JSON="$( cat "$ORIGINAL" )" || failure 5801512242812508
+                                                                                                                                                                    failure 4612322045996105 "$N" "$ORIGINAL_JSON"
                                                                                                                                                                 fi
                                                                                                                                                                 rm ${ resources-directory }/log.lock ${ resources-directory }/log.yaml
                                                                                                                                                             '' ;
