@@ -321,7 +321,7 @@
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
-                                                                                                                                wrap ${ release }/bin/release "/mounts/release/$INDEX" --replace INDEX "$INDEX"
+                                                                                                                                wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
