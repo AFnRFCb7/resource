@@ -206,6 +206,8 @@
                                                                                                                 mounts =
                                                                                                                     {
                                                                                                                         diagnostic = { source = "/mounts/diagnostic" ; type = "bind" ; } ;
+                                                                                                                        "log.lock" = { is-directory = false ; source = "/mounts/log.lock" ; type = "bind" ;} ;
+                                                                                                                        "log.yaml" = { is-directory = false ; source = "/mounts/log.yaml" ; type = "bind" ;} ;
                                                                                                                         release = { source = "/mounts/release" ; type = "bind" ; } ;
                                                                                                                     } ;
                                                                                                                 name = "valid-init" ;
@@ -251,7 +253,7 @@
                                                                                                                                     variables = { } ;
                                                                                                                                 } ;
                                                                                                                         in "${ application }/bin/post" ;
-                                                                                                                runtime-inputs = { pkgs , ... } : [ identified.config.wrap pkgs.coreutils ] ;
+                                                                                                                runtime-inputs = { pkgs , ... } : [ identified.config.wrap pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         release =
@@ -326,9 +328,10 @@
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
-                                                                                                                                echo 6322100276461079 >&2
+                                                                                                                                exec 168> /mounts/log.lock
+                                                                                                                                flock -x 168
+                                                                                                                                jq --null-input '{ type : $TYPE } | yq eval --prettyPrint >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
-                                                                                                                                echo 8536341455776351 >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
