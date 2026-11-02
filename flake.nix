@@ -467,16 +467,14 @@
                                                                                         else
                                                                                             INDEX="$( sequential )" || failure 6590902953585183
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
-#                                                                                            export INDEX
+                                                                                            export INDEX
 #                                                                                            touch "/mounts/flag/$INDEX"
 #                                                                                            MOUNT="/mounts/mounts/$INDEX"
 #                                                                                            mkdir --parents "$MOUNT"
 #                                                                                            if init
 #                                                                                            then
-#                                                                                                echo -n "${ resources-directory }/mounts/$INDEX"
 #                                                                                                rm "/mounts/lock/$HASH"
 #                                                                                            else
-#                                                                                                echo -n "${ resources-directory }/mounts/$INDEX"
 #                                                                                                rm "/mounts/lock/$HASH"
 #                                                                                                exit ${ builtins.toString error }
 #                                                                                            fi
