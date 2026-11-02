@@ -323,6 +323,7 @@
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
+                                                                                                                                echo 5372823281712688 >&2
                                                                                                                                 exec 168> /mounts/log.lock
                                                                                                                                 flock -x 168
                                                                                                                                 TYPE="valid-init"
