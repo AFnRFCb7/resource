@@ -471,10 +471,13 @@
                                                                                             touch "/mounts/flag/$INDEX"
                                                                                             MOUNT="/mounts/mounts/$INDEX"
                                                                                             mkdir --parents "$MOUNT"
+                                                                                            echo 1375245873446623 >&2
                                                                                             if init
                                                                                             then
+                                                                                                echo 5274828677553553 >&2
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                             else
+                                                                                                echo 8199844272484669 >&2
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                                 exit ${ builtins.toString error }
                                                                                             fi
