@@ -323,7 +323,6 @@
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
-                                                                                                                                echo 5372823281712688 >&2
                                                                                                                                 exec 168> /mounts/log.lock
                                                                                                                                 flock -x 168
                                                                                                                                 TYPE="valid-init"
@@ -466,19 +465,27 @@
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                             rm "/mounts/lock/$HASH"
                                                                                         else
+                                                                                            echo 3536671892514947 >&2
                                                                                             INDEX="$( sequential )" || failure 6590902953585183
+                                                                                            echo 1341722606732699 >&2
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                            echo 9023535375272701 >&2
                                                                                             export INDEX
+                                                                                            echo 6223755749061326 >&2
                                                                                             touch "/mounts/flag/$INDEX"
+                                                                                            echo 0420904740148262 >&2
                                                                                             MOUNT="/mounts/mounts/$INDEX"
+                                                                                            echo 8256009738935756 >&2
                                                                                             mkdir --parents "$MOUNT"
-                                                                                            if init
-                                                                                            then
-                                                                                                rm "/mounts/lock/$HASH"
-                                                                                            else
-                                                                                                rm "/mounts/lock/$HASH"
-                                                                                                exit ${ builtins.toString error }
-                                                                                            fi
+                                                                                            echo 2058823291751983 >&2
+#                                                                                            if init
+#                                                                                            then
+#                                                                                                rm "/mounts/lock/$HASH"
+#                                                                                            else
+#                                                                                                rm "/mounts/lock/$HASH"
+#                                                                                                exit ${ builtins.toString error }
+#                                                                                            fi
+                                                                                            echo 0948460562840127 >&2
                                                                                         fi
                                                                                     '' ;
                                                                                 variables = { } ;
