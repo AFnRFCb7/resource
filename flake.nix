@@ -571,34 +571,36 @@
                                                                                                                                                             ''
                                                                                                                                                                 exec 132> ${ resources-directory }/log.lock
                                                                                                                                                                 flock -x 132
-                                                                                                                                                                ORIGINAL="$( mktemp )" || failure 4940461114226167
-                                                                                                                                                                jq --sort-keys "del(.timestamp)" > "$ORIGINAL"
-                                                                                                                                                                N="$( jq 'length' "$ORIGINAL" )" || failure 0163978703024678
-                                                                                                                                                                CORRECT=true
-#                                                                                                                                                                while [[ "$#" -gt 0 ]]
-#                                                                                                                                                                do
-#                                                                                                                                                                    case "$1" in
-#                                                                                                                                                                        --order)
-#                                                                                                                                                                            COPY="$( mktemp )" || failure 1772410810339790
-#                                                                                                                                                                            ORDER_JSON="$( printf '%s\n' "${ "$" }{ORDER[@]}" | jq -R 'tonumber' | jq -s '.') " || failure 0312903319846095
-#                                                                                                                                                                            jq --argjson order "$ORDER_JSON" '. as $original | [$order[] | $original[.-1]]' | yq eval --prettyPrint > "$COPY"
-#                                                                                                                                                                            if diff "$COPY" ${ resources-directory }/log.yaml
-#                                                                                                                                                                            then
-#                                                                                                                                                                                CORRECT=true
-#                                                                                                                                                                            fi
-#                                                                                                                                                                            shift $(( N + 1 ))
-#                                                                                                                                                                            ;;
-#                                                                                                                                                                        *)
-#                                                                                                                                                                            failure 4918633717283692
-#                                                                                                                                                                            ;;
-#                                                                                                                                                                    esac
-#                                                                                                                                                                done
+                                                                                                                                                                EXPECTED="$( mktemp )" || failure 4940461114226167
+                                                                                                                                                                jq 'map(del(.timestamp))' > "$EXPECTED"
+                                                                                                                                                                N="$( jq 'length' "$EXPECTED" )" || failure 0163978703024678
+                                                                                                                                                                CORRECT=false
+                                                                                                                                                                while [[ "$#" -gt 0 ]]
+                                                                                                                                                                do
+                                                                                                                                                                    case "$1" in
+                                                                                                                                                                        --order)
+                                                                                                                                                                            shift 1
+
+                                                                                                                                                                            ORDER_JSON="$( printf '%s\n' "${ "$" }{@:1:$N}" | jq --raw-output 'tonumber' | jq --slurp '.' )" || failure 5547985831229891
+                                                                                                                                                                            OBSERVED="$( mktemp )" || failure 5660646061926270
+                                                                                                                                                                            yq eval -o=json '.' ${ resources-directory }/log.yaml | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
+                                                                                                                                                                            if diff "$EXPECTED" "$OBSERVED"
+                                                                                                                                                                            then
+                                                                                                                                                                                CORRECT=true
+                                                                                                                                                                            fi
+                                                                                                                                                                            shift $(( N ))
+                                                                                                                                                                            ;;
+                                                                                                                                                                        *)
+                                                                                                                                                                            failure 4918633717283692
+                                                                                                                                                                            ;;
+                                                                                                                                                                    esac
+                                                                                                                                                                done
                                                                                                                                                                 if [[ "$CORRECT" != true ]]
                                                                                                                                                                 then
-                                                                                                                                                                    ORIGINAL_JSON="$( cat "$ORIGINAL" )" || failure 5801512242812508
-                                                                                                                                                                    failure 4612322045996105 ${ builtins.toString index } "$N" "$ORIGINAL_JSON"
+                                                                                                                                                                    EXPECTED_JSON="$( cat "$EXPECTED" )" || failure 5801512242812508
+                                                                                                                                                                    failure 4612322045996105 ${ builtins.toString index } "$N" "$EXPECTED_JSON"
                                                                                                                                                                 fi
-                                                                                                                                                                echo > ${ resources-directory }/log.lock ${ resources-directory }/log.yaml
+                                                                                                                                                                truncate -s 0 ${ resources-directory }/log.yaml
                                                                                                                                                             '' ;
                                                                                                                                                     }
                                                                                                                                             )
