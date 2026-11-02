@@ -42,7 +42,7 @@
                                                                                         invalid-release = { is-directory = true ; source = "${ resources-directory }/invalid-release" ; type = "bind" ; } ;
                                                                                         input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
                                                                                         gc-root = { is-directory = true ; source = gc-roots-directory ; type = "bind" ; } ;
-                                                                                        locks = { is-directory = true ; source = "${ resources-directory }/locks" ; type = "bind" ; } ;
+                                                                                        lock = { is-directory = true ; source = "${ resources-directory }/lock" ; type = "bind" ; } ;
                                                                                         mounts = { is-directory = true ; source = "${ resources-directory }/mounts" ; type = "bind" ; } ;
                                                                                         pids = { is-directory = true ; source = "${ resources-directory }/pids" ; type = "bind" ; } ;
                                                                                         release = { source = "${ resources-directory }/release" ; type = "bind" ; } ;
