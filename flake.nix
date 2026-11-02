@@ -560,6 +560,45 @@
                                                                                                                                             )
                                                                                                                                             pkgs.coreutils
                                                                                                                                             pkgs.flock
+                                                                                                                                            (
+                                                                                                                                                pkgs.writeShellApplication
+                                                                                                                                                    {
+                                                                                                                                                        name = "check-log" ;
+                                                                                                                                                        runtimeInputs = [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
+                                                                                                                                                        text =
+                                                                                                                                                            ''
+                                                                                                                                                                exec 132> ${ resources-directory }/log.lock
+                                                                                                                                                                flock -x 132
+                                                                                                                                                                ORIGINAL="$( mktemp )" || failure 4940461114226167
+                                                                                                                                                                jq --sort-keys "del(.timestamp)" > "$ORIGINAL"
+                                                                                                                                                                N="$( jq 'length' "$ORIGINAL" )" || failure 0163978703024678
+                                                                                                                                                                CORRECT=false
+                                                                                                                                                                while [[ "$#" -gt 0 ]]
+                                                                                                                                                                do
+                                                                                                                                                                    case "$1" in
+                                                                                                                                                                        --order)
+                                                                                                                                                                            COPY="$( mktemp )" || failure 1772410810339790
+                                                                                                                                                                            ORDER_JSON="$( printf '%s\n' "${ "$" }{ORDER[@]}" | jq -R 'tonumber' | jq -s '.') " || failure 0312903319846095
+                                                                                                                                                                            jq --argjson order "$ORDER_JSON" '. as $original | [$order[] | $original[.-1]]' | yq eval --prettyPrint > "$COPY"
+                                                                                                                                                                            if diff "$COPY" ${ resources-directory }/log.yaml
+                                                                                                                                                                            then
+                                                                                                                                                                                CORRECT=true
+                                                                                                                                                                            fi
+                                                                                                                                                                            shift $(( N + 1 ))
+                                                                                                                                                                            ;;
+                                                                                                                                                                        *)
+                                                                                                                                                                            failure 4918633717283692
+                                                                                                                                                                            ;;
+                                                                                                                                                                    esac
+                                                                                                                                                                done
+                                                                                                                                                                if [[ "$CORRECT" != true ]]
+                                                                                                                                                                then
+                                                                                                                                                                    failure 4612322045996105
+                                                                                                                                                                fi
+                                                                                                                                                                rm ${ resources-directory }/log.lock ${ resources-directory }/log.yaml
+                                                                                                                                                            '' ;
+                                                                                                                                                    }
+                                                                                                                                            )
                                                                                                                                         ] ;
                                                                                                                                     text =
                                                                                                                                         ''
@@ -574,45 +613,6 @@
                                                                                                 )
                                                                                                 [
                                                                                                     ( identified.config.failure { } )
-                                                                                                    (
-                                                                                                        pkgs.writeShellApplication
-                                                                                                            {
-                                                                                                                name = "check-log" ;
-                                                                                                                runtimeInputs = [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
-                                                                                                                text =
-                                                                                                                    ''
-                                                                                                                        exec 132> ${ resources-directory }/log.lock
-                                                                                                                        flock -x 132
-                                                                                                                        ORIGINAL="$( mktemp )" || failure 4940461114226167
-                                                                                                                        jq --sort-keys "del(.timestamp)" > "$ORIGINAL"
-                                                                                                                        N="$( jq 'length' "$ORIGINAL" )" || failure 0163978703024678
-                                                                                                                        CORRECT=false
-                                                                                                                        while [[ "$#" -gt 0 ]]
-                                                                                                                        do
-                                                                                                                            case "$1" in
-                                                                                                                                --order)
-                                                                                                                                    COPY="$( mktemp )" || failure 1772410810339790
-                                                                                                                                    ORDER_JSON="$( printf '%s\n' "${ "$" }{ORDER[@]}" | jq -R 'tonumber' | jq -s '.') " || failure 0312903319846095
-                                                                                                                                    jq --argjson order "$ORDER_JSON" '. as $original | [$order[] | $original[.-1]]' | yq eval --prettyPrint > "$COPY"
-                                                                                                                                    if diff "$COPY" ${ resources-directory }/log.yaml
-                                                                                                                                    then
-                                                                                                                                        CORRECT=true
-                                                                                                                                    fi
-                                                                                                                                    shift $(( N + 1 ))
-                                                                                                                                    ;;
-                                                                                                                                *)
-                                                                                                                                    failure 4918633717283692
-                                                                                                                                    ;;
-                                                                                                                            esac
-                                                                                                                        done
-                                                                                                                        if [[ "$CORRECT" != true ]]
-                                                                                                                        then
-                                                                                                                            failure 4612322045996105
-                                                                                                                        fi
-                                                                                                                        rm ${ resources-directory }/log.lock ${ resources-directory }/log.yaml
-                                                                                                                    '' ;
-                                                                                                            }
-                                                                                                    )
                                                                                                     (
                                                                                                         pkgs.writeShellApplication
                                                                                                             {
