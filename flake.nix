@@ -236,12 +236,9 @@
                                                                                                                                                         runtime-inputs = { pkgs , ... } : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
-                                                                                                                                                                echo 5299898650800309 >&2
                                                                                                                                                                 # "/mounts/release/$INDEX"
                                                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 3615837188445696
-                                                                                                                                                                echo 7096577592727578 >&2
                                                                                                                                                                 exec 103> /mounts/log.lock
-                                                                                                                                                                echo 8979972990377544 >&2
                                                                                                                                                                 flock -x 103
                                                                                                                                                                 echo 3232971181228511
                                                                                                                                                                 jq --arg TYPE "valid-init" --argjson TIMESTAMP "$TIMESTAMP" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
@@ -331,7 +328,7 @@
                                                                                                                                 exec 168> /mounts/log.lock
                                                                                                                                 flock -x 168
                                                                                                                                 TYPE="valid-init"
-                                                                                                                                jq --null-input --arg TYPE "$TYPE" '{ type : $TYPE }' | yq eval --prettyPrint >> /mounts/log.yaml
+                                                                                                                                jq --null-input --arg TYPE "$TYPE" '[ { type : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
@@ -469,7 +466,6 @@
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                             rm "/mounts/lock/$HASH"
                                                                                         else
-                                                                                            echo 6424223460821921 >&2
                                                                                             INDEX="$( sequential )" || failure 6590902953585183
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                             export INDEX
@@ -594,9 +590,7 @@
                                                                                                                                                                             shift 1
                                                                                                                                                                             ORDER_JSON="$( printf '%s\n' "${ "$" }{@:1:$N}" | jq --raw-output 'tonumber' | jq --slurp '.' )" || failure 5547985831229891
                                                                                                                                                                             OBSERVED="$( mktemp )" || failure 5660646061926270
-                                                                                                                                                                            echo 1008168024870455 >&2
                                                                                                                                                                             yq eval -o=json '.' ${ resources-directory }/log.yaml | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
-                                                                                                                                                                            echo 7634713836978739 >&2
                                                                                                                                                                             if diff "$EXPECTED" "$OBSERVED"
                                                                                                                                                                             then
                                                                                                                                                                                 CORRECT=true
