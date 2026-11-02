@@ -240,9 +240,7 @@
                                                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 3615837188445696
                                                                                                                                                                 exec 103> /mounts/log.lock
                                                                                                                                                                 flock -x 103
-                                                                                                                                                                echo 3232971181228511
-                                                                                                                                                                jq --arg TYPE "valid-init" --argjson TIMESTAMP "$TIMESTAMP" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
-                                                                                                                                                                echo 2700240081763077
+                                                                                                                                                                jq --argjson TIMESTAMP "$TIMESTAMP" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                             '' ;
                                                                                                                                                         variables = { } ;
                                                                                                                                                     } ;
