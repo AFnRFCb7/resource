@@ -266,7 +266,7 @@
                                                                                                                                             mounts =
                                                                                                                                                 {
                                                                                                                                                     flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
-                                                                                                                                                    lock = { source = "${ resource-directory }/lock" ; type = "bind" ; }
+                                                                                                                                                    lock = { source = "${ resource-directory }/lock" ; type = "bind" ; } ;
                                                                                                                                                     pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                                                                                 } ;
                                                                                                                                             name = "release" ;
