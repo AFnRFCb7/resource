@@ -234,11 +234,16 @@
                                                                                                                                                         runtime-inputs = { pkgs , ... } : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
+                                                                                                                                                                echo 5299898650800309 >&2
                                                                                                                                                                 # "/mounts/release/$INDEX"
                                                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 3615837188445696
+                                                                                                                                                                echo 7096577592727578 >&2
                                                                                                                                                                 exec 103> /mounts/log.lock
+                                                                                                                                                                echo 8979972990377544 >&2
                                                                                                                                                                 flock -x 103
+                                                                                                                                                                echo 3232971181228511
                                                                                                                                                                 jq --arg TYPE "valid-init" --argjson TIMESTAMP "$TIMESTAMP" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
+                                                                                                                                                                echo 2700240081763077
                                                                                                                                                             '' ;
                                                                                                                                                         variables = { } ;
                                                                                                                                                     } ;
