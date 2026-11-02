@@ -623,6 +623,7 @@
                                                                                                                 runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                 text =
                                                                                                                     ''
+                                                                                                                        sleep 10
                                                                                                                         mkdir --parents ${ process-lock }
                                                                                                                         ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''exec 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }> ${ process-lock }/process.${ builtins.toString index }.lock'' ) ( builtins.length processes ) ) }
                                                                                                                         ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''flock -x 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }'' ) ( builtins.length processes ) ) }
