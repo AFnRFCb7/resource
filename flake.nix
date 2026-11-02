@@ -330,7 +330,8 @@
                                                                                                                             ''
                                                                                                                                 exec 168> /mounts/log.lock
                                                                                                                                 flock -x 168
-                                                                                                                                jq --null-input '{ type : $TYPE } | yq eval --prettyPrint >> /mounts/log.yaml
+                                                                                                                                TYPE="valid-init"
+                                                                                                                                jq --null-input --arg TYPE "$TYPE" '{ type : $TYPE }' | yq eval --prettyPrint >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
