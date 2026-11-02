@@ -478,13 +478,13 @@
                                                                                             echo 8256009738935756 >&2
                                                                                             mkdir --parents "$MOUNT"
                                                                                             echo 2058823291751983 >&2
-#                                                                                            if init
-#                                                                                            then
-#                                                                                                rm "/mounts/lock/$HASH"
-#                                                                                            else
-#                                                                                                rm "/mounts/lock/$HASH"
-#                                                                                                exit ${ builtins.toString error }
-#                                                                                            fi
+                                                                                            if init
+                                                                                            then
+                                                                                                rm "/mounts/lock/$HASH"
+                                                                                            else
+                                                                                                rm "/mounts/lock/$HASH"
+                                                                                                exit ${ builtins.toString error }
+                                                                                            fi
                                                                                             echo 0948460562840127 >&2
                                                                                         fi
                                                                                     '' ;
