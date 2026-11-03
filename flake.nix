@@ -442,8 +442,10 @@
                                                                                                                                 runtime-inputs = { pkgs , ... } : [ pkgs.jq valid-init ] ;
                                                                                                                                 text =
                                                                                                                                     ''
+                                                                                                                                        echo 7290392604768048 >&2
                                                                                                                                         # todo fix below
                                                                                                                                         jq --null-input '{ }' |  valid-init
+                                                                                                                                        echo 5056644702740363 >&2
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
