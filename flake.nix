@@ -454,7 +454,12 @@
                                                                                                                                 text =
                                                                                                                                     ''
                                                                                                                                         echo 0169781261877506 >&2
-                                                                                                                                        jq --null-input '{ }' | valid-init
+                                                                                                                                        if jq --null-input '{ }' | valid-init
+                                                                                                                                        then
+                                                                                                                                            echo 7618803277646373 >&2
+                                                                                                                                        else
+                                                                                                                                            echo 8901643011166931 "$?" >&2
+                                                                                                                                        fi
                                                                                                                                         echo 6851518482783740
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
