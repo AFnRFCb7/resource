@@ -333,7 +333,12 @@
                                                                                                                                 echo 6917628331826780 >&2
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 echo 4613248904478708 >&2
-                                                                                                                                jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
+                                                                                                                                if jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
+                                                                                                                                then
+                                                                                                                                    echo 3577308626631032 >&2
+                                                                                                                                else
+                                                                                                                                    echo 9254264569911736 >&2
+                                                                                                                                fi
                                                                                                                                 echo 2194430404269928 >&2
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
                                                                                                                                 echo 5621853876290087 >&2
@@ -450,6 +455,7 @@
                                                                                                                                     ''
                                                                                                                                         echo 0169781261877506 >&2
                                                                                                                                         jq --null-input '{ }' | valid-init
+                                                                                                                                        echo 6851518482783740
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
