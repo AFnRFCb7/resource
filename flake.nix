@@ -325,8 +325,9 @@
                                                                                                                                                             rm --recursive --force "${ "$" }{FILES[@]}"
                                                                                                                                                             exec 147>/mounts/logs.lock
                                                                                                                                                             flock -x 147
+                                                                                                                                                            TIMESTAMP="$( date +%s )" || failure 4910980508658578
                                                                                                                                                             TYPE="valid-release"
-                                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '{ "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
+                                                                                                                                                            jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                         fi
                                                                                                                                                     done
                                                                                                                                                 '' ;
