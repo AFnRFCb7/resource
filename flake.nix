@@ -206,7 +206,7 @@
                                                                                                                 mounts =
                                                                                                                     {
                                                                                                                         diagnostic = { source = "/mounts/diagnostic" ; type = "bind" ; } ;
-                                                                                                                        input = { is-directory = false ; source = "/input" ; type = "bind" ; } ;
+                                                                                                                        # input = { is-directory = false ; source = "/input" ; type = "bind" ; } ;
                                                                                                                         "log.lock" = { is-directory = false ; source = "/mounts/log.lock" ; type = "bind" ;} ;
                                                                                                                         "log.yaml" = { is-directory = false ; source = "/mounts/log.yaml" ; type = "bind" ;} ;
                                                                                                                         release = { source = "/mounts/release" ; type = "bind" ; } ;
@@ -350,8 +350,8 @@
                                                                                                                             {
                                                                                                                                 mounts =
                                                                                                                                     {
-                                                                                                                                        input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
-                                                                                                                                        mount = { read-only = true ; source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
+                                                                                                                                        input = { is-directory = false ; read-only = true ; source = "/mounts/input" ; type = "bind" ; } ;
+                                                                                                                                        mount = { source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
                                                                                                                                         output = { is-directory = false ; source = "/mounts/output" ; type = "bind" ; } ;
                                                                                                                                         standard-error = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                         standard-output = { is-directory = false ; type = "temporary" ; } ;
