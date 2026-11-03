@@ -351,7 +351,7 @@
                                                                                                                                 mounts =
                                                                                                                                     {
                                                                                                                                         input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
-                                                                                                                                        mount = { source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
+                                                                                                                                        mount = { read-only = true ; source = "/mounts/mount/$INDEX" ; type = "bind" ; } ;
                                                                                                                                         output = { is-directory = false ; source = "/mounts/output" ; type = "bind" ; } ;
                                                                                                                                         standard-error = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                         standard-output = { is-directory = false ; type = "temporary" ; } ;
