@@ -283,7 +283,7 @@
                                                                                                                                             runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.jq pkgs.gnutar pkgs.xz pkgs.yq-go ] ;
                                                                                                                                             text =
                                                                                                                                                 ''
-                                                                                                                                                    echo 8461632369467679 >&2
+                                                                                                                                                    echo 8461632369467679 > /mounts/temporary/TRACE
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                     do
                                                                                                                                                         rm "/mounts/flag/$INDEX"
