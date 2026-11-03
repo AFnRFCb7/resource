@@ -326,24 +326,12 @@
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
-                                                                                                                                echo 3822076318946374 >&2
                                                                                                                                 exec 168> /mounts/log.lock
-                                                                                                                                echo 1863396265478327 >&2
                                                                                                                                 flock -x 168
-                                                                                                                                echo 1824406872513350 >&2
                                                                                                                                 TYPE="valid-init"
-                                                                                                                                echo 6917628331826780 >&2
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
-                                                                                                                                echo 4613248904478708 >&2
-                                                                                                                                if jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
-                                                                                                                                then
-                                                                                                                                    echo 3577308626631032 >&2
-                                                                                                                                else
-                                                                                                                                    echo 9254264569911736 >&2
-                                                                                                                                fi
-                                                                                                                                echo 2194430404269928 >&2
+                                                                                                                                jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
-                                                                                                                                echo 5621853876290087 >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
@@ -397,7 +385,6 @@
                                                                                                                                         ] ;
                                                                                                                                 text =
                                                                                                                                     ''
-                                                                                                                                        echo 6044680166201700 >&2
                                                                                                                                         mapfile -t ARGUMENTS < <( jq -r '.arguments[]' /mounts/input )
                                                                                                                                         if jq --exit-status 'has("inputs") and (.inputs | has("standard"))' /mounts/input
                                                                                                                                         then
@@ -455,15 +442,8 @@
                                                                                                                                 runtime-inputs = { pkgs , ... } : [ pkgs.jq valid-init ] ;
                                                                                                                                 text =
                                                                                                                                     ''
-                                                                                                                                        echo 0169781261877506 >&2
                                                                                                                                         # todo fix below
-                                                                                                                                        if valid-init
-                                                                                                                                        then
-                                                                                                                                            echo 7618803277646373 >&2
-                                                                                                                                        else
-                                                                                                                                            echo 8901643011166931 "$?" >&2
-                                                                                                                                        fi
-                                                                                                                                        echo 6851518482783740
+                                                                                                                                        valid-init
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
