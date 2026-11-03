@@ -442,10 +442,8 @@
                                                                                                                                 runtime-inputs = { pkgs , ... } : [ pkgs.jq valid-init ] ;
                                                                                                                                 text =
                                                                                                                                     ''
-                                                                                                                                        echo 7290392604768048 >&2
                                                                                                                                         # todo fix below
                                                                                                                                         jq --null-input '{ }' |  valid-init
-                                                                                                                                        echo 5056644702740363 >&2
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
@@ -480,7 +478,6 @@
                                                                                             then
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                             else
-                                                                                                echo 6620862508927537 >&2
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                                 exit ${ builtins.toString error }
                                                                                             fi
@@ -586,6 +583,9 @@
                                                                                                                                                                 flock -x 132
                                                                                                                                                                 EXPECTED="$( mktemp )" || failure 4940461114226167
                                                                                                                                                                 jq 'map(del(.timestamp))' > "$EXPECTED"
+                                                                                                                                                                echo 8842496580820002 >&2
+                                                                                                                                                                jq "." "$EXPECTED" >&2
+                                                                                                                                                                echo 4170155033656842 >&2
                                                                                                                                                                 N="$( jq 'length' "$EXPECTED" )" || failure 0163978703024678
                                                                                                                                                                 CORRECT=false
                                                                                                                                                                 while [[ "$#" -gt 0 ]]
