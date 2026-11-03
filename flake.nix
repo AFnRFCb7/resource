@@ -621,7 +621,7 @@
                                                                                                                                                                     EXPECTED_JSON="$( cat "$EXPECTED" )" || failure 5801512242812508
                                                                                                                                                                     failure 4612322045996105 ${ builtins.toString index } "$N" "$EXPECTED_JSON"
                                                                                                                                                                 fi
-                                                                                                                                                                truncate -s 0 ${ resources-directory }/log.yaml
+                                                                                                                                                                echo > ${ resources-directory }/log.yaml
                                                                                                                                                                 rm "$EXPECTED"
                                                                                                                                                             '' ;
                                                                                                                                                     }
