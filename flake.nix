@@ -589,6 +589,7 @@
                                                                                                                                                         runtimeInputs = [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
+                                                                                                                                                                ${ if index == 1 then ''find ${ resources-directory } >&2 '' else "" }
                                                                                                                                                                 sleep 10s
                                                                                                                                                                 exec 132> ${ resources-directory }/log.lock
                                                                                                                                                                 flock -x 132
