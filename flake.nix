@@ -439,6 +439,7 @@
                                                                                                                                 runtime-inputs = { pkgs , ... } : [ pkgs.jq valid-init ] ;
                                                                                                                                 text =
                                                                                                                                     ''
+                                                                                                                                        echo 0169781261877506 >&2
                                                                                                                                         TYPE="valid-init"
                                                                                                                                         jq --null-input --arg TYPE "$TYPE" '{ type : $TYPE }' | valid-init
                                                                                                                                     '' ;
