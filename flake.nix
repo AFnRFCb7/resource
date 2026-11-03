@@ -25,7 +25,8 @@
                                                                         init ,
                                                                         gc-roots-directory ,
                                                                         release ,
-                                                                        resources-directory
+                                                                        resources-directory ,
+                                                                        temporary-directory
                                                                     } @primary :
                                                                     {
                                                                         error ,
@@ -271,12 +272,15 @@
                                                                                                                                             mounts =
                                                                                                                                                 {
                                                                                                                                                     flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
+                                                                                                                                                    "log.lock" = { directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
+                                                                                                                                                    "log.yaml" = { directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
                                                                                                                                                     lock = { source = "${ resources-directory }/lock" ; type = "bind" ; } ;
                                                                                                                                                     pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
+                                                                                                                                                    temporary = { source = temporary-directory ; type = "bind" ; } ;
                                                                                                                                                 } ;
                                                                                                                                             name = "release" ;
                                                                                                                                             post = null ;
-                                                                                                                                            runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.xz ] ;
+                                                                                                                                            runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.jq pkgs.gnutar pkgs.xz pkgs.yq-go ] ;
                                                                                                                                             text =
                                                                                                                                                 ''
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
@@ -319,6 +323,9 @@
                                                                                                                                                             ARCHIVE_FILE="$( mktemp --suffix ".tar.xz" --dry-run /mounts/temporary/XXXXXXXX )" || failure 9874147964151582
                                                                                                                                                             tar --create --xz --file "$ARCHIVE_FILE" "${ "$" }{FILES[@]}"
                                                                                                                                                             rm --recursive --force "${ "$" }{FILES[@]}"
+                                                                                                                                                            exec 147>/mounts/logs.lock
+                                                                                                                                                            flock -x 147
+                                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '{ "type" : $TYPE } | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                         fi
                                                                                                                                                     done
                                                                                                                                                 '' ;
@@ -504,7 +511,8 @@
                                         } :
                                         {
                                             gc-roots-directory ,
-                                            resources-directory
+                                            resources-directory ,
+                                            temporary-directory
                                         } :
                                         resources :
                                         processes :
@@ -538,6 +546,7 @@
                                                                                                                         init = init ;
                                                                                                                         resources-directory = resources-directory ;
                                                                                                                         release = release ;
+                                                                                                                        temporary-directory = temporary-directory ;
                                                                                                                     }
                                                                                                                     {
                                                                                                                         error = error ;
