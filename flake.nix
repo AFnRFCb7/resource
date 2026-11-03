@@ -239,7 +239,7 @@
                                                                                                                                                         runtime-inputs = { pkgs , ... } : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
-                                                                                                                                                                # "/mounts/release/$INDEX"
+                                                                                                                                                                "/mounts/release/$INDEX" &
                                                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 3615837188445696
                                                                                                                                                                 exec 103> /mounts/log.lock
                                                                                                                                                                 flock -x 103
