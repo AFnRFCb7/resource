@@ -43,6 +43,8 @@
                                                                                         input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
                                                                                         gc-root = { is-directory = true ; source = gc-roots-directory ; type = "bind" ; } ;
                                                                                         lock = { is-directory = true ; source = "${ resources-directory }/lock" ; type = "bind" ; } ;
+                                                                                        "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
+                                                                                        "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
                                                                                         mounts = { is-directory = true ; source = "${ resources-directory }/mounts" ; type = "bind" ; } ;
                                                                                         pids = { is-directory = true ; source = "${ resources-directory }/pids" ; type = "bind" ; } ;
                                                                                         release = { source = "${ resources-directory }/release" ; type = "bind" ; } ;
