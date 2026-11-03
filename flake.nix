@@ -443,7 +443,7 @@
                                                                                                                                 text =
                                                                                                                                     ''
                                                                                                                                         # todo fix below
-                                                                                                                                        valid-init
+                                                                                                                                        jq --null-input '{ }' |  valid-init
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
@@ -478,6 +478,7 @@
                                                                                             then
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                             else
+                                                                                                echo 6620862508927537 >&2
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                                 exit ${ builtins.toString error }
                                                                                             fi
