@@ -325,11 +325,17 @@
                                                                                                                             ''
                                                                                                                                 echo 3822076318946374 >&2
                                                                                                                                 exec 168> /mounts/log.lock
+                                                                                                                                echo 1863396265478327 >&2
                                                                                                                                 flock -x 168
+                                                                                                                                echo 1824406872513350 >&2
                                                                                                                                 TYPE="valid-init"
+                                                                                                                                echo 6917628331826780 >&2
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
+                                                                                                                                echo 4613248904478708 >&2
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" '[ { "timestamp" : $TIMESTAMP , "type" : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
+                                                                                                                                echo 2194430404269928 >&2
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
+                                                                                                                                echo 5621853876290087 >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
