@@ -206,6 +206,7 @@
                                                                                                                 mounts =
                                                                                                                     {
                                                                                                                         diagnostic = { source = "/mounts/diagnostic" ; type = "bind" ; } ;
+                                                                                                                        input = { is-directory = false ; source = "/input" ; type = "bind" ; } ;
                                                                                                                         "log.lock" = { is-directory = false ; source = "/mounts/log.lock" ; type = "bind" ;} ;
                                                                                                                         "log.yaml" = { is-directory = false ; source = "/mounts/log.yaml" ; type = "bind" ;} ;
                                                                                                                         release = { source = "/mounts/release" ; type = "bind" ; } ;
@@ -332,7 +333,7 @@
                                                                                                                                 echo 6917628331826780 >&2
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 echo 4613248904478708 >&2
-                                                                                                                                jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" '[ { "timestamp" : $TIMESTAMP , "type" : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
+                                                                                                                                jq --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' /mounts/input | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
                                                                                                                                 echo 2194430404269928 >&2
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
                                                                                                                                 echo 5621853876290087 >&2
@@ -389,6 +390,7 @@
                                                                                                                                         ] ;
                                                                                                                                 text =
                                                                                                                                     ''
+                                                                                                                                        echo 6044680166201700 >&2
                                                                                                                                         mapfile -t ARGUMENTS < <( jq -r '.arguments[]' /mounts/input )
                                                                                                                                         if jq --exit-status 'has("inputs") and (.inputs | has("standard"))' /mounts/input
                                                                                                                                         then
