@@ -323,6 +323,7 @@
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
+                                                                                                                                echo 3822076318946374 >&2
                                                                                                                                 exec 168> /mounts/log.lock
                                                                                                                                 flock -x 168
                                                                                                                                 TYPE="valid-init"
@@ -440,8 +441,7 @@
                                                                                                                                 text =
                                                                                                                                     ''
                                                                                                                                         echo 0169781261877506 >&2
-                                                                                                                                        TYPE="valid-init"
-                                                                                                                                        jq --null-input --arg TYPE "$TYPE" '{ type : $TYPE }' | valid-init
+                                                                                                                                        jq --null-input '{ }' | valid-init
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
                                                                                                                             } ;
