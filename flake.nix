@@ -579,10 +579,11 @@
                                                                                                                                                         text =
                                                                                                                                                             ''
                                                                                                                                                                 sleep 10s
+                                                                                                                                                                                                                             sleep 10s
                                                                                                                                                                 exec 132> ${ resources-directory }/log.lock
                                                                                                                                                                 flock -x 132
                                                                                                                                                                 EXPECTED="$( mktemp )" || failure 4940461114226167
-                                                                                                                                                                jq 'map(del(.timestamp))' > "$EXPECTED"
+                                                                                                                                                                jq '.' > "$EXPECTED"
                                                                                                                                                                 echo 8842496580820002 >&2
                                                                                                                                                                 jq "." "$EXPECTED" >&2
                                                                                                                                                                 echo 4170155033656842 >&2
@@ -595,8 +596,43 @@
                                                                                                                                                                             shift 1
                                                                                                                                                                             ORDER_JSON="$( printf '%s\n' "${ "$" }{@:1:$N}" | jq --raw-output 'tonumber' | jq --slurp '.' )" || failure 5547985831229891
                                                                                                                                                                             OBSERVED="$( mktemp )" || failure 5660646061926270
-                                                                                                                                                                            yq eval -o=json '.' ${ resources-directory }/log.yaml | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
-                                                                                                                                                                            if diff "$EXPECTED" "$OBSERVED"
+                                                                                                                                                                            yq eval -o=json '.' ${ resources-directory }/log.yaml | jq 'map(del(.timestamp))' | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
+                                                                                                                                                                            echo 1161838265461596 >&2
+                                                                                                                                                                            if diff --unified "$EXPECTED" "$OBSERVED" >&2
+                                                                                                                                                                            then
+                                                                                                                                                                                CORRECT=true
+                                                                                                                                                                            fi
+                                                                                                                                                                            shift $(( N ))
+                                                                                                                                                                            ;;
+                                                                                                                                                                        *)
+                                                                                                                                                                            failure 4918633717283692
+                                                                                                                                                                            ;;
+                                                                                                                                                                    esac
+                                                                                                                                                                done
+                                                                                                                                                                if [[ "$CORRECT" != true ]]
+                                                                                                                                                                then
+                                                                                                                                                                    EXPECTED_JSON="$( cat "$EXPECTED" )" || failure 5801512242812508
+                                                                                                                                                                    failure 4612322045996105 ${ builtins.toString index } "$N" "$EXPECTED_JSON"
+                                                                                                                                                                fi
+                                                                                                                                                                truncate -s 0 ${ resources-directory }/log.yaml                                                                         exec 132> ${ resources-directory }/log.lock
+                                                                                                                                                                flock -x 132
+                                                                                                                                                                EXPECTED="$( mktemp )" || failure 4940461114226167
+                                                                                                                                                                jq '.' > "$EXPECTED"
+                                                                                                                                                                echo 8842496580820002 >&2
+                                                                                                                                                                jq "." "$EXPECTED" >&2
+                                                                                                                                                                echo 4170155033656842 >&2
+                                                                                                                                                                N="$( jq 'length' "$EXPECTED" )" || failure 0163978703024678
+                                                                                                                                                                CORRECT=false
+                                                                                                                                                                while [[ "$#" -gt 0 ]]
+                                                                                                                                                                do
+                                                                                                                                                                    case "$1" in
+                                                                                                                                                                        --order)
+                                                                                                                                                                            shift 1
+                                                                                                                                                                            ORDER_JSON="$( printf '%s\n' "${ "$" }{@:1:$N}" | jq --raw-output 'tonumber' | jq --slurp '.' )" || failure 5547985831229891
+                                                                                                                                                                            OBSERVED="$( mktemp )" || failure 5660646061926270
+                                                                                                                                                                            yq eval -o=json '.' ${ resources-directory }/log.yaml | jq 'map(del(.timestamp))' | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
+                                                                                                                                                                            echo 1161838265461596 >&2
+                                                                                                                                                                            if diff --unified "$EXPECTED" "$OBSERVED" >&2
                                                                                                                                                                             then
                                                                                                                                                                                 CORRECT=true
                                                                                                                                                                             fi
