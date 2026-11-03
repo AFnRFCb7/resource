@@ -590,7 +590,7 @@
                                                                                                                                                         text =
                                                                                                                                                             ''
                                                                                                                                                                 sleep 10s
-                                                                                                                                                                ${ if index == 1 then ''echo 1144184017983081 >&2 && cat ${ resources-directory }/log.yaml >&2 && echo >&2'' else "" }
+                                                                                                                                                                ${ if index == 1 then ''echo 1144184017983081 >&2 && cat ${ resources-directory }/log.yaml >&2 && echo 0781329710168359 >&2'' else "" }
                                                                                                                                                                 exec 132> ${ resources-directory }/log.lock
                                                                                                                                                                 flock -x 132
                                                                                                                                                                 EXPECTED="$( mktemp )" || failure 4940461114226167
