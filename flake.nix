@@ -325,7 +325,8 @@
                                                                                                                                                             rm --recursive --force "${ "$" }{FILES[@]}"
                                                                                                                                                             exec 147>/mounts/logs.lock
                                                                                                                                                             flock -x 147
-                                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '{ "type" : $TYPE } | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
+                                                                                                                                                            TYPE="valid-release"
+                                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '{ "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                         fi
                                                                                                                                                     done
                                                                                                                                                 '' ;
