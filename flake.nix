@@ -286,7 +286,7 @@
                                                                                                                                                         do
                                                                                                                                                             while [[ -f "$PID_FILE" ]]
                                                                                                                                                             do
-                                                                                                                                                                sleep 1
+                                                                                                                                                                sleep 1s
                                                                                                                                                             done
                                                                                                                                                         done
                                                                                                                                                         EXPECTED="${ resources-directory }/mounts/$INDEX"
@@ -297,7 +297,7 @@
                                                                                                                                                             then
                                                                                                                                                                 while [[ -L "$CANDIDATE" ]]
                                                                                                                                                                 do
-                                                                                                                                                                    sleep 1
+                                                                                                                                                                    sleep 1s
                                                                                                                                                                 done
                                                                                                                                                             fi
                                                                                                                                                         done
@@ -578,7 +578,7 @@
                                                                                                                                                         runtimeInputs = [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
-                                                                                                                                                                sleep 10s                                                                                                                                                                                                                             sleep 10s
+                                                                                                                                                                sleep 10s
                                                                                                                                                                 exec 132> ${ resources-directory }/log.lock
                                                                                                                                                                 flock -x 132
                                                                                                                                                                 EXPECTED="$( mktemp )" || failure 4940461114226167
@@ -636,7 +636,7 @@
                                                                                                                 runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                 text =
                                                                                                                     ''
-                                                                                                                        sleep 10
+                                                                                                                        sleep 10s
                                                                                                                         mkdir --parents ${ process-lock }
                                                                                                                         ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''exec 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }> ${ process-lock }/process.${ builtins.toString index }.lock'' ) ( builtins.length processes ) ) }
                                                                                                                         ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''flock -x 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }'' ) ( builtins.length processes ) ) }
