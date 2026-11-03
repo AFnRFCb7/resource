@@ -333,7 +333,7 @@
                                                                                                                                 echo 6917628331826780 >&2
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 echo 4613248904478708 >&2
-                                                                                                                                jq --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' /mounts/input | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
+                                                                                                                                jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
                                                                                                                                 echo 2194430404269928 >&2
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
                                                                                                                                 echo 5621853876290087 >&2
