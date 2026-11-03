@@ -454,7 +454,8 @@
                                                                                                                                 text =
                                                                                                                                     ''
                                                                                                                                         echo 0169781261877506 >&2
-                                                                                                                                        if jq --null-input '{ }' | valid-init
+                                                                                                                                        # todo fix below
+                                                                                                                                        if valid-init
                                                                                                                                         then
                                                                                                                                             echo 7618803277646373 >&2
                                                                                                                                         else
