@@ -291,47 +291,47 @@
                                                                                                                                                         echo 7529121848472359 >> /mounts/temporary/TRACE
                                                                                                                                                         find "/mounts/pid/$INDEX" -mindepth 1 -maxdepth 1 | while read -r PID_FILE
                                                                                                                                                         do
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 5734290668146725 >> /mounts/temporary/TRACE
                                                                                                                                                             while [[ -f "$PID_FILE" ]]
                                                                                                                                                             do
-                                                                                                                                                                echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                                echo 7182764497432656 >> /mounts/temporary/TRACE
                                                                                                                                                                 sleep 1s
-                                                                                                                                                                echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                                echo 0298480549248505 >> /mounts/temporary/TRACE
                                                                                                                                                             done
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 8941734957973407 >> /mounts/temporary/TRACE
                                                                                                                                                         done
-                                                                                                                                                        echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                        echo 0456527785048555 >> /mounts/temporary/TRACE
                                                                                                                                                         EXPECTED="${ resources-directory }/mounts/$INDEX"
-                                                                                                                                                        echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                        echo 612239824306423 >> /mounts/temporary/TRACE
                                                                                                                                                         find "/mounts/gc-roots" -type L | while read -r CANDIDATE
                                                                                                                                                         do
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 0952403544849742 >> /mounts/temporary/TRACE
                                                                                                                                                             OBSERVED="$( readlink "$CANDIDATE" )" || failure 6653347034509208
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 2401036737811075 >> /mounts/temporary/TRACE
                                                                                                                                                             if [[ "$EXPECTED" == "$OBSERVED" ]]
                                                                                                                                                             then
-                                                                                                                                                                echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                                echo 7459422157574621 >> /mounts/temporary/TRACE
                                                                                                                                                                 while [[ -L "$CANDIDATE" ]]
                                                                                                                                                                 do
-                                                                                                                                                                    echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                                    echo 4730167408390059 >> /mounts/temporary/TRACE
                                                                                                                                                                     sleep 1s
-                                                                                                                                                                    echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                                    echo 7691880731769625 >> /mounts/temporary/TRACE
                                                                                                                                                                 done
-                                                                                                                                                                echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                                echo 5732760320021409 >> /mounts/temporary/TRACE
                                                                                                                                                             fi
                                                                                                                                                         done
-                                                                                                                                                        echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                        echo 4332048571662709 >> /mounts/temporary/TRACE
                                                                                                                                                         exec 196> "/mounts/lock/$INDEX"
-                                                                                                                                                        echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                        echo 0821353212247321 >> /mounts/temporary/TRACE
                                                                                                                                                         flock -x 196
-                                                                                                                                                        echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                        echo 7471142887439444 >> /mounts/temporary/TRACE
                                                                                                                                                         if [[ -f "/mounts/flag/$INDEX" ]]
                                                                                                                                                         then
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 2509996860415360 >> /mounts/temporary/TRACE
                                                                                                                                                             flock -u 196
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 9188140293219721 >> /mounts/temporary/TRACE
                                                                                                                                                         else
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 0157645899481264 >> /mounts/temporary/TRACE
                                                                                                                                                             FILES=(
                                                                                                                                                                 "/mounts/gc-roots/$INDEX"
                                                                                                                                                                 "/mounts/diagnostic/$INDEX"
@@ -341,23 +341,23 @@
                                                                                                                                                                 "/mounts/pid/$INDEX"
                                                                                                                                                                 "/mounts/release/$INDEX"
                                                                                                                                                             )
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 3939670191140205 >> /mounts/temporary/TRACE
                                                                                                                                                             ARCHIVE_FILE="$( mktemp --suffix ".tar.xz" --dry-run /mounts/temporary/XXXXXXXX )" || failure 9874147964151582
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 9577427768318179 >> /mounts/temporary/TRACE
                                                                                                                                                             tar --create --xz --file "$ARCHIVE_FILE" "${ "$" }{FILES[@]}"
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 3267557781559521 >> /mounts/temporary/TRACE
                                                                                                                                                             rm --recursive --force "${ "$" }{FILES[@]}"
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 8156406062476495 >> /mounts/temporary/TRACE
                                                                                                                                                             exec 147>/mounts/logs.lock
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 0186219766404876 >> /mounts/temporary/TRACE
                                                                                                                                                             flock -x 147
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 1422390394506202 >> /mounts/temporary/TRACE
                                                                                                                                                             TIMESTAMP="$( date +%s )" || failure 4910980508658578
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 6117012351252018 >> /mounts/temporary/TRACE
                                                                                                                                                             TYPE="valid-release"
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 5806931074421760 >> /mounts/temporary/TRACE
                                                                                                                                                             jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
-                                                                                                                                                            echo 8461632369467679 >> /mounts/temporary/TRACE
+                                                                                                                                                            echo 9918035647406150 >> /mounts/temporary/TRACE
                                                                                                                                                         fi
                                                                                                                                                     done
                                                                                                                                                 '' ;
