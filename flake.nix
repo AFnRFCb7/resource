@@ -250,7 +250,7 @@
                                                                                                                                             in "${ application }/bin/post" ;
                                                                                                                                     variables = { } ;
                                                                                                                                 } ;
-                                                                                                                        in [ "${ resources-directory }/release/$INDEX" "${ application }/bin/post" ] ;
+                                                                                                                        in [ "${ application }/bin/post" "${ resources-directory }/release/$INDEX" ] ;
                                                                                                                 runtime-inputs = { pkgs , ... } : [ identified.config.wrap pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                 text =
                                                                                                                     let
@@ -333,6 +333,7 @@
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '[ { "timestamp" : $TIMESTAMP , "type" : $TYPE } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
+                                                                                                                                cat /mounts/release/$INDEX >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
