@@ -222,7 +222,7 @@
                                                                                                                                 {
                                                                                                                                     mounts = { release = { source = "${ resources-directory }/release" ; type = "bind" ; } ; } ;
                                                                                                                                     name = "post" ;
-                                                                                                                                    post = null ;
+                                                                                                                                    post = [ ] ;
                                                                                                                                     runtime-inputs = { pkgs , ... } : [ ] ;
                                                                                                                                     text =
                                                                                                                                         let
@@ -236,7 +236,7 @@
                                                                                                                                                                 release = { source = "${ resources-directory }/release" ; type = "bind"; } ;
                                                                                                                                                             } ;
                                                                                                                                                         name = "post" ;
-                                                                                                                                                        post = null ;
+                                                                                                                                                        post = [ ] ;
                                                                                                                                                         runtime-inputs = { pkgs , ... } : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
