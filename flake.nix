@@ -50,7 +50,7 @@
                                                                                         release = { source = "${ resources-directory }/release" ; type = "bind" ; } ;
                                                                                     } ;
                                                                                 name = name ;
-                                                                                post = null ;
+                                                                                post = [ ] ;
                                                                                 runtime-inputs =
                                                                                     { pkgs , ... } :
                                                                                         [
@@ -87,7 +87,7 @@
                                                                                                                         invalid-init = { source = "/mounts/invalid-init" ; type = "bind" ; } ;
                                                                                                                     } ;
                                                                                                                 name = "invalid-init" ;
-                                                                                                                post = null ;
+                                                                                                                post = [ ] ;
                                                                                                                 runtime-inputs = { pkgs , ... }: [ ( identified.config.failure { } ) identified.config.wrap pkgs.coreutils ] ;
                                                                                                                 text =
                                                                                                                     let
@@ -120,6 +120,7 @@
                                                                                                                                                                     standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                                                 } ;
                                                                                                                                                             name = "invalid-init" ;
+                                                                                                                                                            post = [ ] ;
                                                                                                                                                             runtime-inputs =
                                                                                                                                                                 { pkgs , ... } :
                                                                                                                                                                     [
@@ -131,7 +132,7 @@
                                                                                                                                                                                 {
                                                                                                                                                                                     mounts = { } ;
                                                                                                                                                                                     name = "recovery" ;
-                                                                                                                                                                                    post = null ;
+                                                                                                                                                                                    post = [ ] ;
                                                                                                                                                                                     runtime-inputs = builtins.getAttrs "runtime-inputs" ( identity ( value null ) ) ;
                                                                                                                                                                                     text = builtins.getAttrs "text" ( identity ( value null ) ) ;
                                                                                                                                                                                 }
@@ -182,7 +183,7 @@
                                                                                                                                                             release = { is-directory = true ; source = "/mounts/release" ; type = "bind" ; } ;
                                                                                                                                                         } ;
                                                                                                                                                     name = "invalid-init" ;
-                                                                                                                                                    post = null ;
+                                                                                                                                                    post = [ ] ;
                                                                                                                                                     runtime-inputs = { pkgs , ... } : [ valid-init ] ;
                                                                                                                                                     text = "valid-init" ;
                                                                                                                                                     variables = { } ;
@@ -250,7 +251,7 @@
                                                                                                                                             in "${ application }/bin/post" ;
                                                                                                                                     variables = { } ;
                                                                                                                                 } ;
-                                                                                                                        in "${ application }/bin/post" ;
+                                                                                                                        in [ "${ application }/bin/post" ] ;
                                                                                                                 runtime-inputs = { pkgs , ... } : [ identified.config.wrap pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                 text =
                                                                                                                     let
@@ -275,7 +276,7 @@
                                                                                                                                                     pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                                                                                 } ;
                                                                                                                                             name = "release" ;
-                                                                                                                                            post = null ;
+                                                                                                                                            post = [ ] ;
                                                                                                                                             runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.xz ] ;
                                                                                                                                             text =
                                                                                                                                                 ''
@@ -352,7 +353,7 @@
                                                                                                                                         standard-output = { is-directory = false ; type = "temporary" ; } ;
                                                                                                                                     } ;
                                                                                                                                 name = "init" ;
-                                                                                                                                post = null ;
+                                                                                                                                post = [ ] ;
                                                                                                                                 runtime-inputs =
                                                                                                                                     { pkgs , ... } :
                                                                                                                                         [
@@ -374,7 +375,7 @@
                                                                                                                                                             {
                                                                                                                                                                 mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                                                                 name = "init" ;
-                                                                                                                                                                post = null ;
+                                                                                                                                                                post = [ ] ;
                                                                                                                                                                 runtime-inputs = builtins.getAttr "text" ( identity ( value null ) ) ;
                                                                                                                                                                 text = builtins.getAttr "text" ( identity ( value null ) ) ;
                                                                                                                                                                 variables = { } ;
@@ -438,7 +439,7 @@
                                                                                                                             {
                                                                                                                                 mounts = { release = { source = "/mounts/release" ; type = "bind" ; } ; } ;
                                                                                                                                 name = "init" ;
-                                                                                                                                post = null ;
+                                                                                                                                post = [ ] ;
                                                                                                                                 runtime-inputs = { pkgs , ... } : [ pkgs.jq valid-init ] ;
                                                                                                                                 text =
                                                                                                                                     ''
