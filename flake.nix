@@ -240,7 +240,6 @@
                                                                                                                                                         runtime-inputs = { pkgs , ... } : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
                                                                                                                                                         text =
                                                                                                                                                             ''
-                                                                                                                                                                "/mounts/release/$INDEX" &
                                                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 3615837188445696
                                                                                                                                                                 exec 103> /mounts/log.lock
                                                                                                                                                                 flock -x 103
@@ -251,7 +250,7 @@
                                                                                                                                             in "${ application }/bin/post" ;
                                                                                                                                     variables = { } ;
                                                                                                                                 } ;
-                                                                                                                        in [ "${ application }/bin/post" ] ;
+                                                                                                                        in [ "${ resources-directory }/release/$INDEX" "${ application }/bin/post" ] ;
                                                                                                                 runtime-inputs = { pkgs , ... } : [ identified.config.wrap pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                 text =
                                                                                                                     let
