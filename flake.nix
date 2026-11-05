@@ -282,8 +282,8 @@
                                                                                                                                             text =
                                                                                                                                                 ''
                                                                                                                                                     sleep 3s
-                                                                                                                                                    export TYPE="valid-release"
-                                                                                                                                                    jq --null-input --arg INDEX "$INDEX" --arg TYPE "$TYPE" '[ { "index" : $INDEX , "type" : $TYPE } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
+                                                                                                                                                    TYPE="valid-release"
+                                                                                                                                                    jq --null-input --arg TYPE "$TYPE" '[ { "type" : $TYPE } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                     do
                                                                                                                                                         rm "/mounts/flag/$INDEX"
