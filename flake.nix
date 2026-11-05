@@ -231,14 +231,14 @@
                                                                                                                                                     {
                                                                                                                                                         mounts =
                                                                                                                                                             {
-                                                                                                                                                                "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
-                                                                                                                                                                "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
+                                                                                                                                                                "log.lock" = { is-directory = false ; source = "/mounts/log.lock" ; type = "bind" ; } ;
+                                                                                                                                                                "log.yaml" = { is-directory = false ; source = "/mounts/log.yaml" ; type = "bind" ; } ;
                                                                                                                                                                 release = { source = "${ resources-directory }/release" ; type = "bind"; } ;
                                                                                                                                                             } ;
                                                                                                                                                         name = "post" ;
                                                                                                                                                         post = [ ] ;
                                                                                                                                                         runtime-inputs = { pkgs , ... } : [ ( identified.config.failure { } ) pkgs.coreutils pkgs.flock pkgs.yq-go ] ;
-                                                                                                                                                        text =
+                                                                                                                                                        /nix/store/lv84k5d0h29ddvbn417w5d3qajir0k0s-vm-test-run-nixos-test.drvtext =
                                                                                                                                                             ''
                                                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 3615837188445696
                                                                                                                                                                 exec 103> /mounts/log.lock
@@ -283,7 +283,7 @@
                                                                                                                                                 ''
                                                                                                                                                     sleep 3s
                                                                                                                                                     export TYPE="valid-release"
-                                                                                                                                                    jq --null-input --arg INDEX "$INDEX" --arg TYPE "$TYPE" '[ { "index" : $INDEX" , "type" : $TYPE } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
+                                                                                                                                                    jq --null-input --arg INDEX "$INDEX" --arg TYPE "$TYPE" '[ { "index" : $INDEX , "type" : $TYPE } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                     do
                                                                                                                                                         rm "/mounts/flag/$INDEX"
