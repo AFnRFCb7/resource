@@ -442,7 +442,6 @@
                                                                                                                                 runtime-inputs = { pkgs , ... } : [ pkgs.jq valid-init ] ;
                                                                                                                                 text =
                                                                                                                                     ''
-                                                                                                                                        # todo fix below
                                                                                                                                         jq --null-input '{ }' |  valid-init
                                                                                                                                     '' ;
                                                                                                                                 variables = { } ;
