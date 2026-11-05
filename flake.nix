@@ -276,9 +276,10 @@
                                                                                                                                                 } ;
                                                                                                                                             name = "release" ;
                                                                                                                                             post = [ ] ;
-                                                                                                                                            runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.xz ] ;
+                                                                                                                                            runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.jq pkgs.xz pkgs.yq-go ] ;
                                                                                                                                             text =
                                                                                                                                                 ''
+                                                                                                                                                    jq "." ${ builtins.toFile ( [ { type = 5827135897470385 ; } ] ) } | yq eval --prettyPrint '.' >> ${ resources-directory }/log.yaml
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                     do
                                                                                                                                                         rm "/mounts/flag/$INDEX"
