@@ -281,7 +281,7 @@
                                                                                                                                             runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.jq pkgs.xz pkgs.yq-go ] ;
                                                                                                                                             text =
                                                                                                                                                 ''
-                                                                                                                                                    sleep 8s
+                                                                                                                                                    sleep 3s
                                                                                                                                                     export TYPE="valid-release"
                                                                                                                                                     jq "." --arg INDEX "$INDEX" --arg TYPE "$TYPE"'{ "index" : $INDEX" , "type" : $TYPE }' | yq eval --prettyPrint '.' >> /mounts/log.yaml
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
