@@ -327,7 +327,7 @@
                                                                                                                                                         fi
                                                                                                                                                     done
                                                                                                                                                 '' ;
-                                                                                                                                            variables = { index = "$INDEX" ; } ;
+                                                                                                                                            variables = { INDEX = "$INDEX" ; } ;
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
