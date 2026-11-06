@@ -327,6 +327,7 @@
                                                                                                                                                         fi
                                                                                                                                                     done
                                                                                                                                                 '' ;
+                                                                                                                                            variables = { } ;
                                                                                                                                         } ;
                                                                                                                         in
                                                                                                                             ''
