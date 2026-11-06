@@ -342,7 +342,7 @@
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '[ { "timestamp" : $TIMESTAMP , "type" : $TYPE } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500
-                                                                                                                                "/mounts/release/$INDEX" >&2
+                                                                                                                                # "/mounts/release/$INDEX" >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
@@ -653,7 +653,7 @@
                                                                                                                         mkdir --parents ${ process-lock }
                                                                                                                         ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''exec 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }> ${ process-lock }/process.${ builtins.toString index }.lock'' ) ( builtins.length processes ) ) }
                                                                                                                         ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''flock -x 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }'' ) ( builtins.length processes ) ) }
-                                                                                                                        find ${ process-lock } -type f -mindepth 1 -maxdepth 1 -name "process.*.failure" | sort | while read -r FAILURE
+                                                                                                                        find ${ process-lock } -mindepth 1 -maxdepth 1 -type f -name "process.*.failure" | sort | while read -r FAILURE
                                                                                                                         do
                                                                                                                             if [[ -s "$FAILURE" ]]
                                                                                                                             then
