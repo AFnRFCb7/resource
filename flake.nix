@@ -288,6 +288,7 @@
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                     do
                                                                                                                                                         rm "/mounts/flag/$INDEX"
+                                                                                                                                                        echo 2843330804572318 >&2
                                                                                                                                                         find "/mounts/pid/$INDEX" -mindepth 1 -maxdepth 1 | while read -r PID_FILE
                                                                                                                                                         do
                                                                                                                                                             while [[ -f "$PID_FILE" ]]
