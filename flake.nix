@@ -288,6 +288,7 @@
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                     do
                                                                                                                                                         rm "/mounts/flag/$INDEX"
+                                                                                                                                                        echo
                                                                                                                                                         echo 2843330804572318 >&2
                                                                                                                                                         find "/mounts/pid/$INDEX" -mindepth 1 -maxdepth 1 | while read -r PID_FILE
                                                                                                                                                         do
@@ -296,6 +297,7 @@
                                                                                                                                                                 sleep 1s
                                                                                                                                                             done
                                                                                                                                                         done
+                                                                                                                                                        echo 1255891755181949 >&2
                                                                                                                                                         EXPECTED="${ resources-directory }/mounts/$INDEX"
                                                                                                                                                         find "/mounts/gc-roots" -type L | while read -r CANDIDATE
                                                                                                                                                         do
