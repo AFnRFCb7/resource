@@ -492,7 +492,7 @@
                                                                                                 exit ${ builtins.toString error }
                                                                                             fi
                                                                                             mkdir --parents "/mounts/pid/$INDEX"
-                                                                                            echo 6649739971485197 >&2
+                                                                                            echo 6649739971485197 "PROCESS_ID=$PROCESS_ID" >&2
                                                                                             echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                             echo 6627088422600241 >&2
                                                                                             chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
