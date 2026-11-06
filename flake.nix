@@ -58,6 +58,7 @@
                                                                                             ( identified.config.sequential { sequential-file = "${ resources-directory }/sequential.asc" ; sequential-lock = "${ resources-directory }/sequential.lock" ; } )
                                                                                             pkgs.coreutils
                                                                                             pkgs.flock
+                                                                                            pkgs.jq
                                                                                             (
                                                                                                 let
                                                                                                     action =
@@ -458,8 +459,8 @@
                                                                                         ] ;
                                                                                 text =
                                                                                     ''
-                                                                                        PID="$( sequential )" || failure 3708670955636569
-                                                                                        HASH=$( sha512sum < /mounts/input | cut --bytes 1-128 ) || failure 9501307898608371
+                                                                                        PROCESS_ID="$( jq --raw-output '.["process-id"]' /mounts/input )" || failure 6902543043364239
+                                                                                        HASH=$( jq 'del(.["process-id"])' /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
                                                                                         exec 169> "/mounts/lock/$HASH"
                                                                                         flock -x 169
                                                                                         if [[ -L "/mounts/canonical/$HASH" ]]
@@ -468,15 +469,15 @@
                                                                                             INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
                                                                                             touch "/mounts/flag/$INDEX"
                                                                                             mkdir --parents "/mounts/pid/$INDEX"
-                                                                                            echo "$PID" > "/mounts/pid/$INDEX/$PID"
-                                                                                            chmod 0400 "/mounts/pid/$INDEX/$PID"
+                                                                                            echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
+                                                                                            chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                             rm "/mounts/lock/$HASH"
                                                                                         else
                                                                                             INDEX="$( sequential )" || failure 6590902953585183
+                                                                                            touch "/mounts/flag/$INDEX"
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                             export INDEX
-                                                                                            touch "/mounts/flag/$INDEX"
                                                                                             MOUNT="/mounts/mounts/$INDEX"
                                                                                             mkdir --parents "$MOUNT"
                                                                                             if init
@@ -486,6 +487,9 @@
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                                 exit ${ builtins.toString error }
                                                                                             fi
+                                                                                            mkdir --parents "/mounts/pid/$INDEX"
+                                                                                            echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
+                                                                                            chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                         fi
                                                                                     '' ;
                                                                                 variables = { } ;
