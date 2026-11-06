@@ -46,7 +46,7 @@
                                                                                         "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
                                                                                         "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
                                                                                         mounts = { is-directory = true ; source = "${ resources-directory }/mounts" ; type = "bind" ; } ;
-                                                                                        pids = { is-directory = true ; source = "${ resources-directory }/pids" ; type = "bind" ; } ;
+                                                                                        pid = { is-directory = true ; source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                         release = { source = "${ resources-directory }/release" ; type = "bind" ; } ;
                                                                                     } ;
                                                                                 name = name ;
