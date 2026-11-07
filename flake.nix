@@ -453,9 +453,6 @@
                                                                                 text =
                                                                                     ''
                                                                                         PROCESS_ID="$( jq --raw-output '.["process-id"]' /mounts/input )" || failure 3930385419435082
-                                                                                        mkdir --parents "/mounts/pid/$INDEX"
-                                                                                        echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
-                                                                                        chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                         HASH=$( jq 'del(.["process-id"])' /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
                                                                                         exec 169> "/mounts/lock/$HASH"
                                                                                         flock -x 169
@@ -465,6 +462,9 @@
                                                                                             INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
                                                                                             touch "/mounts/flag/$INDEX"
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
+                                                                                            mkdir --parents "/mounts/pid/$INDEX"
+                                                                                            echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
+                                                                                            chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                             rm "/mounts/lock/$HASH"
                                                                                         else
                                                                                             INDEX="$( sequential )" || failure 6590902953585183
@@ -475,6 +475,9 @@
                                                                                             mkdir --parents "$MOUNT"
                                                                                             if init
                                                                                             then
+                                                                                                mkdir --parents "/mounts/pid/$INDEX"
+                                                                                                echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
+                                                                                                chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                             else
                                                                                                 rm "/mounts/lock/$HASH"
