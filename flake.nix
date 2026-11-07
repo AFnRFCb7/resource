@@ -274,7 +274,7 @@
                                                                                                                                                     lock = { source = "${ resources-directory }/lock" ; type = "bind" ; } ;
                                                                                                                                                     "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
                                                                                                                                                     "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
-                                                                                                                                                    "master.txt" = { is-directory = false ; source = "/tmp/master.txt" ; type = "bind" } ;
+                                                                                                                                                    "master.txt" = { is-directory = false ; source = "/tmp/master.txt" ; type = "bind" ; } ;
                                                                                                                                                     pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                                                                                 } ;
                                                                                                                                             name = "release" ;
