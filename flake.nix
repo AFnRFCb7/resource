@@ -456,7 +456,7 @@
                                                                                         mkdir --parents "/mounts/pid/$INDEX"
                                                                                         echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                         chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
-                                                                                        HASH=$( jq 'del(.["process-id"]' /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
+                                                                                        HASH=$( jq 'del(.["process-id"])' /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
                                                                                         exec 169> "/mounts/lock/$HASH"
                                                                                         flock -x 169
                                                                                         if [[ -L "/mounts/canonical/$HASH" ]]
