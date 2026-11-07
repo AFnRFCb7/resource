@@ -272,6 +272,7 @@
                                                                                                                                                 {
                                                                                                                                                     flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
                                                                                                                                                     lock = { source = "${ resources-directory }/lock" ; type = "bind" ; } ;
+                                                                                                                                                    "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
                                                                                                                                                     "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
                                                                                                                                                     pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                                                                                 } ;
@@ -281,6 +282,8 @@
                                                                                                                                             text =
                                                                                                                                                 ''
                                                                                                                                                     sleep 2s
+                                                                                                                                                    exec 168> /mounts/log.lock
+                                                                                                                                                    flock -x 168
                                                                                                                                                     TYPE="4792514138748714"
                                                                                                                                                     jq --null-input --arg TYPE "$TYPE" '{ "type" : $TYPE" }' | yq eval --prettyPrint >> /mounts/log.yaml
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
