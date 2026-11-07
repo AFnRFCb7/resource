@@ -40,7 +40,7 @@
                                                                                         flag = { is-directory = true ; source = "${ resources-directory }/flag" ; type = "bind" ; } ;
                                                                                         invalid-init = { is-directory = true ; source = "${ resources-directory }/invalid-init" ; type = "bind" ; } ;
                                                                                         invalid-release = { is-directory = true ; source = "${ resources-directory }/invalid-release" ; type = "bind" ; } ;
-                                                                                        input = { is-directory = false ; source = "/mounts/input" ; type = "bind" ; } ;
+                                                                                        input = { is-directory = false ; source = "/input" ; type = "bind" ; } ;
                                                                                         gc-root = { is-directory = true ; source = gc-roots-directory ; type = "bind" ; } ;
                                                                                         lock = { is-directory = true ; source = "${ resources-directory }/lock" ; type = "bind" ; } ;
                                                                                         "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
@@ -450,7 +450,7 @@
                                                                                                             action
                                                                                             )
                                                                                         ] ;
-                                                                                text =
+                                                                                 text =
                                                                                     ''
                                                                                         PROCESS_ID="$( jq --raw-output '.["process-id"]' /mounts/input )" || failure 3930385419435082
                                                                                         HASH=$( jq 'del(.["process-id"])' /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
