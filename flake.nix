@@ -272,8 +272,8 @@
                                                                                                                                                 {
                                                                                                                                                     flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
                                                                                                                                                     lock = { source = "${ resources-directory }/lock" ; type = "bind" ; } ;
-                                                                                                                                                    "log.lock" = { is-directory = false ; source = "/mounts/log.lock" ; type = "bind" ; } ;
-                                                                                                                                                    "log.yaml" = { is-directory = false ; source = "/mounts/log.yaml" ; type = "bind" ; } ;
+                                                                                                                                                    "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
+                                                                                                                                                    "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
                                                                                                                                                     pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                                                                                 } ;
                                                                                                                                             name = "release" ;
