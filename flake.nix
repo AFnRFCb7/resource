@@ -476,6 +476,7 @@
                                                                                             if init
                                                                                             then
                                                                                                 mkdir --parents "/mounts/pid/$INDEX"
+                                                                                                echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                                 chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                             else
