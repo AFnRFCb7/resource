@@ -335,8 +335,7 @@
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500
-                                                                                                                                sleep 2s
-                                                                                                                                jq --null-input --arg TYPE 2190012347224353 '[ { "type" : $TYPE } } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
+                                                                                                                                cat "/mounts/release/$INDEX" >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
