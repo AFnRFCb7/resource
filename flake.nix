@@ -452,7 +452,7 @@
                                                                                         ] ;
                                                                                 text =
                                                                                     ''
-                                                                                        PROCESS_ID="$( jq --raw-output '.["process-id"]"' /mounts/input )" || failure 3930385419435082
+                                                                                        PROCESS_ID="$( jq --raw-output '.["process-id"]' /mounts/input )" || failure 3930385419435082
                                                                                         mkdir --parents "/mounts/pid/$INDEX"
                                                                                         echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                         chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
