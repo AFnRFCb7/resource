@@ -593,7 +593,9 @@
                                                                                                                                                                 exec 132> ${ resources-directory }/log.lock
                                                                                                                                                                 flock -x 132
                                                                                                                                                                 EXPECTED="$( mktemp )" || failure 4940461114226167
+                                                                                                                                                                ${ if index == 1 then "echo 5099742821029951 >&2" else "" }
                                                                                                                                                                 jq '.' > "$EXPECTED"
+                                                                                                                                                                ${ if index == 1 then "echo 4470253838673879 >&2" else "" }
                                                                                                                                                                 N="$( jq 'length' "$EXPECTED" )" || failure 0163978703024678
                                                                                                                                                                 CORRECT=false
                                                                                                                                                                 while [[ "$#" -gt 0 ]]
