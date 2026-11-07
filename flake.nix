@@ -478,7 +478,8 @@
                                                                                                 echo 4775218669801435 >&2
                                                                                                 mkdir --parents "/mounts/pid/$INDEX"
                                                                                                 echo 5993046888815065 "PROCESS_ID=$PROCESS_ID" >&2
-                                                                                                jq "." /mounts/input >&2
+                                                                                                echo 4812892799238349 >&2
+                                                                                                jq "." /input >&2
                                                                                                 echo 7218932445164856 >&2
                                                                                                 echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                                 echo 3779405958719412 >&2
