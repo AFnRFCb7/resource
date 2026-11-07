@@ -452,8 +452,8 @@
                                                                                         ] ;
                                                                                  text =
                                                                                     ''
-                                                                                        PROCESS_ID="$( jq --raw-output '.["process-id"]' /mounts/input )" || failure 3930385419435082
-                                                                                        HASH=$( jq 'del(.["process-id"])' /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
+                                                                                        PROCESS_ID="$( jq --raw-output '.["process-id"]' /input )" || failure 3930385419435082
+                                                                                        HASH=$( jq 'del(.["process-id"])' /input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
                                                                                         exec 169> "/mounts/lock/$HASH"
                                                                                         flock -x 169
                                                                                         if [[ -L "/mounts/canonical/$HASH" ]]
@@ -475,14 +475,7 @@
                                                                                             mkdir --parents "$MOUNT"
                                                                                             if init
                                                                                             then
-                                                                                                echo 4775218669801435 >&2
                                                                                                 mkdir --parents "/mounts/pid/$INDEX"
-                                                                                                echo 5993046888815065 "PROCESS_ID=$PROCESS_ID" >&2
-                                                                                                echo 4812892799238349 >&2
-                                                                                                jq "." /input >&2
-                                                                                                echo 7218932445164856 >&2
-                                                                                                echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
-                                                                                                echo 3779405958719412 >&2
                                                                                                 chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
                                                                                                 rm "/mounts/lock/$HASH"
                                                                                             else
