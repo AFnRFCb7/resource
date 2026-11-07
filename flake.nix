@@ -272,6 +272,7 @@
                                                                                                                                                 {
                                                                                                                                                     flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
                                                                                                                                                     lock = { source = "${ resources-directory }/lock" ; type = "bind" ; } ;
+                                                                                                                                                    "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
                                                                                                                                                     pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                                                                                 } ;
                                                                                                                                             name = "release" ;
@@ -335,7 +336,7 @@
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500
-                                                                                                                                cat "/mounts/release/$INDEX" >&2
+                                                                                                                                # cat "/mounts/release/$INDEX" >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
