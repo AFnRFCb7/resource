@@ -272,8 +272,8 @@
                                                                                                                                                 {
                                                                                                                                                     flag = { source = "${ resources-directory }/flag" ; type = "bind" ; } ;
                                                                                                                                                     lock = { source = "${ resources-directory }/lock" ; type = "bind" ; } ;
-                                                                                                                                                    "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
-                                                                                                                                                    "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
+                                                                                                                                                    "log.lock" = { is-directory = false ; source = "/mounts/log.lock" ; type = "bind" ; } ;
+                                                                                                                                                    "log.yaml" = { is-directory = false ; source = "/mounts/log.yaml" ; type = "bind" ; } ;
                                                                                                                                                     pid = { source = "${ resources-directory }/pid" ; type = "bind" ; } ;
                                                                                                                                                 } ;
                                                                                                                                             name = "release" ;
@@ -607,7 +607,7 @@
                                                                                                                                                                             OBSERVED="$( mktemp )" || failure 5660646061926270
                                                                                                                                                                             ${ if index == 1 then "echo 1178304124058735 >&2" else "" }
                                                                                                                                                                             yq eval -o=json '.' ${ resources-directory }/log.yaml | jq 'map(del(.timestamp))' | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
-                                                                                                                                                                            ${ if index == 1 then "echo 0588668899564335" else "" }
+                                                                                                                                                                            ${ if index == 1 then "echo 0588668899564335 " else "" }
                                                                                                                                                                             if diff --unified "$EXPECTED" "$OBSERVED" >&2
                                                                                                                                                                             then
                                                                                                                                                                                 CORRECT=true
