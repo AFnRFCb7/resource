@@ -279,6 +279,9 @@
                                                                                                                                             runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.findutils pkgs.flock pkgs.gnutar pkgs.xz ] ;
                                                                                                                                             text =
                                                                                                                                                 ''
+                                                                                                                                                    sleep 2s
+                                                                                                                                                    TYPE="4792514138748714"
+                                                                                                                                                    jq --null-input --arg TYPE "$TYPE" '{ "type" : $TYPE" } | yq eval --prettyPrint >> /mounts/log.yaml
                                                                                                                                                     while [[ -f /mounts/flag/$INDEX ]]
                                                                                                                                                     do
                                                                                                                                                         rm "/mounts/flag/$INDEX"
