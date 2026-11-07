@@ -452,8 +452,11 @@
                                                                                         ] ;
                                                                                 text =
                                                                                     ''
-                                                                                        PID="$( sequential )" || failure 3708670955636569
-                                                                                        HASH=$( sha512sum < /mounts/input | cut --bytes 1-128 ) || failure 9501307898608371
+                                                                                        PROCESS_PID="$( jq --raw-output '.["process-id"]"' /mounts/input )" || failure 3930385419435082
+                                                                                        mkdir --parents "/mounts/pid/$INDEX"
+                                                                                        echo "$PROCESS_ID" > "/mounts/pid/$INDEX/$PROCESS_ID"
+                                                                                        chmod 0400 "/mounts/pid/$INDEX/$PROCESS_ID"
+                                                                                        HASH=$( jq 'del(.["process-id"]' /mounts/input | sha512sum | cut --bytes 1-128 ) || failure 9501307898608371
                                                                                         exec 169> "/mounts/lock/$HASH"
                                                                                         flock -x 169
                                                                                         if [[ -L "/mounts/canonical/$HASH" ]]
@@ -461,9 +464,6 @@
                                                                                             MOUNT="$( readlink "/mounts/canonical/$HASH" )" || failure 9157868575302544
                                                                                             INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
                                                                                             touch "/mounts/flag/$INDEX"
-                                                                                            mkdir --parents "/mounts/pid/$INDEX"
-                                                                                            echo "$PID" > "/mounts/pid/$INDEX/$PID"
-                                                                                            chmod 0400 "/mounts/pid/$INDEX/$PID"
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                             rm "/mounts/lock/$HASH"
                                                                                         else
