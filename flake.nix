@@ -211,7 +211,7 @@
                                                                                                                         diagnostic = { source = "/mounts/diagnostic" ; type = "bind" ; } ;
                                                                                                                         # input = { is-directory = false ; source = "/input" ; type = "bind" ; } ;
                                                                                                                         "log.lock" = { is-directory = false ; source = "/mounts/log.lock" ; type = "bind" ;} ;
-                                                                                                                        "log.yaml" = { is-directory = false ; source = "/mounts/log.yaml" ; type = "bind" ;} ;
+                                                                                                                        "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ;} ;
                                                                                                                         release = { source = "/mounts/release" ; type = "bind" ; } ;
                                                                                                                     } ;
                                                                                                                 name = "valid-init" ;
@@ -335,7 +335,8 @@
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500
-                                                                                                                                # jq --null-input --arg TYPE 2190012347224353 '[ { "type" : $TYPE } } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
+                                                                                                                                sleep 2s
+                                                                                                                                jq --null-input --arg TYPE 2190012347224353 '[ { "type" : $TYPE } } ]' | yq eval --prettyPrint '.' >> /mounts/log.yaml
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
