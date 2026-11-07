@@ -494,6 +494,7 @@
                                 {
                                     check =
                                         {
+                                            communication-directory ,
                                             failure ,
                                             lazy-shell-application ,
                                             nixosTest ,
@@ -686,6 +687,9 @@
                                                                                 [
                                                                                     ''
                                                                                         client.wait_for_unit("multi-user.target")
+                                                                                    ''
+                                                                                    ''
+                                                                                        client.succeed('mkdir --parents ${ communication-directory }')
                                                                                     ''
                                                                                 ]
                                                                                 (
