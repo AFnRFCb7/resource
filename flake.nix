@@ -272,6 +272,7 @@
                                                                                                                                             TYPE=9108435534527325
                                                                                                                                             jq --null-input --arg TYPE "$TYPE" '[ { "type" : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
                                                                                                                                         '' ;
+                                                                                                                                    variables = { } ;
                                                                                                                                 } ;
                                                                                                                         release-2 =
                                                                                                                             let
