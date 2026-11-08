@@ -260,7 +260,7 @@
                                                                                                                                     mounts =
                                                                                                                                         {
                                                                                                                                             "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
-                                                                                                                                            "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type "bind" ; } ;
+                                                                                                                                            "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type = "bind" ; } ;
                                                                                                                                         } ;
                                                                                                                                     name = "release" ;
                                                                                                                                     post = [ ] ;
