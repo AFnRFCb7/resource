@@ -250,10 +250,26 @@
                                                                                                                                             in "${ application }/bin/post" ;
                                                                                                                                     variables = { } ;
                                                                                                                                 } ;
-                                                                                                                        in [ "${ resources-directory }/release/$INDEX" "${ application }/bin/post" ] ;
+                                                                                                                        in [ "${ resources-directory }/release/$INDEX-crazy" "${ resources-directory }/release/$INDEX" "${ application }/bin/post" ] ;
                                                                                                                 runtime-inputs = { pkgs , ... } : [ identified.config.wrap pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
                                                                                                                 text =
                                                                                                                     let
+                                                                                                                        crazy =
+                                                                                                                            identified.config.lazy-shell-application
+                                                                                                                                {
+                                                                                                                                    mounts =
+                                                                                                                                        {
+                                                                                                                                            "master.txt" = { is-directory = false ; source = "/tmp/8027078045526635" ; type = "bind" ; } ;
+                                                                                                                                        } ;
+                                                                                                                                    name = "crazy" ;
+                                                                                                                                    post = [ ] ;
+                                                                                                                                    runtime-inputs = { pkgs , ... } : [ pkgs.coreutils ] ;
+                                                                                                                                    text =
+                                                                                                                                        ''
+                                                                                                                                            echo 5877446826429811 > /mounts/master.txt
+                                                                                                                                        '' ;
+                                                                                                                                    variables = { } ;
+                                                                                                                                } ;
                                                                                                                         release =
                                                                                                                             let
                                                                                                                                 identity =
@@ -340,7 +356,8 @@
                                                                                                                                 TYPE="valid-init"
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
-                                                                                                                                wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500
+                                                                                                                                wrap ${ release }/bin/release "/mounts/release/$INDEX" 0777
+                                                                                                                                wrap ${ crazy }/bin/crazy "/mounts/release/$INDEX-crazy" 0777
                                                                                                                                 # cat "/mounts/release/$INDEX" >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
