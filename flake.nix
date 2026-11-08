@@ -255,6 +255,25 @@
                                                                                                                 text =
                                                                                                                     let
                                                                                                                         release =
+                                                                                                                            identified.config.lazy-shell-application
+                                                                                                                                {
+                                                                                                                                    mounts =
+                                                                                                                                        {
+                                                                                                                                            "log.lock" = { is-directory = false ; source = "${ resources-directory }/log.lock" ; type = "bind" ; } ;
+                                                                                                                                            "log.yaml" = { is-directory = false ; source = "${ resources-directory }/log.yaml" ; type "bind" ; } ;
+                                                                                                                                        } ;
+                                                                                                                                    name = "release" ;
+                                                                                                                                    post = [ ] ;
+                                                                                                                                    runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.jq pkgs.flock pkgs.yq-go ] ;
+                                                                                                                                    text =
+                                                                                                                                        ''
+                                                                                                                                            exec 155> /mounts/log.lock
+                                                                                                                                            flock -x 155
+                                                                                                                                            TYPE=9108435534527325
+                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '[ { "type" : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
+                                                                                                                                        '' ;
+                                                                                                                                } ;
+                                                                                                                        release-2 =
                                                                                                                             let
                                                                                                                                 identity =
                                                                                                                                     {
