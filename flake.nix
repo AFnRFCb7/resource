@@ -262,11 +262,10 @@
                                                                                                                                     runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.flock pkgs.yq-go ] ;
                                                                                                                                     text =
                                                                                                                                         ''
-                                                                                                                                            echo 3169973704919992 > /build/post
-                                                                                                                                            exec 155> ${ release-directory }/log.lock
+                                                                                                                                            exec 155> ${ resources-directory }/log.lock
                                                                                                                                             flock -x 155
                                                                                                                                             TYPE=9108435534527325
-                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '[ { "type" : $TYPE } ]' | yq eval --prettyPrint >> ${ release-directory }/log.yaml
+                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '[ { "type" : $TYPE } ]' | yq eval --prettyPrint >> ${ resources-directory }/log.yaml
                                                                                                                                         '' ;
                                                                                                                                 } ;
                                                                                                                         release-2 =
