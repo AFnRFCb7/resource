@@ -262,6 +262,7 @@
                                                                                                                                     runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.flock pkgs.yq-go ] ;
                                                                                                                                     text =
                                                                                                                                         ''
+                                                                                                                                            echo 3169973704919992 > /build/post
                                                                                                                                             exec 155> /mounts/log.lock
                                                                                                                                             flock -x 155
                                                                                                                                             TYPE=9108435534527325
