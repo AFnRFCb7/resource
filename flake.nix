@@ -351,7 +351,8 @@
                                                                                                                                 TYPE="valid-init"
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
-                                                                                                                                wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500 --replace INDEX "$INDEX"
+                                                                                                                                wrap ${ release }/bin/release "/mounts/release/$INDEX" 0500
+                                                                                                                                echo -n "$INDEX" | export-to-post INDEX
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
