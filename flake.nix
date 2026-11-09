@@ -243,7 +243,8 @@
                                                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 3615837188445696
                                                                                                                                                                 exec 103> /mounts/log.lock
                                                                                                                                                                 flock -x 103
-                                                                                                                                                                jq --argjson TIMESTAMP "$TIMESTAMP" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
+                                                                                                                                                                TYPE=3564169664481315
+                                                                                                                                                                jq --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '. + { "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint "[.]" >> /mounts/log.yaml
                                                                                                                                                             '' ;
                                                                                                                                                         variables = { } ;
                                                                                                                                                     } ;
