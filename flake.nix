@@ -264,13 +264,35 @@
                                                                                                                                         } ;
                                                                                                                                     name = "release" ;
                                                                                                                                     post = [ ] ;
-                                                                                                                                    runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.jq pkgs.flock pkgs.yq-go ] ;
+                                                                                                                                    runtime-inputs =
+                                                                                                                                        { pkgs , ... } :
+                                                                                                                                            [
+                                                                                                                                                (
+                                                                                                                                                    config.lazy-shell-application
+                                                                                                                                                        {
+                                                                                                                                                            mounts =
+                                                                                                                                                                {
+                                                                                                                                                                    "log.lock" = { is-directory = false ; source = "/mounts/log.lock" ; type = "bind" ; } ;
+                                                                                                                                                                    "log.yaml" = { is-directory = false ; source = "/mounts/log.yaml" ; type = "bind" ; } ;
+                                                                                                                                                                } ;
+                                                                                                                                                            name = "valid-release" ;
+                                                                                                                                                            post = [ ] ;
+                                                                                                                                                            runtime-inputs = { pkgs , ... } : [ pkgs.coreutils pkgs.flock pkgs.jq pkgs.yq-go ] ;
+                                                                                                                                                            text =
+                                                                                                                                                                ''
+                                                                                                                                                                    exec 124> /mounts/log.lock
+                                                                                                                                                                    flock -x 124
+                                                                                                                                                                    TIMESTAMP="$( date +%s )" || failure 0614535063147934
+                                                                                                                                                                    TYPE=7069369856985887
+                                                                                                                                                                    jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '.' > /mounts/log.yaml
+                                                                                                                                                                '' ;
+                                                                                                                                                            variables = { } ;
+                                                                                                                                                        }
+                                                                                                                                                )
+                                                                                                                                            ] ;
                                                                                                                                     text =
                                                                                                                                         ''
-                                                                                                                                            exec 155> /mounts/log.lock
-                                                                                                                                            flock -x 155
-                                                                                                                                            TYPE=9108435534527325
-                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '[ { "type" : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
+                                                                                                                                            valid-release
                                                                                                                                         '' ;
                                                                                                                                     variables = { } ;
                                                                                                                                 } ;
@@ -480,6 +502,7 @@
                                                                                         then
                                                                                             MOUNT="$( readlink "/mounts/canonical/$HASH" )" || failure 9157868575302544
                                                                                             INDEX="$( basename "$MOUNT" )" || failure 3489407146167789
+                                                                                            export INDEX
                                                                                             touch "/mounts/flag/$INDEX"
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                             mkdir --parents "/mounts/pid/$INDEX"
@@ -488,6 +511,7 @@
                                                                                             rm "/mounts/lock/$HASH"
                                                                                         else
                                                                                             INDEX="$( sequential )" || failure 6590902953585183
+                                                                                            export INDEX
                                                                                             echo -n "${ resources-directory }/mounts/$INDEX"
                                                                                             export INDEX
                                                                                             touch "/mounts/flag/$INDEX"
