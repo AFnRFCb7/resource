@@ -261,6 +261,7 @@
                                                                                                                                     runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.flock pkgs.yq-go ] ;
                                                                                                                                     text =
                                                                                                                                         ''
+                                                                                                                                            sleep 10s
                                                                                                                                             exec 155> ${ resources-directory }/log.lock
                                                                                                                                             flock -x 155
                                                                                                                                             TYPE=9108435534527325
