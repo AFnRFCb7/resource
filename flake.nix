@@ -261,8 +261,9 @@
                                                                                                                                     runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.flock pkgs.yq-go ] ;
                                                                                                                                     text =
                                                                                                                                         ''
-                                                                                                                                            exec 155> /mounts/log.lock
-                                                                                                                                            flock -x 155
+                                                                                                                                            sleep 10s
+                                                                                                                                            # exec 155> /mounts/log.lock
+                                                                                                                                            # flock -x 155
                                                                                                                                             TYPE=9108435534527325
                                                                                                                                             jq --null-input --arg TYPE "$TYPE" '[ { "type" : $TYPE } ]' | yq eval --prettyPrint >> /mounts/log.yaml
                                                                                                                                         '' ;
@@ -345,7 +346,8 @@
                                                                                                                                 TIMESTAMP="$( date +%s )" || failure 7010050283879972
                                                                                                                                 jq --null-input --argjson TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" --sort-keys '{ "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> /mounts/log.yaml
                                                                                                                                 wrap ${ release }/bin/release "/mounts/release/INDEX" 0500
-                                                                                                                                echo -n "$INDEX" | export-to-post INDEX
+                                                                                                                                # echo -n "$INDEX" | export-to-post INDEX
+                                                                                                                                cat "/mounts/release/INDEX" >&2
                                                                                                                             '' ;
                                                                                                                 variables = { } ;
                                                                                                             } ;
