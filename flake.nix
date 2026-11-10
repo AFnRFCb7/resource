@@ -633,7 +633,7 @@
                                                                                                                                                                             ;;
                                                                                                                                                                     esac
                                                                                                                                                                 done
-                                                                                                                                                                echo 4279049034343807 "CORRECT=$CORRECT" >&2
+                                                                                                                                                                # echo 4279049034343807 "CORRECT=$CORRECT" >&2
                                                                                                                                                                 if [[ "$CORRECT" != true ]]
                                                                                                                                                                 then
                                                                                                                                                                     EXPECTED_JSON="$( cat "$EXPECTED" )" || failure 5801512242812508
