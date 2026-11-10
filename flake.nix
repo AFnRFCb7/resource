@@ -611,6 +611,8 @@
                                                                                                                                                                             ORDER_JSON="$( printf '%s\n' "${ "$" }{@:1:$N}" | jq --raw-output 'tonumber' | jq --slurp '.' )" || failure 5547985831229891
                                                                                                                                                                             if [[ "$N" == 2 ]]
                                                                                                                                                                             then
+                                                                                                                                                                                echo 5993215732653056 >&2
+                                                                                                                                                                                echo "$ORDER_JSON" >&2
                                                                                                                                                                                 yq eval -o=json '.' ${ resources-directory }/log.yaml >&2
                                                                                                                                                                             fi
                                                                                                                                                                             OBSERVED="$( mktemp )" || failure 5660646061926270
