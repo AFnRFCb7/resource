@@ -650,7 +650,7 @@
                                                                                                                                             mkdir --parents ${ process-lock }
                                                                                                                                             exec 170> ${ process-lock }/process.${ builtins.toString index }.lock
                                                                                                                                             flock -x 170
-                                                                                                                                            process 2> ${ process-lock }/process.${ builtins.toString index }.failure
+                                                                                                                                            process 2>> ${ process-lock }/process.${ builtins.toString index }.failure
                                                                                                                                         '' ;
                                                                                                                                 } ;
                                                                                                                     in transform process ;
