@@ -609,7 +609,7 @@
                                                                                                                                                                         --order)
                                                                                                                                                                             shift 1
                                                                                                                                                                             ORDER_JSON="$( printf '%s\n' "${ "$" }{@:1:$N}" | jq --raw-output 'tonumber' | jq --slurp '.' )" || failure 5547985831229891
-                                                                                                                                                                            if [[ "$N" == 2 ]
+                                                                                                                                                                            if [[ "$N" == 2 ]]
                                                                                                                                                                             then
                                                                                                                                                                                 yq eval -o=json '.' ${ resources-directory }/log.yaml >&2
                                                                                                                                                                             fi
