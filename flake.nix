@@ -265,7 +265,7 @@
                                                                                                                                             exec 155> ${ resources-directory }/log.lock
                                                                                                                                             flock -x 155
                                                                                                                                             TYPE=9108435534527325
-                                                                                                                                            jq --null-input --arg TYPE "$TYPE" '[ { "type" : $TYPE } ]' | yq eval --prettyPrint >> ${ resources-directory }/log.yaml
+                                                                                                                                            jq --null-input --arg INDEX "$INDEX" --arg TYPE "$TYPE" '[ { "index" : $INDEX , "type" : $TYPE } ]' | yq eval --prettyPrint >> ${ resources-directory }/log.yaml
                                                                                                                                         '' ;
                                                                                                                                 } ;
                                                                                                                         release-2 =
