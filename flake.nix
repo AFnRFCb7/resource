@@ -617,7 +617,7 @@
 #                                                                                                                                                                            fi
                                                                                                                                                                             OBSERVED="$( mktemp )" || failure 5660646061926270
                                                                                                                                                                             yq eval -o=json '.' ${ resources-directory }/log.yaml | jq 'map(del(.timestamp))' | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
-                                                                                                                                                                            if diff --quiet "$EXPECTED" "$OBSERVED" >&2
+                                                                                                                                                                            if diff -q "$EXPECTED" "$OBSERVED" >&2
                                                                                                                                                                             then
                                                                                                                                                                                 CORRECT=true
                                                                                                                                                                             fi
