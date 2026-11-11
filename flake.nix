@@ -651,6 +651,7 @@
                                                                                                                                             exec 170> ${ process-lock }/process.${ builtins.toString index }.lock
                                                                                                                                             flock -x 170
                                                                                                                                             process 2>> ${ process-lock }/process.${ builtins.toString index }.failure
+                                                                                                                                            flock -u 170
                                                                                                                                         '' ;
                                                                                                                                 } ;
                                                                                                                     in transform process ;
