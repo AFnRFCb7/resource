@@ -258,14 +258,32 @@
                                                                                                                             pkgs.writeShellApplication
                                                                                                                                 {
                                                                                                                                     name = "release" ;
-                                                                                                                                    runtimeInputs = [ pkgs.coreutils pkgs.jq pkgs.flock pkgs.yq-go ] ;
+                                                                                                                                    runtimeInputs =
+                                                                                                                                        [
+                                                                                                                                            pkgs.coreutils
+                                                                                                                                            pkgs.jq
+                                                                                                                                            pkgs.flock
+                                                                                                                                            pkgs.yq-go
+                                                                                                                                            (
+                                                                                                                                                pkgs.writeShellApplication
+                                                                                                                                                    {
+                                                                                                                                                        name = "valid-release" ;
+                                                                                                                                                        runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.jq pkgs.flock pkgs.yq-go ] ;
+                                                                                                                                                        text =
+                                                                                                                                                            ''
+                                                                                                                                                                exec 121> ${ resources-directory }/log.lock
+                                                                                                                                                                flock -x 121
+                                                                                                                                                                TIMESTAMP="$( date +%s )" || failure 7681608080216579
+                                                                                                                                                                TYPE=9108435534527325
+                                                                                                                                                                jq --arg INDEX "$INDEX" --arg TIMESTAMP "$TIMESTAMP" --arg TYPE "$TYPE" '. + { "index" : $INDEX , "timestamp" : $TIMESTAMP , "type" : $TYPE }' | yq eval --prettyPrint '[.]' >> ${ resources-directory }/log.yaml
+                                                                                                                                                            '' ;
+                                                                                                                                                    }
+                                                                                                                                            )
+                                                                                                                                        ] ;
                                                                                                                                     text =
                                                                                                                                         ''
                                                                                                                                             sleep 10s
-                                                                                                                                            exec 155> ${ resources-directory }/log.lock
-                                                                                                                                            flock -x 155
-                                                                                                                                            TYPE=9108435534527325
-                                                                                                                                            jq --null-input --arg INDEX "$INDEX" --arg TYPE "$TYPE" '[ { "index" : $INDEX , "type" : $TYPE } ]' | yq eval --prettyPrint >> ${ resources-directory }/log.yaml
+                                                                                                                                            echo | valid-release
                                                                                                                                         '' ;
                                                                                                                                 } ;
                                                                                                                         release-2 =
