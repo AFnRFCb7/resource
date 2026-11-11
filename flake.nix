@@ -648,10 +648,10 @@
                                                                                                                                     text =
                                                                                                                                         ''
                                                                                                                                             mkdir --parents ${ process-lock }
-                                                                                                                                            exec 170> ${ process-lock }/process.${ builtins.toString index }.lock
-                                                                                                                                            flock -x 170
+                                                                                                                                            # exec 170> ${ process-lock }/process.${ builtins.toString index }.lock
+                                                                                                                                            # flock -x 170
                                                                                                                                             process 2>> ${ process-lock }/process.${ builtins.toString index }.failure
-                                                                                                                                            flock -u 170
+                                                                                                                                            # flock -u 170
                                                                                                                                         '' ;
                                                                                                                                 } ;
                                                                                                                     in transform process ;
@@ -666,10 +666,10 @@
                                                                                                                 runtimeInputs = [ ( config.failure { } ) pkgs.coreutils pkgs.findutils pkgs.flock ] ;
                                                                                                                 text =
                                                                                                                     ''
-                                                                                                                        sleep 10s
+                                                                                                                        sleep 30s
                                                                                                                         mkdir --parents ${ process-lock }
-                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''exec 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }> ${ process-lock }/process.${ builtins.toString index }.lock'' ) ( builtins.length processes ) ) }
-                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''flock -x 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }'' ) ( builtins.length processes ) ) }
+                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''# exec 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }> ${ process-lock }/process.${ builtins.toString index }.lock'' ) ( builtins.length processes ) ) }
+                                                                                                                        ${ builtins.concatStringsSep "\n" ( builtins.genList ( index : ''# flock -x 1${ lib.fixedWidthString 2 "0" ( builtins.toString index ) }'' ) ( builtins.length processes ) ) }
                                                                                                                         find ${ process-lock } -mindepth 1 -maxdepth 1 -type f -name "process.*.failure" | sort | while read -r FAILURE
                                                                                                                         do
                                                                                                                             if [[ -s "$FAILURE" ]]
