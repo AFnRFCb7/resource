@@ -609,22 +609,12 @@
                                                                                                                                                                         --order)
                                                                                                                                                                             shift 1
                                                                                                                                                                             ORDER_JSON="$( printf '%s\n' "${ "$" }{@:1:$N}" | jq --raw-output 'tonumber' | jq --slurp '.' )" || failure 5547985831229891
-#                                                                                                                                                                            if [[ "$N" == 2 ]]
-#                                                                                                                                                                            then
-#                                                                                                                                                                                echo 5993215732653056 >&2
-#                                                                                                                                                                                echo "$ORDER_JSON" >&2
-#                                                                                                                                                                                yq eval -o=json '.' ${ resources-directory }/log.yaml >&2
-#                                                                                                                                                                            fi
                                                                                                                                                                             OBSERVED="$( mktemp )" || failure 5660646061926270
                                                                                                                                                                             yq eval -o=json '.' ${ resources-directory }/log.yaml | jq 'map(del(.timestamp))' | jq --argjson order "$ORDER_JSON" '[. as $original | $order[] | $original[.-1]]' > "$OBSERVED"
                                                                                                                                                                             if diff -q "$EXPECTED" "$OBSERVED" >&2
                                                                                                                                                                             then
                                                                                                                                                                                 CORRECT=true
                                                                                                                                                                             fi
-#                                                                                                                                                                            if [[ "$N" == 2 ]]
-#                                                                                                                                                                            then
-#                                                                                                                                                                                echo 2304510400081533 "CORRECT=$CORRECT" >&2
-#                                                                                                                                                                            fi
                                                                                                                                                                             shift $(( N ))
                                                                                                                                                                             rm "$OBSERVED"
                                                                                                                                                                             ;;
@@ -633,7 +623,6 @@
                                                                                                                                                                             ;;
                                                                                                                                                                     esac
                                                                                                                                                                 done
-                                                                                                                                                                # echo 4279049034343807 "CORRECT=$CORRECT" >&2
                                                                                                                                                                 if [[ "$CORRECT" != true ]]
                                                                                                                                                                 then
                                                                                                                                                                     EXPECTED_JSON="$( cat "$EXPECTED" )" || failure 5801512242812508
