@@ -1,0 +1,11 @@
+graph TD
+  A[Start] --> B{init}
+  B -->|invalid-init| C{invalid-init}
+  B -->|stale-init| D{release}
+  B -->|valid-init| D
+  C -->|valid| D
+  C -->|invalid| C
+  D -->|invalid-release| E{invalid-release}
+  E -->|valid| F{End}
+  E -->|invalid| E
+  D -->|valid-release| F
